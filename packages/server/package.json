@@ -1,0 +1,17 @@
+{
+  "name": "@kuriyota-com/server",
+  "version": "1.0.50",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build --target=bun --outfile=./dist/server.js ./src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.4.0",
+    "dotenv": "^17.2.3",
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
