@@ -6,7 +6,7 @@ import { useI18n } from '@/scripts/i18n';
 
 const HOST = import.meta.env.DEV
   ? 'http://localhost:62801'
-  : 'https://kuriyota.com';
+  : 'https://api.kuriyota.com';
 const { isFetching, data } = useFetch<any>(HOST + '/status');
 const status = computed(() => JSON.parse(data.value));
 
