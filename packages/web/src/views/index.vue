@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue';
+import { computed, shallowRef } from 'vue';
 import dayjs from 'dayjs';
+import { useFetch } from '@vueuse/core';
+
+const HOST = import.meta.env.DEV
+  ? 'http://localhost:62801'
+  : 'https://kuriyota.com';
+const { isFetching, data } = useFetch<any>(HOST + '/status');
+const status = computed(() => JSON.parse(data.value));
 
 const __BUILD_TIME__ = import.meta.env.VITE_BUILD_TIME;
 
@@ -24,9 +31,22 @@ const Contact = shallowRef({
         I'm Kuriyota
         <span class="text-gray-500">(Kuriyona)</span>
       </h1>
+      <div v-if="isFetching" class="flex gap-4">
+        <var-loading size="small" />
+        <span>Loading status</span>
+      </div>
+      <div v-if="data && status?.awake">
+        <span>Kuriyota is now&nbsp;</span>
+        <span v-if="status.awake == 'AWAKE'" class="text-green-500">AWAKE</span>
+        <span v-else-if="status.awake == 'SLEEP'" class="text-yellow-500"
+          >SLEEPING
+        </span>
+        <span v-else class="text-gray-500">...UNKNOWN</span>
+      </div>
+      <hr />
       <p>
         A 17-year-old Chinese senior high school student, otaku, casual anime
-        fan, MtF, and intrest-driven developer.
+        fan, MtF, and interest-driven developer.
       </p>
       <div>
         <p>· Location: Hangzhou, Zhejiang, the P.R.China ( 120° E, 30° N )</p>

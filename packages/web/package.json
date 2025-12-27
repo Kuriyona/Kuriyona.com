@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@varlet/ui": "^3.10.5",
+    "@vueuse/core": "^14.1.0",
     "github-markdown-css": "^5.8.1",
     "markdown-it": "^14.1.0",
     "particlesjs": "^2.2.3",

@@ -19,5 +19,8 @@ export default defineConfig({
     outDir: '../../dist',
     assetsDir: './assets',
     emptyOutDir: true
+  },
+  server: {
+    port: 62800
   }
 });
