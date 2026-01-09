@@ -13,7 +13,7 @@ if (!AUTH_KEY) {
 
 const app = new Elysia()
   .use(cors())
-  .get('/', () => 'This API site of Kuriyota.com')
+  .get('/', () => 'This API site of Kuriyona.com')
   .listen(62801);
 
 app.get('/status', () => Status);

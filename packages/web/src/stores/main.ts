@@ -8,7 +8,7 @@ export const useApiStore = defineStore('api', () => {
 
   const APIHost = import.meta.env.DEV
     ? 'http://localhost:62801'
-    : 'https://api.kuriyota.com';
+    : 'https://api.kuriyona.com';
   let APIKey = '';
 
   const isConnectedToServer = ref(false);

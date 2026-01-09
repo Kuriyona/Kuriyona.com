@@ -1,5 +1,5 @@
 {
-  "name": "@kuriyota-com/web",
+  "name": "@kuriyona-com/web",
   "type": "module",
   "scripts": {
     "dev": "vite",

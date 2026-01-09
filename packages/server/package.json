@@ -1,5 +1,5 @@
 {
-  "name": "@kuriyota-com/server",
+  "name": "@kuriyona-com/server",
   "version": "1.0.50",
   "scripts": {
     "dev": "bun run --hot src/index.ts",

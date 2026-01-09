@@ -1,5 +1,5 @@
 {
-  "name": "@kuriyota-com/monorepo",
+  "name": "@kuriyona-com/monorepo",
   "scripts": {
     "dev": "pnpm -F web run dev",
     "build": "pnpm -F web run build",
