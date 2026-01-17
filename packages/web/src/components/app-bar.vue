@@ -12,6 +12,9 @@ const { locale, t } = useI18n();
       <span class="hover" @click="locale = 1 - locale">{{
         t(['中', 'EN'])
       }}</span>
+      <RouterLink to="time">
+        <span class="hover">{{ t(['Time', '时间']) }}</span></RouterLink
+      >
       <span class="hover">{{ t(['Menu', '菜单']) }}</span>
     </div>
   </div>

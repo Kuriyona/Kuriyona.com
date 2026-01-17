@@ -50,6 +50,14 @@ const Contact = shallowRef({
         </span>
         <span v-else class="text-gray-500">...UNKNOWN</span>
       </div>
+      <p>
+        {{
+          t([
+            'Kuriyona has been in to this world for ',
+            '今天是 Kuriyona 来到这个世界的第 '
+          ])
+        }}{{ dayjs().diff('2008/6/28', 'day') + 1 }}{{ t([' days', ' 天']) }}
+      </p>
       <hr />
       <p>
         {{
