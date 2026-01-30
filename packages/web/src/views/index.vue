@@ -39,7 +39,7 @@ const Contact = shallowRef({
       </div>
       <div
         v-if="data && status?.awake"
-        class="hover:cursor-pointer"
+        class="link-style cursor-pointer"
         @click="execute()">
         <span>{{ t(['Kuriyona is now ', 'Kuriyona 现在 ']) }}</span>
         <span v-if="status.awake == 'AWAKE'" class="text-green-500">{{
@@ -92,16 +92,11 @@ const Contact = shallowRef({
         </p>
       </div>
       <p>
-        {{ t(['I am the founder of', 'I am the founder of']) }}
-        <a href="https://github.com/SharpDotNUT/" target="_blank">
-          #.NUT Studio
-        </a>
-        ,
-        <br />
         {{ t(['and my project ', '以及我的项目']) }}：
         <a
           href="https://github.com/SharpDotNUT/Prototype-YunHan"
           target="_blank"
+          class="link-style"
           >「Prototype · YunHan」
         </a>
       </p>
@@ -111,7 +106,7 @@ const Contact = shallowRef({
         <br />
         <p v-for="(link, name) in Contact">
           <span>·&nbsp;</span>
-          <a :key="name" :href="link" target="_blank">
+          <a :key="name" :href="link" target="_blank" class="link-style">
             {{ name }}
           </a>
         </p>
@@ -128,7 +123,9 @@ const Contact = shallowRef({
       <div>
         <p>
           · {{ t(['Links', '友情链接']) }} :
-          <a href="https://maao.cc">{{ t(["Here's Mars", '这里是毛毛']) }}</a>
+          <a href="https://maao.cc" class="link-style">{{
+            t(["Here's Mars", '这里是毛毛'])
+          }}</a>
         </p>
         <p>
           · {{ t(['Build time', '构建时间']) }} :
@@ -140,7 +137,7 @@ const Contact = shallowRef({
         </p>
         <p>
           · {{ t(['OpenSource', '开源']) }} (MIT) :
-          <a href="https://github.com/Kuriyona/Kuriyona.com">
+          <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">
             Kuriyona/Kuriyona.com
           </a>
         </p>

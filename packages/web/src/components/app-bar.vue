@@ -6,17 +6,17 @@ const { locale, t } = useI18n();
 <template>
   <div
     class="container-bar font-mono py-2 px-3 flex justify-between items-center">
-    <RouterLink to="/" class="text">
-      <span class="hover">Kuriyona's Space</span>
+    <RouterLink to="/" class="link-style-uu">
+      <span>Kuriyona's Space</span>
     </RouterLink>
-    <div class="flex gap-2">
-      <span class="hover" @click="locale = 1 - locale">{{
+    <div id="actions" class="flex gap-2">
+      <span class="link-style-uu" @click="locale = 1 - locale">{{
         t(['中', 'EN'])
       }}</span>
-      <RouterLink to="time">
-        <span class="hover">{{ t(['Time', '时间']) }}</span></RouterLink
-      >
-      <span class="hover">{{ t(['Menu', '菜单']) }}</span>
+      <RouterLink to="time" class="link-style-uu">
+        <span>{{ t(['Time', '时间']) }}</span>
+      </RouterLink>
+      <span class="link-style-uu">{{ t(['Menu', '菜单']) }}</span>
     </div>
   </div>
 </template>

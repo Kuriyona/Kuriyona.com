@@ -30,39 +30,14 @@ body {
   border-radius: 2.5px;
 }
 
-@layer hover {
-  .hover {
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-  }
-  .hover:hover {
-    background-color: #fff;
-    color: #000;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-  }
+.link-style-uu {
+  @apply mx-1 transition-all duration-250 ease-in-out cursor-pointer;
+}
+.link-style {
+  @apply mx-1 transition-all duration-250 ease-in-out cursor-pointer underline;
 }
 
-a {
-  text-decoration: solid underline #fff;
-  margin-left: 0.25rem;
-  margin-right: 0.25rem;
-}
-
-a:hover {
-  background-color: #fff;
-  color: #000;
-  margin-left: 0;
-  margin-right: 0;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  border-radius: 0.25rem;
-}
-
-a.text {
-  text-decoration: none;
+.link-style:hover,
+.link-style-uu:hover {
+  @apply bg-white text-black mx-0 px-1 rounded;
 }
