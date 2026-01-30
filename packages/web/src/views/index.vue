@@ -114,12 +114,6 @@ const Contact = shallowRef({
         <p>· QQ: ID 2946733291</p>
       </div>
       <hr />
-      <div class="flex gap-2 pb-2 overflow-x-auto">
-        <img src="https://hoyocard.qhy04.com/gs/0/306863519.png" />
-        <img src="https://hoyocard.qhy04.com/sr/2/306863519.png" />
-        <img src="https://hoyocard.qhy04.com/zzz/0/306863519.png" />
-      </div>
-      <hr />
       <div>
         <p>
           · {{ t(['Links', '友情链接']) }} :
