@@ -24,7 +24,7 @@ const Contact = shallowRef({
 
 <template>
   <!--{{ t(['', '']) }}-->
-  <div class="-index font-mono flex justify-center h-full">
+  <div class="font-mono flex justify-center h-full">
     <main class="w-160 my-20 p-4 flex flex-col gap-4">
       <img
         class="w-10 rounded-sm"
@@ -143,5 +143,3 @@ const Contact = shallowRef({
     </main>
   </div>
 </template>
-
-<style lang="css" scoped></style>
