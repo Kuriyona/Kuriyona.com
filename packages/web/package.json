@@ -23,12 +23,10 @@
     "@tsconfig/node22": "^22.0.1",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.14.0",
-    "@unocss/preset-wind4": "^66.5.9",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
-    "npm-run-all2": "^7.0.2",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.8.0",
-    "unocss": "^66.5.9",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vue-tsc": "^2.2.8"

@@ -67,6 +67,15 @@ const Contact = shallowRef({
           ])
         }}
       </p>
+      <p>
+        {{
+          t([
+            'As a MtF, I have started HRT/GAHT for ',
+            '作为一个 MtF，我已经开始了 HRT/GAHT '
+          ])
+        }}{{ dayjs().diff('2026/01/17', 'day') + 1
+        }}{{ t([' days.', ' 天。']) }}
+      </p>
       <div>
         <p>
           · {{ t(['Location', '所在地']) }}:

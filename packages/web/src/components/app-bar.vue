@@ -13,10 +13,6 @@ const { locale, t } = useI18n();
       <span class="link-style-uu" @click="locale = 1 - locale">{{
         t(['中', 'EN'])
       }}</span>
-      <RouterLink to="time" class="link-style-uu">
-        <span>{{ t(['Time', '时间']) }}</span>
-      </RouterLink>
-      <span class="link-style-uu">{{ t(['Menu', '菜单']) }}</span>
     </div>
   </div>
 </template>
