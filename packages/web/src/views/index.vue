@@ -10,6 +10,8 @@ const status = computed(() => JSON.parse(data.value));
 
 const __BUILD_TIME__ = window.__BUILD_TIME__;
 
+console.log('Build time: ', __BUILD_TIME__);
+
 const { t } = useI18n();
 
 const Contact = shallowRef({
