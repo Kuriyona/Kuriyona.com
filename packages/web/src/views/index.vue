@@ -132,6 +132,7 @@ const Contact = shallowRef({
             t(["Here's Mars", '这里是毛毛'])
           }}</a>
         </p>
+        <!--
         <p>
           · {{ t(['Build time', '构建时间']) }} :
           {{ dayjs(__BUILD_TIME__).format('YYYY-MM-DD HH:mm:ss') }}
@@ -140,6 +141,7 @@ const Contact = shallowRef({
             }}{{ t([' day(s) ago', ' 天之前']) }})</span
           >
         </p>
+        -->
         <p>
           · {{ t(['OpenSource', '开源']) }} (MIT) :
           <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">
