@@ -20,7 +20,7 @@ const Contact = shallowRef({
   X: 'https://x.com/kuriyona',
   Zhihu: 'https://www.zhihu.com/people/cn-chestnut',
   Telegram: 'https://t.me/Kuriyona',
-  'Kuriyota@outlook.com': 'mailto:kuriyota@outlook.com'
+  'Kuriyona@outlook.com': 'mailto:kuriyona@outlook.com'
 });
 </script>
 
@@ -31,10 +31,7 @@ const Contact = shallowRef({
       <img
         class="w-10 rounded-sm"
         src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
-      <h1 class="text-2xl">
-        I'm Kuriyona
-        <span class="text-gray-500">(Kuriyota)</span>
-      </h1>
+      <h1 class="text-2xl">I'm Kuriyona</h1>
       <div v-if="isFetching" class="flex gap-4">
         <var-loading size="small" />
         <span>{{ t(['Loading status...', '加载状态中...']) }}</span>
@@ -102,15 +99,6 @@ const Contact = shallowRef({
           }}
         </p>
       </div>
-      <p>
-        {{ t(['and my project ', '以及我的项目']) }}：
-        <a
-          href="https://github.com/SharpDotNUT/Prototype-YunHan"
-          target="_blank"
-          class="link-style"
-          >「Prototype · YunHan」
-        </a>
-      </p>
       <hr />
       <div>
         {{ t(['You can find me on', '你可以通过以下途径找到我']) }}
@@ -130,6 +118,12 @@ const Contact = shallowRef({
           · {{ t(['Links', '友情链接']) }} :
           <a href="https://maao.cc" class="link-style">{{
             t(["Here's Mars", '这里是毛毛'])
+          }}</a>
+        </p>
+        <p>
+          · {{ t(['Links', '友情链接']) }} :
+          <a href="https://space.bilibili.com/1337924642" class="link-style">{{
+            t(['鱼块糯 - Bilibili', '鱼块糯 - 哔哩哔哩'])
           }}</a>
         </p>
         <!--
