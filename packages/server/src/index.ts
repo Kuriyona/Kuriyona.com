@@ -1,17 +1,13 @@
 import { Elysia, t } from 'elysia';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-const filename = import.meta.filename as string;
-const dirname = path.dirname(filename);
 import cors from '@elysiajs/cors';
 import { RouteImage } from './image';
+
+import 'dotenv/config';
+
 const Status = {
   awake: 'UNKNOWN',
   updateAt: new Date().getTime()
 };
-
-import { config } from 'dotenv';
-config({ path: path.join(dirname, '.env') });
 
 const app = new Elysia()
   .use(cors())

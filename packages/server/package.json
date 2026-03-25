@@ -2,7 +2,7 @@
   "name": "@kuriyona-com/server",
   "version": "1.0.50",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
+    "dev": "bun run --hot ./src/index.ts",
     "build": "bun build --target=bun --outfile=./dist/server.js ./src/index.ts"
   },
   "dependencies": {
