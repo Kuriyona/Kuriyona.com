@@ -7,7 +7,7 @@ export const useApiStore = defineStore('api', () => {
   const { t } = useI18n();
 
   const APIHost = import.meta.env.DEV
-    ? 'http://localhost:62801'
+    ? 'http://localhost:62802'
     : 'https://api.kuriyona.com';
   let APIKey = '';
 

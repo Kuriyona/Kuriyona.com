@@ -1,26 +1,30 @@
 import { Elysia, t } from 'elysia';
+import fs from 'node:fs/promises';
 import path from 'node:path';
-import 'dotenv/config';
+const filename = import.meta.filename as string;
+const dirname = path.dirname(filename);
 import cors from '@elysiajs/cors';
+import { RouteImage } from './image';
 const Status = {
   awake: 'UNKNOWN',
   updateAt: new Date().getTime()
 };
-const AUTH_KEY = process.env.AUTH_KEY;
-if (!AUTH_KEY) {
-  throw new Error('AUTH_KEY is not set');
-}
+
+import { config } from 'dotenv';
+config({ path: path.join(dirname, '.env') });
 
 const app = new Elysia()
   .use(cors())
   .get('/', () => 'This API site of Kuriyona.com')
-  .listen(62801);
+  .listen(62802);
+
+app.use(RouteImage);
 
 app.get('/status', () => Status);
 app.get(
   '/status/update',
   async ({ query, set }) => {
-    if (query.auth !== AUTH_KEY) {
+    if (query.auth !== Bun.env.AUTH_KEY) {
       set.status = 401;
       return 'Unauthorized';
     }
@@ -45,6 +49,4 @@ app.get(
   }
 );
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+console.log(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
