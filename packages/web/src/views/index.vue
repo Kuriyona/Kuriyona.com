@@ -126,6 +126,12 @@ const Contact = shallowRef({
             t(['鱼块糯 - Bilibili', '鱼块糯 - 哔哩哔哩'])
           }}</a>
         </p>
+        <p>
+          · {{ t(['Links', '友情链接']) }} :
+          <a :href="t(['https://launchpadx.top/en', 'https://launchpadx.top'])" class="link-style">{{
+            t(["LaunchPad's Space", "启动台の小窝"])
+          }}</a>
+        </p>
         <!--
         <p>
           · {{ t(['Build time', '构建时间']) }} :
