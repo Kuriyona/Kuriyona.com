@@ -1,12 +1,22 @@
 {
-  "name": "@kuriyona-com/monorepo",
   "scripts": {
-    "dev": "pnpm -F web run dev",
-    "build": "pnpm -F web run build",
-    "format": "prettier --write ."
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "dayjs": "^1.11.19"
+    "@elysiajs/eden": "^1.4.9",
+    "@tailwindcss/vite": "^4.2.2",
+    "@varlet/nuxt": "^0.1.5",
+    "@varlet/touch-emulator": "^3.14.2",
+    "@varlet/ui": "^3.14.2",
+    "@vueuse/core": "^14.2.1",
+    "dayjs": "^1.11.19",
+    "elysia": "^1.4.28",
+    "nuxt": "^4.4.2",
+    "tailwindcss": "^4.2.2"
   },
   "workspaces": [
     "packages/*"

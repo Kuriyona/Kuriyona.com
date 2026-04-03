@@ -8,7 +8,7 @@ import { HOST } from '@/scripts/api';
 const { isFetching, data, execute } = useFetch<any>(HOST + '/status');
 const status = computed(() => JSON.parse(data.value));
 
-const __BUILD_TIME__ = window.__BUILD_TIME__;
+const __BUILD_TIME__ = undefined;
 
 console.log('Build time: ', __BUILD_TIME__);
 

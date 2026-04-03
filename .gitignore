@@ -32,3 +32,4 @@ coverage
 .env
 packages/server/.env
 packages/server/.env
+/.nuxt
