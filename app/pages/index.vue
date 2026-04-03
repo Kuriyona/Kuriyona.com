@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { computed, shallowRef } from 'vue';
+import { shallowRef } from 'vue';
 import dayjs from 'dayjs';
-import { useFetch } from '@vueuse/core';
 import { useI18n } from '@/scripts/i18n';
-import { HOST } from '@/scripts/api';
 
-const { isFetching, data, execute } = useFetch<any>(HOST + '/status');
-const status = computed(() => JSON.parse(data.value));
+const { $api } = useNuxtApp();
 
-const __BUILD_TIME__ = undefined;
-
-console.log('Build time: ', __BUILD_TIME__);
+const isFetching = ref(false);
+const update = async () => {
+  isFetching.value = true;
+  const res = await $api.status.get();
+  status.value = res.data;
+  isFetching.value = false;
+};
+update();
+const status = ref<undefined | any>(undefined);
 
 const { t } = useI18n();
 
@@ -36,10 +39,7 @@ const Contact = shallowRef({
         <var-loading size="small" />
         <span>{{ t(['Loading status...', '加载状态中...']) }}</span>
       </div>
-      <div
-        v-if="data && status?.awake"
-        class="link-style cursor-pointer"
-        @click="execute()">
+      <div v-if="status" class="link-style cursor-pointer" @click="update()">
         <span>{{ t(['Kuriyona is now ', 'Kuriyona 现在 ']) }}</span>
         <span v-if="status.awake == 'AWAKE'" class="text-green-500">{{
           t(['AWAKE', '醒着'])

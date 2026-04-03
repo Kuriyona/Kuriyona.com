@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { HOST } from '@/scripts/api';
 import { useStorage } from '@vueuse/core';
 import { ref, onMounted, onUnmounted } from 'vue';
 
@@ -9,9 +8,9 @@ const uploading = ref(false);
 const key = ref('');
 const selectedFile = ref<File | null>(null);
 const imageUrl = ref('');
-
-// 添加临时预览URL状态
 const previewUrl = ref('');
+
+const { $api } = useNuxtApp();
 
 const handleFileSelect = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -26,8 +25,8 @@ const handlePaste = (event: ClipboardEvent) => {
   const items = event.clipboardData?.items;
   if (items) {
     for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf('image') !== -1) {
-        const blob = items[i].getAsFile();
+      if (items[i]!.type.indexOf('image') !== -1) {
+        const blob = items[i]!.getAsFile();
         if (blob) {
           selectedFile.value = new File(
             [blob],
@@ -51,11 +50,11 @@ const handleConfirmUpload = async () => {
 
   try {
     const fileName = name.value ? name.value + '.' + ext : file.name;
-    const urlRes = await fetch(
-      HOST +
-        `/image/upload-signed-url?filename=${fileName}&mime=${file.type}&auth=${apiKey.value}`
-    );
-    const data = await urlRes.json();
+    const res = await $api.image['upload-signed-url'].get({
+      query: { filename: fileName, mime: file.type, auth: apiKey.value }
+    });
+    if (res.status != 200) return;
+    const data = res.data!;
     const uploadUrl = data.url;
     key.value = data.key;
 
@@ -68,7 +67,6 @@ const handleConfirmUpload = async () => {
     });
 
     imageUrl.value = `https://r2.kuriyona.com/${key.value}`;
-    // 清空已上传的文件
     selectedFile.value = null;
     previewUrl.value = '';
   } catch (error) {
