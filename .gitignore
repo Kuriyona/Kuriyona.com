@@ -33,3 +33,5 @@ coverage
 packages/server/.env
 packages/server/.env
 /.nuxt
+/.output
+*.zip
