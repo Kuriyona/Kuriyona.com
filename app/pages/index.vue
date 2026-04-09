@@ -114,6 +114,12 @@ const Contact = shallowRef(Config.contact);
           <a :href="link.url" class="link-style">{{ t([link.en, link.zh]) }}</a>
         </p>
         <p>
+          &nbsp;&nbsp;·
+          <nuxt-link to="/links" class="link-style"
+            >{{ t(['More', '更多']) }}...</nuxt-link
+          >
+        </p>
+        <p>
           · {{ t(['OpenSource', '开源']) }} (MIT) :
           <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">
             Kuriyona/Kuriyona.com

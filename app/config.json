@@ -12,19 +12,22 @@
       {
         "url": "https://maao.cc",
         "en": "Here's Mars",
-        "zh": "这里是毛毛"
+        "zh": "这里是毛毛",
+        "avatar": "https://maao.cc/favicon.ico"
       },
       {
         "url": "https://space.bilibili.com/1337924642",
         "en": "鱼块糯 - Bilibili",
-        "zh": "鱼块糯 - 哔哩哔哩"
+        "zh": "鱼块糯 - 哔哩哔哩",
+        "avatar": "https://r2.kuriyona.com/img/xFurina/xFurina.jpg"
       }
     ],
     "others": [
       {
         "url": "https://launchpadx.top/",
         "en": "LaunchPad's Space",
-        "zh": "启动台の小窝"
+        "zh": "启动台の小窝",
+        "avatar": "https://avatars.githubusercontent.com/u/67402215"
       }
     ]
   }
