@@ -1,0 +1,31 @@
+{
+  "contact": {
+    "Github": "https://github.com/Kuriyona",
+    "Bilibili": "https://space.bilibili.com/650631530",
+    "X": "https://x.com/kuriyona",
+    "Zhihu": "https://www.zhihu.com/people/cn-chestnut",
+    "Telegram": "https://t.me/Kuriyona",
+    "Kuriyona@outlook.com": "mailto:kuriyona@outlook.com"
+  },
+  "links": {
+    "main": [
+      {
+        "url": "https://maao.cc",
+        "en": "Here's Mars",
+        "zh": "这里是毛毛"
+      },
+      {
+        "url": "https://space.bilibili.com/1337924642",
+        "en": "鱼块糯 - Bilibili",
+        "zh": "鱼块糯 - 哔哩哔哩"
+      }
+    ],
+    "others": [
+      {
+        "url": "https://launchpadx.top/",
+        "en": "LaunchPad's Space",
+        "zh": "启动台の小窝"
+      }
+    ]
+  }
+}

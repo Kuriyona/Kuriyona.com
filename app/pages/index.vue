@@ -2,6 +2,7 @@
 import { shallowRef } from 'vue';
 import dayjs from 'dayjs';
 import { useI18n } from '@/scripts/i18n';
+import Config from '../config.json';
 
 const { $api } = useNuxtApp();
 
@@ -17,14 +18,7 @@ const status = ref<undefined | any>(undefined);
 
 const { t } = useI18n();
 
-const Contact = shallowRef({
-  Github: 'https://github.com/Kuriyona',
-  Bilibili: 'https://space.bilibili.com/650631530',
-  X: 'https://x.com/kuriyona',
-  Zhihu: 'https://www.zhihu.com/people/cn-chestnut',
-  Telegram: 'https://t.me/Kuriyona',
-  'Kuriyona@outlook.com': 'mailto:kuriyona@outlook.com'
-});
+const Contact = shallowRef(Config.contact);
 </script>
 
 <template>
@@ -114,28 +108,11 @@ const Contact = shallowRef({
       </div>
       <hr />
       <div>
-        <p>
-          · {{ t(['Links', '友情链接']) }} :
-          <a href="https://maao.cc" class="link-style">{{
-            t(["Here's Mars", '这里是毛毛'])
-          }}</a>
+        <p>· {{ t(['Links', '友情链接']) }} :</p>
+        <p v-for="link in Config.links.main">
+          &nbsp;&nbsp;·
+          <a :href="link.url" class="link-style">{{ t([link.en, link.zh]) }}</a>
         </p>
-        <p>
-          · {{ t(['Links', '友情链接']) }} :
-          <a href="https://space.bilibili.com/1337924642" class="link-style">{{
-            t(['鱼块糯 - Bilibili', '鱼块糯 - 哔哩哔哩'])
-          }}</a>
-        </p>
-        <!--
-        <p>
-          · {{ t(['Build time', '构建时间']) }} :
-          {{ dayjs(__BUILD_TIME__).format('YYYY-MM-DD HH:mm:ss') }}
-          <span class="text-gray-500"
-            >({{ Math.floor(dayjs(__BUILD_TIME__).diff(dayjs(), 'day'))
-            }}{{ t([' day(s) ago', ' 天之前']) }})</span
-          >
-        </p>
-        -->
         <p>
           · {{ t(['OpenSource', '开源']) }} (MIT) :
           <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">
