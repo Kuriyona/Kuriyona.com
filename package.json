@@ -22,9 +22,6 @@
     "nuxt": "^4.4.2",
     "tailwindcss": "^4.2.2"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "devDependencies": {
     "nuxt-elysia": "^0.2.0"
   }
