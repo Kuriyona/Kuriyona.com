@@ -6,9 +6,7 @@ import { useI18n } from 'vue-i18n';
 export const useApiStore = defineStore('api', () => {
   const { t } = useI18n();
 
-  const APIHost = import.meta.env.DEV
-    ? 'http://localhost:62802'
-    : 'https://api.kuriyona.com';
+  const APIHost = import.meta.env.DEV ? 'http://localhost:62802' : 'https://api.kuriyona.com';
   let APIKey = '';
 
   const isConnectedToServer = ref(false);
@@ -47,9 +45,9 @@ export const useApiStore = defineStore('api', () => {
     const res = await fetch(APIHost + url, {
       method: method,
       headers: {
-        Authorization: `${APIKey}`
+        Authorization: `${APIKey}`,
       },
-      body: method !== 'GET' ? body : undefined
+      body: method !== 'GET' ? body : undefined,
     });
 
     if (res.status === 401) {
@@ -58,7 +56,7 @@ export const useApiStore = defineStore('api', () => {
 
     return {
       data: (await res.json()) as T,
-      res
+      res,
     };
   }
 
@@ -70,7 +68,7 @@ export const useApiStore = defineStore('api', () => {
     isConnectedToServer,
     testConnection,
     fetchApi,
-    setApiKey
+    setApiKey,
   };
 });
 
@@ -78,6 +76,6 @@ export const useMainStore = defineStore('main', () => {
   const isAdminMode = ref(false);
 
   return {
-    isAdminMode
+    isAdminMode,
   };
 });

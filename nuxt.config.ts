@@ -5,11 +5,11 @@ export default defineNuxtConfig({
   ssr: false,
   modules: ['@varlet/nuxt', 'nuxt-elysia', '@vueuse/nuxt'],
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
   },
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },
   nitro: {
-    preset: 'bun'
-  }
+    preset: 'bun',
+  },
 });

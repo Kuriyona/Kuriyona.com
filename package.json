@@ -4,7 +4,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "fmt": "oxfmt"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1023.0",
@@ -23,6 +24,7 @@
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
-    "nuxt-elysia": "^0.2.0"
+    "nuxt-elysia": "^0.2.0",
+    "oxfmt": "^0.46.0"
   }
 }

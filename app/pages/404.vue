@@ -24,7 +24,7 @@ const data: Ref<any> = computed(() => {
     Language: navigator.languages.join(' | '),
     IPAddress: IPAddress.value,
     IPAddressLocation: IPAddressLocation.value,
-    BuildTime: new Date(__BUILD_TIME__).toLocaleString()
+    BuildTime: new Date(__BUILD_TIME__).toLocaleString(),
   };
 });
 

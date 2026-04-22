@@ -25,9 +25,7 @@ const Contact = shallowRef(Config.contact);
   <!--{{ t(['', '']) }}-->
   <div class="font-mono flex justify-center h-full">
     <main class="w-160 my-20 p-4 flex flex-col gap-4">
-      <img
-        class="w-10 rounded-sm"
-        src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
+      <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
       <h1 class="text-2xl">I'm Kuriyona</h1>
       <div v-if="isFetching" class="flex gap-4">
         <var-loading size="small" />
@@ -44,11 +42,7 @@ const Contact = shallowRef(Config.contact);
         <span v-else class="text-gray-500">...UNKNOWN</span>
       </div>
       <p>
-        {{
-          t([
-            'Kuriyona has been in to this world for ',
-            '今天是 Kuriyona 来到这个世界的第 '
-          ])
+        {{ t(['Kuriyona has been in to this world for ', '今天是 Kuriyona 来到这个世界的第 '])
         }}{{ dayjs().diff('2008/6/28', 'day') + 1 }}{{ t([' days', ' 天']) }}
       </p>
       <hr />
@@ -56,18 +50,13 @@ const Contact = shallowRef(Config.contact);
         {{
           t([
             'A 17-year-old Chinese senior high school student, otaku, casual anime fan, MtF, and interest-driven developer.',
-            '17 岁中国高中生，宅，亚二次元，MtF 和兴趣使然的开发者'
+            '17 岁中国高中生，宅，亚二次元，MtF 和兴趣使然的开发者',
           ])
         }}
       </p>
       <p>
-        {{
-          t([
-            'As a MtF, I have started HRT/GAHT for ',
-            '作为一个 MtF，我已经开始了 HRT/GAHT '
-          ])
-        }}{{ dayjs().diff('2026/01/17', 'day') + 1
-        }}{{ t([' days.', ' 天。']) }}
+        {{ t(['As a MtF, I have started HRT/GAHT for ', '作为一个 MtF，我已经开始了 HRT/GAHT '])
+        }}{{ dayjs().diff('2026/01/17', 'day') + 1 }}{{ t([' days.', ' 天。']) }}
       </p>
       <div>
         <p>
@@ -80,16 +69,13 @@ const Contact = shallowRef(Config.contact);
           {{ t(['June 28th (2008)', '六月 28 (2008)']) }}
         </p>
         <p>
-          · {{ t(['Tech stack', '技术栈']) }} : JavaScript/TypeScript (Vue,
-          Node/Bun, Elysia), HTML/CSS, C#
+          · {{ t(['Tech stack', '技术栈']) }} : JavaScript/TypeScript (Vue, Node/Bun, Elysia),
+          HTML/CSS, C#
         </p>
         <p>
           · {{ t(['Language', '语言']) }}:
           {{
-            t([
-              'Mandarin Chinese, English & Japanese (Learning)',
-              '中文/普通话，英文，初学日文'
-            ])
+            t(['Mandarin Chinese, English & Japanese (Learning)', '中文/普通话，英文，初学日文'])
           }}
         </p>
       </div>
@@ -115,9 +101,7 @@ const Contact = shallowRef(Config.contact);
         </p>
         <p>
           &nbsp;&nbsp;·
-          <nuxt-link to="/links" class="link-style"
-            >{{ t(['More', '更多']) }}...</nuxt-link
-          >
+          <nuxt-link to="/links" class="link-style">{{ t(['More', '更多']) }}...</nuxt-link>
         </p>
         <p>
           · {{ t(['OpenSource', '开源']) }} (MIT) :
@@ -126,8 +110,8 @@ const Contact = shallowRef(Config.contact);
           </a>
         </p>
         <p>
-          · {{ t(['Copyright', '版权所有']) }} ©
-          {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.
+          · {{ t(['Copyright', '版权所有']) }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights
+          reserved.
         </p>
       </div>
     </main>

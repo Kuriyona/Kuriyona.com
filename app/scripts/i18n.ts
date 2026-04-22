@@ -2,7 +2,7 @@ import { ref, watchEffect } from 'vue';
 
 export enum Locales {
   en = 0,
-  zh = 1
+  zh = 1,
 }
 
 const setLanguage = (lang: string) => {

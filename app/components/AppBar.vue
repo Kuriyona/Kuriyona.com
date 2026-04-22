@@ -4,15 +4,12 @@ const { locale, t } = useI18n();
 </script>
 
 <template>
-  <div
-    class="container-bar font-mono py-2 px-3 flex justify-between items-center">
+  <div class="container-bar font-mono py-2 px-3 flex justify-between items-center">
     <RouterLink to="/" class="link-style-uu">
       <span>Kuriyona's Space</span>
     </RouterLink>
     <div id="actions" class="flex gap-2">
-      <span class="link-style-uu" @click="locale = 1 - locale">{{
-        t(['中', 'EN'])
-      }}</span>
+      <span class="link-style-uu" @click="locale = 1 - locale">{{ t(['中', 'EN']) }}</span>
     </div>
   </div>
 </template>

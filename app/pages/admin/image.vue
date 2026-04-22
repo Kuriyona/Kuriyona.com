@@ -28,11 +28,9 @@ const handlePaste = (event: ClipboardEvent) => {
       if (items[i]!.type.indexOf('image') !== -1) {
         const blob = items[i]!.getAsFile();
         if (blob) {
-          selectedFile.value = new File(
-            [blob],
-            `pasted-image-${Date.now()}.png`,
-            { type: blob.type }
-          );
+          selectedFile.value = new File([blob], `pasted-image-${Date.now()}.png`, {
+            type: blob.type,
+          });
           previewUrl.value = URL.createObjectURL(selectedFile.value);
           break;
         }
@@ -51,7 +49,7 @@ const handleConfirmUpload = async () => {
   try {
     const fileName = name.value ? name.value + '.' + ext : file.name;
     const res = await $api.image['upload-signed-url'].get({
-      query: { filename: fileName, mime: file.type, auth: apiKey.value }
+      query: { filename: fileName, mime: file.type, auth: apiKey.value },
     });
     if (res.status != 200) return;
     const data = res.data!;
@@ -62,8 +60,8 @@ const handleConfirmUpload = async () => {
       method: 'PUT',
       body: file,
       headers: {
-        'Content-Type': file.type
-      }
+        'Content-Type': file.type,
+      },
     });
 
     imageUrl.value = `https://r2.kuriyona.com/${key.value}`;
@@ -124,9 +122,7 @@ onUnmounted(() => {
           :disabled="!apiKey">
           确认上传
         </var-button>
-        <var-button type="warning" @click="handleCancel" :disabled="uploading">
-          取消
-        </var-button>
+        <var-button type="warning" @click="handleCancel" :disabled="uploading"> 取消 </var-button>
       </div>
     </div>
 

@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 const Status = {
   awake: 'UNKNOWN',
-  updateAt: new Date().getTime()
+  updateAt: new Date().getTime(),
 };
 
 const app = new Elysia()
@@ -35,9 +35,9 @@ const app = new Elysia()
     {
       query: t.Object({
         auth: t.String(),
-        status: t.String()
-      })
-    }
+        status: t.String(),
+      }),
+    },
   );
 
 export default () => app;

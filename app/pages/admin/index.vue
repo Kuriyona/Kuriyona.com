@@ -8,8 +8,8 @@ const updateStatus = (awake: boolean) => {
   $api.status.update.get({
     query: {
       auth: key.value,
-      status: awake ? 'awake' : 'sleep'
-    }
+      status: awake ? 'awake' : 'sleep',
+    },
   });
 };
 </script>
