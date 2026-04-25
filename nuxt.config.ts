@@ -22,4 +22,14 @@ export default defineNuxtConfig({
   },
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },
+  app: {
+    head: {
+      title: "Kuriyona's Space",
+      htmlAttrs: {
+        lang: 'zh',
+      },
+      meta: [{ name: 'description', content: 'Kuriyona 的个人网站' }],
+      link: [{ rel: 'icon', href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png' }],
+    },
+  },
 });
