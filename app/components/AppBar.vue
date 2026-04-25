@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
-const { locale, t } = useI18n();
+const { locale, setLocale } = useI18n();
 </script>
 
 <template>
@@ -9,7 +9,9 @@ const { locale, t } = useI18n();
       <span>Kuriyona's Space</span>
     </RouterLink>
     <div id="actions" class="flex gap-2">
-      <span class="link-style-uu" @click="locale = 1 - locale">{{ t(['中', 'EN']) }}</span>
+      <span class="link-style-uu" @click="setLocale(locale === 'zh' ? 'en' : 'zh')">{{
+        locale === 'zh' ? 'EN' : '中'
+      }}</span>
     </div>
   </div>
 </template>

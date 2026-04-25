@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { RouteImage } from './image';
-import { cors } from '@elysiajs/cors'
+import { cors } from '@elysiajs/cors';
 
 import 'dotenv/config';
 
@@ -10,9 +10,11 @@ const Status = {
 };
 
 const app = new Elysia()
-  .use(cors({
-    origin: '*',
-  }))
+  .use(
+    cors({
+      origin: '*',
+    }),
+  )
   .get('/', () => 'This API site of Kuriyona.com')
   .get('/status', () => Status)
   .use(RouteImage)
@@ -44,4 +46,4 @@ const app = new Elysia()
     },
   );
 
-app.listen(62802);  
+app.listen(62802);
