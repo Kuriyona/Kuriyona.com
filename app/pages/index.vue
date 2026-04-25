@@ -15,7 +15,7 @@ const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? 
   <div class="font-mono flex justify-center h-full">
     <main class="w-160 my-20 p-4 flex flex-col gap-4">
       <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
-      <h1 class="text-2xl">I'm Kuriyona</h1>
+      <h1 class="text-2xl">I'm Kuriyona (未晞)</h1>
       <ClientOnly>
         <Status />
       </ClientOnly>
@@ -44,6 +44,10 @@ const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? 
         <p>
           · {{ t('language_label') }}:
           {{ t('language_value') }}
+        </p>
+        <p>
+          · {{ t('gender') }}:
+          {{ t('gender_value') }}
         </p>
       </div>
       <hr />
