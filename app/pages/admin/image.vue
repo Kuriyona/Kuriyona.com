@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
+import ky from 'ky';
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const apiKey = useStorage('API_KEY', '');
@@ -9,8 +10,6 @@ const key = ref('');
 const selectedFile = ref<File | null>(null);
 const imageUrl = ref('');
 const previewUrl = ref('');
-
-const { $api } = useNuxtApp();
 
 const handleFileSelect = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -48,16 +47,15 @@ const handleConfirmUpload = async () => {
 
   try {
     const fileName = name.value ? name.value + '.' + ext : file.name;
-    const res = await $api.image['upload-signed-url'].get({
-      query: { filename: fileName, mime: file.type, auth: apiKey.value },
+    const res = await fetchApi.get('/image/upload-signed-url', {
+      searchParams: { filename: fileName, mime: file.type, auth: apiKey.value },
     });
     if (res.status != 200) return;
-    const data = res.data!;
+    const data = await res.json<any>();
     const uploadUrl = data.url;
     key.value = data.key;
 
-    await fetch(uploadUrl, {
-      method: 'PUT',
+    await ky.put(uploadUrl, {
       body: file,
       headers: {
         'Content-Type': file.type,

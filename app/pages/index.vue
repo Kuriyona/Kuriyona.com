@@ -4,13 +4,11 @@ import dayjs from 'dayjs';
 import { useI18n } from '@/scripts/i18n';
 import Config from '../config.json';
 
-const { $api } = useNuxtApp();
-
 const isFetching = ref(false);
 const update = async () => {
   isFetching.value = true;
-  const res = await $api.status.get();
-  status.value = res.data;
+  const res = await fetchApi.get('/status');
+  status.value = await res.json();
   isFetching.value = false;
 };
 update();

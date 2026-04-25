@@ -3,13 +3,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: false,
-  modules: ['@varlet/nuxt', 'nuxt-elysia', '@vueuse/nuxt'],
+  modules: ['@varlet/nuxt', '@vueuse/nuxt'],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+    ],
   },
   css: ['./app/assets/css/main.css'],
-  devtools: { enabled: true },
-  nitro: {
-    preset: 'bun',
-  },
+  devtools: { enabled: true }
 });
