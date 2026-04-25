@@ -6,16 +6,6 @@ import Config from '../config.json';
 
 const { t, locale } = useI18n();
 
-const isFetching = ref(false);
-const update = async () => {
-  isFetching.value = true;
-  const res = await fetchApi.get('/status');
-  status.value = await res.json();
-  isFetching.value = false;
-};
-update();
-const status = ref<undefined | any>(undefined);
-
 const Contact = shallowRef(Config.contact);
 
 const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? link.zh : link.en);
@@ -26,18 +16,9 @@ const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? 
     <main class="w-160 my-20 p-4 flex flex-col gap-4">
       <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
       <h1 class="text-2xl">I'm Kuriyona</h1>
-      <div v-if="isFetching" class="flex gap-4">
-        <var-loading size="small" />
-        <span>{{ t('loading') }}</span>
-      </div>
-      <div v-if="status" class="link-style cursor-pointer" @click="update()">
-        <span>{{ t('kuriyona_is_now') }}</span>
-        <span v-if="status.awake == 'AWAKE'" class="text-green-500">{{ t('awake') }}</span>
-        <span v-else-if="status.awake == 'SLEEP'" class="text-yellow-500"
-          >{{ t('sleeping') }}
-        </span>
-        <span v-else class="text-gray-500">...UNKNOWN</span>
-      </div>
+      <ClientOnly>
+        <Status />
+      </ClientOnly>
       <p>
         {{ t('days_on_earth_prefix') }}{{ dayjs().diff('2008/6/28', 'day') + 1
         }}{{ t('days_suffix') }}

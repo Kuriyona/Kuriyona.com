@@ -2,7 +2,7 @@
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  ssr: false,
+  ssr: true,
   modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n'],
   nitro: {
     prerender: {
