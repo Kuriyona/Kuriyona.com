@@ -35,3 +35,4 @@ packages/server/.env
 /.nuxt
 /.output
 *.zip
+/server-dist

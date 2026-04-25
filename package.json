@@ -5,7 +5,10 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "fmt": "oxfmt"
+    "fmt": "oxfmt",
+    "server": "bun server/index.ts",
+    "server-dev": "bun --hot server/index.ts",
+    "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1023.0",
