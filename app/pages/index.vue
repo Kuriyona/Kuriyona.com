@@ -77,6 +77,12 @@ const Contact = shallowRef(Config.contact);
           </a>
         </p>
         <p>· {{ t('copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.</p>
+        <p>
+          <span>·&nbsp;</span>
+          <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="link-style"
+            >萌 ICP 备 20266280 号</a
+          >
+        </p>
       </div>
     </main>
   </div>
