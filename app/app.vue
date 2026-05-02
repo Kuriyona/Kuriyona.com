@@ -5,8 +5,27 @@ import AppBar from './components/AppBar.vue';
 <template>
   <AppBar class="z-100 sticky top-0 backdrop-blur-lg" />
   <main>
-    <NuxtPage id="main" class="z-0" />
+    <Transition name="page">
+      <NuxtPage id="main" class="z-0" />
+    </Transition>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+</style>
