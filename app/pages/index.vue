@@ -20,29 +20,28 @@ const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? 
         <Status />
       </ClientOnly>
       <p>
-        {{ t('days_on_earth_prefix') }}{{ dayjs().diff('2008/6/28', 'day') + 1
-        }}{{ t('days_suffix') }}
+        {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
       </p>
       <hr />
       <p>
         {{ t('description') }}
       </p>
       <p>
-        {{ t('hrt_prefix') }}{{ dayjs().diff('2026/01/17', 'day') + 1 }}{{ t('hrt_days_suffix') }}
+        {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
       </p>
       <div>
         <p>
-          · {{ t('location_label') }}:
+          · {{ t('location') }}:
           {{ t('location_value') }}
           ( 120° E, 30° N )
         </p>
         <p>
-          · {{ t('birthday_label') }}:
+          · {{ t('birthday') }}:
           {{ t('birthday_value') }}
         </p>
         <p>· {{ t('tech_stack') }} : JavaScript/TypeScript (Vue, Node/Bun, Elysia), HTML/CSS, C#</p>
         <p>
-          · {{ t('language_label') }}:
+          · {{ t('language') }}:
           {{ t('language_value') }}
         </p>
         <p>
