@@ -50,8 +50,10 @@ const Contact = shallowRef(Config.contact);
         <br />
         <p v-for="(link, name) in Contact">
           <span>·&nbsp;</span>
-          <a :key="name" :href="link" target="_blank" class="link-style">
-            {{ name }}
+          <span>{{ name }}</span>
+          <span>&nbsp;:&nbsp;</span>
+          <a :key="name" :href="link.link" target="_blank" class="link-style">
+            {{ link.value }}
           </a>
         </p>
         <p>· {{ t('wechat') }} : @Kuriyota</p>
