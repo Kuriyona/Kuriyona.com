@@ -1,12 +1,12 @@
-@import url('https://fontsapi.zeoseven.com/292/main/result.css');
-@import url('https://fontsapi.zeoseven.com/293/main/result.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap');
 
 body {
   font-weight: 500;
 }
 
 html {
-  --font-family: 'LXGW WenKai', sans-serif;
+  --font-family: 'Noto Sans SC', sans-serif;
 }
 
 body {
@@ -15,6 +15,6 @@ body {
 
 :root {
   .font-mono {
-    font-family: 'LXGW WenKai Mono', var(--font-family);
+    font-family: 'JetBrains Mono', var(--font-family);
   }
 }
