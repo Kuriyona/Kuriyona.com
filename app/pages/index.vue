@@ -7,8 +7,6 @@ import Config from '../config.json';
 const { t, locale } = useI18n();
 
 const Contact = shallowRef(Config.contact);
-
-const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? link.zh : link.en);
 </script>
 
 <template>
@@ -64,7 +62,7 @@ const linkName = (link: { en: string; zh: string }) => (locale.value === 'zh' ? 
         <p>· {{ t('links') }} :</p>
         <p v-for="link in Config.links.main">
           &nbsp;&nbsp;·
-          <a :href="link.url" class="link-style">{{ linkName(link) }}</a>
+          <a :href="link.url" class="link-style">{{ link.title }}</a>
         </p>
         <p>
           &nbsp;&nbsp;·
