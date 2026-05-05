@@ -8,7 +8,7 @@
     "fmt": "oxfmt",
     "server": "bun server/index.ts",
     "server-dev": "bun --hot server/index.ts",
-    "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js"
+    "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js --minify"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1023.0",
