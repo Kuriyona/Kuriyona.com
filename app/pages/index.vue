@@ -53,8 +53,14 @@ const Contact = shallowRef(Config.contact);
             {{ link.value }}
           </a>
         </p>
-        <p>· {{ t('wechat') }} : @Kuriyota</p>
+        <p>· {{ t('wechat') }}: @Kuriyota</p>
         <p>· QQ: ID 2946733291</p>
+        <p>
+          · {{ t('find_my_game_account') }} :
+          <a href="https://enka.network/u/Kuriyona/" target="_blank" class="link-style"
+            >Kuriyona | Enka.network</a
+          >
+        </p>
       </div>
       <hr />
       <div>
