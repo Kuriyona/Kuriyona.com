@@ -17,6 +17,7 @@ const Contact = shallowRef(Config.contact);
       <p>
         {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
       </p>
+      <p>{{ t('weather_i_at') }} <Weather /></p>
       <hr />
       <p>
         {{ t('description') }}
