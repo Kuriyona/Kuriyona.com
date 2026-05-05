@@ -40,10 +40,6 @@ const Contact = shallowRef(Config.contact);
           · {{ t('language') }}:
           {{ t('language_value') }}
         </p>
-        <p>
-          · {{ t('gender') }}:
-          {{ t('gender_value') }}
-        </p>
       </div>
       <hr />
       <div>
