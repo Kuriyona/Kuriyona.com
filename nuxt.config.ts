@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
       { code: 'zh', name: '中文', file: 'zh.json' },
+      { code: 'ja', name: '日本語', file: 'ja.json' },
     ],
     strategy: 'no_prefix',
   },

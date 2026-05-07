@@ -9,9 +9,9 @@ const { locale, setLocale } = useI18n();
       <span>Kuriyona's Space</span>
     </RouterLink>
     <div id="actions" class="flex gap-2">
-      <span class="link-style-uu" @click="setLocale(locale === 'zh' ? 'en' : 'zh')">{{
-        locale === 'zh' ? 'EN' : '中'
-      }}</span>
+      <span class="link-style-uu" v-if="locale !== 'zh'" @click="setLocale('zh')">中</span>
+      <span class="link-style-uu" v-if="locale !== 'ja'" @click="setLocale('ja')">日</span>
+      <span class="link-style-uu" v-if="locale !== 'en'" @click="setLocale('en')">EN</span>
     </div>
   </div>
 </template>
