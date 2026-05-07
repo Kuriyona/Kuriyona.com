@@ -26,9 +26,7 @@ const Contact = shallowRef(Config.contact);
         {{ t('description') }}
       </p>
       <ClientOnly>
-        <p>
-          {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
-        </p>
+        <p>{{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }} | 🏳️‍⚧️🍥</p>
       </ClientOnly>
       <div>
         <p>
