@@ -15,17 +15,21 @@ const Contact = shallowRef(Config.contact);
     <main class="w-160 my-20 p-4 flex flex-col gap-4">
       <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
       <h1 class="text-2xl">I'm Kuriyona (未晞)</h1>
-      <p>
-        {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
-      </p>
-      <p>{{ t('weather_i_at') }} <Weather /></p>
+      <ClientOnly>
+        <p>
+          {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
+        </p>
+        <p>{{ t('weather_i_at') }} <Weather /></p>
+      </ClientOnly>
       <hr />
       <p>
         {{ t('description') }}
       </p>
-      <p>
-        {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
-      </p>
+      <ClientOnly>
+        <p>
+          {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
+        </p>
+      </ClientOnly>
       <div>
         <p>
           · {{ t('location') }}:
