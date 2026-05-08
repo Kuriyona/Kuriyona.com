@@ -3,6 +3,7 @@ import { shallowRef } from 'vue';
 import dayjs from 'dayjs';
 import { useI18n } from '@/scripts/i18n';
 import Config from '../config.json';
+import QRCode from 'qrcode.vue';
 
 const { t, locale } = useI18n();
 
@@ -54,10 +55,20 @@ const Contact = shallowRef(Config.contact);
           <span>·&nbsp;</span>
           <span>{{ link.i18nKey ? t(link.i18nKey) : link.name }}</span>
           <span>&nbsp;:&nbsp;</span>
-          <a v-if="link.link" :key="link.name" :href="link.link" target="_blank" class="link-style">
-            {{ link.value }}
-          </a>
-          <span v-else>{{ link.value }}</span>
+          <VarTooltip placement="right">
+            <a
+              v-if="link.link"
+              :key="link.name"
+              :href="link.link"
+              target="_blank"
+              class="link-style">
+              {{ link.value }}
+            </a>
+            <span v-else>{{ link.value }}</span>
+            <template #content>
+              <div><QRCode :value="link.link" /></div>
+            </template>
+          </VarTooltip>
         </p>
       </div>
       <hr />
