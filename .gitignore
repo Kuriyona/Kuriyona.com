@@ -36,3 +36,4 @@ packages/server/.env
 /.output
 *.zip
 /server-dist
+server/prompt.md

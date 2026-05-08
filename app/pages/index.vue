@@ -18,6 +18,9 @@ const Contact = shallowRef(Config.contact);
         <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
         <h1 class="text-2xl">I'm Kuriyona (未晞)</h1>
       </div>
+      <NuxtLink to="/neko">
+        <VarButton type="primary" size="mini">和未晞的小猫聊天(Beta)</VarButton>
+      </NuxtLink>
       <ClientOnly>
         <p>
           {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
