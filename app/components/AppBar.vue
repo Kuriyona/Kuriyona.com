@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
-const { locale, setLocale } = useI18n();
+const { setLocale } = useI18n();
+const selecting = ref(false);
 </script>
 
 <template>
@@ -9,9 +10,17 @@ const { locale, setLocale } = useI18n();
       <span>Kuriyona's Space</span>
     </RouterLink>
     <div id="actions" class="flex gap-2">
-      <span class="link-style-uu" v-if="locale !== 'zh'" @click="setLocale('zh')">中</span>
-      <span class="link-style-uu" v-if="locale !== 'ja'" @click="setLocale('ja')">日</span>
-      <span class="link-style-uu" v-if="locale !== 'en'" @click="setLocale('en')">EN</span>
+      <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">
+        <VarButton round text>
+          <span class="material-symbols-outlined"> translate </span>
+        </VarButton>
+        <template #options>
+          <VarMenuOption @click="setLocale('zh-Hans')" label="中文(简体)"></VarMenuOption>
+          <VarMenuOption @click="setLocale('zh-Hant')" label="中文(繁体)"></VarMenuOption>
+          <VarMenuOption @click="setLocale('en')" label="English"></VarMenuOption>
+          <VarMenuOption @click="setLocale('ja')" label="日本語"></VarMenuOption>
+        </template>
+      </VarMenuSelect>
     </div>
   </div>
 </template>
