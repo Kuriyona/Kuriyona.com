@@ -8,7 +8,7 @@
     {
       "name": "Bilibili",
       "i18nKey": "contact.bilibili",
-      "value": "Kuriyona 个人主页-哔哩哔哩视频",
+      "value": "Kuriyona - 哔哩哔哩",
       "link": "https://space.bilibili.com/650631530"
     },
     {
@@ -21,6 +21,11 @@
       "i18nKey": "contact.zhihu",
       "value": "Kuriyona - 知乎",
       "link": "https://www.zhihu.com/people/cn-chestnut"
+    },
+    {
+      "name": "Steam",
+      "value": "Kuriyona - Steam",
+      "link": "https://steamcommunity.com/id/kuriyona/"
     },
     {
       "name": "Telegram",
@@ -43,6 +48,12 @@
       "name": "QQ",
       "value": "2946733291",
       "link": "https://qm.qq.com/q/Vlg6pCdge4"
+    },
+    {
+      "name": "Enka",
+      "i18nKey": "find_my_game_account",
+      "value": "Kuriyona - Enka.Network",
+      "link": "https://enka.network/u/Kuriyona"
     }
   ],
   "links": {
