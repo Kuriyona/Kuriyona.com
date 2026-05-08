@@ -10,10 +10,11 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    defaultLocale: 'zh',
+    defaultLocale: 'zh-Hans',
     locales: [
+      { code: 'zh-Hans', name: '简体中文', file: 'zh.json' },
+      { code: 'zh-Hant', name: '繁体中文', file: 'zh-Hant.json' },
       { code: 'en', name: 'English', file: 'en.json' },
-      { code: 'zh', name: '中文', file: 'zh.json' },
       { code: 'ja', name: '日本語', file: 'ja.json' },
     ],
     strategy: 'no_prefix',
