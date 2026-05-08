@@ -9,5 +9,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <span v-if="weather"> {{ weather.now.text }} {{ weather.now.temp }}°C </span>
+  <span v-if="weather"
+    >{{ $t('weather_i_at') }} {{ weather.now.text }} {{ weather.now.temp }}°C
+  </span>
 </template>

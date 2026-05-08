@@ -13,15 +13,17 @@ const Contact = shallowRef(Config.contact);
   <Background />
   <div class="font-mono flex justify-center h-full">
     <main class="w-160 my-20 p-4 flex flex-col gap-4">
-      <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
-      <h1 class="text-2xl">I'm Kuriyona (未晞)</h1>
+      <div class="h-[40vh] flex flex-col items-center justify-center gap-4">
+        <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
+        <h1 class="text-2xl">I'm Kuriyona (未晞)</h1>
+      </div>
       <ClientOnly>
         <p>
           {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
         </p>
-        <p>{{ t('weather_i_at') }} <Weather /></p>
+        <Weather />
+        <hr />
       </ClientOnly>
-      <hr />
       <p>
         {{ t('description') }}
       </p>
@@ -76,6 +78,9 @@ const Contact = shallowRef(Config.contact);
           &nbsp;&nbsp;·
           <nuxt-link to="/links" class="link-style">{{ t('more') }}...</nuxt-link>
         </p>
+      </div>
+      <hr />
+      <div>
         <p>
           · {{ t('opensource') }} (MIT) :
           <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">

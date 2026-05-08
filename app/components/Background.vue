@@ -9,6 +9,7 @@ const Background = 'https://r2.kuriyona.com/img/Background/Columbina.mp4';
       :src="Background"
       autoplay
       muted
-      loop></video>
+      loop
+      playsinline></video>
   </div>
 </template>
