@@ -1,30 +1,50 @@
 {
-  "contact": {
-    "Github": {
+  "contact": [
+    {
+      "name": "Github",
       "value": "@kuriyona",
       "link": "https://github.com/Kuriyona"
     },
-    "Bilibili": {
+    {
+      "name": "Bilibili",
+      "i18nKey": "contact.bilibili",
       "value": "Kuriyona 个人主页-哔哩哔哩视频",
       "link": "https://space.bilibili.com/650631530"
     },
-    "X": {
+    {
+      "name": "X",
       "value": "@kuriyona",
       "link": "https://x.com/kuriyona"
     },
-    "Zhihu": {
+    {
+      "name": "Zhihu",
+      "i18nKey": "contact.zhihu",
       "value": "Kuriyona - 知乎",
       "link": "https://www.zhihu.com/people/cn-chestnut"
     },
-    "Telegram": {
+    {
+      "name": "Telegram",
       "value": "@kuriyona",
       "link": "https://t.me/Kuriyona"
     },
-    "e-Mail": {
+    {
+      "name": "e-Mail",
+      "i18nKey": "contact.email",
       "value": "i@kuriyona.com",
       "link": "mailto:i@kuriyona.com"
+    },
+    {
+      "name": "WeChat",
+      "i18nKey": "contact.wechat",
+      "value": "@Kuriyota",
+      "link": "https://u.wechat.com/EIritUZufuIwmhznPBbyOko"
+    },
+    {
+      "name": "QQ",
+      "value": "2946733291",
+      "link": "https://qm.qq.com/q/Vlg6pCdge4"
     }
-  },
+  ],
   "links": {
     "main": [
       {

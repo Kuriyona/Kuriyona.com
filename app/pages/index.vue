@@ -50,21 +50,14 @@ const Contact = shallowRef(Config.contact);
       <div>
         {{ t('find_me_on') }}
         <br />
-        <p v-for="(link, name) in Contact">
+        <p v-for="link in Contact">
           <span>·&nbsp;</span>
-          <span>{{ name }}</span>
+          <span>{{ link.i18nKey ? t(link.i18nKey) : link.name }}</span>
           <span>&nbsp;:&nbsp;</span>
-          <a :key="name" :href="link.link" target="_blank" class="link-style">
+          <a v-if="link.link" :key="link.name" :href="link.link" target="_blank" class="link-style">
             {{ link.value }}
           </a>
-        </p>
-        <p>· {{ t('wechat') }}: @Kuriyota</p>
-        <p>· QQ: ID 2946733291</p>
-        <p>
-          · {{ t('find_my_game_account') }} :
-          <a href="https://enka.network/u/Kuriyona/" target="_blank" class="link-style"
-            >Kuriyona | Enka.network</a
-          >
+          <span v-else>{{ link.value }}</span>
         </p>
       </div>
       <hr />

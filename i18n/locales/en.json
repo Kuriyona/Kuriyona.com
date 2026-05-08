@@ -1,5 +1,4 @@
 ﻿{
-  "awake": "AWAKE",
   "best_friends": "Best friends !",
   "birthday": "Birthday",
   "birthday_value": "June 28th (2008)",
@@ -22,5 +21,8 @@
   "sleeping": "SLEEPING",
   "tech_stack": "Tech stack",
   "weather_i_at": "The weather at Kuriyona's location is: ",
-  "wechat": "Wechat"
+  "contact.wechat": "Wechat",
+  "contact.bilibili": "Bilibili",
+  "contact.email": "e-Mail",
+  "contact.zhihu": "Zhihu"
 }

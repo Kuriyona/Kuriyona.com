@@ -1,5 +1,4 @@
 {
-  "awake": "起きている",
   "best_friends": "最高の仲間！",
   "birthday": "誕生日",
   "birthday_value": "6 月 28 日 (2008 年)",
@@ -22,5 +21,8 @@
   "sleeping": "寝ている",
   "tech_stack": "技術スタック",
   "weather_i_at": "Kuriyona の所在地の天気：",
-  "wechat": "WeChat"
+  "contact.wechat": "WeChat",
+  "contact.bilibili": "Bilibili",
+  "contact.email": "メール",
+  "contact.zhihu": "Zhihu"
 }

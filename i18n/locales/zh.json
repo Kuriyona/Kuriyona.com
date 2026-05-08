@@ -1,8 +1,11 @@
 ﻿{
-  "awake": "醒着",
   "best_friends": "最好的伙伴！",
   "birthday": "生日",
   "birthday_value": "六月 28 (2008)",
+  "contact.bilibili": "哔哩哔哩",
+  "contact.email": "邮箱",
+  "contact.wechat": "微信",
+  "contact.zhihu": "知乎",
   "copyright": "版权所有",
   "days_on_earth": "今天是 Kuriyona 来到这个世界的第 {0} 天",
   "description": "17 岁中国高中生，宅，亚二次元，MtF 和兴趣使然的开发者",
@@ -21,6 +24,5 @@
   "other_friends": "其他好朋友们~",
   "sleeping": "睡着",
   "tech_stack": "技术栈",
-  "weather_i_at": "Kuriyona 所在地天气为：",
-  "wechat": "微信"
+  "weather_i_at": "Kuriyona 所在地天气为："
 }
