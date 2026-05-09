@@ -20,10 +20,12 @@
   "more": "もっと見る",
   "neko.greeting": "こんにちはニャー！私は未晞ちゃんの子猫です。何か話したいことはありますか？",
   "neko.meow": "にゃ〜",
-  "neko.placeholder": "未晞の子猫とおしゃべり…",
+  "neko.placeholder": "未晞ちゃんの子猫とおしゃべり…",
   "opensource": "オープンソース",
   "other_friends": "その他の友達〜",
   "send": "送信",
   "tech_stack": "技術スタック",
-  "weather_i_at": "Kuriyona の所在地の天気："
+  "weather_i_at": "Kuriyona の所在地の天気：",
+  "neko.title": "未晞ちゃんの子猫",
+  "neko.tips": "知っていましたか？タイトルバーの右側にあるチャットアイコンをクリックして、未晞ちゃんの子猫とチャットしてください~"
 }

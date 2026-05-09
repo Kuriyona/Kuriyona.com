@@ -93,31 +93,29 @@ watch(
 </script>
 
 <template>
-  <div class="flex justify-center h-full">
-    <div class="w-160 my-20 p-4 flex flex-col gap-4">
-      <div ref="chatRef" class="flex-1 overflow-y-auto flex flex-col gap-2">
+  <div class="relative h-full flex flex-col gap-4 p-4 overflow-hidden">
+    <div ref="chatRef" class="overflow-y-auto flex flex-col flex-1 gap-2">
+      <div
+        v-for="(msg, i) in messages"
+        :key="i"
+        :class="msg.role === 'user' ? 'text-right' : 'text-left'">
         <div
-          v-for="(msg, i) in messages"
-          :key="i"
-          :class="msg.role === 'user' ? 'text-right' : 'text-left'">
-          <div
-            :class="msg.role === 'user' ? 'bg-blue-600' : 'bg-gray-700'"
-            class="inline-block px-4 py-2 rounded-lg max-w-[80%] whitespace-pre-wrap">
-            {{ msg.content }}
-          </div>
+          :class="msg.role === 'user' ? 'bg-blue-600' : 'bg-gray-700'"
+          class="inline-block px-4 py-2 rounded-lg max-w-[80%] whitespace-pre-wrap">
+          {{ msg.content }}
         </div>
       </div>
-      <div class="flex flex-col gap-2">
-        <VarInput
-          v-model="input"
-          :placeholder="$t('neko.placeholder')"
-          @keyup.enter="send"
-          :disabled="loading"
-          class="flex-1" />
-        <VarButton @click="send" :loading="loading" type="primary" block>{{
-          $t('neko.meow')
-        }}</VarButton>
-      </div>
+    </div>
+    <div class="flex flex-col gap-4">
+      <VarInput
+        v-model="input"
+        :placeholder="$t('neko.placeholder')"
+        @keyup.enter="send"
+        :disabled="loading"
+        class="flex-1" />
+      <VarButton @click="send" :loading="loading" type="primary" block>{{
+        $t('neko.meow')
+      }}</VarButton>
     </div>
   </div>
 </template>

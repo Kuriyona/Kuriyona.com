@@ -20,10 +20,12 @@
   "more": "更多",
   "neko.greeting": "你好喵！\n我是未晞醬的小貓，有什麼想聊的嗎？",
   "neko.meow": "喵~",
-  "neko.placeholder": "和未晞的小貓聊天...",
+  "neko.placeholder": "和未晞醬的小貓聊天...",
   "opensource": "開源",
   "other_friends": "其他好朋友們~",
   "send": "傳送",
   "tech_stack": "技術棧",
-  "weather_i_at": "Kuriyona 所在地天氣爲："
+  "weather_i_at": "Kuriyona 所在地天氣爲：",
+  "neko.title": "未晞醬的小貓",
+  "neko.tips": "你知道嗎？\n點擊標題列右側的聊天圖示即可和未晞醬的小貓聊天~"
 }

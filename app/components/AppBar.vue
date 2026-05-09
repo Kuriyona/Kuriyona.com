@@ -2,6 +2,7 @@
 import { useI18n } from '@/scripts/i18n';
 const { setLocale } = useI18n();
 const selecting = ref(false);
+const popup = ref(false);
 </script>
 
 <template>
@@ -10,6 +11,20 @@ const selecting = ref(false);
       <span>Kuriyona's Space</span>
     </RouterLink>
     <div id="actions" class="flex gap-2">
+      <VarButton round text @click="popup = true">
+        <span class="material-symbols-outlined"> chat </span>
+      </VarButton>
+      <VarPopup v-model:show="popup" class="rounded-xl">
+        <div class="relative h-[80vh] w-120 max-w-[80vw] overflow-hidden">
+          <div class="flex justify-between items-center px-4 py-2">
+            <span>{{ $t('neko.title') }}</span>
+            <VarButton round text @click="popup = false">
+              <span class="material-symbols-outlined"> close </span>
+            </VarButton>
+          </div>
+          <Neko />
+        </div>
+      </VarPopup>
       <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">
         <VarButton round text>
           <span class="material-symbols-outlined"> translate </span>

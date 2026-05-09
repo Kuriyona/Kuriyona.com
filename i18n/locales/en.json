@@ -20,10 +20,12 @@
   "more": "More",
   "neko.greeting": "Hello meow! \nI’m Weixi-chan’s neko. Is there anything you want to talk about?",
   "neko.meow": "Meow~",
-  "neko.placeholder": "Chatting with Weixi’s neko...",
+  "neko.placeholder": "Chatting with Weixi-chan’s neko...",
   "opensource": "OpenSource",
   "other_friends": "Other friends~",
   "send": "Send",
   "tech_stack": "Tech stack",
-  "weather_i_at": "The weather at Kuriyona's location is: "
+  "weather_i_at": "The weather at Kuriyona's location is: ",
+  "neko.title": "Weixi-chan’s neko",
+  "neko.tips": "Did you know? \nClick the chat icon on the right side of the title bar to chat with Weixi’s neko~"
 }
