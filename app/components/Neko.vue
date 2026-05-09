@@ -97,7 +97,7 @@ watch(
 
 <template>
   <div class="relative h-full flex flex-col gap-4 p-4 overflow-hidden">
-    <div ref="chatRef" class="overflow-y-auto flex flex-col flex-1 gap-2">
+    <div ref="chatRef" class="overflow-y-auto flex flex-col flex-1 gap-2 px-1">
       <div
         v-for="(msg, i) in messages"
         :key="i"
@@ -117,7 +117,7 @@ watch(
         @keyup.enter="send"
         :disabled="loading"
         class="flex-1" />
-      <VarButton @click="send" :loading="loading" type="primary" block>{{
+      <VarButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>{{
         $t('neko.meow')
       }}</VarButton>
     </div>

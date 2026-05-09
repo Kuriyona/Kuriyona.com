@@ -15,8 +15,8 @@ const popup = ref(false);
         <span class="material-symbols-outlined"> chat </span>
       </VarButton>
       <VarPopup v-model:show="popup" class="rounded-xl">
-        <div class="relative h-[80vh] w-120 max-w-[80vw] overflow-hidden">
-          <div class="flex justify-between items-center px-4 py-2">
+        <div class="relative flex flex-col h-[80vh] w-120 max-w-[80vw] overflow-hidden">
+          <div class="flex justify-between items-center px-6 py-2">
             <span>{{ $t('neko.title') }}</span>
             <VarButton round text @click="popup = false">
               <span class="material-symbols-outlined"> close </span>
