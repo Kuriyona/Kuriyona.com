@@ -18,8 +18,12 @@
   "location": "所在地",
   "location_value": "中国、浙江省、杭州市",
   "more": "もっと見る",
+  "neko.greeting": "こんにちはニャー！私は未晞ちゃんの子猫です。何か話したいことはありますか？",
+  "neko.meow": "にゃ〜",
+  "neko.placeholder": "未晞の子猫とおしゃべり…",
   "opensource": "オープンソース",
   "other_friends": "その他の友達〜",
+  "send": "送信",
   "tech_stack": "技術スタック",
   "weather_i_at": "Kuriyona の所在地の天気："
 }

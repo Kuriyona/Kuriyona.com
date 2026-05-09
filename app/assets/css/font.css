@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 
 body {
@@ -7,7 +8,7 @@ body {
 }
 
 html {
-  --font-family: 'Noto Sans SC', sans-serif;
+  --font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
 }
 
 body {

@@ -18,8 +18,12 @@
   "location": "Location",
   "location_value": "Hangzhou, Zhejiang, the P.R.China",
   "more": "More",
+  "neko.greeting": "Hello meow! \nI’m Weixi-chan’s neko. Is there anything you want to talk about?",
+  "neko.meow": "Meow~",
+  "neko.placeholder": "Chatting with Weixi’s neko...",
   "opensource": "OpenSource",
   "other_friends": "Other friends~",
+  "send": "Send",
   "tech_stack": "Tech stack",
   "weather_i_at": "The weather at Kuriyona's location is: "
 }
