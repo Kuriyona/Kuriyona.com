@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 
 let SystemPromptRaw = await fs.readFile(path.join(dirname, './prompt.md'), 'utf-8');
 let SystemPrompt = '';
+let lastChatTime = Date.now();
 
 const updateSystemPrompt = async () => {
   await updateWeather();
@@ -26,6 +27,11 @@ const app = new Elysia({ prefix: '/neko' });
 app.post(
   '/chat/stream',
   async function* ({ body }) {
+    if (Date.now() - lastChatTime < 2 * 1000) {
+      yield sse({ event: 'error', data: '[当前的请求太多了喵]' });
+      return;
+    }
+    lastChatTime = Date.now();
     const apiKey = process.env.LLM_API_KEY;
     if (!apiKey) {
       yield sse({ event: 'error', data: 'LLM_API_KEY not configured' });

@@ -18,6 +18,9 @@ async function send() {
   if (!text || loading.value) return;
   input.value = '';
   messages.value.push({ role: 'user', content: text });
+  while (messages.value.length >= 6) {
+    messages.value.shift();
+  }
   loading.value = true;
   messages.value.push({ role: 'assistant', content: '' });
   try {
@@ -109,6 +112,7 @@ watch(
     <div class="flex flex-col gap-4">
       <VarInput
         v-model="input"
+        maxlength="50"
         :placeholder="$t('neko.placeholder')"
         @keyup.enter="send"
         :disabled="loading"
