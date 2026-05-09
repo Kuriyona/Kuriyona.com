@@ -5,7 +5,21 @@ import path from 'node:path';
 const filename = import.meta.filename as string;
 const dirname = path.dirname(filename);
 
-const SystemPrompt = await fs.readFile(path.join(dirname, './prompt.md'), 'utf-8');
+import { updateWeather, data as WeatherData } from './weather';
+import Contact from '../app/config.json';
+import dayjs from 'dayjs';
+
+let SystemPromptRaw = await fs.readFile(path.join(dirname, './prompt.md'), 'utf-8');
+let SystemPrompt = '';
+
+const updateSystemPrompt = async () => {
+  await updateWeather();
+  SystemPrompt = SystemPromptRaw.replace(
+    '{{WEATHER}}',
+    `${WeatherData.now.text} ${WeatherData.now.temp}℃`,
+  ).replace('{{DATETIME}}', dayjs().format('YYYY-MM-DD HH 时 dddd'));
+};
+updateSystemPrompt();
 
 const app = new Elysia({ prefix: '/neko' });
 
@@ -70,6 +84,31 @@ app.post(
         }),
       ),
     }),
+  },
+);
+
+app.get('/admin/prompt', ({ query: { auth }, set }) => {
+  if (auth !== process.env.AUTH_KEY) {
+    set.status = 401;
+    return null;
+  }
+  return SystemPromptRaw;
+});
+
+app.post(
+  '/admin/prompt',
+  async ({ body, query: { auth }, set }) => {
+    if (auth !== process.env.AUTH_KEY) {
+      set.status = 401;
+      return null;
+    }
+    SystemPromptRaw = body;
+    fs.writeFile(path.join(dirname, './prompt.md'), body);
+    await updateSystemPrompt();
+    return SystemPrompt;
+  },
+  {
+    body: t.String(),
   },
 );
 
