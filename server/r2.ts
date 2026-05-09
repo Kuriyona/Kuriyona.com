@@ -10,20 +10,20 @@ const s3 = new S3Client({
   bucket: process.env.BUCKET_NAME!,
 });
 
-const app = new Elysia({ prefix: '/image' })
+const app = new Elysia({ prefix: '/r2' })
   .get('/list', async ({ params }) => {
     const list = await s3.list({
-      prefix: 'image',
+      prefix: 'static',
     });
     return list.contents;
   })
-  .get('/upload-signed-url', async ({ query: { filename, mime, auth }, set }) => {
+  .get('/upload-signed-url', async ({ query: { key, mime, auth }, set }) => {
     if (auth !== process.env.AUTH_KEY) {
       set.status = 401;
       return null;
     }
-    const key = `image/${dayjs().format('YYYY-MM')}/${dayjs().format('HH-mm-ss')}-${filename}`;
-    const url = s3.presign(key, {
+    const _key = `static/${key}`;
+    const url = s3.presign(_key, {
       type: mime,
       method: 'PUT',
     });
@@ -33,4 +33,4 @@ const app = new Elysia({ prefix: '/image' })
     };
   });
 
-export { app as RouteImage };
+export { app as RouterR2 };

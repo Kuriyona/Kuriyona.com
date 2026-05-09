@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { RouteImage } from './image';
+import { RouterR2 } from './r2';
 import { RouteWeather } from './weather';
 import { cors } from '@elysiajs/cors';
 
@@ -13,7 +13,7 @@ const app = new Elysia()
     }),
   )
   .get('/', () => 'This API site of Kuriyona.com')
-  .use(RouteImage)
+  .use(RouterR2)
   .use(RouteWeather)
   .use(RouteNekoApi);
 

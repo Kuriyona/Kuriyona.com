@@ -1,40 +1,25 @@
-<script setup lang="ts">
-import { useStorage } from '@vueuse/core';
+<!-- <script setup lang="ts">
+import dayjs from 'dayjs';
 import ky from 'ky';
-import { ref, onMounted, onUnmounted } from 'vue';
-
-const apiKey = useStorage('API_KEY', '');
-const name = ref('');
+import { ref } from 'vue';
 const uploading = ref(false);
-const key = ref('');
 const selectedFile = ref<File | null>(null);
-const imageUrl = ref('');
+const fileURL = ref('');
 const previewUrl = ref('');
+const key = ref('');
+
+const setDefaultKey = (ext: string) => {
+  key.value =
+    dayjs().format('YYYY/MM/DD/HHmmss') + Math.random().toString(36).substring(2) + `.${ext}`;
+};
 
 const handleFileSelect = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-  if (file && file.type.startsWith('image/')) {
+  if (file) {
     selectedFile.value = file;
     previewUrl.value = URL.createObjectURL(file);
-  }
-};
-
-const handlePaste = (event: ClipboardEvent) => {
-  const items = event.clipboardData?.items;
-  if (items) {
-    for (let i = 0; i < items.length; i++) {
-      if (items[i]!.type.indexOf('image') !== -1) {
-        const blob = items[i]!.getAsFile();
-        if (blob) {
-          selectedFile.value = new File([blob], `pasted-image-${Date.now()}.png`, {
-            type: blob.type,
-          });
-          previewUrl.value = URL.createObjectURL(selectedFile.value);
-          break;
-        }
-      }
-    }
+    setDefaultKey(file.name.split('.').pop()!);
   }
 };
 
@@ -46,14 +31,12 @@ const handleConfirmUpload = async () => {
   uploading.value = true;
 
   try {
-    const fileName = name.value ? name.value + '.' + ext : file.name;
-    const res = await fetchApi.get('/image/upload-signed-url', {
-      searchParams: { filename: fileName, mime: file.type, auth: apiKey.value },
+    const res = await fetchApi.get('/r2/upload-signed-url', {
+      searchParams: { key: key.value, mime: file.type, auth: apiKey.value },
     });
     if (res.status != 200) return;
     const data = await res.json<any>();
     const uploadUrl = data.url;
-    key.value = data.key;
 
     await ky.put(uploadUrl, {
       body: file,
@@ -62,7 +45,7 @@ const handleConfirmUpload = async () => {
       },
     });
 
-    imageUrl.value = `https://r2.kuriyona.com/${key.value}`;
+    fileURL.value = `https://r2.kuriyona.com/${key.value}`;
     selectedFile.value = null;
     previewUrl.value = '';
   } catch (error) {
@@ -76,34 +59,19 @@ const handleCancel = () => {
   selectedFile.value = null;
   previewUrl.value = '';
 };
-
-onMounted(() => {
-  window.addEventListener('paste', handlePaste);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('paste', handlePaste);
-  // 清理预览URL
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value);
-  }
-});
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 m-4">
-    <var-input v-model="apiKey" placeholder="API Key" />
-    <var-input v-model="name" placeholder="Name" />
+  <Page>
+    <var-input v-model="key" placeholder="Key" />
 
-    <!-- 文件选择器 -->
     <VarUploader
       type="file"
-      accept="image/*"
+      accept="*"
       @change="handleFileSelect"
       :disabled="uploading"
       v-if="!selectedFile" />
 
-    <!-- 显示已选择的图片 -->
     <div v-if="selectedFile" class="flex flex-col items-center gap-2">
       <img
         :src="previewUrl"
@@ -111,7 +79,6 @@ onUnmounted(() => {
         class="max-w-xs max-h-48 object-contain border rounded" />
       <p class="text-sm text-gray-600">已选择: {{ selectedFile.name }}</p>
 
-      <!-- 确认上传按钮 -->
       <div class="flex gap-2">
         <var-button
           type="primary"
@@ -124,10 +91,9 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- 显示上传结果 -->
-    <div v-if="imageUrl" class="mt-4">
-      <p class="break-all">{{ imageUrl }}</p>
-      <img :src="imageUrl" class="max-w-xs max-h-48 object-contain mt-2" />
+    <div v-if="fileURL" class="mt-4">
+      <p class="break-all">{{ fileURL }}</p>
+      <img :src="fileURL" class="max-w-xs max-h-48 object-contain mt-2" />
     </div>
-  </div>
-</template>
+  </Page>
+</template> -->
