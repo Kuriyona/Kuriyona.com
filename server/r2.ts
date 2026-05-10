@@ -1,5 +1,4 @@
-import Elysia from 'elysia';
-import dayjs from 'dayjs';
+import Elysia, { t } from 'elysia';
 
 import { S3Client } from 'bun';
 
