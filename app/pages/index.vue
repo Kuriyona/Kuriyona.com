@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { useI18n } from '@/scripts/i18n';
 import Config from '../config.json';
 import QRCode from 'qrcode.vue';
+import IAm from '~/components/IAm.vue';
 
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
@@ -16,13 +17,7 @@ const Contact = shallowRef(Config.contact);
     <Background />
     <div class="font-mono flex justify-center h-full">
       <main class="w-160 my-20 p-4 flex flex-col gap-4">
-        <div class="h-[40vh] flex flex-col items-center justify-center gap-4">
-          <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
-          <h1 class="text-2xl">
-            I'm Kuriyona (<ruby>未晞<rt>Weixi</rt></ruby
-            >)
-          </h1>
-        </div>
+        <IAm />
         <ClientOnly>
           <p>
             {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
@@ -35,7 +30,11 @@ const Contact = shallowRef(Config.contact);
           {{ t('description') }}
         </p>
         <ClientOnly>
-          <p>{{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }} | 🏳️‍⚧️🍥</p>
+          <div>
+            <p class="trans-text">
+              {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
+            </p>
+          </div>
         </ClientOnly>
         <div>
           <p>

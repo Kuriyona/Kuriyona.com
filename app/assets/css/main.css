@@ -41,3 +41,10 @@ body {
 .link-style-uu:hover {
   @apply bg-white text-black mx-0 px-1 rounded;
 }
+
+.trans-text {
+  background-image: linear-gradient(30deg, #5bcffa, #f5abb9, #ffffff, #f5abb9, #5bcffa);
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
