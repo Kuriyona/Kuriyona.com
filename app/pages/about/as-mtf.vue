@@ -49,12 +49,28 @@ const data = computed(() => [
       </div>
       <var-divider />
       <NuxtLinkLocale to="/">
-        <var-card> {{ $t('about.my-site-home') }} </var-card>
+        <var-card>
+          <div class="flex justify-between items-center">
+            <div>
+              {{ $t('about.my-site-home') }}
+            </div>
+            <span class="material-symbols-outlined"> arrow_forward </span>
+          </div>
+        </var-card>
       </NuxtLinkLocale>
       <var-divider />
       <div class="flex flex-col gap-4">
         <a v-for="item in data" :key="item.href" :href="item.href" target="_blank">
-          <var-card>{{ item.title }}</var-card>
+          <var-card>
+            <div class="flex justify-between items-center">
+              <div>
+                {{ item.title }}
+              </div>
+              <div>
+                <span class="material-symbols-outlined"> open_in_new </span>
+              </div>
+            </div>
+          </var-card>
         </a>
       </div>
     </div>

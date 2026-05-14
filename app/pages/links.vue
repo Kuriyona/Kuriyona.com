@@ -11,11 +11,16 @@ import Config from '../config.json';
       </h1>
       <a :href="link.url" target="_blank" v-for="link in Config.links.main">
         <VarCard>
-          <div class="flex gap-4 items-center">
-            <img :src="link.avatar" class="w-8 h-8 rounded-2xl" />
-            <p>
-              {{ link.title }}
-            </p>
+          <div class="flex justify-between items-center">
+            <div class="flex gap-4 items-center">
+              <img :src="link.avatar" class="w-8 h-8 rounded-2xl" />
+              <p>
+                {{ link.title }}
+              </p>
+            </div>
+            <div>
+              <span class="material-symbols-outlined"> open_in_new </span>
+            </div>
           </div>
         </VarCard>
       </a>
@@ -24,11 +29,16 @@ import Config from '../config.json';
       </h1>
       <a :href="link.url" target="_blank" v-for="link in Config.links.others">
         <VarCard>
-          <div class="flex gap-4 items-center">
-            <img :src="link.avatar" class="w-8 h-8 rounded-2xl" />
-            <p>
-              {{ link.title }}
-            </p>
+          <div class="flex justify-between items-center">
+            <div class="flex gap-4 items-center">
+              <img :src="link.avatar" class="w-8 h-8 rounded-2xl" />
+              <p>
+                {{ link.title }}
+              </p>
+            </div>
+            <div>
+              <span class="material-symbols-outlined"> open_in_new </span>
+            </div>
           </div>
         </VarCard>
       </a>
