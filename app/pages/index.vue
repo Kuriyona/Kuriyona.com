@@ -13,97 +13,85 @@ const Contact = shallowRef(Config.contact);
 </script>
 
 <template>
-  <div>
-    <Background />
-    <div class="font-mono flex justify-center h-full">
-      <main class="w-160 my-20 p-4 flex flex-col gap-4">
-        <IAm />
-        <ClientOnly>
-          <p>
-            {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
-          </p>
-          <Weather />
-        </ClientOnly>
-        <VarAlert type="info" title="Tips" :message="$t('neko.tips')" />
-        <hr />
+  <div class="font-mono flex justify-center h-full">
+    <main class="w-160 my-20 p-4 flex flex-col gap-4">
+      <IAm />
+      <ClientOnly>
         <p>
-          {{ t('description') }}
+          {{ t('days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
         </p>
-        <ClientOnly>
-          <div>
-            <p class="trans-text">
-              {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
-            </p>
-          </div>
-        </ClientOnly>
+        <Weather />
+      </ClientOnly>
+      <VarAlert type="info" title="Tips" :message="$t('neko.tips')" />
+      <hr />
+      <p>
+        {{ t('description') }}
+      </p>
+      <ClientOnly>
         <div>
-          <p>
-            · {{ t('location') }}:
-            {{ t('location_value') }}
-            ( 120° E, 30° N )
-          </p>
-          <p>
-            · {{ t('birthday') }}:
-            {{ t('birthday_value') }}
-          </p>
-          <p>
-            · {{ t('tech_stack') }} : JavaScript/TypeScript (Vue, Node/Bun, Elysia), HTML/CSS, C#
-          </p>
-          <p>
-            · {{ t('language') }}:
-            {{ t('language_value') }}
+          <p class="trans-text">
+            {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
           </p>
         </div>
-        <hr />
-        <div>
-          {{ t('find_me_on') }}
-          <br />
-          <p v-for="link in Contact">
-            <span>·&nbsp;</span>
-            <span>{{ link.i18nKey ? t(link.i18nKey) : link.name }}</span>
-            <span>&nbsp;:&nbsp;</span>
-            <a
-              v-if="link.link"
-              :key="link.name"
-              :href="link.link"
-              target="_blank"
-              class="link-style">
-              {{ link.value }}
-            </a>
-            <span v-else>{{ link.value }}</span>
-          </p>
-        </div>
-        <hr />
-        <div>
-          <p>· {{ t('links') }} :</p>
-          <p v-for="link in Config.links.main">
-            &nbsp;&nbsp;·
-            <a :href="link.url" class="link-style">{{ link.title }}</a>
-          </p>
-          <p>
-            &nbsp;&nbsp;·
-            <nuxt-link-locale to="/links" class="link-style">{{ t('more') }}...</nuxt-link-locale>
-          </p>
-        </div>
-        <hr />
-        <div>
-          <p>
-            · {{ t('opensource') }} (MIT) :
-            <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">
-              Kuriyona/Kuriyona.com
-            </a>
-          </p>
-          <p>
-            · {{ t('copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.
-          </p>
-          <p>
-            <span>·&nbsp;</span>
-            <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="link-style"
-              >萌 ICP 备 20266280 号</a
-            >
-          </p>
-        </div>
-      </main>
-    </div>
+      </ClientOnly>
+      <div>
+        <p>
+          · {{ t('location') }}:
+          {{ t('location_value') }}
+          ( 120° E, 30° N )
+        </p>
+        <p>
+          · {{ t('birthday') }}:
+          {{ t('birthday_value') }}
+        </p>
+        <p>· {{ t('tech_stack') }} : JavaScript/TypeScript (Vue, Node/Bun, Elysia), HTML/CSS, C#</p>
+        <p>
+          · {{ t('language') }}:
+          {{ t('language_value') }}
+        </p>
+      </div>
+      <hr />
+      <div>
+        {{ t('find_me_on') }}
+        <br />
+        <p v-for="link in Contact">
+          <span>·&nbsp;</span>
+          <span>{{ link.i18nKey ? t(link.i18nKey) : link.name }}</span>
+          <span>&nbsp;:&nbsp;</span>
+          <a v-if="link.link" :key="link.name" :href="link.link" target="_blank" class="link-style">
+            {{ link.value }}
+          </a>
+          <span v-else>{{ link.value }}</span>
+        </p>
+      </div>
+      <hr />
+      <div>
+        <p>· {{ t('links') }} :</p>
+        <p v-for="link in Config.links.main">
+          &nbsp;&nbsp;·
+          <a :href="link.url" class="link-style">{{ link.title }}</a>
+        </p>
+        <p>
+          &nbsp;&nbsp;·
+          <nuxt-link-locale to="/links" class="link-style">{{ t('more') }}...</nuxt-link-locale>
+        </p>
+      </div>
+      <hr />
+      <div>
+        <p>
+          · {{ t('opensource') }} (MIT) :
+          <a href="https://github.com/Kuriyona/Kuriyona.com" class="link-style">
+            Kuriyona/Kuriyona.com
+          </a>
+        </p>
+        <p>· {{ t('copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.</p>
+        <p>
+          <span>·&nbsp;</span>
+          <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="link-style"
+            >萌 ICP 备 20266280 号</a
+          >
+        </p>
+      </div>
+    </main>
   </div>
 </template>
