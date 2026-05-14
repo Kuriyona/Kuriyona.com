@@ -1,46 +1,43 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 
-const data = [
+const { t } = useI18n();
+
+const data = computed(() => [
   {
     title: 'MtF.Wiki',
-    href: 'https://mtf.wiki/',
+    href: t('urls.mtf_wiki'),
+  },
+  {
+    title: '2345.lgbt',
+    href: t('urls.2345-lgbt'),
   },
   {
     title: '跨性别 - 百度百科',
     href: 'https://baike.baidu.com/item/%E8%B7%A8%E6%80%A7%E5%88%AB',
-    lang: 'zh',
   },
   {
-    title: '跨性别 - 维基百科',
-    href: 'https://zh.wikipedia.org/wiki/%E8%B7%A8%E6%80%A7%E5%88%A5',
+    title: `${t('trans')} - Wikipedia`,
+    href: t('urls.trans_wikipedia'),
   },
   {
-    title: 'Transgender - Wikipedia',
-    href: 'https://en.wikipedia.org/wiki/Transgender',
+    title: `${t('trans')} - Bing`,
+    href: `https://www.bing.com/search?q=${t('trans')}`,
   },
   {
-    title: 'Bing',
-    href: 'https://www.bing.com/search?q=Transgender',
+    title: `${t('trans')} - Google`,
+    href: `https://www.google.com/search?q=${t('trans')}`,
   },
   {
-    title: 'Google',
-    href: 'https://www.google.com/search?q=Transgender',
+    title: t('about.as-mtf.sites.title.gd-fyi'),
+    href: t('urls.gd_fyi'),
   },
-  {
-    title: '这就是性别烦躁，供参考',
-    href: 'https://genderdysphoria.fyi/zh',
-  },
-  {
-    title: "That's Gender Dysphoria, FYI",
-    href: 'https://genderdysphoria.fyi/en',
-  },
-];
+]);
 </script>
 
 <template>
   <Page>
-    <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-4">
       <IAm />
       <div>
         <p class="trans-text">{{ $t('about.im-mtf') }}</p>
@@ -50,9 +47,11 @@ const data = [
           </p>
         </ClientOnly>
       </div>
+      <var-divider />
       <NuxtLinkLocale to="/">
         <var-card> {{ $t('about.my-site-home') }} </var-card>
       </NuxtLinkLocale>
+      <var-divider />
       <div class="flex flex-col gap-4">
         <a v-for="item in data" :key="item.href" :href="item.href" target="_blank">
           <var-card>{{ item.title }}</var-card>

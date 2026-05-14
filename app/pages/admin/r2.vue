@@ -40,7 +40,7 @@ const handleUpload = async () => {
     <VarButton type="primary" @click="handleUpload" :disabled="fileList.length == 0">
       上传
     </VarButton>
-    <hr />
+    <var-divider />
     <p>文件URL为：{{ lastFileURL }}</p>
   </Page>
 </template>

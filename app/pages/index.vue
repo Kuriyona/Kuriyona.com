@@ -23,7 +23,7 @@ const Contact = shallowRef(Config.contact);
         <Weather />
       </ClientOnly>
       <VarAlert type="info" title="Tips" :message="$t('neko.tips')" />
-      <hr />
+      <var-divider />
       <p>
         {{ t('description') }}
       </p>
@@ -50,7 +50,7 @@ const Contact = shallowRef(Config.contact);
           {{ t('language_value') }}
         </p>
       </div>
-      <hr />
+      <var-divider />
       <div>
         {{ t('find_me_on') }}
         <br />
@@ -64,7 +64,7 @@ const Contact = shallowRef(Config.contact);
           <span v-else>{{ link.value }}</span>
         </p>
       </div>
-      <hr />
+      <var-divider />
       <div>
         <p>· {{ t('links') }} :</p>
         <p v-for="link in Config.links.main">
@@ -76,7 +76,7 @@ const Contact = shallowRef(Config.contact);
           <nuxt-link-locale to="/links" class="link-style">{{ t('more') }}...</nuxt-link-locale>
         </p>
       </div>
-      <hr />
+      <var-divider />
       <div>
         <p>
           · {{ t('opensource') }} (MIT) :
