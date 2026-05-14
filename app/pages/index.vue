@@ -29,9 +29,11 @@ const Contact = shallowRef(Config.contact);
       </p>
       <ClientOnly>
         <div>
-          <p class="trans-text">
-            {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
-          </p>
+          <NuxtLinkLocale to="/about/as-mtf">
+            <p class="trans-text underline">
+              {{ t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
+            </p>
+          </NuxtLinkLocale>
         </div>
       </ClientOnly>
       <div>
