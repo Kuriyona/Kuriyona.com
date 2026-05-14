@@ -42,7 +42,7 @@
       "name": "WeChat",
       "i18nKey": "contact.wechat",
       "value": "@Kuriyota",
-      "link": "https://u.wechat.com/EIritUZufuIwmhznPBbyOko"
+      "_link": "https://u.wechat.com/EIritUZufuIwmhznPBbyOko"
     },
     {
       "name": "QQ",
