@@ -39,13 +39,16 @@ const data = computed(() => [
   <Page>
     <div class="flex flex-col gap-4">
       <IAm />
-      <div>
-        <p class="trans-text">{{ $t('about.im-mtf') }}</p>
-        <ClientOnly>
-          <p class="trans-text">
-            {{ $t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
-          </p>
-        </ClientOnly>
+      <div class="flex gap-2 items-center">
+        <div>
+          <p class="trans-text">{{ $t('about.im-mtf') }}</p>
+          <ClientOnly>
+            <p class="trans-text">
+              {{ $t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
+            </p>
+          </ClientOnly>
+        </div>
+        <div class="text-4xl large:text-nowrap">🏳️‍⚧️🍥</div>
       </div>
       <var-divider />
       <NuxtLinkLocale to="/">
