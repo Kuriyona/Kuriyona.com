@@ -4,7 +4,7 @@ import AppBar from './components/AppBar.vue';
 
 <template>
   <div class="relative h-screen scroll-hidden">
-    <div class="z-100 sticky top-0 backdrop-blur-lg p-2">
+    <div class="z-100 fixed top-0 w-screen px-4 py-2">
       <AppBar />
     </div>
     <main>
