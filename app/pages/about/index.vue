@@ -43,7 +43,7 @@ const { locale } = useI18n();
       </template>
     </CardLink>
     <var-divider description="CONTACT" />
-    <div class="flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-2 justify-center">
       <CardLink
         v-for="link in Config.contact"
         :key="link.name"
