@@ -6,7 +6,6 @@
   "contact.zhihu": "Zhihu",
   "copyright": "Copyright",
   "find_my_game_account": "Find my HoYoverse game account",
-  "hrt_days": "As a MtF, I have started HRT/GAHT for {0} days.",
   "more": "More",
   "neko.greeting": "Hello meow! \nI’m Weixi-chan’s neko. Is there anything you want to talk about?",
   "neko.meow": "Meow~",
@@ -40,5 +39,9 @@
   "about.language.my-english": "English",
   "about.language.my-japanese": "Japanese(learning)",
   "about.language.my-chinese": "Chinese/Mandarin",
-  "global.about-site": "About this site"
+  "global.about-site": "About this site",
+  "about.mtf.hrt_days": "It's been {0} days since I started HRT/GAHT",
+  "about.mtf.comfrim_days": "I have identified my gender identity for {0} months",
+  "about.mtf.be-a-girl": "I've wanted to be a girl for {0} years",
+  "about.mtf.about-trans": "About transgender"
 }

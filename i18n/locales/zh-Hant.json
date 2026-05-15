@@ -6,7 +6,6 @@
   "contact.zhihu": "知乎",
   "copyright": "版權所有",
   "find_my_game_account": "我的 HoYoverse 遊戲賬號",
-  "hrt_days": "作爲一個 MtF，我已經開始了 HRT/GAHT {0} 天",
   "more": "更多",
   "neko.greeting": "你好喵！\n我是未晞醬的小貓，有什麼想聊的嗎？",
   "neko.meow": "喵~",
@@ -39,5 +38,9 @@
   "about.language.my-english": "英文",
   "about.language.my-japanese": "日文(學習中)",
   "about.language.my-chinese": "中文",
-  "global.about-site": "關於本站"
+  "global.about-site": "關於本站",
+  "about.mtf.hrt_days": "我已經開始了 HRT/GAHT {0} 天了",
+  "about.mtf.comfrim_days": "我已經確定了性別認同 {0} 個月了",
+  "about.mtf.be-a-girl": "我已經想要成為女孩子 {0} 年了",
+  "about.mtf.about-trans": "關於跨性別"
 }

@@ -39,18 +39,24 @@ const data = computed(() => [
   <Page>
     <div class="flex flex-col gap-4">
       <IAm />
-      <div class="flex gap-2 items-center">
-        <div>
+      <div class="flex gap-2 justify-between items-center">
+        <div class="flex flex-col items-start">
           <p class="trans-text">{{ $t('about.mtf.im-mtf') }}</p>
+          <p class="trans-text">
+            {{ $t('about.mtf.be-a-girl', [dayjs().diff('2020', 'year')]) }}
+          </p>
+          <p class="trans-text">
+            {{ $t('about.mtf.comfrim_days', [dayjs().diff('2025/11/17', 'month')]) }}
+          </p>
           <ClientOnly>
             <p class="trans-text">
-              {{ $t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
+              {{ $t('about.mtf.hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
             </p>
           </ClientOnly>
         </div>
-        <div class="text-4xl large:text-nowrap">🏳️‍⚧️🍥</div>
+        <div class="text-4xl large:text-nowrap">🏳️‍⚧️<br />🍥</div>
       </div>
-      <var-divider />
+      <var-divider :description="$t('about.about-me')" />
       <NuxtLinkLocale to="/">
         <var-card>
           <div class="flex justify-between items-center">
@@ -61,7 +67,7 @@ const data = computed(() => [
           </div>
         </var-card>
       </NuxtLinkLocale>
-      <var-divider />
+      <var-divider :description="$t('about.mtf.about-trans')" />
       <div class="flex flex-col gap-4">
         <a v-for="item in data" :key="item.href" :href="item.href" target="_blank">
           <var-card>

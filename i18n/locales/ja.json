@@ -6,7 +6,6 @@
   "contact.zhihu": "Zhihu",
   "copyright": "著作権",
   "find_my_game_account": "私の HoYoverse ゲームアカウント",
-  "hrt_days": "MtF として、HRT/GAHT を始めてから {0} 日",
   "more": "もっと見る",
   "neko.greeting": "こんにちはニャー！私は未晞ちゃんの子猫です。何か話したいことはありますか？",
   "neko.meow": "にゃ〜",
@@ -40,5 +39,9 @@
   "about.language.my-english": "英語",
   "about.language.my-japanese": "日本語(学習)",
   "about.language.my-chinese": "中国語",
-  "global.about-site": "このサイトについて"
+  "global.about-site": "このサイトについて",
+  "about.mtf.hrt_days": "HRT/GAHT を開始してから {0} 日が経過しました",
+  "about.mtf.comfrim_days": "私は自分の性自認を {0} か月間認識しています",
+  "about.mtf.be-a-girl": "{0}年間女の子になりたかった",
+  "about.mtf.about-trans": "トランスジェンダーについて"
 }

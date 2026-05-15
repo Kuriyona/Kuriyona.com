@@ -6,7 +6,6 @@
   "contact.zhihu": "知乎",
   "copyright": "版权所有",
   "find_my_game_account": "我的米哈游游戏账号",
-  "hrt_days": "作为一个 MtF，我已经开始了 HRT/GAHT {0} 天",
   "more": "更多",
   "neko.greeting": "你好喵！我是未晞酱的小猫，有什么想聊的吗？",
   "neko.meow": "喵~",
@@ -40,5 +39,9 @@
   "about.language.my-chinese": "中文/普通话",
   "about.language.my-english": "英文",
   "about.language.my-japanese": "日语(学习中)",
-  "global.about-site": "关于本站"
+  "global.about-site": "关于本站",
+  "about.mtf.hrt_days": "我已经开始了 HRT/GAHT {0} 天了",
+  "about.mtf.comfrim_days": "我已经确定了性别认同 {0} 个月了",
+  "about.mtf.be-a-girl": "我已经想要成为女孩子 {0} 年了",
+  "about.mtf.about-trans": "关于跨性别"
 }
