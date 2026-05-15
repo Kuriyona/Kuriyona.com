@@ -17,7 +17,7 @@ useHead({
     </div>
     <main>
       <Background />
-      <NuxtPage id="main" class="z-0 font-mono" />
+      <NuxtPage id="main" class="z-0" />
     </main>
   </div>
 </template>

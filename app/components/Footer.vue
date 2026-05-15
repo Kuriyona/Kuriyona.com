@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 <template>
   <var-card>
-    <div class="text-center">
+    <div class="text-center font-mono">
       <p>
         {{ $t('opensource') }} (MIT) :
         <var-link href="https://github.com/Kuriyona/Kuriyona.com" target="_blank">
