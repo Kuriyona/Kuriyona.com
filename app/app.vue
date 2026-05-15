@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import AppBar from './components/AppBar.vue';
+const { locale } = useI18n();
+useHead({
+  title: "Kuriyona' Space",
+  htmlAttrs: {
+    lang: locale.value,
+  },
+  meta: [{ name: 'description', content: $t('about.description') }],
+});
 </script>
 
 <template>
