@@ -60,10 +60,22 @@ const Contact = shallowRef(Config.contact);
           <span>·&nbsp;</span>
           <span>{{ link.i18nKey ? t(link.i18nKey) : link.name }}</span>
           <span>&nbsp;:&nbsp;</span>
-          <a v-if="link.link" :key="link.name" :href="link.link" target="_blank" class="link-style">
+          <a
+            :key="link.name"
+            :href="link.link"
+            target="_blank"
+            :class="{ 'link-style': link.link }">
             {{ link.value }}
           </a>
-          <span v-else>{{ link.value }}</span>
+          <var-tooltip v-if="link.qr" placement="right">
+            <span>&nbsp;</span>
+            <var-chip size="mini">
+              <span class="material-symbols-outlined text-sm!"> qr_code </span>
+            </var-chip>
+            <template #content>
+              <QRCode :value="link.qr" />
+            </template>
+          </var-tooltip>
         </p>
       </div>
       <var-divider />
