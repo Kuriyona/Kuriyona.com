@@ -14,7 +14,6 @@
   "hrt_days": "MtF として、HRT/GAHT を始めてから {0} 日",
   "language": "言語",
   "language_value": "中国語／普通話、英語、日本語学習中",
-  "links": "リンク",
   "location": "所在地",
   "location_value": "中国、浙江省、杭州市",
   "more": "もっと見る",
@@ -43,5 +42,6 @@
   "about.about-kuriyona-name": "「クリヨナ」は日本語の助けを借りて命名され、漢字で書くと「栗夜奈」となり、日本語の発音で「クリヨナ(ku-ri-yo-na)」と発音されます。",
   "about.about-weixi-name": "「未晞（ウェイシー）」は、私が自分でつけた本名です。『詩経』「秦風」の「蒹葭萋萋、白露未晞（兼葭しょくしょく、白露いまだひる）」という一節から取っており、「夜明け」と「新生」を象徴しています。",
   "global.in-dev": "このページはまだ開発中または半完成です",
-  "about.about-me": "私について"
+  "about.about-me": "私について",
+  "about.links": "リンク"
 }

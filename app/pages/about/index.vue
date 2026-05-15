@@ -44,5 +44,9 @@ const { locale } = useI18n();
         </var-card>
       </CardLink>
     </div>
+    <var-divider :description="$t('about.links')" />
+    <a :href="link.url" target="_blank" v-for="link in Config.links.main">
+      <CardLink :to="link.url" :text="link.title" :img="link.avatar" />
+    </a>
   </Page>
 </template>

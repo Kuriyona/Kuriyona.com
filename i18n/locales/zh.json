@@ -14,7 +14,6 @@
   "hrt_days": "作为一个 MtF，我已经开始了 HRT/GAHT {0} 天",
   "language": "语言",
   "language_value": "中文/普通话，英文，初学日文",
-  "links": "友情链接",
   "location": "所在地",
   "location_value": "中国，浙江省，杭州市",
   "more": "更多",
@@ -43,5 +42,6 @@
   "about.about-kuriyona-name": "「Kuriyona」借助日语取名，写作汉字是「栗夜奈」，读音为日语发音「クリヨナ(ku-ri-yo-na)」。",
   "about.about-weixi-name": "「未晞」则是我为自己取的真名，选自《诗经·秦风》中的「蒹葭萋萋，白露未晞」，寓意「破晓」和「新生」。",
   "global.in-dev": "本页面仍在开发中或为半成品",
-  "about.about-me": "关于我"
+  "about.about-me": "关于我",
+  "about.links": "友情链接"
 }

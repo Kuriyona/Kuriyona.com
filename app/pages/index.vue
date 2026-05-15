@@ -59,7 +59,6 @@ const Contact = shallowRef(Config.contact);
         <br />
         <p v-for="link in Contact">
           <span>·&nbsp;</span>
-          <span>{{ link.i18nKey ? t(link.i18nKey) : link.name }}</span>
           <span>&nbsp;:&nbsp;</span>
           <a
             :key="link.name"
@@ -78,18 +77,6 @@ const Contact = shallowRef(Config.contact);
                 <QRCode :value="link.qr" />
               </template> </var-tooltip
           ></ClientOnly>
-        </p>
-      </div>
-      <var-divider />
-      <div>
-        <p>· {{ t('links') }} :</p>
-        <p v-for="link in Config.links.main">
-          &nbsp;&nbsp;·
-          <a :href="link.url" class="link-style">{{ link.title }}</a>
-        </p>
-        <p>
-          &nbsp;&nbsp;·
-          <nuxt-link-locale to="/links" class="link-style">{{ t('more') }}...</nuxt-link-locale>
         </p>
       </div>
       <var-divider />

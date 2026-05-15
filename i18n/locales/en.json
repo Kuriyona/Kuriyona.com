@@ -14,7 +14,6 @@
   "hrt_days": "As a MtF, I have started HRT/GAHT for {0} days.",
   "language": "Language",
   "language_value": "Mandarin Chinese, English & Japanese (Learning)",
-  "links": "Links",
   "location": "Location",
   "location_value": "Hangzhou, Zhejiang, the P.R.China",
   "more": "More",
@@ -43,5 +42,6 @@
   "about.about-kuriyona-name": "\"Kuriyona\" was named with the help of Japanese, and the written Chinese character is \"栗夜奈\", which is pronounced as the Japanese pronunciation \"クリヨナ(ku-ri-yo-na)\".",
   "about.about-weixi-name": "\"Weixi (未晞) is the real name I chose for myself. It comes from the line 'The reeds grow lush and dense, the white dew not yet dried' in the Qin Feng section of the Book of Songs (the Classic of Poetry). It symbolizes 'dawn' and 'rebirth'.\"",
   "global.in-dev": "This page is still under development or semi-finished",
-  "about.about-me": "About me"
+  "about.about-me": "About me",
+  "about.links": "Links"
 }
