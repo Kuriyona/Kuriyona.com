@@ -9,6 +9,7 @@ const { locale } = useI18n();
   <Page>
     <IAm />
     <var-alert type="warning" :message="$t('global.in-dev')" />
+    <var-divider :description="$t('about.about-me')" />
     <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
     <p>{{ $t('about.also-weixi-yona') }}</p>
     <p>{{ $t('about.about-kuriyona-name') }}</p>
@@ -23,20 +24,24 @@ const { locale } = useI18n();
     </div>
     <var-divider :description="$t('about.mtf.as-mtf')" />
     <CardLink to="/about/as-mtf" :text="$t('global.read_more')" />
-    <var-divider v-if="false" description="CONTACT" />
-    <div v-if="false">
+    <var-divider description="CONTACT" />
+    <div class="flex flex-wrap gap-2">
       <CardLink
         v-for="link in Config.contact"
         :key="link.name"
         :to="link.link"
         :text="link.value"
         :new="true">
-        <div>
-          <img
-            height="32"
-            width="32"
-            :src="`https://unpkg.com/simple-icons@v16/icons/${link.icon}.svg`" />
-        </div>
+        <var-card>
+          <div class="flex items-center gap-2">
+            <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
+            <img
+              v-if="link.icon"
+              class="w-4 h-4"
+              :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
+            <span>{{ link.i18nKey ? $t(link.i18nKey) : link.name }}</span>
+          </div>
+        </var-card>
       </CardLink>
     </div>
   </Page>

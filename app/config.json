@@ -44,7 +44,7 @@
       "i18nKey": "contact.email",
       "value": "i@kuriyona.com",
       "link": "mailto:i@kuriyona.com",
-      "icon": "email"
+      "mdIcon": "mail"
     },
     {
       "name": "WeChat",
