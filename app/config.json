@@ -20,7 +20,8 @@
       "name": "Zhihu",
       "i18nKey": "contact.zhihu",
       "value": "Kuriyona - 知乎",
-      "link": "https://www.zhihu.com/people/cn-chestnut"
+      "link": "https://www.zhihu.com/people/cn-chestnut",
+      "qr": "https://www.zhihu.com/people/cn-chestnut"
     },
     {
       "name": "Steam",
@@ -41,13 +42,14 @@
     {
       "name": "WeChat",
       "i18nKey": "contact.wechat",
-      "value": "@Kuriyota",
-      "_link": "https://u.wechat.com/EIritUZufuIwmhznPBbyOko"
+      "value": "@Kuriyona-Chan",
+      "qr": "https://u.wechat.com/EMz6xUdrM3Vlw9uPe2OweLQ?s=3"
     },
     {
       "name": "QQ",
       "value": "2946733291",
-      "link": "https://qm.qq.com/q/Vlg6pCdge4"
+      "link": "https://qm.qq.com/q/Vlg6pCdge4",
+      "qr": "https://qm.qq.com/q/Vlg6pCdge4"
     },
     {
       "name": "Enka",
