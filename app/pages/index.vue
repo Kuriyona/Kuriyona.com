@@ -22,7 +22,6 @@ const Contact = shallowRef(Config.contact);
         </p>
         <Weather />
       </ClientOnly>
-      <VarAlert type="info" title="Tips" :message="$t('neko.tips')" />
       <var-divider />
       <p>
         {{ t('description') }}
@@ -92,6 +91,7 @@ const Contact = shallowRef(Config.contact);
         </p>
       </div>
       <var-divider />
+      <VarAlert type="info" title="Tips" :message="$t('neko.tips')" />
       <div>
         <p>
           · {{ t('opensource') }} (MIT) :
