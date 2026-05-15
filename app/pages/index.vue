@@ -67,15 +67,16 @@ const Contact = shallowRef(Config.contact);
             :class="{ 'link-style': link.link }">
             {{ link.value }}
           </a>
-          <var-tooltip v-if="link.qr" placement="right">
-            <span>&nbsp;</span>
-            <var-chip size="mini">
-              <span class="material-symbols-outlined text-sm!"> qr_code </span>
-            </var-chip>
-            <template #content>
-              <QRCode :value="link.qr" />
-            </template>
-          </var-tooltip>
+          <ClientOnly>
+            <var-tooltip v-if="link.qr" placement="right">
+              <span>&nbsp;</span>
+              <var-chip size="mini">
+                <span class="material-symbols-outlined text-sm!"> qr_code </span>
+              </var-chip>
+              <template #content>
+                <QRCode :value="link.qr" />
+              </template> </var-tooltip
+          ></ClientOnly>
         </p>
       </div>
       <var-divider />
