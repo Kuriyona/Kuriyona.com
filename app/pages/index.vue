@@ -54,32 +54,6 @@ const Contact = shallowRef(Config.contact);
         <CardLink to="/about/" :text="$t('global.read_more')" />
       </div>
       <var-divider />
-      <div>
-        {{ t('find_me_on') }}
-        <br />
-        <p v-for="link in Contact">
-          <span>·&nbsp;</span>
-          <span>&nbsp;:&nbsp;</span>
-          <a
-            :key="link.name"
-            :href="link.link"
-            target="_blank"
-            :class="{ 'link-style': link.link }">
-            {{ link.value }}
-          </a>
-          <ClientOnly>
-            <var-tooltip v-if="link.qr" placement="right">
-              <span>&nbsp;</span>
-              <var-chip size="mini">
-                <span class="material-symbols-outlined text-sm!"> qr_code </span>
-              </var-chip>
-              <template #content>
-                <QRCode :value="link.qr" />
-              </template> </var-tooltip
-          ></ClientOnly>
-        </p>
-      </div>
-      <var-divider />
       <VarAlert type="info" title="Tips" :message="$t('neko.tips')" />
       <div>
         <p>
