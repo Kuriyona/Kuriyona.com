@@ -51,7 +51,7 @@ const { locale } = useI18n();
         :text="link.value"
         :new="true">
         <var-card>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-4">
             <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
             <img
               v-if="link.icon"
