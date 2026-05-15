@@ -163,5 +163,19 @@
       "name": "Markdown",
       "icon": "Markdown"
     }
+  ],
+  "languages": [
+    {
+      "name": "about.language.my-chinese",
+      "icon": "ZH"
+    },
+    {
+      "name": "about.language.my-english",
+      "icon": "EN"
+    },
+    {
+      "name": "about.language.my-japanese",
+      "icon": "JP"
+    }
   ]
 }

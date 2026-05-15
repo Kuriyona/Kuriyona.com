@@ -1,29 +1,47 @@
 <script setup lang="ts">
 import Config from '@/config.json';
 import { Alert } from '@varlet/ui';
+import dayjs from 'dayjs';
 
 const { locale } = useI18n();
 </script>
 
 <template>
-  <Page>
+  <Page class="gap-6">
     <IAm />
-    <var-alert type="warning" :message="$t('global.in-dev')" />
     <var-divider :description="$t('about.about-me')" />
     <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
+    <p>{{ $t('about.description') }}</p>
     <p>{{ $t('about.also-weixi-yona') }}</p>
     <p>{{ $t('about.about-kuriyona-name') }}</p>
     <p>{{ $t('about.about-weixi-name') }}</p>
-    <var-divider :description="$t('tech_stack')" />
-    <div class="flex gap-2 flex-wrap">
+    <ClientOnly>
+      <p>
+        {{ $t('about.days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
+      </p>
+      <Weather />
+    </ClientOnly>
+    <var-divider :description="$t('about.skills')" />
+    <div class="flex gap-2 flex-wrap justify-center">
       <img
         v-for="item in Config.tech_stack"
         :key="item.name"
         :alt="item.name"
         :src="`https://img.shields.io/badge/${encodeURIComponent(item.name)}-black?style=for-the-badge&logo=${item.icon}`" />
     </div>
+    <div class="flex gap-2 flex-wrap justify-center">
+      <img
+        v-for="item in Config.languages"
+        :key="item.name"
+        :alt="$t(item.name)"
+        :src="`https://img.shields.io/badge/${item.icon}-${$t(item.name)}-black?style=for-the-badge`" />
+    </div>
     <var-divider :description="$t('about.mtf.as-mtf')" />
-    <CardLink to="/about/as-mtf" :text="$t('global.read_more')" />
+    <CardLink to="/about/as-mtf">
+      <template #content>
+        <span class="trans-text">{{ $t('global.read_more') }}</span>
+      </template>
+    </CardLink>
     <var-divider description="CONTACT" />
     <div class="flex flex-wrap gap-2">
       <CardLink

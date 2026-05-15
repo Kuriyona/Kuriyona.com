@@ -9,7 +9,7 @@ import AppBar from './components/AppBar.vue';
     </div>
     <main>
       <Background />
-      <NuxtPage id="main" class="z-0" />
+      <NuxtPage id="main" class="z-0 font-mono" />
     </main>
   </div>
 </template>

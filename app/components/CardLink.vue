@@ -23,7 +23,8 @@ const props = defineProps({
       <div class="flex justify-between items-center">
         <div class="flex items-center gap-4">
           <img v-if="img" :src="img" class="w-8 h-8 rounded-2xl" />
-          <span>{{ props.text }}</span>
+          <span v-if="!$slots.content">{{ props.text }}</span>
+          <slot name="content" />
         </div>
         <span v-if="!props.new" class="material-symbols-outlined"> arrow_forward </span>
         <span v-else class="material-symbols-outlined"> open_in_new </span>
