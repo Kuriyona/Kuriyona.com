@@ -39,7 +39,9 @@ const { locale } = useI18n();
     <var-divider :description="$t('about.mtf.as-mtf')" />
     <CardLink to="/about/as-mtf">
       <template #content>
-        <span class="trans-text">{{ $t('global.read_more') }}</span>
+        <span class="trans-text">
+          {{ $t('global.read_more') }} | 「{{ $t('about.mtf.as-mtf') }}」
+        </span>
       </template>
     </CardLink>
     <var-divider description="CONTACT" />
