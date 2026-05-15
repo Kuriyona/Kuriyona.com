@@ -12,15 +12,19 @@ const Contact = shallowRef(Config.contact);
 </script>
 
 <template>
-  <div class="flex justify-center h-full">
-    <main class="w-160 my-20 p-4 flex flex-col gap-4">
-      <IAm />
+  <div class="fixed top-[68px] left-0 bottom-0 w-screen flex justify-center items-center">
+    <main class="w-80 my-20 p-4 flex flex-col items-center justify-center gap-4">
+      <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
+      <h1 class="text-2xl">I'm Kuriyona</h1>
       <p class="text-center">{{ $t('about.description') }}</p>
-      <div class="mb-20">
-        <CardLink to="/about/" :text="$t('global.read_more')" />
-      </div>
-      <var-divider />
-      <Footer />
+      <NuxtLinkLocale to="/about/" class="w-full">
+        <var-button block>
+          <div class="flex justify-center items-center gap-2">
+            <span class="text-sm!">{{ $t('about.about-me') }}</span>
+            <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
+          </div>
+        </var-button>
+      </NuxtLinkLocale>
     </main>
   </div>
 </template>
