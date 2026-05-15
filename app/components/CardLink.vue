@@ -6,6 +6,9 @@ const props = defineProps({
   text: {
     type: String,
   },
+  img: {
+    type: String,
+  },
   new: {
     type: Boolean,
     default: false,
@@ -18,7 +21,10 @@ const props = defineProps({
     <slot />
     <var-card v-if="!$slots.default">
       <div class="flex justify-between items-center">
-        <span>{{ props.text }}</span>
+        <div class="flex items-center gap-4">
+          <img v-if="img" :src="img" class="w-8 h-8 rounded-2xl" />
+          <span>{{ props.text }}</span>
+        </div>
         <span v-if="!props.new" class="material-symbols-outlined"> arrow_forward </span>
         <span v-else class="material-symbols-outlined"> open_in_new </span>
       </div>
