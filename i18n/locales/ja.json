@@ -28,12 +28,19 @@
   "weather_i_at": "Kuriyona の所在地の天気：",
   "neko.title": "未晞ちゃんの子猫",
   "neko.tips": "知っていましたか？タイトルバーの右側にあるチャットアイコンをクリックして、未晞ちゃんの子猫とチャットしてください~",
-  "about.im-mtf": "私は MtF（Male-to-Female，トランスジェンダー女性）、トランスジェンダーコミュニティのメンバーです",
   "about.my-site-home": "私の個人的なウェブサイトのホームページ",
   "urls.mtf_wiki": "https://mtf.wiki/ja/",
   "urls.trans_wikipedia": "https://ja.wikipedia.org/wiki/トランスジェンダー",
   "trans": "トランスジェンダー",
-  "about.as-mtf.sites.title.gd-fyi": "これは性別違和です、参考までに",
   "urls.gd_fyi": "https://genderdysphoria.fyi/",
-  "urls.2345-lgbt": "https://2345.lgbt/ja/"
+  "urls.2345-lgbt": "https://2345.lgbt/ja/",
+  "about.mtf.sites.title.gd-fyi": "これは性別違和です、参考までに",
+  "about.mtf.im-mtf": "私は MtF（Male-to-Female，トランスジェンダー女性）、トランスジェンダーコミュニティのメンバーです",
+  "about.mtf.as-mtf": "MtF として",
+  "global.read_more": "続きを読む",
+  "about.hello-i-am-kuriyona": "こんにちは、Kuriyona です。",
+  "about.also-weixi-yona": "もちろん、「未晞(ウェイシー)」または「Yona」と呼んでいただいても構いません。",
+  "about.about-kuriyona-name": "「クリヨナ」は日本語の助けを借りて命名され、漢字で書くと「栗夜奈」となり、日本語の発音で「クリヨナ(ku-ri-yo-na)」と発音されます。",
+  "about.about-weixi-name": "「未晞（ウェイシー）」は、私が自分でつけた本名です。『詩経』「秦風」の「蒹葭萋萋、白露未晞（兼葭しょくしょく、白露いまだひる）」という一節から取っており、「夜明け」と「新生」を象徴しています。",
+  "global.in-dev": "このページはまだ開発中または半完成です"
 }

@@ -28,12 +28,19 @@
   "weather_i_at": "Kuriyona 所在地天气为：",
   "neko.title": "未晞酱的小猫",
   "neko.tips": "你知道吗？点击标题栏右侧的聊天图标即可和未晞酱的小猫聊天~",
-  "about.im-mtf": "我是一位 MtF (Male-to-Female，跨性别女性)，跨性别者的一员",
   "about.my-site-home": "我的个人网站主页",
   "urls.mtf_wiki": "https://mtf.wiki/zh-cn/",
   "urls.trans_wikipedia": "https://zh.wikipedia.org/wiki/跨性别",
   "trans": "跨性别",
-  "about.as-mtf.sites.title.gd-fyi": "这就是性别烦躁，供参考",
   "urls.gd_fyi": "https://genderdysphoria.fyi/zh/",
-  "urls.2345-lgbt": "https://2345.lgbt/zh-cn/"
+  "urls.2345-lgbt": "https://2345.lgbt/zh-cn/",
+  "about.mtf.sites.title.gd-fyi": "这就是性别烦躁，供参考",
+  "about.mtf.im-mtf": "我是一位 MtF (Male-to-Female，跨性别女性)，跨性别者的一员",
+  "about.mtf.as-mtf": "作为一个 MtF",
+  "global.read_more": "阅读更多",
+  "about.hello-i-am-kuriyona": "你好，我是 Kuriyona。",
+  "about.also-weixi-yona": "当然，你也可以称呼我为「未晞」或者 Yona。",
+  "about.about-kuriyona-name": "「Kuriyona」借助日语取名，写作汉字是「栗夜奈」，读音为日语发音「クリヨナ(ku-ri-yo-na)」。",
+  "about.about-weixi-name": "「未晞」则是我为自己取的真名，选自《诗经·秦风》中的「蒹葭萋萋，白露未晞」，寓意「破晓」和「新生」。",
+  "global.in-dev": "本页面仍在开发中或为半成品"
 }

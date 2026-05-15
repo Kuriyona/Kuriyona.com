@@ -28,12 +28,19 @@
   "weather_i_at": "The weather at Kuriyona's location is: ",
   "neko.title": "Weixi-chan’s neko",
   "neko.tips": "Did you know? \nClick the chat icon on the right side of the title bar to chat with Weixi’s neko~",
-  "about.im-mtf": "I am an MtF (Male-to-Female), a member of the transgenders",
   "about.my-site-home": "My personal website homepage",
   "urls.mtf_wiki": "https://mtf.wiki/en/",
   "urls.trans_wikipedia": "https://en.wikipedia.org/wiki/Transgender",
   "trans": "Transgender",
   "urls.gd_fyi": "https://genderdysphoria.fyi/en",
-  "about.as-mtf.sites.title.gd-fyi": "That's Gender Dysphoria, FYI",
-  "urls.2345-lgbt": "https://2345.lgbt/en/"
+  "urls.2345-lgbt": "https://2345.lgbt/en/",
+  "about.mtf.sites.title.gd-fyi": "That's Gender Dysphoria, FYI",
+  "about.mtf.im-mtf": "I am an MtF (Male-to-Female), a member of the transgenders",
+  "about.mtf.as-mtf": "As a MtF",
+  "global.read_more": "Read more",
+  "about.hello-i-am-kuriyona": "Hello, my name is Kuriyona.",
+  "about.also-weixi-yona": "Of course, you can also call me \"未晞 (Weixi)\" or Yona.",
+  "about.about-kuriyona-name": "\"Kuriyona\" was named with the help of Japanese, and the written Chinese character is \"栗夜奈\", which is pronounced as the Japanese pronunciation \"クリヨナ(ku-ri-yo-na)\".",
+  "about.about-weixi-name": "\"Weixi (未晞) is the real name I chose for myself. It comes from the line 'The reeds grow lush and dense, the white dew not yet dried' in the Qin Feng section of the Book of Songs (the Classic of Poetry). It symbolizes 'dawn' and 'rebirth'.\"",
+  "global.in-dev": "This page is still under development or semi-finished"
 }

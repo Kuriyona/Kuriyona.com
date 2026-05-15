@@ -50,6 +50,8 @@ const Contact = shallowRef(Config.contact);
           · {{ t('language') }}:
           {{ t('language_value') }}
         </p>
+        <br />
+        <CardLink to="/about/" :text="$t('global.read_more')" />
       </div>
       <var-divider />
       <div>

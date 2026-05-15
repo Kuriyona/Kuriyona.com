@@ -29,7 +29,7 @@ const data = computed(() => [
     href: `https://www.google.com/search?q=${t('trans')}`,
   },
   {
-    title: t('about.as-mtf.sites.title.gd-fyi'),
+    title: t('about.mtf.sites.title.gd-fyi'),
     href: t('urls.gd_fyi'),
   },
 ]);
@@ -41,7 +41,7 @@ const data = computed(() => [
       <IAm />
       <div class="flex gap-2 items-center">
         <div>
-          <p class="trans-text">{{ $t('about.im-mtf') }}</p>
+          <p class="trans-text">{{ $t('about.mtf.im-mtf') }}</p>
           <ClientOnly>
             <p class="trans-text">
               {{ $t('hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
