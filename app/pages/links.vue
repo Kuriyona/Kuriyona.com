@@ -10,37 +10,13 @@ import Config from '../config.json';
         {{ $t('best_friends') }}
       </h1>
       <a :href="link.url" target="_blank" v-for="link in Config.links.main">
-        <VarCard>
-          <div class="flex justify-between items-center">
-            <div class="flex gap-4 items-center">
-              <img :src="link.avatar" class="w-8 h-8 rounded-2xl" />
-              <p>
-                {{ link.title }}
-              </p>
-            </div>
-            <div>
-              <span class="material-symbols-outlined"> open_in_new </span>
-            </div>
-          </div>
-        </VarCard>
+        <CardLink :to="link.url" :text="link.title" :img="link.avatar" />
       </a>
       <h1 class="text-2xl mt-10">
         {{ $t('other_friends') }}
       </h1>
       <a :href="link.url" target="_blank" v-for="link in Config.links.others">
-        <VarCard>
-          <div class="flex justify-between items-center">
-            <div class="flex gap-4 items-center">
-              <img :src="link.avatar" class="w-8 h-8 rounded-2xl" />
-              <p>
-                {{ link.title }}
-              </p>
-            </div>
-            <div>
-              <span class="material-symbols-outlined"> open_in_new </span>
-            </div>
-          </div>
-        </VarCard>
+        <CardLink :to="link.url" :text="link.title" :img="link.avatar" :new="true" />
       </a>
     </main>
   </div>
