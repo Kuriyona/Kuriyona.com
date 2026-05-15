@@ -4,7 +4,9 @@ import AppBar from './components/AppBar.vue';
 
 <template>
   <div class="relative h-screen scroll-hidden">
-    <AppBar class="z-100 sticky top-0 backdrop-blur-lg" />
+    <div class="z-100 sticky top-0 backdrop-blur-lg p-2">
+      <AppBar />
+    </div>
     <main>
       <Background />
       <NuxtPage id="main" class="z-0" />

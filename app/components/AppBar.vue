@@ -6,7 +6,7 @@ const popup = ref(false);
 </script>
 
 <template>
-  <div class="container-bar font-mono py-2 px-3 flex justify-between items-center">
+  <div class="container-bar font-mono py-2 px-3 flex justify-between items-center rounded-xl">
     <RouterLink to="/" class="link-style-uu">
       <span>Kuriyona's Space</span>
     </RouterLink>
