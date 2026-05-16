@@ -43,8 +43,8 @@ export default defineNuxtConfig({
     },
   },
   site: {
-    url: 'https://kuriuriyona.com',
-    name: 'Kuriyona Space',
+    url: 'https://kuriyona.com',
+    name: "Kuriyona's Space",
   },
   sitemap: {
     exclude: ['/admin/**'],
