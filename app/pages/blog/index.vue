@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { data: posts } = await useAsyncData('posts', () => queryCollection('blog').all());
 
-useSeo({ title: $t('blog.title') });
+useSeoMeta({ title: $t('blog.title') });
 watchEffect(() => {
   console.log(posts.value);
 });

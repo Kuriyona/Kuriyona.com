@@ -2,7 +2,7 @@
 import Config from '@/config.json';
 import dayjs from 'dayjs';
 
-useSeo({ title: $t('about.about-me') });
+useSeoMeta({ title: $t('about.about-me') });
 </script>
 
 <template>
