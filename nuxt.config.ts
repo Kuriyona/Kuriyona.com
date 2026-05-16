@@ -6,10 +6,10 @@ const gitHash = child_process.execSync('git rev-parse --short HEAD').toString().
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: true,
-  modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxt/content'],
+  modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxt/content', '@nuxtjs/sitemap'],
   nitro: {
     prerender: {
-      ignore: [],
+      ignore: ['/admin/**'],
     },
   },
   i18n: {
@@ -33,8 +33,21 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      link: [{ rel: 'icon', href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png' }],
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png',
+        },
+      ],
     },
+  },
+  site: {
+    url: 'https://kuriuriyona.com',
+    name: 'Kuriyona Space',
+  },
+  sitemap: {
+    exclude: ['/admin/**'],
   },
   content: {
     build: {
