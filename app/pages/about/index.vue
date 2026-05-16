@@ -21,6 +21,7 @@ const { locale } = useI18n();
       </p>
       <Weather />
     </ClientOnly>
+    <CardLink to="/blog" :text="$t('blog.title')" />
     <var-divider :description="$t('about.skills')" />
     <div class="flex gap-2 flex-wrap justify-center">
       <img
@@ -52,16 +53,14 @@ const { locale } = useI18n();
         :to="link.link"
         :text="link.value"
         :new="true">
-        <var-card>
-          <div class="flex items-center gap-4">
-            <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
-            <img
-              v-if="link.icon"
-              class="w-4 h-4"
-              :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
-            <span>{{ link.i18nKey ? $t(link.i18nKey) : link.name }}</span>
-          </div>
-        </var-card>
+        <div class="flex items-center gap-4">
+          <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
+          <img
+            v-if="link.icon"
+            class="w-4 h-4"
+            :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
+          <span>{{ link.i18nKey ? $t(link.i18nKey) : link.name }}</span>
+        </div>
       </CardLink>
     </div>
     <var-divider :description="$t('about.links')" />

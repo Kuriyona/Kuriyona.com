@@ -37,3 +37,4 @@ packages/server/.env
 *.zip
 /server-dist
 server/prompt.md
+/.data

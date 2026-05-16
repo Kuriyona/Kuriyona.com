@@ -6,7 +6,7 @@ const gitHash = child_process.execSync('git rev-parse --short HEAD').toString().
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: true,
-  modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n'],
+  modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxt/content'],
   nitro: {
     prerender: {
       ignore: [],
@@ -34,6 +34,15 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [{ rel: 'icon', href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png' }],
+    },
+  },
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: 'github-dark',
+        },
+      },
     },
   },
 });
