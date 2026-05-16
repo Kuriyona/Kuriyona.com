@@ -1,7 +1,5 @@
 allowBuilds:
+  '@parcel/watcher': true
   '@varlet/nuxt': true
   better-sqlite3: true
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@varlet/nuxt'
-  - esbuild
+  esbuild: true
