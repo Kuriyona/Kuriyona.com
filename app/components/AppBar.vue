@@ -8,9 +8,9 @@ const popup = ref(false);
 <template>
   <div
     class="container-bar font-mono py-2 px-3 flex justify-between items-center rounded-xl backdrop-brightness-75 backdrop-blur-3xl">
-    <RouterLink to="/" class="link-style-uu">
-      <span>Kuriyona's Space</span>
-    </RouterLink>
+    <NuxtLinkLocale to="/">
+      <span class="hover:text-shadow-lg text-shadow-white/20">Kuriyona's Space</span>
+    </NuxtLinkLocale>
     <div id="actions" class="flex gap-2">
       <VarButton round text @click="popup = true">
         <span class="material-symbols-outlined"> chat </span>
