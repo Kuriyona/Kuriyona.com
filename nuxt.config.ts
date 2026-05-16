@@ -1,4 +1,7 @@
 ﻿import tailwindcss from '@tailwindcss/vite';
+import child_process from 'child_process';
+
+const gitHash = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -21,6 +24,10 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      GIT_HASH: JSON.stringify(gitHash),
+      BUILD_TIME: JSON.stringify(new Date().toISOString()),
+    },
   },
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },

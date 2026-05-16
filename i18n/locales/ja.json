@@ -43,5 +43,6 @@
   "about.mtf.hrt_days": "HRT/GAHT を開始してから {0} 日が経過しました",
   "about.mtf.comfrim_days": "私は自分の性自認を {0} か月間認識しています",
   "about.mtf.be-a-girl": "{0}年間女の子になりたかった",
-  "about.mtf.about-trans": "トランスジェンダーについて"
+  "about.mtf.about-trans": "トランスジェンダーについて",
+  "global.build-time": "ビルド時間"
 }

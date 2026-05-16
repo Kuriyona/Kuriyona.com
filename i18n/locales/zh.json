@@ -43,5 +43,6 @@
   "about.mtf.hrt_days": "我已经开始了 HRT/GAHT {0} 天了",
   "about.mtf.comfrim_days": "我已经确定了性别认同 {0} 个月了",
   "about.mtf.be-a-girl": "我已经想要成为女孩子 {0} 年了",
-  "about.mtf.about-trans": "关于跨性别"
+  "about.mtf.about-trans": "关于跨性别",
+  "global.build-time": "构建时间"
 }

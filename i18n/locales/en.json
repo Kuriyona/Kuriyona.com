@@ -43,5 +43,6 @@
   "about.mtf.hrt_days": "It's been {0} days since I started HRT/GAHT",
   "about.mtf.comfrim_days": "I have identified my gender identity for {0} months",
   "about.mtf.be-a-girl": "I've wanted to be a girl for {0} years",
-  "about.mtf.about-trans": "About transgender"
+  "about.mtf.about-trans": "About transgender",
+  "global.build-time": "Build time"
 }
