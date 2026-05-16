@@ -7,7 +7,7 @@ const popup = ref(false);
 
 <template>
   <div
-    class="container-bar font-mono py-2 px-3 flex justify-between items-center rounded-xl backdrop-blur-xl">
+    class="container-bar font-mono py-2 px-3 flex justify-between items-center rounded-xl backdrop-brightness-75 backdrop-blur-3xl">
     <RouterLink to="/" class="link-style-uu">
       <span>Kuriyona's Space</span>
     </RouterLink>
@@ -40,9 +40,3 @@ const popup = ref(false);
     </div>
   </div>
 </template>
-
-<style scoped>
-.container-bar {
-  box-shadow: 0 0 50px #fff2;
-}
-</style>

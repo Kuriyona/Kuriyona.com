@@ -5,7 +5,7 @@ const buildTime = BUILD_TIME;
 </script>
 
 <template>
-  <var-card>
+  <Card>
     <div class="text-center font-mono">
       <p>
         {{ $t('opensource') }} (MIT) :
@@ -27,5 +27,5 @@ const buildTime = BUILD_TIME;
         </var-link>
       </p>
     </div>
-  </var-card>
+  </Card>
 </template>
