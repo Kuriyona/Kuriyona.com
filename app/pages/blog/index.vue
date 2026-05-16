@@ -9,7 +9,7 @@ watchEffect(() => {
 <template>
   <Page>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
-    <CardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.id}`">
+    <CardLink v-for="post in posts" :key="post.id" :href="post.path">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.meta.desc }}</p>
       <p class="justify-end flex items-center gap-1">
