@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Config from '../config.json';
+useSeo({ title: $t('about.links') });
 </script>
 
 <template>

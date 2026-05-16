@@ -33,6 +33,7 @@ const data = computed(() => [
     href: t('urls.gd_fyi'),
   },
 ]);
+useSeo({ title: $t('about.mtf.as-mtf') });
 </script>
 
 <template>

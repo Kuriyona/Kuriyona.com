@@ -8,6 +8,10 @@ const id = route.params.id;
 const { data: post } = await useAsyncData('post', () =>
   queryCollection('blog').path(`/blog/${id}`).first(),
 );
+useSeo({
+  title: `${post.value!.title} - ${$t('blog.title')}`,
+  description: post.value!.meta.desc as string,
+});
 </script>
 
 <template>

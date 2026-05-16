@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import Config from '@/config.json';
-import { Alert } from '@varlet/ui';
 import dayjs from 'dayjs';
 
-const { locale } = useI18n();
+useSeo({ title: $t('about.about-me') });
 </script>
 
 <template>
