@@ -32,6 +32,7 @@
     "ky": "^2.0.2",
     "nuxt": "^4.4.2",
     "qrcode.vue": "^3.9.0",
+    "shiki": "^4.0.2",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
