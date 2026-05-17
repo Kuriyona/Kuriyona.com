@@ -16,7 +16,13 @@ useSeoMeta({ title: $t('about.about-me') });
     <p>{{ $t('about.about-weixi-name') }}</p>
     <ClientOnly>
       <p>
-        {{ $t('about.days_on_earth', [dayjs().diff('2008/6/28', 'day') + 1]) }}
+        {{
+          $t('about.days_on_earth', [
+            dayjs().diff('2008/6/28', 'year'),
+            dayjs().diff('2008/6/28', 'month'),
+            dayjs().diff('2008/6/28', 'day'),
+          ])
+        }}
       </p>
       <Weather />
     </ClientOnly>

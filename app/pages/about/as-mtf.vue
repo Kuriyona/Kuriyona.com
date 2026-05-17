@@ -44,6 +44,15 @@ useSeoMeta({ title: $t('about.mtf.as-mtf') });
         <div class="flex flex-col items-start trans-text">
           <p>{{ $t('about.mtf.im-mtf') }}</p>
           <p>
+            {{
+              $t('about.days_on_earth', [
+                dayjs().diff('2008/6/28', 'year'),
+                dayjs().diff('2008/6/28', 'month'),
+                dayjs().diff('2008/6/28', 'day'),
+              ])
+            }}
+          </p>
+          <p>
             {{ $t('about.mtf.be-a-girl', [dayjs().diff('2020', 'year')]) }}
           </p>
           <p>
