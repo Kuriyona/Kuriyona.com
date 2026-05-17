@@ -16,7 +16,5 @@ const updateStatus = (awake: boolean) => {
 <template>
   <div class="flex flex-col gap-2 m-4">
     <var-input v-model="key" />
-    <var-button @click="updateStatus(true)">Awake</var-button>
-    <var-button @click="updateStatus(false)">Sleep</var-button>
   </div>
 </template>
