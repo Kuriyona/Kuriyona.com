@@ -4,9 +4,10 @@ import 'github-markdown-css/github-markdown-dark.css';
 const route = useRoute();
 
 const id = route.params.id;
+const { locale } = useI18n();
 
 const { data: post } = await useAsyncData('post', () =>
-  queryCollection('blog').path(`/blog/${id}`).first(),
+  queryCollection('blog').path(`/blog/${locale.value.toLowerCase()}/${id}`).first(),
 );
 useSeoMeta({
   title: `${post.value!.title} - ${$t('blog.title')}`,
