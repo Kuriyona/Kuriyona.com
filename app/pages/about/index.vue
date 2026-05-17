@@ -21,6 +21,13 @@ useSeoMeta({ title: $t('about.about-me') });
       <Weather />
     </ClientOnly>
     <CardLink to="/blog" :text="$t('blog.title')" />
+    <CardLink to="/about/as-mtf">
+      <template #content>
+        <span class="trans-text">
+          {{ $t('global.read_more') }} | 「{{ $t('about.mtf.as-mtf') }}」
+        </span>
+      </template>
+    </CardLink>
     <var-divider :description="$t('about.skills')" />
     <div class="flex gap-2 flex-wrap justify-center">
       <img
@@ -36,14 +43,6 @@ useSeoMeta({ title: $t('about.about-me') });
         :alt="$t(item.name)"
         :src="`https://img.shields.io/badge/${item.icon}-${$t(item.name)}-black?style=for-the-badge`" />
     </div>
-    <var-divider :description="$t('about.mtf.as-mtf')" />
-    <CardLink to="/about/as-mtf">
-      <template #content>
-        <span class="trans-text">
-          {{ $t('global.read_more') }} | 「{{ $t('about.mtf.as-mtf') }}」
-        </span>
-      </template>
-    </CardLink>
     <var-divider description="CONTACT" />
     <div class="flex flex-wrap gap-2 justify-center">
       <CardLink
