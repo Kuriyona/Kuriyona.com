@@ -41,16 +41,16 @@ useSeoMeta({ title: $t('about.mtf.as-mtf') });
     <div class="flex flex-col gap-4">
       <IAm />
       <div class="flex gap-2 justify-between items-center">
-        <div class="flex flex-col items-start">
-          <p class="trans-text">{{ $t('about.mtf.im-mtf') }}</p>
-          <p class="trans-text">
+        <div class="flex flex-col items-start trans-text">
+          <p>{{ $t('about.mtf.im-mtf') }}</p>
+          <p>
             {{ $t('about.mtf.be-a-girl', [dayjs().diff('2020', 'year')]) }}
           </p>
-          <p class="trans-text">
+          <p>
             {{ $t('about.mtf.comfrim_days', [dayjs().diff('2025/11/17', 'month')]) }}
           </p>
           <ClientOnly>
-            <p class="trans-text">
+            <p>
               {{ $t('about.mtf.hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
             </p>
           </ClientOnly>
