@@ -47,7 +47,7 @@ useSeoMeta({ title: $t('about.mtf.as-mtf') });
             {{ $t('about.mtf.be-a-girl', [dayjs().diff('2020', 'year')]) }}
           </p>
           <p>
-            {{ $t('about.mtf.comfrim_days', [dayjs().diff('2025/11/17', 'month')]) }}
+            {{ $t('about.mtf.confirm_days', [dayjs().diff('2025/11/17', 'month')]) }}
           </p>
           <ClientOnly>
             <p>
