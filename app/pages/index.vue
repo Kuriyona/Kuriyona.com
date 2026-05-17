@@ -6,8 +6,16 @@
       <p class="text-center">{{ $t('about.description') }}</p>
       <NuxtLinkLocale to="/about/" class="w-full">
         <var-button block>
-          <div class="flex justify-center items-center gap-2">
+          <div class="flex justify-center items-center gap-2 hover:gap-3">
             <span class="text-sm!">{{ $t('about.about-me') }}</span>
+            <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
+          </div>
+        </var-button>
+      </NuxtLinkLocale>
+      <NuxtLinkLocale to="/blog/" class="w-full">
+        <var-button block>
+          <div class="flex justify-center items-center gap-2 hover:gap-3">
+            <span class="text-sm!">{{ $t('blog.title') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
           </div>
         </var-button>
