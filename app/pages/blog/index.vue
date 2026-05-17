@@ -13,15 +13,17 @@ watchEffect(() => {
     <CardLink v-for="post in posts" :key="post.id" :href="post.path">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.meta.desc }}</p>
-      <p class="justify-end flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm!"> schedule </span>
-        <span class="text-sm"> {{ post.meta.date }}</span>
-      </p>
-      <p
-        v-if="post.meta.edit && post.meta.edit != post.meta.date"
-        class="justify-end flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm!"> edit </span>
-        <span class="text-sm"> {{ post.meta.edit }}</span>
+      <p class="justify-end flex gap-2">
+        <span class="inline-flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm!"> schedule </span>
+          <span class="text-sm"> {{ post.meta.date }}</span>
+        </span>
+        <span
+          v-if="post.meta.edit && post.meta.edit != post.meta.date"
+          class="inline-flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm!"> edit </span>
+          <span class="text-sm"> {{ post.meta.edit }}</span>
+        </span>
       </p>
     </CardLink>
   </Page>
