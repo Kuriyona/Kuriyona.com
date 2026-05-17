@@ -10,9 +10,6 @@ const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
 );
 
 useSeoMeta({ title: $t('blog.title') });
-watchEffect(() => {
-  console.log(posts.value);
-});
 </script>
 
 <template>
@@ -21,6 +18,7 @@ watchEffect(() => {
     <CardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.path.split('/')[3]}`">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.meta.desc }}</p>
+      <br />
       <p class="justify-end flex gap-2">
         <span class="inline-flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> schedule </span>

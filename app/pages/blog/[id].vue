@@ -30,6 +30,6 @@ useSeoMeta({
       </span>
     </div>
     <var-divider />
-    <ContentRenderer :value="post!" class="markdown-body bg-transparent!" />
+    <ContentRenderer :value="post!" class="markdown-body bg-transparent! my-10!" />
   </Page>
 </template>
