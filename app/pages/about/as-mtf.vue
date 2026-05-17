@@ -58,30 +58,15 @@ useSeoMeta({ title: $t('about.mtf.as-mtf') });
         <div class="text-4xl large:text-nowrap">🏳️‍⚧️<br />🍥</div>
       </div>
       <var-divider :description="$t('about.about-me')" />
-      <NuxtLinkLocale to="/">
-        <var-card>
-          <div class="flex justify-between items-center">
-            <div>
-              {{ $t('about.my-site-home') }}
-            </div>
-            <span class="material-symbols-outlined"> arrow_forward </span>
-          </div>
-        </var-card>
-      </NuxtLinkLocale>
+      <CardLink to="/about" :text="$t('about.my-site-home')" />
       <var-divider :description="$t('about.mtf.about-trans')" />
       <div class="flex flex-col gap-4">
-        <a v-for="item in data" :key="item.href" :href="item.href" target="_blank">
-          <var-card>
-            <div class="flex justify-between items-center">
-              <div>
-                {{ item.title }}
-              </div>
-              <div>
-                <span class="material-symbols-outlined"> open_in_new </span>
-              </div>
-            </div>
-          </var-card>
-        </a>
+        <CardLink
+          v-for="item in data"
+          :key="item.href"
+          :to="item.href"
+          :text="item.title"
+          :new="true" />
       </div>
     </div>
   </Page>
