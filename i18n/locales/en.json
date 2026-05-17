@@ -1,8 +1,6 @@
 ﻿{
-  "about.about-kuriyona-name": "\"Kuriyona\" was named with the help of Japanese, and the written Chinese character is \"栗夜奈\", which is pronounced as the Japanese pronunciation \"クリヨナ(ku-ri-yo-na)\"",
   "about.about-me": "About me",
-  "about.about-weixi-name": "\"Weixi (未晞) is the real name I chose for myself. It comes from the line 'The reeds grow lush and dense, the white dew not yet dried' in the Qin Feng section of the Book of Songs (the Classic of Poetry). It symbolizes 'dawn' and 'rebirth'.",
-  "about.also-weixi-yona": "Of course, you can also call me \"未晞 (Weixi)\" or Yona",
+  "about.also-weixi-yona": "You can also call me \"未晞 (Weixi)\" or Yona",
   "about.days_on_earth": "I have been in this world {0} years / {1} months / {2} days",
   "about.description": "\"A cute girl who is a 17-year-old Chinese senior high school student, otaku, casual anime fan, MtF, and interest-driven developer\"",
   "about.hello-i-am-kuriyona": "Hello, my name is Kuriyona.",
@@ -47,5 +45,6 @@
   "urls.trans_wikipedia": "https://en.wikipedia.org/wiki/Transgender",
   "weather_i_at": "The weather at Kuriyona's location is: ",
   "weixi-chan": "Weixi-chan",
-  "about.mtf.confirm_days": "I have identified my gender identity for {0} months"
+  "about.mtf.confirm_days": "I have identified my gender identity for {0} months",
+  "about.about-my-name": "About my name"
 }

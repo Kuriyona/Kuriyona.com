@@ -1,8 +1,6 @@
 {
-  "about.about-kuriyona-name": "「クリヨナ」は日本語の助けを借りて命名され、漢字で書くと「栗夜奈」となり、日本語の発音で「クリヨナ(ku-ri-yo-na)」と発音されます",
   "about.about-me": "私について",
-  "about.about-weixi-name": "「未晞（ウェイシー）」は、私が自分でつけた本名です。『詩経』「秦風」の「蒹葭萋萋、白露未晞（兼葭しょくしょく、白露いまだひる）」という一節から取っており、「夜明け」と「新生」を象徴しています",
-  "about.also-weixi-yona": "もちろん、「未晞(ウェイシー)」または「Yona」と呼んでいただいても構いません",
+  "about.also-weixi-yona": "「未晞(ウェイシー)」または「Yona」と呼んでいただいても構いません",
   "about.days_on_earth": "私はこの世界に {0} 年 / {1} か月 / {2} 日住んでいます",
   "about.description": "「可愛い 17 歳の中国人女子高生。オタクで、MtF で、趣味で開発をしています」",
   "about.hello-i-am-kuriyona": "こんにちは、Kuriyona です。",
@@ -47,5 +45,6 @@
   "urls.trans_wikipedia": "https://ja.wikipedia.org/wiki/トランスジェンダー",
   "weather_i_at": "Kuriyona の所在地の天気：",
   "weixi-chan": "未晞ちゃん",
-  "about.mtf.confirm_days": "私は自分の性自認を {0} か月間認識しています"
+  "about.mtf.confirm_days": "私は自分の性自認を {0} か月間認識しています",
+  "about.about-my-name": "私の名前について"
 }

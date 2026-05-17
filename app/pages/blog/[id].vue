@@ -6,7 +6,7 @@ const route = useRoute();
 const id = route.params.id;
 const { locale } = useI18n();
 
-const { data: post } = await useAsyncData('post', () =>
+const { data: post } = await useAsyncData(`post-${id}-${locale.value.toLowerCase()}`, () =>
   queryCollection('blog').path(`/blog/${locale.value.toLowerCase()}/${id}`).first(),
 );
 useSeoMeta({

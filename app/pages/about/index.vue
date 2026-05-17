@@ -12,8 +12,6 @@ useSeoMeta({ title: $t('about.about-me') });
     <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
     <p>{{ $t('about.description') }}</p>
     <p>{{ $t('about.also-weixi-yona') }}</p>
-    <p>{{ $t('about.about-kuriyona-name') }}</p>
-    <p>{{ $t('about.about-weixi-name') }}</p>
     <ClientOnly>
       <p>
         {{
@@ -27,6 +25,9 @@ useSeoMeta({ title: $t('about.about-me') });
       <Weather />
     </ClientOnly>
     <CardLink to="/blog" :text="$t('blog.title')" />
+    <CardLink
+      to="/blog/about-name"
+      :text="`${$t('global.read_more')} | 「${$t('about.about-my-name')}」`" />
     <CardLink to="/about/as-mtf">
       <template #content>
         <span class="trans-text">
