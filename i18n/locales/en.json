@@ -46,5 +46,7 @@
   "weather_i_at": "The weather at Kuriyona's location is: ",
   "weixi-chan": "Weixi-chan",
   "about.mtf.confirm_days": "I have identified my gender identity for {0} months",
-  "about.about-my-name": "About my name"
+  "about.about-my-name": "About my name",
+  "global.notFound": "Page not found",
+  "blog.notFound": "The current blog does not exist or the blog in the current language does not exist."
 }

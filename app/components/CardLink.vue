@@ -13,6 +13,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  icon: {
+    type: String,
+  },
 });
 </script>
 
@@ -26,7 +29,8 @@ const props = defineProps({
           <span v-if="!$slots.content">{{ props.text }}</span>
           <slot name="content" />
         </div>
-        <span v-if="!props.new" class="material-symbols-outlined"> arrow_forward </span>
+        <span v-if="props.icon" class="material-symbols-outlined">{{ props.icon }}</span>
+        <span v-else-if="!props.new" class="material-symbols-outlined"> arrow_forward </span>
         <span v-else class="material-symbols-outlined"> open_in_new </span>
       </div>
     </Card>

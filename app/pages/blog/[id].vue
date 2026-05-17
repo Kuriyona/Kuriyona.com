@@ -10,26 +10,32 @@ const { data: post } = await useAsyncData(`post-${id}-${locale.value.toLowerCase
   queryCollection('blog').path(`/blog/${locale.value.toLowerCase()}/${id}`).first(),
 );
 useSeoMeta({
-  title: `${post.value!.title} - ${$t('blog.title')}`,
-  description: post.value!.meta.desc as string,
+  title: `${post.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
+  description: post.value?.meta.desc as string,
 });
 </script>
 
 <template>
   <Page>
-    <h1 class="text-2xl">{{ post!.title }}</h1>
-    <p class="text-sm">{{ post!.meta.desc }}</p>
-    <div class="flex justify-between items-center gap-1">
-      <span class="flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm!"> schedule </span>
-        <span class="text-sm"> {{ post!.meta.date }}</span>
-      </span>
-      <span v-if="post!.meta.edit" class="flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm!"> edit </span>
-        <span class="text-sm"> {{ post!.meta.edit }}</span>
-      </span>
-    </div>
-    <var-divider />
-    <ContentRenderer :value="post!" class="markdown-body bg-transparent! my-10!" />
+    <h1 class="text-2xl">{{ post?.title || $t('global.notFound') }}</h1>
+    <p class="text-sm">{{ post?.meta.desc || $t('blog.notFound') }}</p>
+    <template v-if="!post">
+      <var-divider />
+      <CardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
+    </template>
+    <template v-else>
+      <div class="flex justify-between items-center gap-1">
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm!"> schedule </span>
+          <span class="text-sm"> {{ post.meta.date }}</span>
+        </span>
+        <span v-if="post.meta.edit" class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm!"> edit </span>
+          <span class="text-sm"> {{ post.meta.edit }}</span>
+        </span>
+      </div>
+      <var-divider />
+      <ContentRenderer :value="post!" class="markdown-body bg-transparent! my-10!" />
+    </template>
   </Page>
 </template>

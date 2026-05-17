@@ -9,6 +9,8 @@ const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
     ),
 );
 
+console.log(posts.value);
+
 useSeoMeta({ title: $t('blog.title') });
 </script>
 
