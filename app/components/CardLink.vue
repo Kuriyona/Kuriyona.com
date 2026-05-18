@@ -21,7 +21,7 @@ const props = defineProps({
 
 <template>
   <NuxtLinkLocale :to="props.to" :target="props.new ? '_blank' : '_self'">
-    <Card class="hover:shadow-2xl transition-shadow shadow-white/5">
+    <Card class="hover:bg-white/5 transition-bg duration-300">
       <slot />
       <div v-if="!$slots.default" class="flex justify-between items-center">
         <div class="flex items-center gap-4">

@@ -6,7 +6,7 @@
       <p class="text-center">{{ $t('about.description') }}</p>
       <NuxtLinkLocale to="/about/" class="w-full">
         <Button block text>
-          <div class="flex justify-center items-center gap-2 hover:gap-3">
+          <div class="flex justify-center items-center gap-2">
             <span class="text-sm!">{{ $t('about.about-me') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
           </div>
@@ -14,7 +14,7 @@
       </NuxtLinkLocale>
       <NuxtLinkLocale to="/blog/" class="w-full">
         <Button block text>
-          <div class="flex justify-center items-center gap-2 hover:gap-3">
+          <div class="flex justify-center items-center gap-2">
             <span class="text-sm!">{{ $t('blog.title') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
           </div>
