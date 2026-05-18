@@ -17,6 +17,11 @@ useSeoMeta({
 
 <template>
   <Page>
+    <NuxtLinkLocale to="/blog">
+      <Button round text>
+        <span class="material-symbols-outlined"> arrow_back </span>
+      </Button>
+    </NuxtLinkLocale>
     <h1 class="text-2xl">{{ post?.title || $t('global.notFound') }}</h1>
     <p class="text-sm">{{ post?.meta.desc || $t('blog.notFound') }}</p>
     <template v-if="!post">

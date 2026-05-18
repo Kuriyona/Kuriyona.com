@@ -16,6 +16,11 @@ useSeoMeta({ title: $t('blog.title') });
 
 <template>
   <Page>
+    <NuxtLinkLocale to="/about">
+      <Button round text>
+        <span class="material-symbols-outlined"> arrow_back </span>
+      </Button>
+    </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
     <CardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.path.split('/')[3]}`">
       <h2 class="text-lg">{{ post.title }}</h2>
