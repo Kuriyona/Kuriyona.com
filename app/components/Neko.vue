@@ -101,15 +101,16 @@ watch(
       <div
         v-for="(msg, i) in messages"
         :key="i"
-        :class="msg.role === 'user' ? 'text-right' : 'text-left'">
-        <div
-          :class="msg.role === 'user' ? 'bg-blue-600' : 'bg-gray-700'"
-          class="inline-block px-4 py-2 rounded-lg max-w-[80%] whitespace-pre-wrap">
-          {{ msg.content }}
-        </div>
+        class="flex"
+        :class="msg.role === 'user' ? 'justify-end text-right' : 'justify-start text-left'">
+        <var-card class="max-w-[80%] w-fit">
+          <div class="whitespace-pre-wrap">
+            {{ msg.content }}
+          </div>
+        </var-card>
       </div>
     </div>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
       <VarInput
         v-model="input"
         maxlength="50"
