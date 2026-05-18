@@ -45,8 +45,9 @@
   "urls.trans_wikipedia": "https://en.wikipedia.org/wiki/Transgender",
   "weather_i_at": "The weather at Kuriyona's location is: ",
   "weixi-chan": "Weixi-chan",
-  "about.mtf.confirm_days": "I have identified my gender identity for {0} months",
   "about.about-my-name": "About my name",
   "global.notFound": "Page not found",
-  "blog.notFound": "The current blog does not exist or the blog in the current language does not exist."
+  "blog.notFound": "The current blog does not exist or the blog in the current language does not exist.",
+  "about.mtf.percent-life": "This is {0}% of my life",
+  "about.mtf.identify_days": "I have identified my gender identity for {0} months"
 }

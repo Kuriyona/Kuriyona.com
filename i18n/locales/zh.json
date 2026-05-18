@@ -45,8 +45,9 @@
   "urls.trans_wikipedia": "https://zh.wikipedia.org/wiki/跨性别",
   "weather_i_at": "Kuriyona 所在地天气为：",
   "weixi-chan": "未晞酱",
-  "about.mtf.confirm_days": "我已经确定了性别认同 {0} 个月了",
   "about.about-my-name": "关于我的名字",
   "global.notFound": "没有找到页面",
-  "blog.notFound": "当前博客不存在或者当前语言下博客不存在"
+  "blog.notFound": "当前博客不存在或者当前语言下博客不存在",
+  "about.mtf.percent-life": "这占我生命的 {0} %",
+  "about.mtf.identify_days": "我已经确定了性别认同 {0} 个月了"
 }

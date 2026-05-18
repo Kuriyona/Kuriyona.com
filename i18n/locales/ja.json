@@ -45,8 +45,9 @@
   "urls.trans_wikipedia": "https://ja.wikipedia.org/wiki/トランスジェンダー",
   "weather_i_at": "Kuriyona の所在地の天気：",
   "weixi-chan": "未晞ちゃん",
-  "about.mtf.confirm_days": "私は自分の性自認を {0} か月間認識しています",
   "about.about-my-name": "私の名前について",
   "global.notFound": "ページが見つかりません",
-  "blog.notFound": "現在のブログが存在しないか、現在の言語のブログが存在しません。"
+  "blog.notFound": "現在のブログが存在しないか、現在の言語のブログが存在しません。",
+  "about.mtf.percent-life": "これは私の人生の {0} % です",
+  "about.mtf.identify_days": "私は自分の性自認を {0} か月間認識しています"
 }

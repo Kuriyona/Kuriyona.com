@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import { round } from 'es-toolkit';
 
 const { t } = useI18n();
 
@@ -34,6 +35,41 @@ const data = computed(() => [
   },
 ]);
 useSeoMeta({ title: $t('about.mtf.as-mtf') });
+
+const timeInfo = computed(() => {
+  const now = dayjs();
+  const birthday = dayjs('2008/6/28');
+  const wantTime = dayjs('2020');
+  const identifyTime = dayjs('2025/11/17');
+  const hrtStartTime = dayjs('2026/01/17');
+
+  const years = now.diff(birthday, 'year');
+  const months = now.diff(birthday, 'month');
+  const days = now.diff(birthday, 'day');
+
+  const totalLife = now.diff(birthday);
+
+  const wantYears = now.diff(wantTime, 'year');
+  const percentWant = round((now.diff(wantTime) / totalLife) * 100);
+
+  const identifyMonths = now.diff(identifyTime, 'month');
+  const percentIdentify = round((now.diff(identifyTime) / totalLife) * 100, 2);
+
+  const hrtDays = now.diff(hrtStartTime, 'day') + 1;
+  const percentHrt = round((now.diff(hrtStartTime) / totalLife) * 100, 2);
+
+  return {
+    years,
+    months,
+    days,
+    wantYears,
+    percentWant,
+    identifyMonths,
+    percentIdentify,
+    hrtDays,
+    percentHrt,
+  };
+});
 </script>
 
 <template>
@@ -44,23 +80,20 @@ useSeoMeta({ title: $t('about.mtf.as-mtf') });
         <div class="flex flex-col items-start trans-text">
           <p>{{ $t('about.mtf.im-mtf') }}</p>
           <p>
-            {{
-              $t('about.days_on_earth', [
-                dayjs().diff('2008/6/28', 'year'),
-                dayjs().diff('2008/6/28', 'month'),
-                dayjs().diff('2008/6/28', 'day'),
-              ])
-            }}
+            {{ $t('about.days_on_earth', [timeInfo.years, timeInfo.months, timeInfo.days]) }}
           </p>
           <p>
-            {{ $t('about.mtf.be-a-girl', [dayjs().diff('2020', 'year')]) }}
+            {{ $t('about.mtf.be-a-girl', [timeInfo.wantYears]) }}
+            ({{ $t('about.mtf.percent-life', [timeInfo.percentWant]) }})
           </p>
           <p>
-            {{ $t('about.mtf.confirm_days', [dayjs().diff('2025/11/17', 'month')]) }}
+            {{ $t('about.mtf.identify_days', [timeInfo.identifyMonths]) }}
+            ({{ $t('about.mtf.percent-life', [timeInfo.percentIdentify]) }})
           </p>
           <ClientOnly>
             <p>
-              {{ $t('about.mtf.hrt_days', [dayjs().diff('2026/01/17', 'day') + 1]) }}
+              {{ $t('about.mtf.hrt_days', [timeInfo.hrtDays]) }}
+              ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
             </p>
           </ClientOnly>
         </div>
