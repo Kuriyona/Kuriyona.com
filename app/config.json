@@ -40,6 +40,12 @@
       "icon": "telegram"
     },
     {
+      "name": "Discord",
+      "value": "@kuriyona",
+      "link": "https://discord.com/users/1145274057785360454",
+      "icon": "discord"
+    },
+    {
       "name": "e-Mail",
       "i18nKey": "contact.email",
       "value": "i@kuriyona.com",
