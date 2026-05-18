@@ -5,16 +5,22 @@ useSeoMeta({ title: $t('about.links') });
 
 <template>
   <Page>
+    <h1 class="text-2xl">{{ $t('about.links') }}</h1>
     <var-divider :description="$t('best_friends')" />
-    <a :href="link.url" target="_blank" v-for="link in Config.links.main">
-      <CardLink :to="link.url" :text="link.title" :img="link.avatar" />
-    </a>
+    <CardLink
+      v-for="link in Config.links.main"
+      :to="link.url"
+      :text="link.title"
+      :img="link.avatar" />
     <var-divider :description="$t('other_friends')" />
-    <a :href="link.url" target="_blank" v-for="link in Config.links.others">
-      <CardLink :to="link.url" :text="link.title" :img="link.avatar" :new="true" />
-    </a>
+    <CardLink
+      v-for="link in Config.links.others"
+      :to="link.url"
+      :text="link.title"
+      :img="link.avatar"
+      :new="true" />
     <var-divider :description="$t('links.add-me')" />
-    <Card class="font-mono">
+    <Card class="font-mono text-wrap break-all">
       <p>url : https://kuriyona.com</p>
       <p>title : Kuriyona's Space</p>
       <p>desc : {{ $t('about.description') }}</p>
