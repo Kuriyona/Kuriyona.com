@@ -4,33 +4,33 @@ useSeoMeta({ title: $t('about.links') });
 </script>
 
 <template>
-  <Page>
+  <AppPage>
     <NuxtLinkLocale to="/about">
-      <Button round text>
+      <KButton round text>
         <span class="material-symbols-outlined"> arrow_back </span>
-      </Button>
+      </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('about.links') }}</h1>
     <var-divider :description="$t('best_friends')" />
-    <CardLink
+    <KCardLink
       v-for="link in Config.links.main"
       :to="link.url"
       :text="link.title"
       :img="link.avatar"
       :new="true" />
     <var-divider :description="$t('other_friends')" />
-    <CardLink
+    <KCardLink
       v-for="link in Config.links.others"
       :to="link.url"
       :text="link.title"
       :img="link.avatar"
       :new="true" />
     <var-divider :description="$t('links.add-me')" />
-    <Card class="font-mono text-wrap break-all">
+    <KCard class="font-mono text-wrap break-all">
       <p>url : https://kuriyona.com</p>
       <p>title : Kuriyona's Space</p>
       <p>desc : {{ $t('about.description') }}</p>
       <p>avatar : https://r2.kuriyona.com/img/avatar/Avatar_256.png</p>
-    </Card>
-  </Page>
+    </KCard>
+  </AppPage>
 </template>

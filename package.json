@@ -32,11 +32,13 @@
     "gsap": "^3.15.0",
     "ky": "^2.0.2",
     "nuxt": "^4.4.2",
+    "primevue": "^4.5.5",
     "qrcode.vue": "^3.9.0",
     "shiki": "^4.0.2",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
+    "@primevue/nuxt-module": "^4.5.5",
     "oxfmt": "^0.46.0"
   },
   "packageManager": "pnpm@11.1.2"

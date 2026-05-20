@@ -4,7 +4,7 @@
       <slot />
       <div class="flex-1"></div>
       <var-divider :description="$t('global.about-site')" />
-      <Footer />
+      <AppFooter />
     </div>
   </div>
 </template>

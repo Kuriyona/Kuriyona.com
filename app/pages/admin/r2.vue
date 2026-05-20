@@ -34,7 +34,7 @@ const handleUpload = async () => {
 </script>
 
 <template>
-  <Page>
+  <AppPage>
     <VarUploader v-model="fileList" accept="*" maxlength="1" @after-read="handleRead" />
     <VarInput v-model="key" />
     <VarButton type="primary" @click="handleUpload" :disabled="fileList.length == 0">
@@ -42,5 +42,5 @@ const handleUpload = async () => {
     </VarButton>
     <var-divider />
     <p>文件URL为：{{ lastFileURL }}</p>
-  </Page>
+  </AppPage>
 </template>

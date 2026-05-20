@@ -19,7 +19,7 @@ useHead({
     <div class="z-100 fixed top-0 w-screen px-4 py-2">
       <AppBar />
     </div>
-    <Background />
+    <AppBackground />
     <main>
       <NuxtPage id="main" class="z-0 pt-[68px]" />
     </main>

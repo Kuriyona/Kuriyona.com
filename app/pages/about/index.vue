@@ -6,7 +6,7 @@ useSeoMeta({ title: $t('about.about-me') });
 </script>
 
 <template>
-  <Page class="gap-6">
+  <AppPage class="gap-6">
     <IAm />
     <var-divider :description="$t('about.about-me')" />
     <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
@@ -22,19 +22,19 @@ useSeoMeta({ title: $t('about.about-me') });
           ])
         }}
       </p>
-      <Weather />
+      <KWeather />
     </ClientOnly>
-    <CardLink to="/blog" :text="$t('blog.title')" />
-    <CardLink
+    <KCardLink to="/blog" :text="$t('blog.title')" />
+    <KCardLink
       to="/blog/about-name"
       :text="`${$t('global.read_more')} | 「${$t('about.about-my-name')}」`" />
-    <CardLink to="/about/as-mtf">
+    <KCardLink to="/about/as-mtf">
       <template #content>
         <span class="trans-text">
           {{ $t('global.read_more') }} | 「{{ $t('about.mtf.as-mtf') }}」
         </span>
       </template>
-    </CardLink>
+    </KCardLink>
     <var-divider :description="$t('about.skills')" />
     <div class="flex gap-2 flex-wrap justify-center">
       <img
@@ -52,7 +52,7 @@ useSeoMeta({ title: $t('about.about-me') });
     </div>
     <var-divider description="CONTACT" />
     <div class="flex flex-wrap gap-2 justify-center">
-      <CardLink
+      <KCardLink
         v-for="link in Config.contact"
         :key="link.name"
         :to="link.link"
@@ -66,15 +66,15 @@ useSeoMeta({ title: $t('about.about-me') });
             :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
           <span>{{ link.i18nKey ? $t(link.i18nKey) : link.name }}</span>
         </div>
-      </CardLink>
+      </KCardLink>
     </div>
     <var-divider :description="$t('about.links')" />
-    <CardLink
+    <KCardLink
       v-for="link in Config.links.main"
       :to="link.url"
       :text="link.title"
       :img="link.avatar"
       :new="true" />
-    <CardLink to="/links" :text="$t('more')" />
-  </Page>
+    <KCardLink to="/links" :text="$t('more')" />
+  </AppPage>
 </template>

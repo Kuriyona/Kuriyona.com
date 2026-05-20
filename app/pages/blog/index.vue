@@ -15,14 +15,14 @@ useSeoMeta({ title: $t('blog.title') });
 </script>
 
 <template>
-  <Page>
+  <AppPage>
     <NuxtLinkLocale to="/about">
-      <Button round text>
+      <KButton round text>
         <span class="material-symbols-outlined"> arrow_back </span>
-      </Button>
+      </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
-    <CardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.path.split('/')[3]}`">
+    <KCardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.path.split('/')[3]}`">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.meta.desc }}</p>
       <br />
@@ -38,6 +38,6 @@ useSeoMeta({ title: $t('blog.title') });
           <span class="text-sm"> {{ post.meta.edit }}</span>
         </span>
       </p>
-    </CardLink>
-  </Page>
+    </KCardLink>
+  </AppPage>
 </template>
