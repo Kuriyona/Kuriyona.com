@@ -5,20 +5,20 @@
       <h1 class="text-2xl">I'm Kuriyona</h1>
       <p class="text-center">{{ $t('about.description') }}</p>
       <NuxtLinkLocale to="/about/" class="w-full">
-        <Button block text>
+        <KButton block text>
           <div class="flex justify-center items-center gap-2">
             <span class="text-sm!">{{ $t('about.about-me') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
           </div>
-        </Button>
+        </KButton>
       </NuxtLinkLocale>
       <NuxtLinkLocale to="/blog/" class="w-full">
-        <Button block text>
+        <KButton block text>
           <div class="flex justify-center items-center gap-2">
             <span class="text-sm!">{{ $t('blog.title') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
           </div>
-        </Button>
+        </KButton>
       </NuxtLinkLocale>
       <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="underline">
         萌 ICP 备 20266280 号

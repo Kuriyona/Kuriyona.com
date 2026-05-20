@@ -28,6 +28,9 @@ export default defineNuxtConfig({
       GIT_HASH: JSON.stringify(gitHash),
       BUILD_TIME: JSON.stringify(new Date().toISOString()),
     },
+    optimizeDeps: {
+      include: ['dayjs', '@varlet/touch-emulator', 'ky'],
+    },
   },
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },

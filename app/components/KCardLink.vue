@@ -21,7 +21,7 @@ const props = defineProps({
 
 <template>
   <NuxtLinkLocale :to="props.to" :target="props.new ? '_blank' : '_self'">
-    <Card class="hover:bg-white/5 transition-bg duration-300">
+    <KCard class="hover:bg-white/5 transition-bg duration-300">
       <slot />
       <div v-if="!$slots.default" class="flex justify-between items-center">
         <div class="flex items-center gap-4">
@@ -33,6 +33,6 @@ const props = defineProps({
         <span v-else-if="!props.new" class="material-symbols-outlined"> arrow_forward </span>
         <span v-else class="material-symbols-outlined"> open_in_new </span>
       </div>
-    </Card>
+    </KCard>
   </NuxtLinkLocale>
 </template>

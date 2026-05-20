@@ -73,7 +73,7 @@ const timeInfo = computed(() => {
 </script>
 
 <template>
-  <Page>
+  <AppPage>
     <div class="flex flex-col gap-4">
       <IAm />
       <div class="flex gap-2 justify-between items-center">
@@ -100,10 +100,10 @@ const timeInfo = computed(() => {
         <div class="text-4xl large:text-nowrap">🏳️‍⚧️<br />🍥</div>
       </div>
       <var-divider :description="$t('about.about-me')" />
-      <CardLink to="/about" :text="$t('about.my-site-home')" />
+      <KCardLink to="/about" :text="$t('about.my-site-home')" />
       <var-divider :description="$t('about.mtf.about-trans')" />
       <div class="flex flex-col gap-4">
-        <CardLink
+        <KCardLink
           v-for="item in data"
           :key="item.href"
           :to="item.href"
@@ -111,5 +111,5 @@ const timeInfo = computed(() => {
           :new="true" />
       </div>
     </div>
-  </Page>
+  </AppPage>
 </template>

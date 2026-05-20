@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
+import NekoChat from './NekoChat.vue';
 const { setLocale } = useI18n();
 const selecting = ref(false);
 const popup = ref(false);
@@ -23,7 +24,7 @@ const popup = ref(false);
               <span class="material-symbols-outlined"> close </span>
             </VarButton>
           </div>
-          <Neko />
+          <NekoChat />
         </div>
       </VarPopup>
       <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">

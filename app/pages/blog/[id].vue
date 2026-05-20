@@ -16,17 +16,17 @@ useSeoMeta({
 </script>
 
 <template>
-  <Page>
+  <AppPage>
     <NuxtLinkLocale to="/blog">
-      <Button round text>
+      <KButton round text>
         <span class="material-symbols-outlined"> arrow_back </span>
-      </Button>
+      </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ post?.title || $t('global.notFound') }}</h1>
     <p class="text-sm">{{ post?.meta.desc || $t('blog.notFound') }}</p>
     <template v-if="!post">
       <var-divider />
-      <CardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
+      <KCardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
     </template>
     <template v-else>
       <div class="flex justify-between items-center gap-1">
@@ -42,5 +42,5 @@ useSeoMeta({
       <var-divider />
       <ContentRenderer :value="post!" class="markdown-body bg-transparent! my-10!" />
     </template>
-  </Page>
+  </AppPage>
 </template>
