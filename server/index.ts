@@ -29,8 +29,7 @@ const app = new Elysia()
     {
       body: t.Object({
         title: t.String(),
-        message: t.String(),
-        priority: t.Optional(t.Number()),
+        content: t.String(),
       }),
     },
   );

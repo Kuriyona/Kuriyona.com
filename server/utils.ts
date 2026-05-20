@@ -1,14 +1,12 @@
 import ky from 'ky';
-const host = process.env.GOTIFY_HOST;
-const apiKey = process.env.GOTIFY_API_KEY;
-export const push = async (message: { title: string; message: string; priority?: number }) => {
-  console.log(JSON.stringify(message));
+const apiKey = process.env.PUSHPLUS_API_KEY;
+export const push = async (message: { title: string; content: string }) => {
   return await ky
-    .post(`${host}/message?token=${apiKey}`, {
+    .post(`https://www.pushplus.plus/send`, {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(message),
+      body: JSON.stringify({ ...message, token: apiKey, template: 'markdown' }),
     })
     .json();
 };
