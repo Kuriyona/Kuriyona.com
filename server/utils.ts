@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import ky from 'ky';
 const apiKey = process.env.PUSHPLUS_API_KEY;
+const secretKey = process.env.TURNSTILE_SECRET_KEY;
 const DAY_LIMIT = 100;
 
 let date = dayjs().format('YYYY-MM-DD');
@@ -30,4 +31,19 @@ export const push = async (message: { title: string; content: string }) => {
       body: JSON.stringify({ ...message, token: apiKey, template: 'markdown' }),
     })
     .json();
+};
+
+export const verifyTurnstile = async (token: string) => {
+  const data = await ky
+    .post(`https://challenges.cloudflare.com/turnstile/v0/siteverify`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        secret: secretKey,
+        response: token,
+      }),
+    })
+    .json<{ success: boolean }>();
+  return data.success;
 };

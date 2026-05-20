@@ -3,6 +3,7 @@ import { ref, nextTick, watch } from 'vue';
 import { HOST } from '@/utils/api';
 
 const { t } = useI18n();
+const mainStore = useMainStore();
 
 const greeting = t('neko.greeting');
 
@@ -29,6 +30,7 @@ async function send() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         messages: messages.value.slice(0, -1),
+        jwt: mainStore.jwt,
       }),
     });
     if (!res.ok) {
@@ -110,17 +112,22 @@ watch(
         </var-card>
       </div>
     </div>
+    <KTurnstile v-if="!mainStore.jwt" />
     <div class="flex flex-col gap-2">
       <VarInput
         v-model="input"
         maxlength="50"
         :placeholder="$t('neko.placeholder')"
         @keyup.enter="send"
-        :disabled="loading"
+        :disabled="loading || !mainStore.jwt"
         class="flex-1" />
-      <VarButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>{{
-        $t('neko.meow')
-      }}</VarButton>
+      <VarButton
+        @click="send"
+        :disabled="loading || !input.trim().length || !mainStore.jwt"
+        type="primary"
+        block
+        >{{ $t('neko.meow') }}</VarButton
+      >
     </div>
   </div>
 </template>

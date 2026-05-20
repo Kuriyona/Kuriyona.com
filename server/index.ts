@@ -2,15 +2,22 @@ import { Elysia, t } from 'elysia';
 import { RouterR2 } from './r2';
 import { RouteWeather } from './weather';
 import { cors } from '@elysiajs/cors';
+import { jwt } from '@elysia/jwt';
 
 import 'dotenv/config';
 import { RouteNekoApi } from './neko';
-import { push } from './utils';
+import { push, verifyTurnstile } from './utils';
 
 const app = new Elysia()
   .use(
     cors({
       origin: '*',
+    }),
+  )
+  .use(
+    jwt({
+      name: 'jwt',
+      secret: Math.random().toString(36),
     }),
   )
   .get('/', () => 'This API site of Kuriyona.com')
@@ -30,6 +37,24 @@ const app = new Elysia()
       body: t.Object({
         title: t.String(),
         content: t.String(),
+      }),
+    },
+  )
+  .get(
+    '/turnstile',
+    async ({ jwt, query: { token } }) => {
+      const result = await verifyTurnstile(token);
+      if (result) {
+        const value = await jwt.sign({
+          pass: true,
+        });
+        return value;
+      }
+      return null;
+    },
+    {
+      query: t.Object({
+        token: t.String(),
       }),
     },
   );
