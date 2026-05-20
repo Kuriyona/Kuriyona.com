@@ -20,9 +20,9 @@
           </div>
         </Button>
       </NuxtLinkLocale>
-      <var-link href="https://icp.gov.moe/?keyword=20266280" target="_blank">
+      <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="underline">
         萌 ICP 备 20266280 号
-      </var-link>
+      </a>
     </main>
   </div>
 </template>

@@ -9,22 +9,23 @@ const buildTime = BUILD_TIME;
     <div class="text-center font-mono">
       <p>
         {{ $t('opensource') }} (MIT) :
-        <var-link href="https://github.com/Kuriyona/Kuriyona.com" target="_blank">
-          Kuriyona/Kuriyona.com
-        </var-link>
+        <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="underline"
+          >Kuriyona/Kuriyona.com</a
+        >
         <span>&nbsp;</span>
-        <var-link
+        <a
           :href="`https://github.com/Kuriyona/Kuriyona.com/commit/${gitHash}`"
-          target="_blank">
+          target="_blank"
+          class="underline">
           {{ gitHash }}
-        </var-link>
+        </a>
       </p>
       <p>{{ $t('copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.</p>
       <p>{{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}</p>
       <p>
-        <var-link href="https://icp.gov.moe/?keyword=20266280" target="_blank">
+        <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="underline">
           萌 ICP 备 20266280 号
-        </var-link>
+        </a>
       </p>
     </div>
   </Card>
