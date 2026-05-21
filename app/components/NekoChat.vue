@@ -36,6 +36,9 @@ async function send() {
     if (!res.ok) {
       const err = await res.json().catch(() => ({ error: 'Request failed' }));
       messages.value[messages.value.length - 1]!.content = err.error || 'Request failed';
+      if (res.status === 401) {
+        mainStore.jwt = '';
+      }
       return;
     }
     const reader = res.body!.getReader();

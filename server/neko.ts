@@ -8,6 +8,7 @@ const dirname = path.dirname(filename);
 import { updateWeather, data as WeatherData } from './weather';
 import Contact from '../app/config.json';
 import dayjs from 'dayjs';
+import jwt from '@elysia/jwt';
 
 let SystemPromptRaw = await fs.readFile(path.join(dirname, './prompt.md'), 'utf-8');
 let SystemPrompt = '';
@@ -24,74 +25,90 @@ updateSystemPrompt();
 
 const app = new Elysia({ prefix: '/neko' });
 
-app.post(
-  '/chat/stream',
-  async function* ({ body }) {
-    if (Date.now() - lastChatTime < 2 * 1000) {
-      yield sse({ event: 'error', data: '[当前的请求太多了喵]' });
-      return;
-    }
-    lastChatTime = Date.now();
-    const apiKey = process.env.LLM_API_KEY;
-    if (!apiKey) {
-      yield sse({ event: 'error', data: 'LLM_API_KEY not configured' });
-      return;
-    }
-    const model = 'Qwen/Qwen3-8B';
-    const res = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: SystemPrompt }, ...body.messages],
-        stream: true,
-        enable_thinking: false,
-      }),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      yield sse({ event: 'error', data: err.error?.message || 'API error' });
-      return;
-    }
-    const reader = res.body!.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') continue;
-          try {
-            const parsed = JSON.parse(data);
-            const content = parsed.choices?.[0]?.delta?.content || '';
-            if (content) {
-              yield sse({ event: 'message', data: { content } });
-            }
-          } catch {}
+app
+  .use(
+    jwt({
+      name: 'jwt',
+      secret: process.env.JWT_SECRET!,
+    }),
+  )
+  .post(
+    '/chat/stream',
+    async function* ({ body, jwt, set }) {
+      const pass = await jwt.verify(body.jwt);
+      if (!pass) {
+        set.status = 401;
+        yield sse({ event: 'error', data: 'JWT not valid' });
+        return;
+      }
+      if (Date.now() - lastChatTime < 2 * 1000) {
+        set.status = 429;
+        yield sse({ event: 'error', data: '[当前的请求太多了喵]' });
+        return;
+      }
+      lastChatTime = Date.now();
+      const apiKey = process.env.LLM_API_KEY;
+      if (!apiKey) {
+        set.status = 500;
+        yield sse({ event: 'error', data: 'LLM_API_KEY not configured' });
+        return;
+      }
+      const model = 'Qwen/Qwen3-8B';
+      const res = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'system', content: SystemPrompt }, ...body.messages],
+          stream: true,
+          enable_thinking: false,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        yield sse({ event: 'error', data: err.error?.message || 'API error' });
+        return;
+      }
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content || '';
+              if (content) {
+                yield sse({ event: 'message', data: { content } });
+              }
+            } catch {}
+          }
         }
       }
-    }
-    yield sse({ event: 'done', data: '' });
-  },
-  {
-    body: t.Object({
-      messages: t.Array(
-        t.Object({
-          role: t.String(),
-          content: t.String(),
-        }),
-      ),
-    }),
-  },
-);
+      yield sse({ event: 'done', data: '' });
+    },
+    {
+      body: t.Object({
+        messages: t.Array(
+          t.Object({
+            role: t.String(),
+            content: t.String(),
+          }),
+        ),
+        jwt: t.String(),
+      }),
+    },
+  );
 
 app.get('/admin/prompt', ({ query: { auth }, set }) => {
   if (auth !== process.env.AUTH_KEY) {

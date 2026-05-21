@@ -17,7 +17,7 @@ const app = new Elysia()
   .use(
     jwt({
       name: 'jwt',
-      secret: Math.random().toString(36),
+      secret: process.env.JWT_SECRET!,
     }),
   )
   .get('/', () => 'This API site of Kuriyona.com')
@@ -47,6 +47,7 @@ const app = new Elysia()
       if (result) {
         const value = await jwt.sign({
           pass: true,
+          exp: '2h',
         });
         return value;
       }
