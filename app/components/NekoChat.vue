@@ -113,21 +113,17 @@ watch(
       </div>
     </div>
     <KTurnstile v-if="!mainStore.jwt" />
-    <div class="flex flex-col gap-2">
+    <div v-else class="flex flex-col gap-2">
       <VarInput
         v-model="input"
         maxlength="50"
         :placeholder="$t('neko.placeholder')"
         @keyup.enter="send"
-        :disabled="loading || !mainStore.jwt"
+        :disabled="loading"
         class="flex-1" />
-      <VarButton
-        @click="send"
-        :disabled="loading || !input.trim().length || !mainStore.jwt"
-        type="primary"
-        block
-        >{{ $t('neko.meow') }}</VarButton
-      >
+      <VarButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>
+        {{ $t('neko.meow') }}
+      </VarButton>
     </div>
   </div>
 </template>

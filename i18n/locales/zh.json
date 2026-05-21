@@ -49,5 +49,8 @@
   "global.notFound": "没有找到页面",
   "blog.notFound": "当前博客不存在或者当前语言下博客不存在",
   "about.mtf.percent-life": "这占我生命的 {0} %",
-  "about.mtf.identify_days": "我已经确定了性别认同 {0} 个月了"
+  "about.mtf.identify_days": "我已经确定了性别认同 {0} 个月了",
+  "turnstile.tip": "请等待组件加载并验证您的身份",
+  "global.verifySuccess": "验证成功",
+  "global.verify": "验证"
 }

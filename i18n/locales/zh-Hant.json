@@ -48,5 +48,8 @@
   "global.notFound": "沒有找到頁面",
   "blog.notFound": "當前部落格不存在或當前語言下部落格不存在",
   "about.mtf.percent-life": "這占我生命的 {0} %",
-  "about.mtf.identify_days": "我已經確定了性別認同 {0} 個月了"
+  "about.mtf.identify_days": "我已經確定了性別認同 {0} 個月了",
+  "global.verifySuccess": "驗證成功",
+  "turnstile.tip": "請等待元件載入並驗證您的身份",
+  "global.verify": "驗證"
 }

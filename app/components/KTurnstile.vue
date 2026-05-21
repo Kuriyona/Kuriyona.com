@@ -3,25 +3,36 @@ import VueTurnstile from 'vue-turnstile';
 import { useMainStore } from '@/stores/main';
 
 const mainStore = useMainStore();
-const token = ref();
-
-const onSubmit = async (token: string) => {
+const Turnstile = useTemplateRef('turnstile');
+const token = ref('');
+const loading = ref(false);
+const verify = async (token: string) => {
+  loading.value = true;
   const res = await fetchApi('/turnstile', {
     searchParams: { token },
   }).text();
   if (res) {
     mainStore.jwt = res;
-    Snackbar.success('验证成功');
+    Snackbar.success($t('global.verifySuccess'));
   } else {
-    Snackbar.error('验证失败');
+    Turnstile.value?.reset();
   }
+  loading.value = false;
 };
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
-    <p>请验证您的身份</p>
-    <VueTurnstile site-key="0x4AAAAAADTR98IL1RUn8gKN" v-model="token" />
-    <var-button @click="onSubmit(token)" block>验证</var-button>
-  </div>
+  <var-card>
+    <div class="flex flex-col gap-2">
+      <p class="text-center">{{ $t('turnstile.tip') }}</p>
+      <VueTurnstile
+        ref="turnstile"
+        site-key="0x4AAAAAADTR98IL1RUn8gKN"
+        v-model="token"
+        size="flexible" />
+      <var-button @click="verify(token)" block :loading="loading">
+        {{ $t('global.verify') }}
+      </var-button>
+    </div>
+  </var-card>
 </template>
