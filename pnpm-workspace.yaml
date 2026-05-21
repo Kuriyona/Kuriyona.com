@@ -3,3 +3,31 @@ allowBuilds:
   '@varlet/nuxt': true
   better-sqlite3: true
   esbuild: true
+minimumReleaseAgeExclude:
+  - xml2js@0.5.0
+  - axios@1.7.4
+  - axios@1.8.2
+  - axios@1.12.0
+  - lodash@4.17.23
+  - minimatch@9.0.6
+  - rollup@4.59.0
+  - minimatch@9.0.7
+  - file-type@21.3.1
+  - file-type@21.3.2
+  - brace-expansion@2.0.3
+  - picomatch@4.0.4
+  - lodash@4.17.24
+  - axios@1.15.0
+  - postcss@8.5.10
+  - '@xmldom/xmldom@0.8.12'
+  - axios@1.15.1
+  - axios@1.15.2
+  - uuid@13.0.1
+  - axios@1.13.5
+  - '@xmldom/xmldom@0.8.13'
+  - nitropack@2.13.4
+  - devalue@5.8.1
+  - brace-expansion@5.0.6
+  - ws@8.20.1
+  - nuxt@4.4.6
+  - '@nuxt/nitro-server@4.4.6'
