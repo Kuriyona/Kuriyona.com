@@ -15,13 +15,9 @@ useHead({
 </script>
 
 <template>
-  <div class="relative h-screen scroll-hidden">
-    <div class="z-100 fixed top-0 w-screen px-4 py-2">
-      <AppBar />
-    </div>
+  <div>
+    <AppBar class="z-100" />
     <AppBackground />
-    <main>
-      <NuxtPage id="main" class="z-0 pt-[68px]" />
-    </main>
+    <NuxtPage id="main" class="z-0" />
   </div>
 </template>
