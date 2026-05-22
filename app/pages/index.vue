@@ -1,28 +1,41 @@
+<script setup lang="ts">
+const config = useAppConfig();
+</script>
+
 <template>
-  <div class="fixed top-0 left-0 bottom-0 w-screen flex justify-center items-center font-mono">
-    <main class="w-80 my-20 p-4 flex flex-col items-center justify-center gap-4">
-      <img class="w-10 rounded-sm" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
-      <h1 class="text-2xl">I'm Kuriyona</h1>
-      <p class="text-center">{{ $t('about.description') }}</p>
-      <NuxtLinkLocale to="/about/" class="w-full">
-        <KButton block text>
-          <div class="flex justify-center items-center gap-2">
-            <span class="text-sm!">{{ $t('about.about-me') }}</span>
-            <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
-          </div>
-        </KButton>
-      </NuxtLinkLocale>
-      <NuxtLinkLocale to="/blog/" class="w-full">
-        <KButton block text>
-          <div class="flex justify-center items-center gap-2">
-            <span class="text-sm!">{{ $t('blog.title') }}</span>
-            <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
-          </div>
-        </KButton>
-      </NuxtLinkLocale>
-      <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="underline">
-        萌 ICP 备 20266280 号
-      </a>
-    </main>
-  </div>
+  <AppPage>
+    <div class="h-[20vh] flex items-center justify-center">
+      <h1 class="text-2xl font-bold">你好，欢迎来到 Kuriyona's Space</h1>
+    </div>
+    <div class="flex justify-center gap-2 max-[400px]:flex-col">
+      <KCard :title="$t('about.about-me')">
+        <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
+        <p>{{ $t('about.also-weixi-yona') }}</p>
+        <br />
+        <p class="font-bold">{{ $t('about.description') }}</p>
+      </KCard>
+      <KCard :title="$t('about.info')">
+        <KTable>
+          <tbody class="bg-transparent">
+            <tr>
+              <th>名字</th>
+              <td>未晞</td>
+            </tr>
+            <tr>
+              <th>生日</th>
+              <td>{{ config.info.birth }}</td>
+            </tr>
+            <tr>
+              <th>MBTI</th>
+              <td>{{ config.info.mbti }}</td>
+            </tr>
+            <tr>
+              <th>身高</th>
+              <td>{{ config.info.height }} cm</td>
+            </tr>
+          </tbody>
+        </KTable>
+      </KCard>
+    </div>
+  </AppPage>
 </template>

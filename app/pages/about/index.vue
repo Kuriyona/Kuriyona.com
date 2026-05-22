@@ -9,9 +9,6 @@ useSeoMeta({ title: $t('about.about-me') });
   <AppPage class="gap-6">
     <IAm />
     <var-divider :description="$t('about.about-me')" />
-    <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
-    <p>{{ $t('about.description') }}</p>
-    <p>{{ $t('about.also-weixi-yona') }}</p>
     <ClientOnly>
       <p>
         {{
