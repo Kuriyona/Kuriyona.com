@@ -7,7 +7,7 @@ const config = useAppConfig();
     <div class="h-[20vh] flex items-center justify-center">
       <h1 class="text-2xl font-bold">你好，欢迎来到 Kuriyona's Space</h1>
     </div>
-    <div class="flex justify-center gap-2 max-[400px]:flex-col">
+    <div class="flex justify-center gap-4 max-[400px]:flex-col">
       <KCard :title="$t('about.about-me')">
         <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
         <p>{{ $t('about.also-weixi-yona') }}</p>
@@ -35,6 +35,14 @@ const config = useAppConfig();
             </tr>
           </tbody>
         </KTable>
+      </KCard>
+    </div>
+    <div class="flex justify-center gap-2 max-[400px]:flex-col">
+      <KCard :title="'未晞所在地'">
+        <img class="h-20" src="https://r2.kuriyona.com/static/image/site/location-map.png" />
+      </KCard>
+      <KCard :title="'未晞所在地天气'">
+        <CardWeather />
       </KCard>
     </div>
   </AppPage>
