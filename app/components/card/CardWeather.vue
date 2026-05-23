@@ -16,7 +16,12 @@ onMounted(() => {
       <tbody class="bg-transparent">
         <tr>
           <th>天气</th>
-          <td>{{ weather.now.text }}</td>
+          <td>
+            <span class="flex justify-end gap-1">
+              <i :class="`qi-${weather.now.icon}`"></i>
+              <span>{{ weather.now.text }}</span>
+            </span>
+          </td>
         </tr>
         <tr>
           <th>温度</th>
