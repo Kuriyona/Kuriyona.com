@@ -67,5 +67,6 @@
   "weather.weather": "Weather",
   "weather.wind-dir": "Wind direction",
   "weather.wind-speed": "Wind speed",
-  "weixi-chan": "Weixi-chan"
+  "weixi-chan": "Weixi-chan",
+  "app.using-cf": "Cloudflare network you for visit this site"
 }
