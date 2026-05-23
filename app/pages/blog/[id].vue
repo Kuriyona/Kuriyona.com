@@ -23,7 +23,7 @@ useSeoMeta({
       </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ post?.title || $t('global.notFound') }}</h1>
-    <p class="text-sm">{{ post?.meta.desc || $t('blog.notFound') }}</p>
+    <p class="text-sm">{{ post?.desc || $t('blog.notFound') }}</p>
     <template v-if="!post">
       <var-divider />
       <KCardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
@@ -32,11 +32,11 @@ useSeoMeta({
       <div class="flex justify-between items-center gap-1">
         <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> schedule </span>
-          <span class="text-sm"> {{ post.meta.date }}</span>
+          <span class="text-sm"> {{ post.date }}</span>
         </span>
-        <span v-if="post.meta.edit" class="flex items-center gap-1">
+        <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> edit </span>
-          <span class="text-sm"> {{ post.meta.edit }}</span>
+          <span class="text-sm"> {{ post.edit }}</span>
         </span>
       </div>
       <var-divider />

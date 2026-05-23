@@ -38,7 +38,8 @@
     "qrcode.vue": "^3.9.1",
     "shiki": "^4.1.0",
     "tailwindcss": "^4.3.0",
-    "vue-turnstile": "^1.0.11"
+    "vue-turnstile": "^1.0.11",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "oxfmt": "^0.46.0"
