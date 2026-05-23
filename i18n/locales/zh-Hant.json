@@ -28,8 +28,10 @@
   "about.skills": "技能",
   "about.weather": "所在地天氣",
   "about.welcome-to": "你好，歡迎來到",
+  "app.using-cf": "你造訪此網站使用的 Cloudflare 網路為",
   "best_friends": "最好的夥伴！",
   "blog.notFound": "當前部落格不存在或當前語言下部落格不存在",
+  "blog.other-lang": "其他語言版本",
   "blog.title": "@:weixi-chan{''}的博客",
   "contact.bilibili": "嗶哩嗶哩",
   "contact.email": "郵箱",
@@ -66,7 +68,5 @@
   "weather.weather": "天氣",
   "weather.wind-dir": "風向",
   "weather.wind-speed": "風速",
-  "weixi-chan": "未晞醬",
-  "app.using-cf": "你造訪此網站使用的 Cloudflare 網路為",
-  "blog.other-lang": "其他語言版本"
+  "weixi-chan": "未晞醬"
 }

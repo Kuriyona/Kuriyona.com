@@ -26,3 +26,7 @@ body {
     font-family: 'Noto Color Emoji', var(--font-family);
   }
 }
+
+.material-symbols-outlined {
+  user-select: none;
+}

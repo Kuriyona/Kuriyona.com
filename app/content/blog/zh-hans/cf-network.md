@@ -102,9 +102,12 @@ export async function getCloudflareStatus(): Promise<CloudflareStatusResult> {
   // 获取 trace 数据
   const traceText = await ky.get('https://kuriyona.com/cdn-cgi/trace').text();
   const traceData = Object.fromEntries(
-    traceText.split('\n').filter(line => line.includes('=')).map((line) => line.split('='))
+    traceText
+      .split('\n')
+      .filter((line) => line.includes('='))
+      .map((line) => line.split('=')),
   ) as TraceData;
-  
+
   console.log(traceData);
 
   // 计算当前节点名称

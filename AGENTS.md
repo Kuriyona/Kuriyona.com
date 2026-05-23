@@ -4,17 +4,17 @@ Personal website built with **Nuxt 4** (SSR) + **Elysia** (Bun backend).
 
 ## Stack
 
-| Layer | Choice |
-|-------|--------|
-| Runtime | **Bun** (not Node.js) |
-| Package manager | **pnpm** |
-| Frontend | Nuxt 4 + Vue 3 + Tailwind CSS v4 |
-| UI library | Varlet UI (`<var-input>`, `<VarCard>`, etc.) |
-| Animations | GSAP |
-| I18n | `@nuxtjs/i18n` (no_prefix strategy, zh/en) |
-| Backend | Elysia on Bun, port 62802 |
-| Storage | Cloudflare R2 (S3-compatible) via AWS SDK |
-| Formatter | `oxfmt` (not Prettier) |
+| Layer           | Choice                                       |
+| --------------- | -------------------------------------------- |
+| Runtime         | **Bun** (not Node.js)                        |
+| Package manager | **pnpm**                                     |
+| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4             |
+| UI library      | Varlet UI (`<var-input>`, `<VarCard>`, etc.) |
+| Animations      | GSAP                                         |
+| I18n            | `@nuxtjs/i18n` (no_prefix strategy, zh/en)   |
+| Backend         | Elysia on Bun, port 62802                    |
+| Storage         | Cloudflare R2 (S3-compatible) via AWS SDK    |
+| Formatter       | `oxfmt` (not Prettier)                       |
 
 ## Commands
 

@@ -28,8 +28,10 @@
   "about.skills": "Skills",
   "about.weather": "Location weather",
   "about.welcome-to": "Hello, welcome to",
+  "app.using-cf": "Cloudflare network you for visit this site",
   "best_friends": "Best friends !",
   "blog.notFound": "The current blog does not exist or the blog in the current language does not exist.",
+  "blog.other-lang": "Other language versions",
   "blog.title": "@:weixi-chan{''}'s blog",
   "contact.bilibili": "Bilibili",
   "contact.email": "e-Mail",
@@ -67,7 +69,5 @@
   "weather.weather": "Weather",
   "weather.wind-dir": "Wind direction",
   "weather.wind-speed": "Wind speed",
-  "weixi-chan": "Weixi-chan",
-  "app.using-cf": "Cloudflare network you for visit this site",
-  "blog.other-lang": "Other language versions"
+  "weixi-chan": "Weixi-chan"
 }

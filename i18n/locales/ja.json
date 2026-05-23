@@ -28,8 +28,10 @@
   "about.skills": "スキル",
   "about.weather": "位置の天気",
   "about.welcome-to": "こんにちは、ようこそ",
+  "app.using-cf": "このサイト訪問時の Cloudflare ネットワーク",
   "best_friends": "最高の仲間！",
   "blog.notFound": "現在のブログが存在しないか、現在の言語のブログが存在しません。",
+  "blog.other-lang": "他の言語バージョン",
   "blog.title": "@:weixi-chan{''}のブログ",
   "contact.bilibili": "Bilibili",
   "contact.email": "メール",
@@ -67,7 +69,5 @@
   "weather.weather": "天気",
   "weather.wind-dir": "風向き",
   "weather.wind-speed": "風速",
-  "weixi-chan": "未晞ちゃん",
-  "app.using-cf": "このサイト訪問時の Cloudflare ネットワーク",
-  "blog.other-lang": "他の言語バージョン"
+  "weixi-chan": "未晞ちゃん"
 }
