@@ -44,3 +44,11 @@ useSeoMeta({
     </template>
   </AppPage>
 </template>
+
+<style lang="css">
+p:has(img) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
