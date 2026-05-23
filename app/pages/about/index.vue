@@ -18,7 +18,7 @@ const config = useAppConfig();
         <br />
         <p class="font-bold">{{ $t('about.description') }}</p>
       </KCard>
-      <CardInfo />
+      <CardInfo class="min-w-[25%]" />
     </div>
     <KCardLink to="/blog">
       <template #content>
@@ -52,7 +52,7 @@ const config = useAppConfig();
             src="https://r2.kuriyona.com/static/image/site/location-map-400.png" />
         </div>
       </KCard>
-      <KCard :title="$t('about.weather')">
+      <KCard :title="$t('about.weather')" class="min-w-[25%]">
         <CardWeather />
       </KCard>
     </div>
