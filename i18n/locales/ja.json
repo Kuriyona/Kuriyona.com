@@ -68,5 +68,6 @@
   "weather.wind-dir": "風向き",
   "weather.wind-speed": "風速",
   "weixi-chan": "未晞ちゃん",
-  "app.using-cf": "このサイト訪問時の Cloudflare ネットワーク"
+  "app.using-cf": "このサイト訪問時の Cloudflare ネットワーク",
+  "blog.other-lang": "他の言語バージョン"
 }

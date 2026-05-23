@@ -4,11 +4,20 @@ import 'github-markdown-css/github-markdown-dark.css';
 const route = useRoute();
 
 const id = route.params.id;
-const { locale } = useI18n();
+const { locale, locales } = useI18n();
 
-const { data: post } = await useAsyncData(`post-${id}-${locale.value.toLowerCase()}`, () =>
-  queryCollection('blog').path(`/blog/${locale.value.toLowerCase()}/${id}`).first(),
-);
+const { data: posts } = await useAsyncData(`post-${id}`, async () => {
+  return await Promise.all(
+    locales.value.map(async (locale) => ({
+      locale: locale.code,
+      post: await queryCollection('blog')
+        .path(`/blog/${locale.code.toLocaleLowerCase()}/${id}`)
+        .first(),
+    })),
+  );
+});
+const post = computed(() => posts.value?.find((item) => item.locale == locale.value)?.post);
+const otherPosts = computed(() => posts.value?.filter((item) => item.locale != locale.value));
 useSeoMeta({
   title: `${post.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
   description: post.value?.meta.desc as string,
@@ -42,6 +51,13 @@ useSeoMeta({
       <var-divider />
       <ContentRenderer :value="post!" class="markdown-body bg-transparent! my-10!" />
     </template>
+    <KCard :title="$t('blog.other-lang')">
+      <KCardLink level v-for="item in otherPosts" :to="`/blog/${id}`" :lang="item.locale">
+        <template #content>
+          {{ item?.post?.title || $t('global.notFound') }}
+        </template>
+      </KCardLink>
+    </KCard>
   </AppPage>
 </template>
 

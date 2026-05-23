@@ -1,26 +1,19 @@
 <script setup lang="ts">
-const props = defineProps({
-  to: {
-    type: String,
-  },
-  text: {
-    type: String,
-  },
-  img: {
-    type: String,
-  },
-  new: {
-    type: Boolean,
-    default: false,
-  },
-  icon: {
-    type: String,
-  },
-});
+const props = defineProps<{
+  to?: string;
+  text?: string;
+  img?: string;
+  new?: boolean;
+  icon?: string;
+  lang?: string;
+}>();
 </script>
 
 <template>
-  <NuxtLinkLocale :to="props.to" :target="props.new ? '_blank' : '_self'">
+  <NuxtLinkLocale
+    :to="props.to"
+    :locale="props.lang as any"
+    :target="props.new ? '_blank' : '_self'">
     <KCard class="hover:bg-white/5 transition-bg duration-300" v-bind="$attrs">
       <slot />
       <div v-if="!$slots.default" class="flex justify-between items-center">
