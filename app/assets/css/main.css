@@ -1,7 +1,7 @@
 @import url('./font.css');
 @import 'tailwindcss';
 
-html{
+html {
   scroll-behavior: smooth;
   scroll-padding-top: 100px;
 }
@@ -13,7 +13,21 @@ body {
 }
 
 * {
-  transition: color 0.25s, background-color 0.25s;
+  transition:
+    color 0.25s,
+    background-color 0.25s;
+}
+
+* {
+  cursor:
+    url('https://r2.kuriyona.com/static/cursor/windows_11_cursors_concept/arrow.cur'), auto;
+}
+
+a,
+a *,
+button,
+button * {
+  cursor: url('https://r2.kuriyona.com/static/cursor/windows_11_cursors_concept/hand.cur'), pointer;
 }
 
 ::selection {
