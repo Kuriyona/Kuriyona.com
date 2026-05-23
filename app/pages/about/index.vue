@@ -6,7 +6,7 @@ const config = useAppConfig();
   <AppPage>
     <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10 mb-10">
       <h1 class="text-2xl font-bold">
-        <span>你好，欢迎来到</span>
+        <span>{{ $t('about.welcome-to') }}</span>
         <br />
         <span>Kuriyona's Space</span>
       </h1>
@@ -20,16 +20,20 @@ const config = useAppConfig();
       </KCard>
       <CardInfo />
     </div>
-    <KCardLink to="/about-mtf">
+    <KCardLink to="/about/as-mtf">
       <template #content>
-        <p class="trans-text">{{ $t('about.mtf.as-mtf') }}</p>
+        <p class="trans-text">
+          <span>{{ $t('global.read-more') }}</span>
+          <span>&nbsp;·&nbsp;</span>
+          <span>「{{ $t('about.mtf.as-mtf') }}」</span>
+        </p>
       </template>
     </KCardLink>
     <div class="flex justify-center gap-4 max-[600px]:flex-col">
-      <KCard :title="'未晞所在地'" class="flex-1">
+      <KCard :title="$t('about.location')" class="flex-1">
         <div class="relative max-h-40 h-full w-full">
           <p class="absolute bottom-1 left-1 text-black/80 text-sm backdrop-blur-md p-1 rounded-md">
-            浙江省，杭州市，临安区
+            {{ $t('about.location-value') }}
           </p>
           <img
             class="h-full w-full object-cover max-[400px]:hidden"
@@ -39,11 +43,11 @@ const config = useAppConfig();
             src="https://r2.kuriyona.com/static/image/site/location-map-400.png" />
         </div>
       </KCard>
-      <KCard :title="'未晞所在地天气'">
+      <KCard :title="$t('about.weather')">
         <CardWeather />
       </KCard>
     </div>
-    <KCard :title="'未晞的技能'">
+    <KCard :title="$t('about.skills')">
       <div class="flex justify-center gap-2 max-[600px]:flex-col">
         <div class="flex gap-2 flex-wrap justify-center">
           <img
@@ -63,7 +67,7 @@ const config = useAppConfig();
         </div>
       </div>
     </KCard>
-    <KCard :title="'找到我'">
+    <KCard :title="$t('about.find-me')">
       <div class="flex flex-wrap gap-2 justify-center">
         <KCardLink
           level

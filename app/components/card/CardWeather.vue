@@ -15,7 +15,7 @@ onMounted(() => {
     <KTable v-if="weather">
       <tbody class="bg-transparent">
         <tr>
-          <th>天气</th>
+          <th>{{ $t('weather.weather') }}</th>
           <td>
             <span class="flex justify-end gap-1">
               <i :class="`qi-${weather.now.icon}`"></i>
@@ -24,15 +24,15 @@ onMounted(() => {
           </td>
         </tr>
         <tr>
-          <th>温度</th>
+          <th>{{ $t('weather.temp') }}</th>
           <td>{{ weather.now.temp }}℃</td>
         </tr>
         <tr>
-          <th>体感</th>
+          <th>{{ $t('weather.feels-like') }}</th>
           <td>{{ weather.now.feelsLike }}℃</td>
         </tr>
         <tr>
-          <th>湿度</th>
+          <th>{{ $t('weather.humidity') }}</th>
           <td>{{ weather.now.humidity }}%</td>
         </tr>
       </tbody>
@@ -40,19 +40,19 @@ onMounted(() => {
     <KTable v-if="weather">
       <tbody class="bg-transparent">
         <tr>
-          <th>风速</th>
+          <th>{{ $t('weather.wind-speed') }}</th>
           <td>{{ weather.now.windSpeed }} m/s</td>
         </tr>
         <tr>
-          <th>风向</th>
+          <th>{{ $t('weather.wind-dir') }}</th>
           <td>{{ weather.now.windDir }}</td>
         </tr>
         <tr>
-          <th>云量</th>
+          <th>{{ $t('weather.cloud') }}</th>
           <td>{{ weather.now.cloud }}%</td>
         </tr>
         <tr>
-          <th>能见度</th>
+          <th>{{ $t('weather.vis') }}</th>
           <td>{{ weather.now.vis }} km</td>
         </tr>
       </tbody>

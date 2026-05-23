@@ -7,11 +7,11 @@ const config = useAppConfig();
     <KTable>
       <tbody class="bg-transparent">
         <tr>
-          <th>名字</th>
+          <th>{{ $t('about.name') }}</th>
           <td>未晞</td>
         </tr>
         <tr>
-          <th>生日</th>
+          <th>{{ $t('about.birth') }}</th>
           <td>{{ config.info.birth }}</td>
         </tr>
         <tr>
@@ -19,7 +19,7 @@ const config = useAppConfig();
           <td>{{ config.info.mbti }}</td>
         </tr>
         <tr>
-          <th>身高</th>
+          <th>{{ $t('about.height') }}</th>
           <td>{{ config.info.height }} cm</td>
         </tr>
       </tbody>
