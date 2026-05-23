@@ -15,6 +15,11 @@ const config = useAppConfig();
       <KCard :title="$t('about.about-me')" class="flex-1">
         <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
         <p>{{ $t('about.also-weixi-yona') }}</p>
+        <p>
+          <NuxtLinkLocale to="/blog/about-name" class="underline">{{
+            $t('about.about-my-name')
+          }}</NuxtLinkLocale>
+        </p>
         <br />
         <p class="font-bold">{{ $t('about.description') }}</p>
       </KCard>
