@@ -8,6 +8,14 @@ useSeoMeta({ title: $t('about.about-me') });
 <template>
   <AppPage class="gap-6">
     <IAm />
+    <div class="flex justify-center gap-4 max-[400px]:flex-col">
+      <KCard :title="$t('about.about-me')" class="flex-1">
+        <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
+        <p>{{ $t('about.also-weixi-yona') }}</p>
+        <br />
+        <p class="font-bold">{{ $t('about.description') }}</p>
+      </KCard>
+    </div>
     <var-divider :description="$t('about.about-me')" />
     <ClientOnly>
       <p>
