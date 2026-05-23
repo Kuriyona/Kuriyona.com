@@ -25,7 +25,7 @@ const config = useAppConfig();
         <p class="trans-text">{{ $t('about.mtf.as-mtf') }}</p>
       </template>
     </KCardLink>
-    <div class="flex justify-center gap-2 max-[600px]:flex-col">
+    <div class="flex justify-center gap-4 max-[600px]:flex-col">
       <KCard :title="'未晞所在地'" class="flex-1">
         <div class="relative max-h-40 h-full w-full">
           <p class="absolute bottom-1 left-1 text-black/80 text-sm backdrop-blur-md p-1 rounded-md">
@@ -61,6 +61,26 @@ const config = useAppConfig();
             :alt="$t(item.name)"
             :src="`https://img.shields.io/badge/${item.icon}-${$t(item.name)}-black?style=for-the-badge`" />
         </div>
+      </div>
+    </KCard>
+    <KCard :title="'找到我'">
+      <div class="flex flex-wrap gap-2 justify-center">
+        <KCardLink
+          level
+          v-for="link in config.contact"
+          :key="link.name"
+          :to="link.link"
+          :text="link.value"
+          :new="true">
+          <div class="flex items-center gap-4">
+            <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
+            <img
+              v-if="link.icon"
+              class="w-4 h-4"
+              :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
+            <span>{{ link.i18nKey ? $t(link.i18nKey) : link.name }}</span>
+          </div>
+        </KCardLink>
       </div>
     </KCard>
   </AppPage>
