@@ -31,6 +31,32 @@ const handleUpload = async () => {
   lastFileURL.value = `https://r2.kuriyona.com/static/${key.value}`;
   if (res.status != 200) return;
 };
+
+const handlePasteFile = async (event: ClipboardEvent) => {
+  const items = event.clipboardData?.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.indexOf('image') !== -1 || item.type.indexOf('file') !== -1) {
+      const file = item.getAsFile();
+      if (!file) continue;
+      const varFile: VarFile = {
+        file: file,
+        name: file.name || `paste-${Date.now()}.${file.type.split('/')[1] || 'png'}`,
+      };
+      fileList.value = [varFile];
+      const name = varFile.name;
+      key.value = `${dayjs().format('YYYY/MM/DD/')}${name}`;
+    }
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('paste', handlePasteFile);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('paste', handlePasteFile);
+});
 </script>
 
 <template>
