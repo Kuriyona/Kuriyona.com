@@ -10,9 +10,6 @@ body {
   font-weight: 500;
   color: var(--color-text);
   background-color: var(--color-body);
-}
-
-* {
   transition:
     color 0.25s,
     background-color 0.25s;

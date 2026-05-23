@@ -41,7 +41,8 @@ const config = useAppConfig();
     <div class="flex justify-center gap-4 max-[600px]:flex-col">
       <KCard :title="$t('about.location')" class="flex-1">
         <div class="relative max-h-40 h-full w-full">
-          <p class="absolute bottom-1 left-1 text-black/80 text-sm backdrop-blur-md p-1 rounded-md">
+          <p
+            class="absolute bottom-0 left-0 text-black/80 text-sm backdrop-blur-md p-1 rounded-tr-md">
             {{ $t('about.location-value') }}
           </p>
           <img
