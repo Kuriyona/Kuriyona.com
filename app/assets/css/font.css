@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji');
 
 @import url('https://cdn.jsdelivr.net/npm/qweather-icons@1.3.0/font/qweather-icons.css');
 
@@ -20,5 +21,8 @@ body {
 :root {
   .font-mono {
     font-family: 'JetBrains Mono', var(--font-family);
+  }
+  .font-emoji {
+    font-family: 'Noto Color Emoji', var(--font-family);
   }
 }
