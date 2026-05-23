@@ -1,6 +1,11 @@
 @import url('./font.css');
 @import 'tailwindcss';
 
+html{
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
 body {
   font-weight: 500;
   color: var(--color-text);

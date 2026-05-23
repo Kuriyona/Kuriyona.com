@@ -51,4 +51,6 @@ p:has(img) {
   justify-content: center;
   align-items: center;
 }
+html {
+}
 </style>
