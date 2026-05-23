@@ -7,12 +7,40 @@ const popup = ref(false);
 </script>
 
 <template>
-  <div class="sticky top-0 flex justify-center p-2">
-    <div
-      class="w-200 font-mono py-2 px-3 flex justify-between items-center rounded-xl backdrop-brightness-75 backdrop-blur-3xl">
-      <NuxtLinkLocale to="/">
-        <span class="hover:text-shadow-lg text-shadow-white/20">Kuriyona's Space</span>
-      </NuxtLinkLocale>
+  <div class="sticky top-0 flex justify-center backdrop-brightness-75 backdrop-blur-3xl">
+    <div class="w-200 px-4">
+      <div class="font-mono py-2 px-3 flex justify-between items-center rounded-xl">
+        <NuxtLinkLocale to="/">
+          <span class="hover:underline">Kuriyona's Space</span>
+        </NuxtLinkLocale>
+        <div id="actions" class="flex gap-2">
+          <VarButton round text @click="popup = true">
+            <span class="material-symbols-outlined"> chat </span>
+          </VarButton>
+          <VarPopup v-model:show="popup" class="rounded-l-xl" position="right">
+            <div class="relative flex flex-col h-full w-120 max-w-[80vw] overflow-hidden">
+              <div class="flex justify-between items-center px-6 py-2">
+                <span>{{ $t('neko.title') }}</span>
+                <VarButton round text @click="popup = false">
+                  <span class="material-symbols-outlined"> close </span>
+                </VarButton>
+              </div>
+              <NekoChat />
+            </div>
+          </VarPopup>
+          <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">
+            <VarButton round text>
+              <span class="material-symbols-outlined"> translate </span>
+            </VarButton>
+            <template #options>
+              <VarMenuOption @click="setLocale('zh-Hans')" label="中文(简体)"></VarMenuOption>
+              <VarMenuOption @click="setLocale('zh-Hant')" label="中文(繁体)"></VarMenuOption>
+              <VarMenuOption @click="setLocale('en')" label="English"></VarMenuOption>
+              <VarMenuOption @click="setLocale('ja')" label="日本語"></VarMenuOption>
+            </template>
+          </VarMenuSelect>
+        </div>
+      </div>
     </div>
   </div>
 </template>
