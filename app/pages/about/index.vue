@@ -11,7 +11,7 @@ const config = useAppConfig();
         <span>Kuriyona's Space</span>
       </h1>
     </div>
-    <div class="flex justify-center gap-4 max-[400px]:flex-col">
+    <div class="flex justify-center gap-4 max-[600px]:flex-col">
       <KCard :title="$t('about.about-me')" class="flex-1">
         <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
         <p>{{ $t('about.also-weixi-yona') }}</p>
@@ -20,6 +20,15 @@ const config = useAppConfig();
       </KCard>
       <CardInfo />
     </div>
+    <KCardLink to="/blog">
+      <template #content>
+        <p>
+          <span>{{ $t('global.read-more') }}</span>
+          <span>&nbsp;·&nbsp;</span>
+          <span>「{{ $t('blog.title') }}」</span>
+        </p>
+      </template>
+    </KCardLink>
     <KCardLink to="/about/as-mtf">
       <template #content>
         <p class="trans-text">
