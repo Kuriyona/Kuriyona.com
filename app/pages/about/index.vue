@@ -43,5 +43,25 @@ const config = useAppConfig();
         <CardWeather />
       </KCard>
     </div>
+    <KCard :title="'未晞的技能'">
+      <div class="flex justify-center gap-2 max-[600px]:flex-col">
+        <div class="flex gap-2 flex-wrap justify-center">
+          <img
+            v-for="item in config.tech_stack"
+            :key="item.name"
+            :alt="item.name"
+            :src="`https://img.shields.io/badge/${encodeURIComponent(item.name)}-black?style=for-the-badge&logo=${item.icon}`" />
+        </div>
+        <var-divider vertical class="max-[600px]:hidden" />
+        <var-divider class="min-[600px]:hidden" />
+        <div class="flex gap-2 flex-wrap justify-center">
+          <img
+            v-for="item in config.languages"
+            :key="item.name"
+            :alt="$t(item.name)"
+            :src="`https://img.shields.io/badge/${item.icon}-${$t(item.name)}-black?style=for-the-badge`" />
+        </div>
+      </div>
+    </KCard>
   </AppPage>
 </template>
