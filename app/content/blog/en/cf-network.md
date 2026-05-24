@@ -1,8 +1,8 @@
 ---
 title: How to Display the Current Cloudflare Network Used on a Website
 desc: By parsing Cloudflare's /cdn-cgi/trace endpoint to obtain the current network node ID, and then matching the node name using Cloudflare Status's public API, you can dynamically display the name of the Cloudflare network that the visitor is using on your website.
-date: 2025-05-24
-edit: 2025-05-24
+date: 2026-05-24
+edit: 2026-05-24
 ---
 
 Early this morning, I added a small feature to my personal website: displaying the current Cloudflare network in use.

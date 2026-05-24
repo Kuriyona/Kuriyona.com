@@ -1,8 +1,8 @@
 ---
 title: About the Name of Weixi-chan
 desc: The origin of the name "Weixi-chan"
-date: 2025-05-18
-edit: 2025-05-18
+date: 2026-05-18
+edit: 2026-05-18
 ---
 
 ### My Names

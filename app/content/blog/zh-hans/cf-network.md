@@ -1,8 +1,8 @@
 ---
 title: 如何在网站显示当前使用的 Cloudflare 网络
 desc: 通过解析 Cloudflare 的 /cdn-cgi/trace 接口获取当前网络节点 ID，再结合 Cloudflare Status 的公共 API 匹配出节点名称，从而在网站上动态显示访客正在使用的 Cloudflare 网络名称。
-date: 2025-05-24
-edit: 2025-05-24
+date: 2026-05-24
+edit: 2026-05-24
 ---
 
 今天凌晨给我的个人网站加了一个小功能，就是在网站显示当前使用的 Cloudflare 网络。
