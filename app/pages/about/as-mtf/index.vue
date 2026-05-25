@@ -110,12 +110,13 @@ const timeInfo = computed(() => {
         </div>
       </KCard>
       <KCard :title="$t('about.about-me')">
-        <KCardLink to="/about" :text="$t('about.my-site-home')" />
+        <KCardLink to="/about" level :text="$t('about.my-site-home')" />
       </KCard>
       <KCard :title="$t('about.mtf.about-trans')">
         <div class="flex flex-col gap-4">
           <KCardLink
             v-for="item in data"
+            level
             :key="item.href"
             :to="item.href"
             :text="item.title"
