@@ -15,7 +15,7 @@ const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
   <div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
     <div class="relative max-w-100 flex flex-col gap-4 mx-4">
       <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10">
-        <h1 class="text-2xl font-bold">
+        <h1 class="text-2xl font-bold font-mono">
           <span>{{ $t('about.welcome-to') }}</span>
           <br />
           <span>Kuriyona's Space</span>

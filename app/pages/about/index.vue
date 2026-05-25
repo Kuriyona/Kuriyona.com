@@ -5,7 +5,7 @@ const config = useAppConfig();
 <template>
   <AppPage>
     <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10 mb-10">
-      <h1 class="text-2xl font-bold">
+      <h1 class="text-2xl font-bold font-mono">
         <span>{{ $t('about.welcome-to') }}</span>
         <br />
         <span>Kuriyona's Space</span>
