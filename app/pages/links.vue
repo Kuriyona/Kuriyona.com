@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Config from '../config.json';
+const config = useAppConfig();
 useSeoMeta({ title: $t('about.links') });
 </script>
 
@@ -13,14 +13,14 @@ useSeoMeta({ title: $t('about.links') });
     <h1 class="text-2xl">{{ $t('about.links') }}</h1>
     <var-divider :description="$t('best_friends')" />
     <KCardLink
-      v-for="link in Config.links.main"
+      v-for="link in config.links.main"
       :to="link.url"
       :text="link.title"
       :img="link.avatar"
       :new="true" />
     <var-divider :description="$t('other_friends')" />
     <KCardLink
-      v-for="link in Config.links.others"
+      v-for="link in config.links.others"
       :to="link.url"
       :text="link.title"
       :img="link.avatar"

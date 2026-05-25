@@ -102,5 +102,17 @@ const config = useAppConfig();
         </KCardLink>
       </div>
     </KCard>
+    <KCard :title="$t('about.links')">
+      <div class="flex flex-col gap-2">
+        <KCardLink
+          v-for="link in config.links.main"
+          level
+          :to="link.url"
+          :text="link.title"
+          :img="link.avatar"
+          :new="true" />
+        <KCardLink level to="/links" :text="$t('more')" />
+      </div>
+    </KCard>
   </AppPage>
 </template>
