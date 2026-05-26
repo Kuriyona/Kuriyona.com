@@ -81,8 +81,8 @@ export default defineAppConfig({
       name: 'Zhihu',
       i18nKey: 'contact.zhihu',
       value: 'Kuriyona - 知乎',
-      link: 'https://www.zhihu.com/people/cn-chestnut',
-      qr: 'https://www.zhihu.com/people/cn-chestnut',
+      link: 'https://www.zhihu.com/people/kuriyona',
+      qr: 'https://www.zhihu.com/people/kuriyona',
       icon: 'zhihu',
     },
     {
