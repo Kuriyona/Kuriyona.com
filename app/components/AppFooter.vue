@@ -31,8 +31,7 @@ const { currentNodeName, location } = useCloudflareStatus();
       </p>
       <p v-if="currentNodeName">
         <span>{{ $t('app.using-cf') }}</span>
-        <span>&nbsp;:&nbsp;{{ currentNodeName }}&nbsp;|&nbsp;</span>
-        <span class="font-emoji">{{ countryCodeToFlagEmoji(location) }}</span>
+        <span>&nbsp;:&nbsp;{{ currentNodeName }}</span>
       </p>
     </div>
   </KCard>
