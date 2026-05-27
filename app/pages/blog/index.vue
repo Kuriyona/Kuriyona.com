@@ -6,7 +6,7 @@ const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
     .order('date', 'DESC')
     .all()
     .then((res) =>
-      res.filter((post) => post.path.startsWith(`/blog/${locale.value.toLowerCase()}`)),
+      res.filter((post) => post.path.startsWith(`/blog/${uniLocale(locale.value).toLowerCase()}`)),
     ),
 );
 

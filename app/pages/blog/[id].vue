@@ -11,7 +11,7 @@ const { data: posts } = await useAsyncData(`post-${id}`, async () => {
     locales.value.map(async (locale) => ({
       locale: locale.code,
       post: await queryCollection('blog')
-        .path(`/blog/${locale.code.toLocaleLowerCase()}/${id}`)
+        .path(`/blog/${uniLocale(locale.code).toLowerCase()}/${id}`)
         .first(),
     })),
   );
@@ -52,11 +52,13 @@ useSeoMeta({
       <ContentRenderer :value="post!" class="markdown-body bg-transparent! my-10!" />
     </template>
     <KCard :title="$t('blog.other-lang')">
-      <KCardLink level v-for="item in otherPosts" :to="`/blog/${id}`" :lang="item.locale">
-        <template #content>
-          {{ item?.post?.title || $t('global.notFound') }}
-        </template>
-      </KCardLink>
+      <div class="flex flex-col gap-2">
+        <KCardLink level v-for="item in otherPosts" :to="`/blog/${id}`" :lang="item.locale">
+          <template #content>
+            {{ item?.post?.title || $t('global.notFound') }}
+          </template>
+        </KCardLink>
+      </div>
     </KCard>
   </AppPage>
 </template>
