@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
 import NekoChat from './NekoChat.vue';
-const { setLocale } = useI18n();
+const { setLocale, locales } = useI18n();
 const selecting = ref(false);
 const popup = ref(false);
 </script>
@@ -36,15 +36,11 @@ const popup = ref(false);
               <span class="material-symbols-outlined"> translate </span>
             </VarButton>
             <template #options>
-              <VarMenuOption @click="setLocale('zh-Hans')" label="简体中文"></VarMenuOption>
               <VarMenuOption
-                @click="setLocale('zh-Hant-TW')"
-                label="繁体中文（台湾）"></VarMenuOption>
-              <VarMenuOption
-                @click="setLocale('zh-Hant-HK')"
-                label="繁体中文（香港）"></VarMenuOption>
-              <VarMenuOption @click="setLocale('en')" label="English"></VarMenuOption>
-              <VarMenuOption @click="setLocale('ja')" label="日本語"></VarMenuOption>
+                v-for="locale in locales"
+                :key="locale.code"
+                @click="setLocale(locale.code)"
+                :label="locale.name" />
             </template>
           </VarMenuSelect>
         </div>
