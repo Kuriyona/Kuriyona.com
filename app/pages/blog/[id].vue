@@ -17,7 +17,9 @@ const { data: posts } = await useAsyncData(`post-${id}`, async () => {
   );
 });
 const post = computed(() => posts.value?.find((item) => item.locale == locale.value)?.post);
-const otherPosts = computed(() => posts.value?.filter((item) => item.locale != locale.value));
+const otherPosts = computed(() =>
+  posts.value?.filter((item) => item.locale != locale.value && item.post),
+);
 useSeoMeta({
   title: `${post.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
   description: post.value?.meta.desc as string,
@@ -55,7 +57,7 @@ useSeoMeta({
       <div class="flex flex-col gap-2">
         <KCardLink level v-for="item in otherPosts" :to="`/blog/${id}`" :lang="item.locale">
           <template #content>
-            {{ item?.post?.title || $t('global.notFound') }}
+            {{ item?.post?.title }}
           </template>
         </KCardLink>
       </div>
