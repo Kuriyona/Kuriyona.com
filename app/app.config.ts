@@ -192,4 +192,31 @@ export default defineAppConfig({
       icon: 'JP',
     },
   ],
+  games: [
+    {
+      i18nKey: 'about.games.genshin',
+      img: 'https://r2.kuriyona.com/static/image/games/genshin.png',
+      link: 'https://ys.mihoyo.com/',
+    },
+    {
+      i18nKey: 'about.games.starrail',
+      img: 'https://r2.kuriyona.com/static/image/games/starrail.png',
+      link: 'https://sr.mihoyo.com/',
+    },
+    {
+      name: 'Cities: Skylines',
+      img: 'https://r2.kuriyona.com/static/image/games/steam/header/949230.png',
+      link: 'https://www.steampowered.com/app/949230/',
+    },
+    {
+      name: 'Transport Fever',
+      img: 'https://r2.kuriyona.com/static/image/games/steam/header/1066780.png',
+      link: 'https://www.steampowered.com/app/1066780/',
+    },
+    {
+      name: 'Ballex',
+      img: 'https://r2.kuriyona.com/static/image/games/steam/header/1383570.png',
+      link: 'https://www.steampowered.com/app/1383570/',
+    },
+  ],
 });
