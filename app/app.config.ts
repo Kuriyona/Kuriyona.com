@@ -204,6 +204,11 @@ export default defineAppConfig({
       link: 'https://sr.mihoyo.com/',
     },
     {
+      name: 'Minecraft',
+      img: 'https://r2.kuriyona.com/static/image/games/minecraft.png',
+      link: 'https://minecraft.net/',
+    },
+    {
       name: 'Cities: Skylines',
       img: 'https://r2.kuriyona.com/static/image/games/steam/header/949230.png',
       link: 'https://www.steampowered.com/app/949230/',
