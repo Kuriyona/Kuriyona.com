@@ -14,7 +14,7 @@ export default defineAppConfig({
       },
       {
         url: 'https://space.bilibili.com/1337924642',
-        title: '妹妹 | 鱼块糯 - 哔哩哔哩',
+        title: '鱼块糯 - 哔哩哔哩',
         avatar: 'https://r2.kuriyona.com/img/xFurina/xFurina.jpg',
       },
     ],
@@ -31,7 +31,7 @@ export default defineAppConfig({
       },
       {
         url: 'https://github.com/lfcypo',
-        title: 'lfcypo',
+        title: 'lfcypo - GitHub',
         avatar: 'https://avatars.githubusercontent.com/u/110813385',
       },
       {
