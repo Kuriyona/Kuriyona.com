@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const config = useAppConfig();
-useSeoMeta({ title: $t('about.links') });
+useSeoMeta({ title: $t('about.links.title') });
 </script>
 
 <template>
@@ -10,8 +10,8 @@ useSeoMeta({ title: $t('about.links') });
         <span class="material-symbols-outlined"> arrow_back </span>
       </KButton>
     </NuxtLinkLocale>
-    <h1 class="text-2xl">{{ $t('about.links') }}</h1>
-    <KCard :title="$t('best_friends')">
+    <h1 class="text-2xl">{{ $t('about.links.title') }}</h1>
+    <KCard :title="$t('about.links.best-friends')">
       <div class="flex flex-col gap-2">
         <KCardLink
           v-for="link in config.links.main"
@@ -22,8 +22,8 @@ useSeoMeta({ title: $t('about.links') });
           :new="true" />
       </div>
     </KCard>
-    <KCard :title="$t('other_friends')">
-      <div class="flex flex-col gap-2">
+    <KCard :title="$t('about.links.other-friends')">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <KCardLink
           v-for="link in config.links.others"
           level
@@ -33,7 +33,7 @@ useSeoMeta({ title: $t('about.links') });
           :new="true" />
       </div>
     </KCard>
-    <KCard :title="$t('links.add-me')">
+    <KCard :title="$t('about.links.add-me')">
       <div class="font-mono text-wrap break-all">
         <p>url : https://kuriyona.com</p>
         <p>title : Kuriyona's Space</p>

@@ -15,7 +15,6 @@
   "about.language.my-chinese": "Chinese/Mandarin",
   "about.language.my-english": "English",
   "about.language.my-japanese": "Japanese(learning)",
-  "about.links": "Links",
   "about.location": "Location",
   "about.location-value": "Lin'an District, Hangzhou City, Zhejiang Province, the P.R.China",
   "about.mtf.about-trans": "About transgender",
@@ -32,7 +31,6 @@
   "about.weather": "Location weather",
   "about.welcome-to": "Hello, welcome to",
   "app.using-cf": "Cloudflare network you for visit this site",
-  "best_friends": "Best friends !",
   "blog.notFound": "The current blog does not exist or the blog in the current language does not exist.",
   "blog.other-lang": "Other language versions",
   "blog.title": "@:weixi-chan{''}'s blog",
@@ -48,7 +46,6 @@
   "global.read-more": "Read more",
   "global.verify": "Verify",
   "global.verifySuccess": "Verification successful",
-  "links.add-me": "Add me",
   "more": "More",
   "neko.greeting": "Hello meow! \nI’m Weixi-chan’s neko. Is there anything you want to talk about?",
   "neko.meow": "Meow~",
@@ -56,7 +53,6 @@
   "neko.tips": "Did you know? \nClick the chat icon on the right side of the title bar to chat with Weixi’s neko~",
   "neko.title": "Weixi-chan’s neko",
   "opensource": "OpenSource",
-  "other_friends": "Other friends~",
   "send": "Send",
   "trans": "Transgender",
   "turnstile.tip": "Please wait for the component to load and verify your identity",
@@ -72,5 +68,9 @@
   "weather.weather": "Weather",
   "weather.wind-dir": "Wind direction",
   "weather.wind-speed": "Wind speed",
-  "weixi-chan": "Weixi-chan"
+  "weixi-chan": "Weixi-chan",
+  "about.links.title": "Links",
+  "about.links.best-friends": "Best friends !",
+  "about.links.other-friends": "Other friends~",
+  "about.links.add-me": "Add me"
 }

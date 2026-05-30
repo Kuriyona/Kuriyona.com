@@ -15,7 +15,6 @@
   "about.language.my-chinese": "中文/普通话",
   "about.language.my-english": "英文",
   "about.language.my-japanese": "日语(学习中)",
-  "about.links": "友情链接",
   "about.location": "所在地",
   "about.location-value": "浙江省，杭州市，临安区",
   "about.mtf.about-trans": "关于跨性别",
@@ -32,7 +31,6 @@
   "about.weather": "所在地天气",
   "about.welcome-to": "你好，欢迎来到",
   "app.using-cf": "你访问此网站使用的 Cloudflare 网络为",
-  "best_friends": "最好的伙伴！",
   "blog.notFound": "当前博客不存在或者当前语言下博客不存在",
   "blog.other-lang": "其他语言版本",
   "blog.title": "@:weixi-chan{''}的博客",
@@ -48,7 +46,6 @@
   "global.read-more": "阅读更多",
   "global.verify": "验证",
   "global.verifySuccess": "验证成功",
-  "links.add-me": "添加我",
   "more": "更多",
   "neko.greeting": "你好喵！我是未晞酱的小猫，有什么想聊的吗？",
   "neko.meow": "喵~",
@@ -56,7 +53,6 @@
   "neko.tips": "你知道吗？点击标题栏右侧的聊天图标即可和未晞酱的小猫聊天~",
   "neko.title": "未晞酱的小猫",
   "opensource": "开源",
-  "other_friends": "其他好朋友们~",
   "send": "发送",
   "trans": "跨性别",
   "turnstile.tip": "请等待组件加载并验证您的身份",
@@ -72,5 +68,9 @@
   "weather.weather": "天气",
   "weather.wind-dir": "风向",
   "weather.wind-speed": "风速",
-  "weixi-chan": "未晞酱"
+  "weixi-chan": "未晞酱",
+  "about.links.title": "友情链接",
+  "about.links.best-friends": "最好的伙伴！",
+  "about.links.other-friends": "其他好朋友们~",
+  "about.links.add-me": "添加我"
 }

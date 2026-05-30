@@ -15,7 +15,6 @@
   "about.language.my-chinese": "中国語",
   "about.language.my-english": "英語",
   "about.language.my-japanese": "日本語(学習)",
-  "about.links": "リンク",
   "about.location": "位置",
   "about.location-value": "中国、浙江省、杭州市、臨安区",
   "about.mtf.about-trans": "トランスジェンダーについて",
@@ -32,7 +31,6 @@
   "about.weather": "位置の天気",
   "about.welcome-to": "こんにちは、ようこそ",
   "app.using-cf": "このサイト訪問時の Cloudflare ネットワーク",
-  "best_friends": "最高の仲間！",
   "blog.notFound": "現在のブログが存在しないか、現在の言語のブログが存在しません。",
   "blog.other-lang": "他の言語バージョン",
   "blog.title": "@:weixi-chan{''}のブログ",
@@ -48,7 +46,6 @@
   "global.read-more": "続きを読む",
   "global.verify": "確認する",
   "global.verifySuccess": "検証成功",
-  "links.add-me": "私を追加してください",
   "more": "もっと見る",
   "neko.greeting": "こんにちはニャー！私は未晞ちゃんの子猫です。何か話したいことはありますか？",
   "neko.meow": "にゃ〜",
@@ -56,7 +53,6 @@
   "neko.tips": "知っていましたか？タイトルバーの右側にあるチャットアイコンをクリックして、未晞ちゃんの子猫とチャットしてください~",
   "neko.title": "未晞ちゃんの子猫",
   "opensource": "オープンソース",
-  "other_friends": "その他の友達〜",
   "send": "送信",
   "trans": "トランスジェンダー",
   "turnstile.tip": "コンポーネントがロードされ、本人確認が完了するまで待ってください。",
@@ -72,5 +68,9 @@
   "weather.weather": "天気",
   "weather.wind-dir": "風向き",
   "weather.wind-speed": "風速",
-  "weixi-chan": "未晞ちゃん"
+  "weixi-chan": "未晞ちゃん",
+  "about.links.title": "リンク",
+  "about.links.best-friends": "最高の仲間！",
+  "about.links.other-friends": "その他の友達〜",
+  "about.links.add-me": "私を追加してください"
 }
