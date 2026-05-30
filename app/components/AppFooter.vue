@@ -11,12 +11,12 @@ const { currentNodeName, location } = useCloudflareStatus();
     <div class="text-center font-mono">
       <p>
         {{ $t('opensource') }} (MIT) :
-        <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="underline"
-          >Kuriyona/Kuriyona.com</a
+        <a href="https://github.com/Kuriyona/Kuriyona" target="_blank" class="underline"
+          >Kuriyona/Kuriyona</a
         >
         <span>&nbsp;</span>
         <a
-          :href="`https://github.com/Kuriyona/Kuriyona.com/commit/${gitHash}`"
+          :href="`https://github.com/Kuriyona/Kuriyona/commit/${gitHash}`"
           target="_blank"
           class="underline">
           {{ gitHash }}

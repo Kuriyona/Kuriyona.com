@@ -62,7 +62,7 @@ const result = res.components
 
 ### 代码实现
 
-本站实际使用的代码可以查看 [useCloudflareStatus.ts](https://github.com/Kuriyona/Kuriyona.com/blob/main/app/composables/useCloudflareStatus.ts)
+本站实际使用的代码可以查看 [useCloudflareStatus.ts](https://github.com/Kuriyona/Kuriyona/blob/main/app/composables/useCloudflareStatus.ts)
 
 以下是通用的 TypeScript 完整代码实现：
 

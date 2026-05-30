@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -8,7 +7,8 @@
     "fmt": "oxfmt",
     "server": "bun server/index.ts",
     "server-dev": "bun --hot server/index.ts",
-    "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js --minify"
+    "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js --minify",
+    "generate-readme": "bun scripts/generate-readme.ts"
   },
   "dependencies": {
     "@elysia/jwt": "^1.4.2",
@@ -42,6 +42,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/node": "^25.9.1",
     "oxfmt": "^0.46.0"
   },
   "packageManager": "pnpm@11.1.2"
