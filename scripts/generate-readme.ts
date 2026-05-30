@@ -5,13 +5,16 @@ const dirname = path.dirname(filename);
 
 import config from '../app/config.json';
 
+const getURL = (name: string, icon?: string, style = 'for-the-badge') => {
+  return `https://img.shields.io/badge/${encodeURIComponent(name)}-black?style=${style}&logo=${icon || ''}`;
+};
+
 const tech = config.tech_stack.map((item) => {
-  const url = `https://img.shields.io/badge/${encodeURIComponent(item.name)}-black?style=for-the-badge&logo=${item.icon}`;
-  return `![${item.name}](${url})`;
+  return `![${item.name}](${getURL(item.name, item.icon)})`;
 });
 
 const languages = config.languages.map((item) => {
-  const url = `https://img.shields.io/badge/${item.icon}-${item.text}-black?style=for-the-badge`;
+  const url = getURL(`${item.icon}-${item.text}`, item.icon);
   return `![${item.text}](${url})`;
 });
 
@@ -19,9 +22,25 @@ const contact = [
   ...config.contact
     .filter((item) => item.name !== 'e-Mail')
     .map((item) => {
-      const url = `https://img.shields.io/badge/${item.name}-black?style=for-the-badge&logo=${item.icon}`;
+      const url = getURL(item.name, item.icon);
       return `[![${item.name}](${url})](${item.link})`;
     }),
+];
+
+const devices = [
+  ...config.device.map((item) => {
+    const url = getURL(item.label, item.icon);
+    const children = item.children
+      ?.map((child) => {
+        const url = getURL(child.label, child.icon, 'flat');
+        return `![${child.label}](${url})`;
+      })
+      .join(' ');
+    if (item.children) {
+      return `![${item.label}](${url})\n${children}`;
+    }
+    return `![${item.label}](${url})`;
+  }),
 ];
 
 const readme = `
@@ -43,6 +62,9 @@ ${languages.join(' ')}
 
 ### Contact
 ${contact.join(' ')}
+
+### Devices
+${devices.join('\n\n')}
 `;
 
 await fs.writeFile(path.join(dirname, '../README.md'), readme);

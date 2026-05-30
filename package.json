@@ -45,5 +45,5 @@
     "@types/node": "^25.9.1",
     "oxfmt": "^0.46.0"
   },
-  "packageManager": "pnpm@11.1.2"
+  "packageManager": "pnpm@11.4.0"
 }

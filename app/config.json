@@ -4,7 +4,6 @@
     "mbti": "INFP",
     "height": "166"
   },
-
   "links": {
     "main": [
       {
@@ -235,6 +234,56 @@
       "name": "Ballex",
       "img": "https://r2.kuriyona.com/static/image/games/steam/header/1383570.png",
       "link": "https://www.steampowered.com/app/1383570/"
+    }
+  ],
+  "device": [
+    {
+      "label": "PC-X86--64",
+      "children": [
+        {
+          "label": "SYSTEM-Microsoft Windows 11 Pro Insider Preview 25H2"
+        },
+        {
+          "label": "CPU-Intel Core i5--12400F",
+          "icon": "intel"
+        },
+        {
+          "label": "GPU-RTX 4060",
+          "icon": "nvidia"
+        },
+        {
+          "label": "RAM-32GiB"
+        }
+      ]
+    },
+    {
+      "label": "OnePlus-Ace 5",
+      "icon": "oneplus",
+      "children": [
+        {
+          "label": "SYSTEM-ColorOS 16 / Android 16",
+          "icon": "android"
+        },
+        {
+          "label": "SOC-Snapdragon 8 Gen 3 Mobile Platform",
+          "icon": "snapdragon"
+        },
+        {
+          "label": "RAM-12GiB"
+        }
+      ]
+    },
+    {
+      "label": "Miaomi-Pad 5",
+      "icon": "xiaomi"
+    },
+    {
+      "label": "HUAWEI-Watch GT 6",
+      "icon": "huawei"
+    },
+    {
+      "label": "HUAWEI-FreeBuds SE 4",
+      "icon": "huawei"
     }
   ]
 }
