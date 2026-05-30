@@ -24,6 +24,7 @@ export default defineAppConfig({
       {
         url: 'https://launchpadx.top/',
         title: '启动台の小窝',
+        desc: '用代码改变世界',
         avatar: 'https://avatars.githubusercontent.com/u/67402215',
       },
       {
@@ -39,6 +40,7 @@ export default defineAppConfig({
       {
         url: 'https://chiyu.it/',
         title: '池鱼小栈',
+        desc: '｜д•´)!!',
         avatar: 'https://chiyu.it/images/logo/logo.webp',
       },
       {
@@ -50,6 +52,7 @@ export default defineAppConfig({
       {
         url: 'https://zkn.moe',
         title: 'kave',
+        desc: '一个灵魂处于布朗运动中的学生',
         avatar: 'https://zkn.moe/profile.jpeg',
       },
       {

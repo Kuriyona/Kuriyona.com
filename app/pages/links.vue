@@ -29,6 +29,7 @@ useSeoMeta({ title: $t('about.links.title') });
           level
           :to="link.url"
           :text="link.title"
+          :desc="link.desc"
           :img="link.avatar"
           :new="true" />
       </div>
@@ -40,6 +41,7 @@ useSeoMeta({ title: $t('about.links.title') });
           level
           :to="link.url"
           :text="link.title"
+          :desc="link.desc"
           :img="link.avatar"
           :new="true" />
       </div>

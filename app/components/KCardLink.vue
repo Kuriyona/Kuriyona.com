@@ -2,6 +2,7 @@
 const props = defineProps<{
   to?: string;
   text?: string;
+  desc?: string;
   img?: string;
   new?: boolean;
   icon?: string;
@@ -19,7 +20,10 @@ const props = defineProps<{
       <div v-if="!$slots.default" class="flex justify-between items-center">
         <div class="flex items-center gap-4">
           <img v-if="img" :src="img" class="w-8 h-8 rounded-2xl" />
-          <span v-if="!$slots.content">{{ props.text }}</span>
+          <div v-if="!$slots.content">
+            <p>{{ props.text }}</p>
+            <p v-if="props.desc" class="text-sm text-white/50">{{ props.desc }}</p>
+          </div>
           <slot name="content" />
         </div>
         <span v-if="props.icon" class="material-symbols-outlined">{{ props.icon }}</span>
