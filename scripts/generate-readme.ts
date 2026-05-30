@@ -4,7 +4,6 @@ const filename = import.meta.filename as string;
 const dirname = path.dirname(filename);
 
 import config from '../app/config.json';
-import text from '../i18n/locales/en.json';
 
 const tech = config.tech_stack.map((item) => {
   const url = `https://img.shields.io/badge/${encodeURIComponent(item.name)}-black?style=for-the-badge&logo=${item.icon}`;
@@ -26,13 +25,15 @@ const contact = [
 ];
 
 const readme = `
-# I'm Kuriyona
+<a href="https://kuriyona.com" target="_blank">
+  <img src="./public/intro.svg" alt="I'm Kuriyona" />
+</a>
+
+---
 
 Kuriyona read as Japanese \`クリヨナ\`.
 
 You can just call me Kuriyona or 未晞(Weixi).
-
-> ${text['about.description']}
 
 ### Tech Stack
 ${tech.join(' ')}
@@ -42,11 +43,6 @@ ${languages.join(' ')}
 
 ### Contact
 ${contact.join(' ')}
-
-### Website
-
-View more on my [website](https://kuriyona.com)
-
 `;
 
 await fs.writeFile(path.join(dirname, '../README.md'), readme);
