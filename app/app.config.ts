@@ -1,3 +1,5 @@
+import Links from './pages/links.vue';
+
 export default defineAppConfig({
   info: {
     birth: '2008-06-28',
@@ -54,6 +56,14 @@ export default defineAppConfig({
         url: 'https://yuan1182.org/',
         title: '大明朱元璋',
         avatar: 'https://yuan1182.org/avatar.jpg',
+      },
+    ],
+    links: [
+      {
+        url: 'https://www.nekro.top/',
+        title: 'Nekro’s SEKAI',
+        desc: '自留地、日常记录、经验分享。',
+        avatar: 'https://avatars.githubusercontent.com/u/90670998',
       },
     ],
   },
