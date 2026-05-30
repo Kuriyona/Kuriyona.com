@@ -20,7 +20,6 @@ export function useCloudflareStatus() {
     async () => {
       const res = await ky.get('https://kuriyona.com/cdn-cgi/trace').text();
       const result = Object.fromEntries(res.split('\n').map((line) => line.split('=')));
-      console.log(result);
       return result;
     },
     {

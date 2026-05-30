@@ -108,8 +108,6 @@ export async function getCloudflareStatus(): Promise<CloudflareStatusResult> {
       .map((line) => line.split('=')),
   ) as TraceData;
 
-  console.log(traceData);
-
   // 计算当前节点名称
   const currentNodeName = nodesData.find((n) => n.code === traceData?.colo)?.name;
 

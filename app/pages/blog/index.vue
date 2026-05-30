@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { locale } = useI18n();
-console.log(locale.value.toLowerCase());
 const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
   queryCollection('blog')
     .order('date', 'DESC')

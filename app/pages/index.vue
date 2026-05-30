@@ -1,16 +1,3 @@
-<script setup lang="ts">
-const config = useAppConfig();
-const { locale } = useI18n();
-console.log(locale.value.toLowerCase());
-const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
-  queryCollection('blog')
-    .all()
-    .then((res) =>
-      res.filter((post) => post.path.startsWith(`/blog/${locale.value.toLowerCase()}`)),
-    ),
-);
-</script>
-
 <template>
   <div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center">
     <div class="relative max-w-100 flex flex-col gap-4 mx-4">

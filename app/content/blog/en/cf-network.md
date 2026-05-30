@@ -108,8 +108,6 @@ export async function getCloudflareStatus(): Promise<CloudflareStatusResult> {
       .map((line) => line.split('=')),
   ) as TraceData;
 
-  console.log(traceData);
-
   // Determine current node name
   const currentNodeName = nodesData.find((n) => n.code === traceData?.colo)?.name;
 
