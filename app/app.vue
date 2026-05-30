@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppBar from './components/AppBar.vue';
+import { greet } from './utils/console.js';
 const { locale } = useI18n();
 useHead({
   htmlAttrs: {
@@ -11,6 +12,9 @@ useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${titleChunk} - Kuriyona' Space` : "Kuriyona' Space";
   },
+});
+onMounted(() => {
+  greet();
 });
 </script>
 
