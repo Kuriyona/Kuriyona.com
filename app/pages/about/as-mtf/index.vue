@@ -109,7 +109,9 @@ const timeInfo = computed(() => {
       </div>
     </KCard>
     <KCard :title="$t('about.about-me')">
-      <KCardLink to="/about" level :text="$t('about.my-site-home')" />
+      <div>
+        <KCardLink to="/about" level :text="$t('about.my-site-home')" />
+      </div>
     </KCard>
     <KCard :title="$t('about.mtf.about-trans')">
       <div class="flex flex-col gap-4">
