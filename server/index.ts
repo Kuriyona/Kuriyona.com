@@ -23,20 +23,6 @@ const app = new Elysia()
   .use(RouterR2)
   .use(RouteWeather)
   .use(RouteNekoApi)
-  .use(
-    new Elysia().post(
-      '/push',
-      async ({ body }) => {
-        return await push(`${body.title}\n\n${body.content}`);
-      },
-      {
-        body: t.Object({
-          title: t.String(),
-          content: t.String(),
-        }),
-      },
-    ),
-  )
   .get(
     '/turnstile',
     async ({ jwt, query: { token } }) => {

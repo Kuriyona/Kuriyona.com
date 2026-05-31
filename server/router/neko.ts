@@ -7,6 +7,7 @@ const dirname = path.dirname(filename);
 import { updateWeather, data as WeatherData } from './weather';
 import dayjs from 'dayjs';
 import jwt from '@elysia/jwt';
+import { validateAuth, validateJWT } from '../plugin/auth';
 
 let SystemPromptRaw = await fs.readFile(path.join(dirname, '../prompt.md'), 'utf-8');
 let SystemPrompt = '';
@@ -31,7 +32,7 @@ app.use(
 );
 
 app.use(
-  new Elysia().post(
+  new Elysia().use(validateJWT).post(
     '/chat/stream',
     async function* ({ body, set }) {
       if (Date.now() - lastChatTime < 2 * 1000) {
@@ -98,7 +99,6 @@ app.use(
             content: t.String(),
           }),
         ),
-        jwt: t.String(),
       }),
     },
   ),
@@ -106,6 +106,7 @@ app.use(
 
 app.use(
   new Elysia()
+    .use(validateAuth)
     .get('/admin/prompt', () => {
       return SystemPromptRaw;
     })

@@ -27,10 +27,9 @@ async function send() {
   try {
     const res = await fetch(`${HOST}/neko/chat/stream`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: mainStore.jwt },
       body: JSON.stringify({
         messages: messages.value.slice(0, -1),
-        jwt: mainStore.jwt,
       }),
     });
     if (!res.ok) {

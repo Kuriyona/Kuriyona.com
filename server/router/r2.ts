@@ -1,5 +1,6 @@
 import Elysia from 'elysia';
 import { S3Client } from 'bun';
+import { validateAuth } from '../plugin/auth';
 
 const s3 = new S3Client({
   endpoint: process.env.ENDPOINT,
@@ -9,7 +10,8 @@ const s3 = new S3Client({
 });
 
 const app = new Elysia({ prefix: '/r2' })
-  .get('/list', async ({ params }) => {
+  .use(validateAuth)
+  .get('/list', async () => {
     const list = await s3.list({
       prefix: 'static',
     });
