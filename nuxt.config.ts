@@ -42,17 +42,6 @@ export default defineNuxtConfig({
   },
   css: ['./app/assets/css/main.css'],
   devtools: { enabled: true },
-  app: {
-    head: {
-      link: [
-        {
-          rel: 'icon',
-          type: 'image/png',
-          href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png',
-        },
-      ],
-    },
-  },
   site: {
     url: 'https://kuriyona.com',
     name: "Kuriyona's Space",

@@ -3,6 +3,7 @@ allowBuilds:
   '@varlet/nuxt': true
   better-sqlite3: true
   esbuild: true
+  sharp: true
 minimumReleaseAgeExclude:
   - xml2js@0.5.0
   - axios@1.7.4

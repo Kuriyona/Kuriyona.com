@@ -8,7 +8,9 @@
     "server": "bun server/index.ts",
     "server-dev": "bun --hot server/index.ts",
     "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js --minify",
-    "generate-readme": "bun scripts/generate-readme.ts"
+    "generate-readme": "bun scripts/generate-readme.ts",
+    "generate-intro": "bun scripts/generate-intro.ts",
+    "build": "pnpm run generate-intro && pnpm run generate"
   },
   "dependencies": {
     "@elysia/jwt": "^1.4.2",
@@ -36,6 +38,7 @@
     "nuxt": "^4.4.6",
     "pinia": "^3.0.4",
     "qrcode.vue": "^3.9.1",
+    "sharp": "^0.34.5",
     "shiki": "^4.1.0",
     "tailwindcss": "^4.3.0",
     "vue-turnstile": "^1.0.11",
