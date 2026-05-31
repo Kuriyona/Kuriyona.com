@@ -6,7 +6,8 @@ import { jwt } from '@elysia/jwt';
 
 import 'dotenv/config';
 import { RouteNekoApi } from './neko';
-import { push, verifyTurnstile } from './utils';
+import { verifyTurnstile } from './utils';
+import { push } from './bot';
 
 const app = new Elysia()
   .use(
@@ -31,7 +32,7 @@ const app = new Elysia()
         set.status = 401;
         return null;
       }
-      return await push(body);
+      return await push(`${body.title}\n${body.content}`);
     },
     {
       body: t.Object({
