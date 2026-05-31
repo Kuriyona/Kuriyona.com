@@ -1,16 +1,14 @@
 import Elysia, { t, sse } from 'elysia';
-
 import fs from 'node:fs/promises';
 import path from 'node:path';
 const filename = import.meta.filename as string;
 const dirname = path.dirname(filename);
 
 import { updateWeather, data as WeatherData } from './weather';
-import Contact from '../app/config.json';
 import dayjs from 'dayjs';
 import jwt from '@elysia/jwt';
 
-let SystemPromptRaw = await fs.readFile(path.join(dirname, './prompt.md'), 'utf-8');
+let SystemPromptRaw = await fs.readFile(path.join(dirname, '../prompt.md'), 'utf-8');
 let SystemPrompt = '';
 let lastChatTime = Date.now();
 
@@ -25,22 +23,17 @@ updateSystemPrompt();
 
 const app = new Elysia({ prefix: '/neko' });
 
-app
-  .use(
-    jwt({
-      name: 'jwt',
-      secret: process.env.JWT_SECRET!,
-    }),
-  )
-  .post(
+app.use(
+  jwt({
+    name: 'jwt',
+    secret: process.env.JWT_SECRET!,
+  }),
+);
+
+app.use(
+  new Elysia().post(
     '/chat/stream',
-    async function* ({ body, jwt, set }) {
-      const pass = await jwt.verify(body.jwt);
-      if (!pass) {
-        set.status = 401;
-        yield sse({ event: 'error', data: 'JWT not valid' });
-        return;
-      }
+    async function* ({ body, set }) {
       if (Date.now() - lastChatTime < 2 * 1000) {
         set.status = 429;
         yield sse({ event: 'error', data: '[当前的请求太多了喵]' });
@@ -108,31 +101,26 @@ app
         jwt: t.String(),
       }),
     },
-  );
+  ),
+);
 
-app.get('/admin/prompt', ({ query: { auth }, set }) => {
-  if (auth !== process.env.AUTH_KEY) {
-    set.status = 401;
-    return null;
-  }
-  return SystemPromptRaw;
-});
-
-app.post(
-  '/admin/prompt',
-  async ({ body, query: { auth }, set }) => {
-    if (auth !== process.env.AUTH_KEY) {
-      set.status = 401;
-      return null;
-    }
-    SystemPromptRaw = body;
-    fs.writeFile(path.join(dirname, './prompt.md'), body);
-    await updateSystemPrompt();
-    return SystemPrompt;
-  },
-  {
-    body: t.String(),
-  },
+app.use(
+  new Elysia()
+    .get('/admin/prompt', () => {
+      return SystemPromptRaw;
+    })
+    .post(
+      '/admin/prompt',
+      async ({ body }) => {
+        SystemPromptRaw = body;
+        fs.writeFile(path.join(dirname, './prompt.md'), body);
+        await updateSystemPrompt();
+        return SystemPrompt;
+      },
+      {
+        body: t.String(),
+      },
+    ),
 );
 
 export { app as RouteNekoApi };
