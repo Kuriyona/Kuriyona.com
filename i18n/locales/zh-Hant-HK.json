@@ -74,5 +74,8 @@
   "about.links.other-friends": "其他好朋友們~",
   "about.links.add-me": "添加我",
   "turnstile.please-verify": "請先驗證您是真人",
-  "global.start": "開始"
+  "global.start": "開始",
+  "about.links.exchange": "交換",
+  "global.submit": "提交",
+  "global.cancel": "取消"
 }

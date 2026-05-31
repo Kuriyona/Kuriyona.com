@@ -8,6 +8,6 @@ bot.command('start', (ctx) => ctx.reply('Welcome!\n' + `Your user id is ${ctx.fr
 
 bot.start();
 
-export const push = (message: string) => bot.api.sendMessage(KURIYONA_ID, message);
+export const push = (message: string) => bot.api.sendMessage(KURIYONA_ID, message, {});
 
 export const isRunning = () => bot.isRunning();

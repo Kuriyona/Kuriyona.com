@@ -1,11 +1,11 @@
 import { Elysia, t } from 'elysia';
 import { RouterR2 } from './router/r2';
 import { RouteWeather } from './router/weather';
+import { RouteLinks } from './router/links';
 import { cors } from '@elysiajs/cors';
 import { jwt } from '@elysia/jwt';
 import { RouteNekoApi } from './router/neko';
 import { verifyTurnstile } from './utils';
-import { push } from './bot';
 
 const app = new Elysia()
   .use(
@@ -23,6 +23,7 @@ const app = new Elysia()
   .use(RouterR2)
   .use(RouteWeather)
   .use(RouteNekoApi)
+  .use(RouteLinks)
   .get(
     '/turnstile',
     async ({ jwt, query: { token } }) => {

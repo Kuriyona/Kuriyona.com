@@ -74,5 +74,8 @@
   "about.links.other-friends": "その他の友達〜",
   "about.links.add-me": "私を追加してください",
   "turnstile.please-verify": "まず、あなたが実在の人物であることを確認してください",
-  "global.start": "始める"
+  "global.start": "始める",
+  "about.links.exchange": "交換",
+  "global.submit": "送信",
+  "global.cancel": "キャンセル"
 }

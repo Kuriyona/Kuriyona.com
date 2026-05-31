@@ -74,5 +74,8 @@
   "about.links.other-friends": "Other friends~",
   "about.links.add-me": "Add me",
   "turnstile.please-verify": "Please verify you are a real person first",
-  "global.start": "Start"
+  "global.start": "Start",
+  "about.links.exchange": "Exchange",
+  "global.submit": "Submit",
+  "global.cancel": "Cancel"
 }
