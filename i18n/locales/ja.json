@@ -55,7 +55,7 @@
   "opensource": "オープンソース",
   "send": "送信",
   "trans": "トランスジェンダー",
-  "turnstile.tip": "コンポーネントがロードされ、本人確認が完了するまで待ってください。",
+  "turnstile.tip": "コンポーネントが読み込まれ、あなたが実在の人物であることを確認するまでお待ちください",
   "urls.2345-lgbt": "https://2345.lgbt/ja/",
   "urls.gd_fyi": "https://genderdysphoria.fyi/",
   "urls.mtf_wiki": "https://mtf.wiki/ja/",
@@ -72,5 +72,7 @@
   "about.links.title": "リンク",
   "about.links.best-friends": "最高の仲間！",
   "about.links.other-friends": "その他の友達〜",
-  "about.links.add-me": "私を追加してください"
+  "about.links.add-me": "私を追加してください",
+  "turnstile.please-verify": "まず、あなたが実在の人物であることを確認してください",
+  "global.start": "始める"
 }

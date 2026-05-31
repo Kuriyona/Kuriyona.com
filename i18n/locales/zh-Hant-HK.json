@@ -55,7 +55,7 @@
   "opensource": "開源",
   "send": "發送",
   "trans": "跨性別",
-  "turnstile.tip": "請等待組件加載並驗證您的身份",
+  "turnstile.tip": "请等待组件加载并验证您是真人",
   "urls.2345-lgbt": "https://2345.lgbt/zh-hk/",
   "urls.gd_fyi": "https://genderdysphoria.fyi/tw/",
   "urls.mtf_wiki": "https://mtf.wiki/zh-hant/",
@@ -72,5 +72,7 @@
   "about.links.title": "友情鏈接",
   "about.links.best-friends": "最好的夥伴！",
   "about.links.other-friends": "其他好朋友們~",
-  "about.links.add-me": "添加我"
+  "about.links.add-me": "添加我",
+  "turnstile.please-verify": "請先驗證您是真人",
+  "global.start": "開始"
 }

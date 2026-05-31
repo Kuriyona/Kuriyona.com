@@ -55,7 +55,7 @@
   "opensource": "OpenSource",
   "send": "Send",
   "trans": "Transgender",
-  "turnstile.tip": "Please wait for the component to load and verify your identity",
+  "turnstile.tip": "Please wait for the component to load and verify that you are a real person",
   "urls.2345-lgbt": "https://2345.lgbt/en/",
   "urls.gd_fyi": "https://genderdysphoria.fyi/en",
   "urls.mtf_wiki": "https://mtf.wiki/en/",
@@ -72,5 +72,7 @@
   "about.links.title": "Links",
   "about.links.best-friends": "Best friends !",
   "about.links.other-friends": "Other friends~",
-  "about.links.add-me": "Add me"
+  "about.links.add-me": "Add me",
+  "turnstile.please-verify": "Please verify you are a real person first",
+  "global.start": "Start"
 }

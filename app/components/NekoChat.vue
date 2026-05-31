@@ -13,6 +13,7 @@ const messages = ref<{ role: string; content: string }[]>([
 const input = ref('');
 const loading = ref(false);
 const chatRef = ref<HTMLElement | null>(null);
+const showTurnstile = ref(false);
 
 async function send() {
   const text = input.value.trim();
@@ -114,7 +115,11 @@ watch(
         </var-card>
       </div>
     </div>
-    <KTurnstile v-if="!mainStore.jwt" />
+    <KTurnstile v-model:show="showTurnstile" />
+    <template v-if="!mainStore.jwt">
+      <var-alert> {{ $t('turnstile.please-verify') }} </var-alert>
+      <var-button @click="showTurnstile = true" block> {{ $t('global.start') }} </var-button>
+    </template>
     <div v-else class="flex flex-col gap-2">
       <VarInput
         v-model="input"
