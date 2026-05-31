@@ -74,55 +74,53 @@ const timeInfo = computed(() => {
 
 <template>
   <AppPage>
-    <div class="flex flex-col gap-4">
-      <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10 mb-10">
-        <h1 class="text-2xl font-bold font-mono">
-          <span>{{ $t('about.welcome-to') }}</span>
-          <br />
-          <span>Kuriyona's Space</span>
-          <span>&nbsp;/&nbsp;</span>
-          <span>{{ $t('about.mtf.as-mtf') }}</span>
-        </h1>
-      </div>
-      <KCard :title="$t('about.mtf.as-mtf')">
-        <div class="flex gap-2 justify-between items-center">
-          <div class="flex flex-col items-start trans-text">
-            <p>{{ $t('about.mtf.im-mtf') }}</p>
-            <p>
-              {{ $t('about.days_on_earth', [timeInfo.years, timeInfo.months, timeInfo.days]) }}
-            </p>
-            <p>
-              {{ $t('about.mtf.be-a-girl', [timeInfo.wantYears]) }}
-              ({{ $t('about.mtf.percent-life', [timeInfo.percentWant]) }})
-            </p>
-            <p>
-              {{ $t('about.mtf.identify_days', [timeInfo.identifyMonths]) }}
-              ({{ $t('about.mtf.percent-life', [timeInfo.percentIdentify]) }})
-            </p>
-            <ClientOnly>
-              <p>
-                {{ $t('about.mtf.hrt_days', [timeInfo.hrtDays]) }}
-                ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
-              </p>
-            </ClientOnly>
-          </div>
-          <div class="text-4xl large:text-nowrap">🏳️‍⚧️<br />🍥</div>
-        </div>
-      </KCard>
-      <KCard :title="$t('about.about-me')">
-        <KCardLink to="/about" level :text="$t('about.my-site-home')" />
-      </KCard>
-      <KCard :title="$t('about.mtf.about-trans')">
-        <div class="flex flex-col gap-4">
-          <KCardLink
-            v-for="item in data"
-            level
-            :key="item.href"
-            :to="item.href"
-            :text="item.title"
-            :new="true" />
-        </div>
-      </KCard>
+    <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10 mb-10">
+      <h1 class="text-2xl font-bold font-mono">
+        <span>{{ $t('about.welcome-to') }}</span>
+        <br />
+        <span>Kuriyona's Space</span>
+        <span>&nbsp;/&nbsp;</span>
+        <span>{{ $t('about.mtf.as-mtf') }}</span>
+      </h1>
     </div>
+    <KCard :title="$t('about.mtf.as-mtf')">
+      <div class="flex gap-2 justify-between items-center">
+        <div class="flex flex-col items-start trans-text">
+          <p>{{ $t('about.mtf.im-mtf') }}</p>
+          <p>
+            {{ $t('about.days_on_earth', [timeInfo.years, timeInfo.months, timeInfo.days]) }}
+          </p>
+          <p>
+            {{ $t('about.mtf.be-a-girl', [timeInfo.wantYears]) }}
+            ({{ $t('about.mtf.percent-life', [timeInfo.percentWant]) }})
+          </p>
+          <p>
+            {{ $t('about.mtf.identify_days', [timeInfo.identifyMonths]) }}
+            ({{ $t('about.mtf.percent-life', [timeInfo.percentIdentify]) }})
+          </p>
+          <ClientOnly>
+            <p>
+              {{ $t('about.mtf.hrt_days', [timeInfo.hrtDays]) }}
+              ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
+            </p>
+          </ClientOnly>
+        </div>
+        <div class="text-4xl large:text-nowrap">🏳️‍⚧️<br />🍥</div>
+      </div>
+    </KCard>
+    <KCard :title="$t('about.about-me')">
+      <KCardLink to="/about" level :text="$t('about.my-site-home')" />
+    </KCard>
+    <KCard :title="$t('about.mtf.about-trans')">
+      <div class="flex flex-col gap-4">
+        <KCardLink
+          v-for="item in data"
+          level
+          :key="item.href"
+          :to="item.href"
+          :text="item.title"
+          :new="true" />
+      </div>
+    </KCard>
   </AppPage>
 </template>
