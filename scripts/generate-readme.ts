@@ -50,20 +50,20 @@ const readme = `
 
 ---
 
-Kuriyona read as Japanese \`クリヨナ\`.
-
-You can just call me Kuriyona or 未晞(Weixi).
-
 ### Tech Stack
+
 ${tech.join(' ')}
 
 ### Languages
+
 ${languages.join(' ')}
 
 ### Contact
+
 ${contact.join(' ')}
 
 ### Devices
+
 ${devices.join('\n\n')}
 `;
 

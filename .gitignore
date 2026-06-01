@@ -38,3 +38,4 @@ packages/server/.env
 /server-dist
 server/prompt.md
 /.data
+/temp

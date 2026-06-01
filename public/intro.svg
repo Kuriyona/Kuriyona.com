@@ -2,27 +2,37 @@
     <defs>
         <style>
             * {
-                font-family: 'JetBrains Mono', sans-serif;
+                font-family: 'JetBrains Mono', 'Noto Sans SC', 'Noto Sans JP', sans-serif;
+                font-weight: bold;
             }
         </style>
     </defs>
     <rect width="1280" height="640" fill="#f0f0f0" />
-    <text x="60" y="160" fill="black" font-size="64" font-weight="bold">
+    <text x="60" y="100" fill="black" font-size="64" font-weight="bold">
         I'm Kuriyona
     </text>
-    <text x="60" y="260" fill="black" font-size="48" font-weight="bold">
-        A cute girl who is a 17-year-old
+    <text x="60" y="160" fill="black" font-size="32" font-weight="bold">
+        Lin'an, Hangzhou, China
+    </text>
+    <text x="60" y="200" fill="black" font-size="32" font-weight="bold">
+        Kuriyona reads as クリヨナ/[kɯ̹ɾʲijona]
+    </text>
+    <text x="60" y="240" fill="black" font-size="32" font-weight="bold">
+        Just call me Kuriyona or 未晞(Weixi/ウェイシー).
     </text>
     <text x="60" y="320" fill="black" font-size="48" font-weight="bold">
-        Chinese senior high school student,
+        A cute girl who is a 17-year-old
     </text>
     <text x="60" y="380" fill="black" font-size="48" font-weight="bold">
-        otaku, casual anime fan, MtF
+        Chinese senior high school student,
     </text>
     <text x="60" y="440" fill="black" font-size="48" font-weight="bold">
-        and interest-driven developer
+        otaku, casual anime fan, MtF
     </text>
-    <text x="1200" y="540" fill="black" font-size="32" font-weight="bold" text-anchor="end">
+    <text x="60" y="500" fill="black" font-size="48" font-weight="bold">
+        and an interest-driven developer.
+    </text>
+    <text x="60" y="580" fill="black" font-size="32" font-weight="bold">
         more on my website
     </text>
     <text x="1200" y="580" fill="black" font-size="32" font-weight="bold" text-anchor="end">

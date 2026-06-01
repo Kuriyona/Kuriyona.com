@@ -9,6 +9,11 @@ export const s3 = new S3Client({
   bucket: process.env.BUCKET_NAME!,
 });
 
+export const download = async (key: string) => {
+  const s3File = s3.file(key);
+  return await s3File.arrayBuffer();
+};
+
 export const upload = async (file: Buffer, key: string) => {
   const s3File = s3.file(key);
   await s3File.write(file);
