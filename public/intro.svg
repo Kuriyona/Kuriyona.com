@@ -1,9 +1,8 @@
 <svg width="1280" height="640" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800');
             * {
-                font-family: 'JetBrains Mono', 'Noto Sans JP', sans-serif;
+                font-family: 'JetBrains Mono', sans-serif;
             }
         </style>
     </defs>

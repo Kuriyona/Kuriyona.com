@@ -17,11 +17,11 @@ useHead({
 useSeoMeta({
   ogTitle: "Kuriyona' Space",
   ogDescription: $t('about.description'),
-  ogImage: '/intro.png',
+  ogImage: 'https://r2.kuriyona.com/static/intro/intro.png',
   ogUrl: 'https://kuriyona.com',
   twitterTitle: "Kuriyona' Space",
   twitterDescription: $t('about.description'),
-  twitterImage: '/intro.png',
+  twitterImage: 'https://r2.kuriyona.com/static/intro/intro.png',
   twitterCard: 'summary',
 });
 onMounted(() => {

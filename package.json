@@ -10,7 +10,7 @@
     "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js --minify",
     "generate-readme": "bun scripts/generate-readme.ts",
     "generate-intro": "bun scripts/generate-intro.ts",
-    "build": "pnpm run generate-intro && pnpm run generate"
+    "build": "pnpm run generate"
   },
   "dependencies": {
     "@elysia/jwt": "^1.4.2",
