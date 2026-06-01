@@ -45,6 +45,7 @@ const popup = ref(false);
           </VarMenuSelect>
         </div>
       </div>
+      <MusicBar />
     </div>
   </div>
 </template>

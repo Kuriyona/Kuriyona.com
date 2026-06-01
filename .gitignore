@@ -39,3 +39,4 @@ packages/server/.env
 server/prompt.md
 /.data
 public/intro.png
+/temp
