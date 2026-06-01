@@ -119,6 +119,12 @@
       "icon": "discord"
     },
     {
+      "name": "Wakatime",
+      "value": "kuriyona",
+      "link": "https://wakatime.com/@Kuriyona",
+      "icon": "wakatime"
+    },
+    {
       "name": "Instagram",
       "value": "@kuriyona_",
       "link": "https://www.instagram.com/kuriyona_",
