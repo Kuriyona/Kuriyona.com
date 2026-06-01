@@ -103,7 +103,7 @@
     {
       "name": "Steam",
       "value": "Kuriyona - Steam",
-      "link": "https://steamcommunity.com/id/kuriyona/",
+      "link": "https://steamcommunity.com/id/kuriyona",
       "icon": "steam"
     },
     {
@@ -117,6 +117,12 @@
       "value": "@kuriyona",
       "link": "https://discord.com/users/1145274057785360454",
       "icon": "discord"
+    },
+    {
+      "name": "Instagram",
+      "value": "@kuriyona_",
+      "link": "https://www.instagram.com/kuriyona_",
+      "icon": "instagram"
     },
     {
       "name": "e-Mail",
