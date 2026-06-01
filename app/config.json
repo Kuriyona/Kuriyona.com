@@ -81,9 +81,15 @@
       "icon": "bilibili"
     },
     {
-      "name": "X",
+      "name": "X (Suspended)",
       "value": "@kuriyona",
       "link": "https://x.com/kuriyona",
+      "icon": "x"
+    },
+    {
+      "name": "X (New)",
+      "value": "@kuriyona_chan",
+      "link": "https://x.com/kuriyona_chan",
       "icon": "x"
     },
     {
