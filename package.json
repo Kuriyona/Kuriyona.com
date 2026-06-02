@@ -10,6 +10,7 @@
     "server-dist": "bun build --target=bun ./server/index.ts --outfile ./server-dist/server.js --minify",
     "generate-readme": "bun scripts/generate-readme.ts",
     "generate-intro": "bun scripts/generate-intro.ts",
+    "upload-intro": "bun scripts/upload-intro.ts",
     "build": "pnpm run generate"
   },
   "dependencies": {
@@ -43,6 +44,7 @@
     "shiki": "^4.1.0",
     "tailwindcss": "^4.3.0",
     "vue-turnstile": "^1.0.11",
+    "xmlbuilder2": "^4.0.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
