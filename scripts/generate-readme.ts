@@ -45,7 +45,7 @@ const devices = [
 
 const readme = `
 <a href="https://kuriyona.com" target="_blank">
-  <img src="https://r2.kuriyona.com/static/intro/intro.png" alt="I'm Kuriyona" />
+  <img src="https://r2.kuriyona.com/static/intro/intro-en.png" alt="I'm Kuriyona" />
 </a>
 
 ---
