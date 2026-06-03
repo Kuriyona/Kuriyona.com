@@ -77,5 +77,6 @@
   "global.start": "Start",
   "about.links.exchange": "Exchange",
   "global.submit": "Submit",
-  "global.cancel": "Cancel"
+  "global.cancel": "Cancel",
+  "about.links.request-exchange": "Request a link exchange"
 }

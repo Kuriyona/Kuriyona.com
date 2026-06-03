@@ -77,5 +77,6 @@
   "global.start": "始める",
   "about.links.exchange": "交換",
   "global.submit": "送信",
-  "global.cancel": "キャンセル"
+  "global.cancel": "キャンセル",
+  "about.links.request-exchange": "リンク交換を申請する"
 }
