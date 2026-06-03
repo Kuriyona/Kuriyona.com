@@ -131,6 +131,11 @@
       "icon": "instagram"
     },
     {
+      "name": "XBOX",
+      "value": "@kuriyona_",
+      "link": "https://www.xbox.com/play/user/Kuriyona"
+    },
+    {
       "name": "e-Mail",
       "i18nKey": "contact.email",
       "value": "i@kuriyona.com",
