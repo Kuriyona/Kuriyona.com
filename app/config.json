@@ -146,7 +146,8 @@
       "name": "WeChat",
       "i18nKey": "contact.wechat",
       "value": "@Kuriyona-Chan",
-      "qr": "https://u.wechat.com/EMz6xUdrM3Vlw9uPe2OweLQ?s=3",
+      "link": "https://u.wechat.com/EMz6xUdrM3Vlw9uPe2OweLQ",
+      "qrOnly": true,
       "icon": "wechat"
     },
     {
