@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
 import NekoChat from './NekoChat.vue';
-const { setLocale, locales } = useI18n();
+const { setLocale, locales, locale } = useI18n();
+const currentLocale = computed(() => locales.value.find((l) => l.code == locale.value)?.name);
 const selecting = ref(false);
 const popup = ref(false);
 </script>
@@ -17,23 +18,15 @@ const popup = ref(false);
           </NuxtLinkLocale>
         </div>
         <div id="actions" class="flex gap-2">
-          <VarButton round text @click="popup = true">
-            <span class="material-symbols-outlined"> chat </span>
+          <VarButton text @click="popup = true" size="small">
+            <span class="text-sm!"> Neko </span>
           </VarButton>
-          <VarPopup v-model:show="popup" class="rounded-l-xl" position="right">
-            <div class="relative flex flex-col h-full w-120 max-w-[80vw] overflow-hidden">
-              <div class="flex justify-between items-center px-6 py-2">
-                <span>{{ $t('neko.title') }}</span>
-                <VarButton round text @click="popup = false">
-                  <span class="material-symbols-outlined"> close </span>
-                </VarButton>
-              </div>
-              <NekoChat />
-            </div>
-          </VarPopup>
           <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">
-            <VarButton round text>
-              <span class="material-symbols-outlined"> translate </span>
+            <VarButton text size="small">
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm!"> translate </span>
+                <span class="text-sm!"> {{ currentLocale }} </span>
+              </div>
             </VarButton>
             <template #options>
               <VarMenuOption
@@ -46,5 +39,16 @@ const popup = ref(false);
         </div>
       </div>
     </div>
+    <VarPopup v-model:show="popup" class="rounded-l-xl" position="right">
+      <div class="relative flex flex-col h-full w-120 max-w-[80vw] overflow-hidden">
+        <div class="flex justify-between items-center px-6 py-2">
+          <span>{{ $t('neko.title') }}</span>
+          <VarButton round text @click="popup = false">
+            <span class="material-symbols-outlined"> close </span>
+          </VarButton>
+        </div>
+        <NekoChat />
+      </div>
+    </VarPopup>
   </div>
 </template>
