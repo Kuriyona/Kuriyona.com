@@ -4,6 +4,8 @@ import { round } from 'es-toolkit';
 
 const { t } = useI18n();
 
+const isJune = computed(() => dayjs().month() == 5);
+
 const data = computed(() => [
   {
     title: 'MtF.Wiki',
@@ -83,6 +85,13 @@ const timeInfo = computed(() => {
         <span>{{ $t('about.mtf.as-mtf') }}</span>
       </h1>
     </div>
+    <KCard v-if="isJune" class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-white">
+      <div
+        class="absolute top-0 left-0 h-full w-full pride-bg rounded-xl brightness-25 transition-[filter] duration-300"></div>
+      <p class="relative text-sm text-center transition-colors duration-300">
+        {{ $t('about.mtf.pride-month') }}
+      </p>
+    </KCard>
     <KCard :title="$t('about.mtf.as-mtf')">
       <div class="flex gap-2 justify-between items-center">
         <div class="flex flex-col items-start trans-text">
