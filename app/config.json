@@ -69,90 +69,83 @@
   "contact": [
     {
       "name": "Github",
-      "value": "@kuriyona",
+      "value": "@Kuriyona",
       "link": "https://github.com/Kuriyona",
       "icon": "github"
     },
     {
       "name": "Bilibili",
       "i18nKey": "contact.bilibili",
-      "value": "Kuriyona - 哔哩哔哩",
+      "value": "Kuriyona(650631530)",
       "link": "https://space.bilibili.com/650631530",
       "icon": "bilibili"
     },
     {
-      "name": "X (Suspended)",
-      "value": "@kuriyona",
-      "link": "https://x.com/kuriyona",
-      "icon": "x"
-    },
-    {
-      "name": "X (New)",
-      "value": "@kuriyona_chan",
-      "link": "https://x.com/kuriyona_chan",
+      "name": "X",
+      "value": "@Kuriyona",
+      "link": "https://x.com/Kuriyona",
       "icon": "x"
     },
     {
       "name": "Zhihu",
       "i18nKey": "contact.zhihu",
-      "value": "Kuriyona - 知乎",
-      "link": "https://www.zhihu.com/people/kuriyona",
-      "qr": "https://www.zhihu.com/people/kuriyona",
+      "value": "Kuriyona",
+      "link": "https://www.zhihu.com/people/Kuriyona",
       "icon": "zhihu"
     },
     {
       "name": "Steam",
-      "value": "Kuriyona - Steam",
-      "link": "https://steamcommunity.com/id/kuriyona",
+      "value": "Kuriyona",
+      "link": "https://steamcommunity.com/id/Kuriyona",
       "icon": "steam"
     },
     {
       "name": "Telegram",
-      "value": "@kuriyona",
+      "value": "@Kuriyona",
       "link": "https://t.me/Kuriyona",
       "icon": "telegram"
     },
     {
       "name": "Discord",
-      "value": "@kuriyona",
+      "value": "@Kuriyona",
       "link": "https://discord.com/users/1145274057785360454",
       "icon": "discord"
     },
     {
       "name": "Wakatime",
-      "value": "kuriyona",
+      "value": "@Kuriyona",
       "link": "https://wakatime.com/@Kuriyona",
       "icon": "wakatime"
     },
     {
       "name": "Instagram",
-      "value": "@kuriyona_",
-      "link": "https://www.instagram.com/kuriyona_",
+      "value": "@Kuriyona_",
+      "link": "https://www.instagram.com/Kuriyona_",
       "icon": "instagram"
     },
     {
       "name": "XBOX",
-      "value": "@kuriyona_",
+      "value": "@Kuriyona",
       "link": "https://www.xbox.com/play/user/Kuriyona"
     },
     {
       "name": "e-Mail",
       "i18nKey": "contact.email",
-      "value": "i@kuriyona.com",
-      "link": "mailto:i@kuriyona.com",
+      "value": "Kuriyona@outlook.com",
+      "link": "mailto:Kuriyona@outlook.com",
       "mdIcon": "mail"
     },
     {
       "name": "WeChat",
       "i18nKey": "contact.wechat",
-      "value": "@Kuriyona-Chan",
+      "value": "@Kuriyona_chan",
       "link": "https://u.wechat.com/EMz6xUdrM3Vlw9uPe2OweLQ",
       "qrOnly": true,
       "icon": "wechat"
     },
     {
       "name": "QQ",
-      "value": "2946733291",
+      "value": "Kuriyona(2946733291)",
       "link": "https://qm.qq.com/q/Vlg6pCdge4",
       "qr": "https://qm.qq.com/q/Vlg6pCdge4",
       "icon": "qq"
@@ -161,7 +154,6 @@
       "name": "小红书",
       "value": "Kuriyona",
       "link": "https://www.xiaohongshu.com/user/profile/65fedf07000000000b00eb20",
-      "qr": "https://www.xiaohongshu.com/user/profile/65fedf07000000000b00eb20",
       "icon": "xiaohongshu"
     }
   ],
