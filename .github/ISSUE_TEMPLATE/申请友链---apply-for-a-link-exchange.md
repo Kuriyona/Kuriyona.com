@@ -9,10 +9,10 @@ assignees: Kuriyona
 ### 填写你的网站信息
 
 ```yaml
-title : 
-desc : 
-avatar : https://
-url : https://
+title:
+desc:
+avatar: https://
+url: https://
 ```
 
 ### 额外说明

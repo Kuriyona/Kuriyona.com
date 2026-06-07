@@ -17,7 +17,7 @@ const config = useAppConfig();
         <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
         <p>{{ $t('about.also-weixi-yona') }}</p>
         <p>
-          <NuxtLinkLocale to="/blog/about-name" class="underline">{{
+          <NuxtLinkLocale to="/blog/about-name" class="link">{{
             $t('about.about-my-name')
           }}</NuxtLinkLocale>
         </p>

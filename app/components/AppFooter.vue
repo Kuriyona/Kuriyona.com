@@ -11,21 +11,21 @@ const { currentNodeName, location } = useCloudflareStatus();
     <div class="text-center font-mono">
       <p>
         {{ $t('opensource') }} (MIT) :
-        <a href="https://github.com/Kuriyona/Kuriyona" target="_blank" class="underline"
+        <a href="https://github.com/Kuriyona/Kuriyona" target="_blank" class="link"
           >Kuriyona/Kuriyona</a
         >
         <span>&nbsp;</span>
         <a
           :href="`https://github.com/Kuriyona/Kuriyona/commit/${gitHash}`"
           target="_blank"
-          class="underline">
+          class="link">
           {{ gitHash }}
         </a>
       </p>
       <p>{{ $t('copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.</p>
       <p>{{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}</p>
       <p>
-        <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="underline">
+        <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="link">
           萌 ICP 备 20266280 号
         </a>
       </p>
