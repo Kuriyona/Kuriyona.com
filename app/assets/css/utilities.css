@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+.link {
+  color: #cbc3e3;
+  text-decoration: underline;
+  transition: all 0.3s ease-in-out;
+  padding: 0 2px;
+  border-radius: 4px;
+}
+
+.link:hover {
+  color: #000;
+  text-decoration: none;
+  background-color: #cbc3e3;
+}
+
+.trans-text {
+  background-image: linear-gradient(30deg, #5bcffa, #f5abb9, #ffffff, #f5abb9, #5bcffa);
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.pride-bg {
+  background-image: linear-gradient(
+    to bottom,
+    #e50000 0%,
+    #e50000 16.6%,
+    #ff8d00 16.6%,
+    #ff8d00 33.2%,
+    #ffee00 33.2%,
+    #ffee00 49.8%,
+    #028121 49.8%,
+    #028121 66.4%,
+    #004cff 66.4%,
+    #004cff 83%,
+    #770088 83%,
+    #770088 100%
+  );
+}
