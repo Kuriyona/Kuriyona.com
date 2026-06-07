@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
 import NekoChat from './NekoChat.vue';
+import BirthdayCountdown from './bar/BirthdayCountdown.vue';
 const { setLocale, locales, locale } = useI18n();
 const currentLocale = computed(() => locales.value.find((l) => l.code == locale.value)?.name);
 const selecting = ref(false);
@@ -9,8 +10,8 @@ const popup = ref(false);
 
 <template>
   <div class="sticky top-0 flex justify-center backdrop-brightness-75 backdrop-blur-3xl">
-    <div class="w-200 px-4">
-      <div class="relative font-mono h-12 py-2 px-3 flex justify-between items-center rounded-xl">
+    <div class="w-200 px-4 *:px-2 *:font-mono">
+      <div class="relative h-12 py-2 px-3 flex justify-between items-center rounded-xl">
         <div class="h-full flex items-center gap-4">
           <img class="h-3/4 rounded-md" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
           <NuxtLinkLocale to="/about">
@@ -38,6 +39,7 @@ const popup = ref(false);
           </VarMenuSelect>
         </div>
       </div>
+      <BirthdayCountdown />
     </div>
     <VarPopup v-model:show="popup" class="rounded-l-xl" position="right">
       <div class="relative flex flex-col h-full w-120 max-w-[80vw] overflow-hidden">

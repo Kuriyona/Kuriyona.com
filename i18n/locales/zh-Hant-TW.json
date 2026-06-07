@@ -79,5 +79,6 @@
   "weather.weather": "天氣",
   "weather.wind-dir": "風向",
   "weather.wind-speed": "風速",
-  "weixi-chan": "未晞醬"
+  "weixi-chan": "未晞醬",
+  "global.birthdayCountdown": "距離我的 {0} 歲生日還有 {1}"
 }
