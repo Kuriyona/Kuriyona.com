@@ -23,8 +23,9 @@ export default defineNuxtConfig({
     defaultLocale: 'zh-Hans',
     locales: [
       { code: 'zh-Hans', name: '简体中文', file: 'zh-Hans.json' },
-      { code: 'zh-Hant-TW', name: '繁体中文（台湾）', file: 'zh-Hant-TW.json' },
-      { code: 'zh-Hant-HK', name: '繁体中文（香港）', file: 'zh-Hant-HK.json' },
+      { code: 'zh-Hant', name: '繁体中文', file: 'zh-Hant-TW.json' },
+      // { code: 'zh-Hant-TW', name: '繁体中文（台湾）', file: 'zh-Hant-TW.json' },
+      // { code: 'zh-Hant-HK', name: '繁体中文（香港）', file: 'zh-Hant-HK.json' },
       { code: 'en', name: 'English', file: 'en.json' },
       { code: 'ja', name: '日本語', file: 'ja.json' },
     ],
