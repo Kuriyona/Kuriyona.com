@@ -6,19 +6,31 @@ const selecting = ref(false);
 </script>
 
 <template>
-  <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">
-    <VarButton text size="small">
+  <div class="relative z-10">
+    <VarButton text size="small" @click="selecting = !selecting">
       <div class="flex items-center gap-1">
         <span class="material-symbols-outlined text-sm!"> translate </span>
         <span class="text-sm!"> {{ currentLocale }} </span>
+        <span
+          class="material-symbols-outlined text-sm! transition-all duration-300"
+          :class="{ 'rotate-180': selecting }">
+          keyboard_arrow_down
+        </span>
       </div>
     </VarButton>
-    <template #options>
-      <VarMenuOption
-        v-for="locale in locales"
-        :key="locale.code"
-        @click="setLocale(locale.code)"
-        :label="locale.name" />
-    </template>
-  </VarMenuSelect>
+    <KCard v-if="selecting" class="absolute top-8 right-0 bg-black">
+      <a>
+        <p
+          v-for="locale in locales"
+          :key="locale.code"
+          @click="
+            setLocale(locale.code);
+            selecting = false;
+          "
+          class="text-right text-nowrap">
+          {{ locale.name }}
+        </p>
+      </a>
+    </KCard>
+  </div>
 </template>
