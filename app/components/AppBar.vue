@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BirthdayCountdown from './bar/BirthdayCountdown.vue';
 const popup = ref(false);
 </script>
 
@@ -20,7 +19,7 @@ const popup = ref(false);
           <LanguageSelector />
         </div>
       </div>
-      <BirthdayCountdown />
+      <AppBarTips />
       <NekoCatPopup v-model:show="popup" />
     </div>
   </div>

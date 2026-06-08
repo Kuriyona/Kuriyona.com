@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Contact from '~/components/bar/Contact.vue';
 const config = useAppConfig();
 </script>
 
@@ -83,7 +82,7 @@ const config = useAppConfig();
         </div>
       </div>
     </KCard>
-    <Contact />
+    <CardContact />
     <CardGames />
     <KCard :title="$t('about.links.title')">
       <div class="flex flex-col gap-2">
