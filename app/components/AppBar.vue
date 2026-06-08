@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from '@/scripts/i18n';
-import NekoChat from './NekoChat.vue';
 import BirthdayCountdown from './bar/BirthdayCountdown.vue';
 const { setLocale, locales, locale } = useI18n();
 const currentLocale = computed(() => locales.value.find((l) => l.code == locale.value)?.name);
@@ -40,17 +39,7 @@ const popup = ref(false);
         </div>
       </div>
       <BirthdayCountdown />
+      <NekoCatPopup v-model:show="popup" />
     </div>
-    <VarPopup v-model:show="popup" class="rounded-l-xl" position="right">
-      <div class="relative flex flex-col h-full w-120 max-w-[80vw] overflow-hidden">
-        <div class="flex justify-between items-center px-6 py-2">
-          <span>{{ $t('neko.title') }}</span>
-          <VarButton round text @click="popup = false">
-            <span class="material-symbols-outlined"> close </span>
-          </VarButton>
-        </div>
-        <NekoChat />
-      </div>
-    </VarPopup>
   </div>
 </template>
