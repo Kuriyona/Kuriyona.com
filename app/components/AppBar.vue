@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import { useI18n } from '@/scripts/i18n';
 import BirthdayCountdown from './bar/BirthdayCountdown.vue';
-const { setLocale, locales, locale } = useI18n();
-const currentLocale = computed(() => locales.value.find((l) => l.code == locale.value)?.name);
-const selecting = ref(false);
 const popup = ref(false);
 </script>
 
@@ -21,21 +17,7 @@ const popup = ref(false);
           <VarButton text @click="popup = true" size="small">
             <span class="text-sm!"> Neko </span>
           </VarButton>
-          <VarMenuSelect v-model="selecting" variant="standard" placement="bottom-end">
-            <VarButton text size="small">
-              <div class="flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm!"> translate </span>
-                <span class="text-sm!"> {{ currentLocale }} </span>
-              </div>
-            </VarButton>
-            <template #options>
-              <VarMenuOption
-                v-for="locale in locales"
-                :key="locale.code"
-                @click="setLocale(locale.code)"
-                :label="locale.name" />
-            </template>
-          </VarMenuSelect>
+          <LanguageSelector />
         </div>
       </div>
       <BirthdayCountdown />
