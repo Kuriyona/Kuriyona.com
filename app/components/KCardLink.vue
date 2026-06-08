@@ -16,7 +16,8 @@ const imgError = ref(false);
   <NuxtLinkLocale
     :to="props.to"
     :locale="props.lang as any"
-    :target="props.new ? '_blank' : '_self'">
+    :target="props.new ? '_blank' : '_self'"
+    class="hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
     <KCard
       class="hover:bg-white/5 transition-bg duration-300 h-full flex flex-col justify-center"
       v-bind="$attrs">
@@ -34,9 +35,9 @@ const imgError = ref(false);
           </div>
           <slot name="content" />
         </div>
-        <span v-if="props.icon" class="material-symbols-outlined">{{ props.icon }}</span>
-        <span v-else-if="!props.new" class="material-symbols-outlined"> arrow_forward </span>
-        <span v-else class="material-symbols-outlined"> open_in_new </span>
+        <span v-if="props.icon" class="icon material-symbols-outlined">{{ props.icon }}</span>
+        <span v-else-if="!props.new" class="icon material-symbols-outlined"> arrow_forward </span>
+        <span v-else class="icon material-symbols-outlined"> open_in_new </span>
       </div>
     </KCard>
   </NuxtLinkLocale>
