@@ -1,18 +1,18 @@
 <script setup lang="ts">
+import QRCode from 'qrcode.vue';
 const config = useAppConfig();
 </script>
 
 <template>
   <KCard :title="$t('about.find-me')">
-    <div class="flex flex-wrap gap-2 justify-center">
+    <div class="hidden sm:flex flex-wrap gap-2 justify-center">
       <var-tooltip v-for="link in config.contact">
         <KCardLink
           level
           :key="link.name"
           :to="!link.qrOnly ? link.link : undefined"
           :text="link.value"
-          :new="true"
-          class="">
+          :new="true">
           <div class="flex items-center gap-2">
             <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
             <img
@@ -32,6 +32,24 @@ const config = useAppConfig();
           </div>
         </template>
       </var-tooltip>
+    </div>
+    <div class="flex sm:hidden flex-wrap gap-2 justify-center">
+      <KCardLink
+        v-for="link in config.contact.filter((item) => item.icon && item.name != 'WeChat')"
+        level
+        :key="link.name"
+        :to="!link.qrOnly ? link.link : undefined"
+        :text="link.value"
+        :new="true"
+        class="">
+        <div class="flex items-center gap-2">
+          <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
+          <img
+            v-if="link.icon"
+            class="w-4 h-4"
+            :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
+        </div>
+      </KCardLink>
     </div>
   </KCard>
 </template>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import QRCode from 'qrcode.vue';
 import Contact from '~/components/bar/Contact.vue';
 const config = useAppConfig();
 </script>
