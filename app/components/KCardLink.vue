@@ -30,6 +30,7 @@ const imgError = ref(false);
           <div v-if="!$slots.content">
             <p>{{ props.text }}</p>
             <p v-if="props.desc" class="text-sm text-white/50">{{ props.desc }}</p>
+            <p v-if="props.to && props.new" class="text-xs text-white/50">{{ props.to }}</p>
           </div>
           <slot name="content" />
         </div>
