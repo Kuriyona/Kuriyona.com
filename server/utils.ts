@@ -14,7 +14,10 @@ export const download = async (key: string) => {
   return await s3File.arrayBuffer();
 };
 
-export const upload = async (file: Buffer, key: string) => {
+export const upload = async (file: Buffer | string, key: string) => {
+  if (typeof file === 'string') {
+    file = Buffer.from(file);
+  }
   const s3File = s3.file(key);
   await s3File.write(file);
 };
