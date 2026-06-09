@@ -21,6 +21,7 @@ const popup = ref(false);
       </div>
       <AppBarTips />
       <NekoCatPopup v-model:show="popup" />
+      <MusicBar />
     </div>
   </div>
 </template>

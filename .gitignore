@@ -38,4 +38,5 @@ packages/server/.env
 /server-dist
 server/prompt.md
 /.data
+public/intro.png
 /temp
