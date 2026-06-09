@@ -17,6 +17,7 @@
     "@elysia/jwt": "^1.4.2",
     "@elysiajs/cors": "^1.4.2",
     "@elysiajs/eden": "^1.4.9",
+    "@kuriyona/cecilia": "^0.2.0",
     "@nuxt/content": "^3.14.0",
     "@nuxtjs/i18n": "^10.3.0",
     "@nuxtjs/sitemap": "8.0.15",
