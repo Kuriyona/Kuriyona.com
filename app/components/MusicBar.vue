@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ky from 'ky';
-import type { Lyric, PlaylistDetails, SongDetail } from '~/utils/types/music';
 const store = useMusicStore();
 
 const url = computed(() => {
@@ -55,13 +53,13 @@ const handleProgressClick = (event: MouseEvent) => {
           </KButton>
         </div>
         <div class="w-full flex-col gap-1 hidden sm:flex">
-          <p class="text-sm truncate">{{ store.currentSong.name }}</p>
+          <p id="name" class="text-sm truncate">{{ store.currentSong.name }}</p>
           <div
             id="progress"
             class="h-0.5 bg-white/25 transition-all duration-300 rounded-full"
             @click="handleProgressClick">
             <div
-              class="h-full bg-white/50"
+              class="h-full bg-white/50 transition-width duration-100"
               :style="{
                 width: `${(currentTime / store.currentSong.duration) * 100 * 1000}%`,
               }"></div>
