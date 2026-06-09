@@ -18,6 +18,17 @@ const currentLyricLine = computed(() => {
     (store.currentLyric?.lines.findIndex((line) => line.time >= currentTime.value) ?? 1) - 1;
   return store.currentLyric?.lines[index];
 });
+
+const handleProgressClick = (event: MouseEvent) => {
+  if (!audio.value || !store.currentSong) return;
+
+  const target = event.currentTarget as HTMLElement;
+  const rect = target.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const percentage = clickX / rect.width;
+  const newTime = percentage * store.currentSong.duration;
+  currentTime.value = newTime / 1000;
+};
 </script>
 
 <template>
@@ -27,8 +38,8 @@ const currentLyricLine = computed(() => {
     class="h-10 hover:h-16 flex items-center gap-2 text-nowrap truncate">
     <audio ref="audio" :src="url" autoplay></audio>
     <img :src="cover" class="h-full hidden" />
-    <div class="flex justify-between w-full">
-      <div id="main" class="flex items-center gap-1 min-w-0 h-fit">
+    <div class="flex justify-between w-full gap-2">
+      <div id="main" class="flex items-center gap-1 min-w-0 h-fit w-full max-w-80">
         <div class="flex items-center">
           <KButton round text @click="playing = !playing">
             <span class="material-symbols-outlined">
@@ -43,9 +54,21 @@ const currentLyricLine = computed(() => {
             <span class="material-symbols-outlined"> skip_next </span>
           </KButton>
         </div>
-        <p class="text-sm truncate hidden sm:block">{{ store.currentSong.name }}</p>
+        <div class="w-full flex-col gap-1 hidden sm:flex">
+          <p class="text-sm truncate">{{ store.currentSong.name }}</p>
+          <div
+            id="progress"
+            class="h-0.5 bg-white/25 transition-all duration-300 rounded-full"
+            @click="handleProgressClick">
+            <div
+              class="h-full bg-white/50"
+              :style="{
+                width: `${(currentTime / store.currentSong.duration) * 100 * 1000}%`,
+              }"></div>
+          </div>
+        </div>
       </div>
-      <div class="flex flex-col justify-center text-right min-w-0">
+      <div class="flex flex-col justify-center text-right min-w-0 w-full">
         <p class="text-xs truncate">{{ currentLyricLine?.text }}</p>
         <p v-if="currentLyricLine?.translation" class="text-xs! truncate">
           {{ currentLyricLine?.translation }}
@@ -67,6 +90,7 @@ const currentLyricLine = computed(() => {
   @apply hover:[&>img]:block;
   @apply hover:[&_#main]:flex-col-reverse hover:[&_#main]:items-start;
   @apply hover:[&_.hover-show]:flex;
+  @apply hover:[&_#progress]:h-1;
   @apply transition-all duration-300;
 }
 </style>
