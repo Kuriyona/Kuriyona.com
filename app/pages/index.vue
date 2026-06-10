@@ -10,7 +10,7 @@
         <p class="font-bold">{{ $t('about.description') }}</p>
       </div>
       <NuxtLinkLocale to="/about">
-        <KButton block text>
+        <KButton block text round>
           <div class="flex items-center gap-2">
             <span>{{ $t('about.about-me') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
@@ -18,7 +18,7 @@
         </KButton>
       </NuxtLinkLocale>
       <NuxtLinkLocale to="/blog">
-        <KButton block text>
+        <KButton block text round>
           <div class="flex items-center gap-2">
             <span>{{ $t('blog.title') }}</span>
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>

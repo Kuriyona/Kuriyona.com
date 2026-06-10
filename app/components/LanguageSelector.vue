@@ -18,19 +18,20 @@ const selecting = ref(false);
         </span>
       </div>
     </VarButton>
-    <KCard v-if="selecting" class="absolute top-8 right-0 bg-black">
-      <a>
-        <p
-          v-for="locale in locales"
-          :key="locale.code"
-          @click="
-            setLocale(locale.code);
-            selecting = false;
-          "
-          class="text-right text-nowrap">
-          {{ locale.name }}
-        </p>
-      </a>
-    </KCard>
+    <div
+      v-if="selecting"
+      class="absolute top-8 right-0 bg-black border border-white/5 rounded-lg p-2">
+      <KButton
+        v-for="locale in locales"
+        :key="locale.code"
+        block
+        @click="
+          setLocale(locale.code);
+          selecting = false;
+        "
+        class="text-xs"
+        >{{ locale.name }}
+      </KButton>
+    </div>
   </div>
 </template>
