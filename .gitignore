@@ -30,13 +30,11 @@ coverage
 *.tsbuildinfo
 
 .env
-packages/server/.env
-packages/server/.env
 /.nuxt
 /.output
 *.zip
-/server-dist
-server/prompt.md
+/backend-dist
+/backend/prompt.md
 /.data
 public/intro.png
 /temp

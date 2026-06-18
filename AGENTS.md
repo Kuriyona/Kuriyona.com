@@ -19,14 +19,14 @@ Personal website — **Nuxt 4** (SSR) + **Elysia** (Bun backend).
 ## Commands
 
 ```
-pnpm dev          Nuxt dev server (hot reload)
+pnpm dev          Nuxt dev backend (hot reload)
 pnpm build        Nuxt production build
 pnpm generate     Nuxt static generation
 pnpm preview      Nuxt preview build output
 pnpm fmt          Format with oxfmt
-pnpm server       Run Elysia backend (Bun)
-pnpm server-dev   Run Elysia backend with hot reload
-pnpm server-dist  Bundle Elysia backend to server-dist/server.js
+pnpm backend       Run Elysia backend (Bun)
+pnpm backend-dev   Run Elysia backend with hot reload
+pnpm backend-dist  Bundle Elysia backend to /backend-dist/backend.js
 ```
 
 `postinstall` auto-runs `nuxt prepare`. No lint, typecheck, or test commands.
@@ -35,7 +35,7 @@ pnpm server-dist  Bundle Elysia backend to server-dist/server.js
 
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `app/pages/admin/` — **3** protected pages: `/admin` (API key input), `/admin/r2` (R2 upload), `/admin/neko` (system prompt editor). All require `API_KEY` in `localStorage`.
-- `server/` — Standalone Elysia API server (`server/index.ts`). Routes: R2 signed URLs (`/r2/*`), weather proxy (`/weather/`), neko chat SSE (`/neko/chat/stream`), push notification (`/push`), Turnstile verify (`/turnstile`).
+- `/backend/` — Standalone Elysia API /backend (`/backend/index.ts`). Routes: R2 signed URLs (`/r2/*`), weather proxy (`/weather/`), neko chat SSE (`/neko/chat/stream`), push notification (`/push`), Turnstile verify (`/turnstile`).
 - `i18n/locales/` — 4 locale files: `zh.json` (default), `zh-Hant.json`, `en.json`, `ja.json`
 - `app/config.json` — Friend links (the only "content" source; `@nuxt/content` is unused beyond blog MD)
 - `app/content/` — Blog markdown files (collected by `content.config.ts`)
@@ -48,7 +48,7 @@ pnpm server-dist  Bundle Elysia backend to server-dist/server.js
 - **Admin auth**: Pages read `API_KEY` from `localStorage` via `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`.
 - **Varlet UI**: Components use `var-*` prefix in templates. Dark theme applied in plugin via `StyleProvider(Themes.md3Dark)`.
-- **Env vars**: Loaded via `dotenv/config` in server. `.env` is gitignored. Required vars: `AUTH_KEY`, `JWT_SECRET`, `WEATHER_API_KEY`, `LLM_API_KEY`, `TURNSTILE_SECRET_KEY`, `PUSHPLUS_API_KEY`, `ENDPOINT`, `ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `BUCKET_NAME`.
+- **Env vars**: Loaded via `dotenv/config` in /backend. `.env` is gitignored. Required vars: `AUTH_KEY`, `JWT_SECRET`, `WEATHER_API_KEY`, `LLM_API_KEY`, `TURNSTILE_SECRET_KEY`, `PUSHPLUS_API_KEY`, `ENDPOINT`, `ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `BUCKET_NAME`.
 - **API host**: `import.meta.env.DEV` — `http://localhost:62802` (dev) vs `https://api.kuriyona.com` (prod).
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` are `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Neko chat**: SSE endpoint (`/neko/chat/stream`) proxies to SiliconFlow API (`Qwen/Qwen3-8B`). Requires JWT obtained via `/turnstile` (Cloudflare Turnstile verification). Rate-limited to 1 request per 2 seconds.

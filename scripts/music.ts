@@ -4,7 +4,7 @@ const filename = import.meta.filename as string;
 const dirname = path.dirname(filename);
 
 import { getPlaylistDetail, getLyric, getSongsDetail } from '@kuriyona/cecilia';
-import { upload } from '../server/utils';
+import { upload } from '../backend/utils';
 
 const playlistId = 18007101553;
 

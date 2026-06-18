@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 const filename = import.meta.filename as string;
 const dirname = path.dirname(filename);
-import { upload } from '../server/utils';
+import { upload } from '../backend/utils';
 
 const temp = path.join(dirname, '../temp');
 
