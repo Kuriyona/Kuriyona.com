@@ -6,14 +6,7 @@ const gitHash = child_process.execSync('git rev-parse --short HEAD').toString().
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: true,
-  modules: [
-    '@varlet/nuxt',
-    '@vueuse/nuxt',
-    '@nuxtjs/i18n',
-    '@nuxt/content',
-    '@nuxtjs/sitemap',
-    '@pinia/nuxt',
-  ],
+  modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxtjs/sitemap', '@pinia/nuxt'],
   nitro: {
     prerender: {
       ignore: ['/admin/**'],

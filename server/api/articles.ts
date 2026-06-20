@@ -6,9 +6,5 @@ export default defineEventHandler(async () => {
     delete article.content;
     return article;
   });
-  return {
-    success: true,
-    data: articles,
-    total: articles.length,
-  };
+  return articles;
 });

@@ -35,6 +35,5 @@ coverage
 *.zip
 /backend-dist
 /backend/prompt.md
-/.data
 public/intro.png
 /temp

@@ -1,16 +1,14 @@
 <script setup lang="ts">
-const { locale } = useI18n();
-const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
-  queryCollection('blog')
-    .order('date', 'DESC')
-    .all()
-    .then((res) =>
-      res.filter((post) => post.path.startsWith(`/blog/${uniLocale(locale.value).toLowerCase()}`)),
-    ),
-);
+import type { ArticleMeta } from '~~/server/utils';
 
-const { data } = await useFetch(`/api/articles`);
-const article = computed(() => data.value?.data || null);
+const { locale } = useI18n();
+
+const { data: articlesData } = await useFetch(`/api/articles`);
+const articles = computed(() =>
+  (articlesData.value as ArticleMeta[]).filter((post) => {
+    return post.lang.toLowerCase() == locale.value.toLowerCase();
+  }),
+);
 useSeoMeta({ title: $t('blog.title') });
 </script>
 
@@ -22,19 +20,18 @@ useSeoMeta({ title: $t('blog.title') });
       </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
-    {{ article }}
-    <KCardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.path.split('/')[3]}`">
+    <KCardLink v-for="post in articles" :key="post.slug" :href="`/blog/${post.slug}`">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.desc }}</p>
       <br />
       <p class="justify-end flex gap-2">
         <span class="inline-flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> schedule </span>
-          <span class="text-sm"> {{ post.date }}</span>
+          <span class="text-sm"> {{ formatDate(post.date) }}</span>
         </span>
         <span v-if="post.edit && post.edit != post.date" class="inline-flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> edit </span>
-          <span class="text-sm"> {{ post.edit }}</span>
+          <span class="text-sm"> {{ formatDate(post.date) }}</span>
         </span>
       </p>
     </KCardLink>
