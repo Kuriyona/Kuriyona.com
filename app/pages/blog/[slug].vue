@@ -5,9 +5,14 @@ import type { ArticleMeta } from '~~/server/utils';
 const route = useRoute();
 
 const slug = route.params.slug;
+const { locale } = useI18n();
 
 const { data: articlesData } = await useFetch(`/api/articles/${slug}`);
-const article = computed(() => (articlesData.value as ArticleMeta[])[0]);
+const article = computed(() =>
+  (articlesData.value as ArticleMeta[]).find(
+    (post) => post.lang.toLowerCase() == locale.value.toLowerCase(),
+  ),
+);
 
 useSeoMeta({
   title: `${article.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
