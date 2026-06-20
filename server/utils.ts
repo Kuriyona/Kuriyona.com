@@ -20,7 +20,11 @@ export type Article = ArticleMeta & {
 };
 
 const MARKDOWN_ROOT = path.resolve(process.cwd(), './app/content/blog');
-const md = createMarkdownExit();
+const md = createMarkdownExit({
+  html: true,
+  breaks: true,
+  linkify: true,
+});
 md.use(
   Shiki({
     theme: 'one-dark-pro',
