@@ -58,9 +58,7 @@ const config = useAppConfig();
             src="https://r2.kuriyona.com/static/image/site/location-map-400.png" />
         </div>
       </KCard>
-      <KCard :title="$t('about.weather')" class="min-w-[25%]">
-        <CardWeather />
-      </KCard>
+      <CardWeather />
     </div>
     <KCard :title="$t('about.skills')">
       <div class="flex justify-center gap-2 max-[600px]:flex-col">
