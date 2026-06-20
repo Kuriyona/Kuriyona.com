@@ -51,7 +51,7 @@ useSeoMeta({ title: $t('about.links.title') });
       </div>
     </KCard>
     <KCard :title="$t('about.links.exchange')">
-      <div class="font-mono text-wrap break-all">
+      <div class="font-monos text-wrap break-all">
         <p>url : https://kuriyona.com</p>
         <p>title : Kuriyona's Space</p>
         <p>desc : {{ $t('about.description') }}</p>

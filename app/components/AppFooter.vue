@@ -8,7 +8,7 @@ const { currentNodeName, location } = useCloudflareStatus();
 
 <template>
   <KCard>
-    <div class="text-center font-mono">
+    <div class="text-center font-monos">
       <p>
         {{ $t('opensource') }} (MIT) :
         <a href="https://github.com/Kuriyona/Kuriyona" target="_blank" class="link"

@@ -7,6 +7,7 @@
 
 html {
   --font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
+  --font-family-monos: 'JetBrains Mono', var(--font-family), monospace;
 }
 
 body {
@@ -15,8 +16,8 @@ body {
 }
 
 :root {
-  .font-mono {
-    font-family: 'JetBrains Mono', var(--font-family), monospace;
+  .font-monos {
+    font-family: var(--font-family-monos);
   }
   .font-emoji {
     font-family: 'Noto Color Emoji', var(--font-family);

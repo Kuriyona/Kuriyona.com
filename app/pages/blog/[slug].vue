@@ -60,5 +60,8 @@ p:has(img) {
 }
 .markdown-body {
   font-family: inherit !important;
+  code {
+    font-family: var(--font-family-monos);
+  }
 }
 </style>

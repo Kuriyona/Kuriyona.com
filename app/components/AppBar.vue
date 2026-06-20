@@ -4,7 +4,7 @@ const popup = ref(false);
 
 <template>
   <div class="sticky top-0 flex justify-center backdrop-brightness-75 backdrop-blur-3xl">
-    <div class="w-200 max-w-screen px-4 *:px-2 *:font-mono">
+    <div class="w-200 max-w-screen px-4 *:px-2 *:font-monos">
       <div class="relative h-12 py-2 px-3 flex justify-between items-center rounded-xl">
         <div class="h-full flex items-center gap-4">
           <img class="h-3/4 rounded-md" src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
