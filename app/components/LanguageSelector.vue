@@ -10,7 +10,7 @@ const selecting = ref(false);
     <VarButton text size="small" @click="selecting = !selecting">
       <div class="flex items-center gap-1">
         <span class="material-symbols-outlined text-sm!"> translate </span>
-        <span class="text-sm!"> {{ currentLocale }} </span>
+        <span class="text-sm! hidden sm:inline-block"> {{ currentLocale }} </span>
         <span
           class="material-symbols-outlined text-sm! transition-all duration-300"
           :class="{ 'rotate-180': selecting }">

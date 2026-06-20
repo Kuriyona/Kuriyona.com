@@ -5,7 +5,7 @@
 </template>
 
 <style lang="css">
-@import 'tailwindcss';
+@reference "tailwindcss";
 
 .k-table {
   @apply w-full;

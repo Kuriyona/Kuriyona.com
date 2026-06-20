@@ -85,7 +85,7 @@ const handleProgressClick = (event: MouseEvent) => {
   @apply hidden;
 }
 #music-bar {
-  @apply hover:[&>img]:block;
+  @apply hover:sm:[&>img]:block;
   @apply hover:[&_#main]:flex-col-reverse hover:[&_#main]:items-start;
   @apply hover:[&_.hover-show]:flex;
   @apply hover:[&_#progress]:h-1;
