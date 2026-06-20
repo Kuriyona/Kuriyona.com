@@ -58,4 +58,7 @@ p:has(img) {
   justify-content: center;
   align-items: center;
 }
+.markdown-body {
+  font-family: inherit !important;
+}
 </style>

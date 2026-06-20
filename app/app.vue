@@ -2,6 +2,16 @@
 import AppBar from './components/AppBar.vue';
 import { greet } from './utils/console.js';
 const { locale } = useI18n();
+watch(
+  () => locale.value,
+  (newLocale) => {
+    useHead({
+      htmlAttrs: {
+        lang: newLocale,
+      },
+    });
+  },
+);
 useHead({
   htmlAttrs: {
     lang: locale.value,

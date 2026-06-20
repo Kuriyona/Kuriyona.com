@@ -16,7 +16,7 @@ body {
 
 :root {
   .font-mono {
-    font-family: 'JetBrains Mono', var(--font-family);
+    font-family: 'JetBrains Mono', var(--font-family), monospace;
   }
   .font-emoji {
     font-family: 'Noto Color Emoji', var(--font-family);
