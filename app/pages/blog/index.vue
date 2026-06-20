@@ -9,6 +9,8 @@ const { data: posts } = await useAsyncData(`posts-${locale.value}`, () =>
     ),
 );
 
+const { data } = await useFetch(`/api/articles`);
+const article = computed(() => data.value?.data || null);
 useSeoMeta({ title: $t('blog.title') });
 </script>
 
@@ -20,6 +22,7 @@ useSeoMeta({ title: $t('blog.title') });
       </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
+    {{ article }}
     <KCardLink v-for="post in posts" :key="post.id" :href="`/blog/${post.path.split('/')[3]}`">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.desc }}</p>

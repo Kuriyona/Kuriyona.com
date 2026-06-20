@@ -20,6 +20,10 @@ const post = computed(() => posts.value?.find((item) => item.locale == locale.va
 const otherPosts = computed(() =>
   posts.value?.filter((item) => item.locale != locale.value && item.post),
 );
+
+const { data } = await useFetch(`/api/articles/${id}`);
+const article = computed(() => data.value?.data || null);
+
 useSeoMeta({
   title: `${post.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
   description: post.value?.meta.desc as string,
@@ -35,6 +39,7 @@ useSeoMeta({
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ post?.title || $t('global.notFound') }}</h1>
     <p class="text-sm">{{ post?.desc || $t('blog.notFound') }}</p>
+    {{ article }}
     <template v-if="!post">
       <var-divider />
       <KCardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
