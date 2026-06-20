@@ -3,7 +3,7 @@ import KCardLink from '~/components/KCardLink.vue';
 
 const config = useAppConfig();
 const ISSUE =
-  'https://github.com/Kuriyona/Kuriyona/issues/new?template=%E7%94%B3%E8%AF%B7%E5%8F%8B%E9%93%BE---apply-for-a-link-exchange.md';
+  'https://github.com/Kuriyona/Kuriyona/issues/new?template=申请友链---apply-for-a-link-exchange.md';
 useSeoMeta({ title: $t('about.links.title') });
 </script>
 

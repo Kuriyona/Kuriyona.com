@@ -22,16 +22,18 @@ const imgError = ref(false);
       class="hover:bg-white/5 transition-bg duration-300 h-full flex flex-col justify-center"
       v-bind="$attrs">
       <slot />
-      <div v-if="!$slots.default" class="flex justify-between items-center">
-        <div class="flex items-center gap-4">
+      <div v-if="!$slots.default" class="flex justify-between items-center w-full overflow-hidden">
+        <div class="flex items-center gap-4 min-w-0">
           <template v-if="img">
             <img v-if="!imgError" @error="imgError = true" :src="img" class="w-8 h-8 rounded-2xl" />
             <span v-else class="material-symbols-outlined"> block </span>
           </template>
-          <div v-if="!$slots.content">
+          <div v-if="!$slots.content" class="max-w-full">
             <p>{{ props.text }}</p>
             <p v-if="props.desc" class="text-sm text-white/50">{{ props.desc }}</p>
-            <p v-if="props.to && props.new" class="text-xs text-white/50">{{ props.to }}</p>
+            <p v-if="props.to && props.new" class="text-xs text-white/50 max-w-full truncate">
+              {{ props.to }}
+            </p>
           </div>
           <slot name="content" />
         </div>
