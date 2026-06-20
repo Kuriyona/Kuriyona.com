@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { createMarkdownExit } from 'markdown-exit';
+import Shiki from '@shikijs/markdown-exit';
 
 export type ArticleMeta = {
   slug: string;
@@ -18,6 +19,11 @@ export type Article = ArticleMeta & {
 
 const MARKDOWN_ROOT = path.resolve(process.cwd(), './app/content/blog');
 const md = createMarkdownExit();
+md.use(
+  Shiki({
+    theme: 'one-dark-pro',
+  }),
+);
 
 async function getAllMarkdownFiles() {
   try {
@@ -43,7 +49,7 @@ async function parseMarkdownFile(filePath: string) {
   const { data: frontmatter, content } = matter(fileContent);
   return {
     frontmatter,
-    content: md.render(content),
+    content: await md.renderAsync(content),
   };
 }
 
