@@ -40,7 +40,9 @@ useSeoMeta({
         </span>
       </div>
       <var-divider />
-      <pre v-html="article.content"></pre>
+      <div class="markdown-body bg-transparent!">
+        <div v-html="article.content"></div>
+      </div>
     </template>
   </AppPage>
 </template>
@@ -50,7 +52,5 @@ p:has(img) {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-html {
 }
 </style>
