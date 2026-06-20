@@ -34,15 +34,26 @@ useSeoMeta({
       <KCardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
     </template>
     <template v-else>
-      <div class="flex justify-between items-center gap-1">
+      <div class="flex justify-between items-center gap-2">
         <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> schedule </span>
-          <span class="text-sm"> {{ article.date }}</span>
+          <span class="text-sm">{{
+            $t('blog.reading-time', [
+              Math.ceil(article.readingTime.minutes),
+              article.readingTime.words,
+            ])
+          }}</span>
         </span>
-        <span class="flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm!"> edit </span>
-          <span class="text-sm"> {{ article.edit }}</span>
-        </span>
+        <div class="flex justify-between items-center gap-2">
+          <span class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm!"> event </span>
+            <span class="text-sm"> {{ formatDate(article.date) }}</span>
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm!"> edit </span>
+            <span class="text-sm"> {{ formatDate(article.edit) }}</span>
+          </span>
+        </div>
       </div>
       <var-divider />
       <div class="markdown-body bg-transparent!">

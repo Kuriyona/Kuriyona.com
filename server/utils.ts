@@ -3,13 +3,15 @@ import path from 'node:path';
 import matter from 'gray-matter';
 import { createMarkdownExit } from 'markdown-exit';
 import Shiki from '@shikijs/markdown-exit';
+import readingTime from 'reading-time';
 
 export type ArticleMeta = {
   slug: string;
   lang: string;
   title: string;
-  desc?: string;
+  desc: string;
   date: string;
+  readingTime: any;
   [key: string]: any;
 };
 
@@ -50,6 +52,7 @@ async function parseMarkdownFile(filePath: string) {
   return {
     frontmatter,
     content: await md.renderAsync(content),
+    readingTime: readingTime(content),
   };
 }
 
@@ -64,11 +67,13 @@ async function getAllArticles() {
     const { frontmatter, content } = result;
     articles.push({
       slug,
-      ...frontmatter,
       title: frontmatter.title || slug,
       lang,
+      desc: frontmatter.desc || '',
       date: frontmatter.date || '',
       tags: frontmatter.tags || [],
+      edit: frontmatter.edit || '',
+      readingTime: result.readingTime,
       content,
     });
   }

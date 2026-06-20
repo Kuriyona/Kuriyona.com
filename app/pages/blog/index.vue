@@ -25,8 +25,14 @@ useSeoMeta({ title: $t('blog.title') });
       <p class="text-sm">{{ post.desc }}</p>
       <br />
       <p class="justify-end flex gap-2">
-        <span class="inline-flex items-center gap-1">
+        <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> schedule </span>
+          <span class="text-sm">{{
+            $t('blog.reading-time', [Math.ceil(post.readingTime.minutes), post.readingTime.words])
+          }}</span>
+        </span>
+        <span class="inline-flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm!"> event </span>
           <span class="text-sm"> {{ formatDate(post.date) }}</span>
         </span>
         <span v-if="post.edit && post.edit != post.date" class="inline-flex items-center gap-1">

@@ -44,6 +44,7 @@
     "nuxt": "^4.4.6",
     "pinia": "^3.0.4",
     "qrcode.vue": "^3.9.1",
+    "reading-time": "^1.5.0",
     "sharp": "^0.34.5",
     "shiki": "^4.1.0",
     "tailwindcss": "^4.3.0",

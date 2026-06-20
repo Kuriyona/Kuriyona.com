@@ -80,5 +80,6 @@
   "weather.wind-dir": "风向",
   "weather.wind-speed": "风速",
   "weixi-chan": "未晞酱",
-  "global.birthdayCountdown": "距离我的 {0} 岁生日还有 {1}"
+  "global.birthdayCountdown": "距离我的 {0} 岁生日还有 {1}",
+  "blog.reading-time": "{0} 分钟，{1} 字/词"
 }
