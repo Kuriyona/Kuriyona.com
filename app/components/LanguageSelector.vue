@@ -6,32 +6,30 @@ const selecting = ref(false);
 </script>
 
 <template>
-  <div class="relative z-10">
-    <VarButton text size="small" @click="selecting = !selecting">
-      <div class="flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm!"> translate </span>
-        <span class="text-sm! hidden sm:inline-block"> {{ currentLocale }} </span>
-        <span
-          class="material-symbols-outlined text-sm! transition-all duration-300"
-          :class="{ 'rotate-180': selecting }">
-          keyboard_arrow_down
-        </span>
-      </div>
-    </VarButton>
-    <div
-      v-if="selecting"
-      class="absolute top-8 right-0 bg-black border border-white/5 rounded-lg p-2">
-      <KButton
-        v-for="locale in locales"
-        :key="locale.code"
-        block
-        @click="
-          setLocale(locale.code);
-          selecting = false;
-        "
-        class="text-xs"
-        >{{ locale.name }}
-      </KButton>
-    </div>
-  </div>
+  <KMenu v-model="selecting" direction="bottom" align="end">
+    <template #trigger>
+      <VarButton text size="small">
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm!"> translate </span>
+          <span class="text-sm! hidden sm:inline-block"> {{ currentLocale }} </span>
+          <span
+            class="material-symbols-outlined text-sm! transition-all duration-300"
+            :class="{ 'rotate-180': selecting }">
+            keyboard_arrow_down
+          </span>
+        </div>
+      </VarButton>
+    </template>
+    <KButton
+      v-for="locale in locales"
+      :key="locale.code"
+      block
+      @click="
+        setLocale(locale.code);
+        selecting = false;
+      "
+      class="text-xs"
+      >{{ locale.name }}
+    </KButton>
+  </KMenu>
 </template>
