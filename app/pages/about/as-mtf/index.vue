@@ -43,7 +43,7 @@ const timeInfo = computed(() => {
   const birthday = dayjs('2008/6/28');
   const wantTime = dayjs('2020');
   const identifyTime = dayjs('2025/11/17');
-  const hrtStartTime = dayjs('2026/01/17');
+  const hrtStartTime = dayjs('2026/01/14');
 
   const years = now.diff(birthday, 'year');
   const months = now.diff(birthday, 'month');
