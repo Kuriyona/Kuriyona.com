@@ -62,7 +62,7 @@ Combined with the network ID obtained earlier, we can now get the actual network
 
 ### Code Implementation
 
-The actual code used on this site can be seen in [useCloudflareStatus.ts](https://github.com/Kuriyona/Kuriyona/blob/main/app/composables/useCloudflareStatus.ts)
+The actual code used on this site can be seen in [useCloudflareStatus.ts](https://github.com/Kuriyona/Kuriyona.com/blob/main/app/composables/useCloudflareStatus.ts)
 
 Below is a complete TypeScript implementation:
 
