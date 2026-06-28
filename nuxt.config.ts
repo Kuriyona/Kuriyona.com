@@ -29,7 +29,15 @@ export default defineNuxtConfig({
       BUILD_TIME: JSON.stringify(new Date().toISOString()),
     },
     optimizeDeps: {
-      include: ['dayjs', '@varlet/touch-emulator', 'ky'],
+      include: [
+        'dayjs',
+        '@varlet/touch-emulator',
+        'ky',
+        'dayjs/plugin/duration',
+        'vue-turnstile',
+        'qrcode.vue',
+        'gsap',
+      ],
     },
   },
   css: ['./app/assets/css/main.css'],
