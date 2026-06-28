@@ -19,7 +19,7 @@ const countdownDays = computed(() => {
   return dayjs.duration(nextBirthday.diff(now.value));
 });
 const show = computed(() => {
-  return countdownDays.value.asDays() <= 30 && !closed.value;
+  return countdownDays.value.asDays() <= 30 && countdownDays.value.asDays() > 0 && !closed.value;
 });
 const showTips = useLocalStorage('showNekoTips', true);
 const showTips2 = useLocalStorage('showNekoTips2', true);
@@ -43,7 +43,7 @@ const showTips2 = useLocalStorage('showNekoTips2', true);
     </KButton>
   </div>
   <div v-if="showTips2" class="flex items-center justify-between gap-2 text-sm text-white/80">
-    <p>网站纯自己手写|我知道自己写的丑喵|高考完会进行重制的喵|唔，就是这样</p>
+    <p>网站纯自己手写|我知道自己写的丑喵|暑假会进行重制的喵|唔，就是这样</p>
     <KButton round text size="mini" @click="showTips2 = false">
       <span class="material-symbols-outlined text-sm! leading-none"> close </span>
     </KButton>
