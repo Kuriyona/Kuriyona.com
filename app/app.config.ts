@@ -1,3 +1,3 @@
-import Config from './config.json';
+import Config from '../Kuriyona/config.json';
 
 export default defineAppConfig(Config);
