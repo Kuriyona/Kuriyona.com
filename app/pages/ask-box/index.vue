@@ -1,16 +1,4 @@
 <script lang="ts" setup>
-const mainStore = useMainStore();
-const showTurnstile = ref(false);
-
-const formRef = useTemplateRef('form');
-const form = ref({
-  name: '',
-  showName: true,
-  question: '',
-  showIP: false,
-  note: '',
-});
-
 const { data: questions } = useAsyncData(
   'questions',
   async () => {
@@ -20,87 +8,46 @@ const { data: questions } = useAsyncData(
         ip?: string;
         question: string;
         answer: string;
-        askedAt: string;
-        answeredAt?: string;
+        askedAt: number;
+        answeredAt?: number;
       }[]
     >();
-    return res;
+    return res.sort(
+      (a, b) => Math.max(a.answeredAt || 0, a.askedAt) - Math.max(b.answeredAt || 0, b.askedAt),
+    );
   },
   { server: false },
 );
-const submit = async () => {
-  const valid = await formRef.value?.validate();
-  if (!valid) {
-    return;
-  }
-  const res = await fetchApi.post('/ask-box', {
-    headers: { 'Content-Type': 'application/json', Authorization: mainStore.jwt },
-    body: JSON.stringify(form.value),
-  });
-  if (res.status === 200) {
-    Snackbar.success('提交成功');
-  } else {
-    Snackbar.error('提交失败');
-  }
-};
-
 useSeoMeta({ title: '提问箱' });
 </script>
 
 <template>
   <AppPage>
-    <h2 class="text-xl font-bold">向未晞酱提问</h2>
-    <p>请在下方填写并提交你的问题，留下身份或者匿名都行喵。</p>
-    <p>第一版就先这样吧，后面再调整 UI。</p>
-    <var-form ref="form" class="my-4 flex flex-col gap-2">
-      <var-input placeholder="昵称（可选）" v-model="form.name" variant="outlined" />
-      <var-input
-        placeholder="问题（支持 Markdown）"
-        :rules="(e) => e.trim().length > 0 || '请输入文本（'"
-        textarea
-        v-model="form.question"
-        variant="outlined" />
-      <var-input placeholder="备注（可选/不公开）" v-model="form.note" variant="outlined" />
-      <p class="mt-2 flex items-center justify-between">
-        <span>公开展示昵称：</span> <var-switch v-model="form.showName" />
-      </p>
-      <p class="flex items-center justify-between">
-        <span>公开展示 IP 属地：</span> <var-switch v-model="form.showIP" />
-      </p>
-    </var-form>
-    <KTurnstile v-model:show="showTurnstile" />
-    <KCard v-if="!mainStore.jwt">
-      <var-alert class="mb-2"> {{ $t('turnstile.please-verify') }} </var-alert>
-      <var-button @click="showTurnstile = true" block> {{ $t('global.start') }} </var-button>
-    </KCard>
-    <var-button v-if="mainStore.jwt" type="primary" block @click="submit">
-      {{ $t('global.submit') }}
-    </var-button>
-
-    <template v-if="questions?.length">
-      <var-divider class="my-8!" />
-      <h3 class="text-xl font-bold">已经被回答并公开的问题</h3>
-      <p>后续会转移到单独的问题页面，不会显示在提问页面中。</p>
-      <KCard v-if="questions.length > 0" v-for="(question, index) in questions" :key="index">
-        <div class="flex flex-col gap-2">
-          <p class="text-sm">
-            来自<span class="font-bold">&nbsp;{{ question.name || '匿名' }}&nbsp;</span
-            ><span v-if="question.askedAt">在 {{ formatTime(question.askedAt) }} </span> 的提问
-          </p>
-          <p class="text-base">
-            <KMarkdown :content="question.question" />
-          </p>
-          <hr />
-          <p class="text-sm">
-            由<span class="font-bold">&nbsp;未晞酱&nbsp;</span
-            ><span v-if="question.answeredAt">于 {{ formatTime(question.answeredAt) }} 写下的</span
-            >回答
-          </p>
-          <p class="text-base">
-            <KMarkdown :content="question.answer" />
-          </p>
-        </div>
-      </KCard>
-    </template>
-  </AppPage>
+    <h2 class="text-2xl font-bold">未晞酱的提问箱</h2>
+    <h3 class="text-xl font-bold">你可以...</h3>
+    <KCardLink to="/ask-box/ask" text="向未晞酱提问" />
+    <h3 class="text-xl font-bold">或者浏览公开的问题...</h3>
+    <KCard
+      v-if="questions && questions.length > 0"
+      v-for="(question, index) in questions"
+      :key="index">
+      <div class="flex flex-col gap-2">
+        <p class="text-sm">
+          来自<span class="font-bold">&nbsp;{{ question.name || '匿名' }}&nbsp;</span
+          ><span v-if="question.askedAt">在 {{ formatTime(question.askedAt) }} </span> 的提问
+        </p>
+        <p class="text-base">
+          <KMarkdown :content="question.question" />
+        </p>
+        <hr />
+        <p class="text-sm">
+          由<span class="font-bold">&nbsp;未晞酱&nbsp;</span
+          ><span v-if="question.answeredAt">于 {{ formatTime(question.answeredAt) }} 写下的</span
+          >回答
+        </p>
+        <p class="text-base">
+          <KMarkdown :content="question.answer" />
+        </p>
+      </div> </KCard
+  ></AppPage>
 </template>

@@ -4,6 +4,6 @@ export const formatDate = (date: string) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
 
-export const formatTime = (date: string) => {
+export const formatTime = (date: string | number) => {
   return dayjs(date).format('YYYY-MM-DD HH:mm');
 };
