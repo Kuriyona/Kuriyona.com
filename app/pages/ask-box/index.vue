@@ -10,17 +10,23 @@ const form = ref({
   note: '',
 });
 
-const { data: questions } = useAsyncData('questions', async () => {
-  const res = await fetchApi.get('/ask-box').json<
-    {
-      name?: string;
-      ip?: string;
-      question: string;
-      answer: string;
-    }[]
-  >();
-  return res;
-});
+const { data: questions } = useAsyncData(
+  'questions',
+  async () => {
+    const res = await fetchApi.get('/ask-box').json<
+      {
+        name?: string;
+        ip?: string;
+        question: string;
+        answer: string;
+        askedAt: string;
+        answeredAt?: string;
+      }[]
+    >();
+    return res;
+  },
+  { server: false },
+);
 const submit = async () => {
   const res = await fetchApi.post('/ask-box', {
     headers: { 'Content-Type': 'application/json', Authorization: mainStore.jwt },
@@ -42,10 +48,14 @@ useSeoMeta({ title: '提问箱' });
     <p>请在下方填写并提交你的问题，留下身份或者匿名都行喵。</p>
     <p>第一版就先这样吧，后面再调整 UI。</p>
     <var-form class="my-4 flex flex-col gap-2">
-      <var-input placeholder="昵称(可选)" v-model="form.name" variant="outlined" />
-      <var-input placeholder="问题" textarea v-model="form.question" variant="outlined" />
-      <var-input placeholder="备注(可选/不公开)" v-model="form.note" variant="outlined" />
-      <p class="flex items-center justify-between">
+      <var-input placeholder="昵称（可选）" v-model="form.name" variant="outlined" />
+      <var-input
+        placeholder="问题（支持 Markdown）"
+        textarea
+        v-model="form.question"
+        variant="outlined" />
+      <var-input placeholder="备注（可选/不公开）" v-model="form.note" variant="outlined" />
+      <p class="mt-2 flex items-center justify-between">
         <span>公开展示昵称：</span> <var-switch v-model="form.showName" />
       </p>
       <p class="flex items-center justify-between">
@@ -65,12 +75,22 @@ useSeoMeta({ title: '提问箱' });
       <p>后续会转移到单独的问题页面，不会显示在提问页面中。</p>
       <KCard v-if="questions.length > 0" v-for="(question, index) in questions" :key="index">
         <div class="flex flex-col gap-2">
-          <p class="text-sm" v-if="question.name">
-            来自 <span class="font-bold">{{ question.name }}</span> 的提问
+          <p class="text-sm">
+            来自<span class="font-bold">&nbsp;{{ question.name || '匿名' }}&nbsp;</span
+            ><span v-if="question.askedAt">在 {{ formatTime(question.askedAt) }} </span> 的提问
           </p>
-          <p class="text-base">{{ question.question }}</p>
+          <p class="text-base">
+            <KMarkdown :content="question.question" />
+          </p>
           <hr />
-          <p class="text-base">{{ question.answer }}</p>
+          <p class="text-sm">
+            由<span class="font-bold">&nbsp;未晞酱&nbsp;</span
+            ><span v-if="question.answeredAt">于 {{ formatTime(question.answeredAt) }} 写下的</span
+            >回答
+          </p>
+          <p class="text-base">
+            <KMarkdown :content="question.answer" />
+          </p>
         </div>
       </KCard>
     </template>
