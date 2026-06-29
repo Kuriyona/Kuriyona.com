@@ -49,23 +49,24 @@ const selecting = ref(false);
   </div>
   <Transition name="menu">
     <div v-if="mobileMenu">
-      <div class="fixed right-0 top-0 w-screen h-screen bg-black/50" @click="mobileMenu = false" />
+      <div class="fixed right-0 top-0 w-screen h-screen bg-black/25" @click="mobileMenu = false" />
       <div
-        class="fixed w-80 max-w-[95vw] right-0 top-0 h-screen bg-black/75 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-visible">
+        class="fixed w-80 max-w-[95vw] right-0 top-0 h-screen bg-black/50 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-visible">
         <div class="flex justify-end">
           <KButton round @click="mobileMenu = false">
             <span class="material-symbols-outlined text-lg! leading-none"> close </span>
           </KButton>
         </div>
-        <KCardLink to="/blog" @click="mobileMenu = false" text="Blog" />
+        <KCardLink to="/blog" @click="mobileMenu = false" text="Blog" shadow />
         <KCardLink
           @click="
             popup = true;
             mobileMenu = false;
           "
-          text="Neko" />
-        <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" />
-        <KCard>
+          text="Neko"
+          shadow />
+        <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" shadow />
+        <KCard shadow>
           <KButton
             v-for="locale in locales"
             :key="locale.code"

@@ -74,5 +74,9 @@ p:has(img) {
   code {
     font-family: var(--font-family-monos);
   }
+  pre {
+    background-color: transparent !important;
+    backdrop-filter: brightness(0.75);
+  }
 }
 </style>

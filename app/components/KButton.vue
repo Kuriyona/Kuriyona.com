@@ -4,7 +4,7 @@
     :class="{
       'w-full': $attrs.block !== undefined,
       'rounded-full!': $attrs.round !== undefined,
-      'shadow-lg shadow-white/3': $attrs.level !== undefined,
+      'shadow-md shadow-white/2': $attrs.shadow !== undefined,
     }">
     <slot></slot>
   </button>

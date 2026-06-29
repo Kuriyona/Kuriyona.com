@@ -3,19 +3,19 @@ export const BackgroundPresets = [
     type: 'video',
     name: 'Columbina from Genshin Web Event',
     url: 'https://r2.kuriyona.com/img/Background/Columbina.mp4',
-    brightness: 0.05,
+    brightness: 0.1,
   },
   {
     type: 'image',
     name: 'LoliAPI Random ACG Image',
     random: true,
     url: 'https://www.loliapi.com/acg/',
-    brightness: 0.5,
+    brightness: 0.1,
   },
   {
     type: 'bing',
     name: 'Bing Daily Image',
-    brightness: 0.5,
+    brightness: 0.1,
   },
 ];
 

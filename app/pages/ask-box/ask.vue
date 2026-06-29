@@ -39,22 +39,23 @@ useSeoMeta({ title: '提问箱 - 向未晞酱提问' });
     </NuxtLinkLocale>
     <h2 class="text-xl font-bold">向未晞酱提问</h2>
     <p>请在下方填写并提交你的问题，留下身份或者匿名都行的喵。</p>
-    <var-form ref="form" class="my-4 flex flex-col gap-2">
-      <var-input placeholder="昵称（可选）" v-model="form.name" variant="outlined" />
-      <var-input
-        placeholder="问题（支持 Markdown）"
-        :rules="(e) => e.trim().length > 0 || '请输入文本（'"
-        textarea
-        v-model="form.question"
-        variant="outlined" />
-      <var-input placeholder="备注（可选/不公开）" v-model="form.note" variant="outlined" />
-      <p class="mt-2 flex items-center justify-between">
-        <span>公开展示昵称：</span> <var-switch v-model="form.showName" />
-      </p>
-      <p class="flex items-center justify-between">
-        <span>公开展示 IP 属地：</span> <var-switch v-model="form.showIP" />
-      </p>
-    </var-form>
+    <KCard class="my-4">
+      <var-form ref="form" class="flex flex-col gap-4">
+        <var-input placeholder="昵称（可选）" v-model="form.name" variant="outlined" />
+        <var-input
+          placeholder="问题（支持 Markdown）"
+          :rules="(e) => e.trim().length > 0 || '请输入文本（'"
+          textarea
+          v-model="form.question"
+          variant="outlined" />
+        <var-input placeholder="备注（可选/不公开）" v-model="form.note" variant="outlined" />
+        <p class="mt-2 flex items-center justify-between">
+          <span>公开展示昵称：</span> <var-switch v-model="form.showName" />
+        </p>
+        <p class="flex items-center justify-between">
+          <span>公开展示 IP 属地：</span> <var-switch v-model="form.showIP" />
+        </p> </var-form
+    ></KCard>
     <KTurnstile v-model:show="showTurnstile" />
     <KCard v-if="!mainStore.jwt">
       <var-alert class="mb-2"> {{ $t('turnstile.please-verify') }} </var-alert>
