@@ -9,7 +9,7 @@ const selecting = ref(false);
 </script>
 
 <template>
-  <div class="sticky top-0 flex justify-center backdrop-brightness-75 backdrop-blur-3xl">
+  <div class="fixed w-screen top-0 flex justify-center backdrop-brightness-75 backdrop-blur-3xl">
     <div class="w-200 max-w-screen px-4 *:px-2 *:font-monos">
       <div class="relative min-h-12 py-2 px-3 flex justify-between items-center rounded-xl">
         <div class="h-full flex items-center gap-4">
@@ -46,43 +46,42 @@ const selecting = ref(false);
       <AppBarTips />
       <NekoCatPopup v-model:show="popup" />
     </div>
-
-    <Transition name="menu">
-      <div v-if="mobileMenu">
-        <div class="fixed right-0 w-screen h-screen bg-black/50" @click="mobileMenu = false" />
-        <div
-          class="fixed w-80 max-w-[95vw] right-0 h-screen bg-black border-l border-white/5 flex flex-col gap-4 p-4 overflow-visible">
-          <div class="flex justify-end">
-            <KButton round @click="mobileMenu = false">
-              <span class="material-symbols-outlined text-lg! leading-none"> close </span>
-            </KButton>
-          </div>
-          <KCardLink to="/blog" @click="mobileMenu = false" text="Blog" />
-          <KCardLink
-            @click="
-              popup = true;
-              mobileMenu = false;
-            "
-            text="Neko" />
-          <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" />
-          <KCard>
-            <KButton
-              v-for="locale in locales"
-              :key="locale.code"
-              block
-              @click="
-                setLocale(locale.code);
-                selecting = false;
-              "
-              class="text-xs"
-              >{{ locale.name }}
-            </KButton>
-          </KCard>
-          <BackgroundSelector />
-        </div>
-      </div>
-    </Transition>
   </div>
+  <Transition name="menu">
+    <div v-if="mobileMenu">
+      <div class="fixed right-0 top-0 w-screen h-screen bg-black/50" @click="mobileMenu = false" />
+      <div
+        class="fixed w-80 max-w-[95vw] right-0 top-0 h-screen bg-black/75 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-visible">
+        <div class="flex justify-end">
+          <KButton round @click="mobileMenu = false">
+            <span class="material-symbols-outlined text-lg! leading-none"> close </span>
+          </KButton>
+        </div>
+        <KCardLink to="/blog" @click="mobileMenu = false" text="Blog" />
+        <KCardLink
+          @click="
+            popup = true;
+            mobileMenu = false;
+          "
+          text="Neko" />
+        <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" />
+        <KCard>
+          <KButton
+            v-for="locale in locales"
+            :key="locale.code"
+            block
+            @click="
+              setLocale(locale.code);
+              selecting = false;
+            "
+            class="text-xs"
+            >{{ locale.name }}
+          </KButton>
+        </KCard>
+        <BackgroundSelector />
+      </div>
+    </div>
+  </Transition>
 </template>
 
 <style scoped>
