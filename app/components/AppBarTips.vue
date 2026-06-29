@@ -22,7 +22,7 @@ const show = computed(() => {
   return countdownDays.value.asDays() <= 30 && countdownDays.value.asDays() > 0 && !closed.value;
 });
 const showTips = useLocalStorage('showNekoTips', true);
-const showTips2 = useLocalStorage('showNekoTips2', true);
+const showTips3 = useLocalStorage('showNekoTips3', true);
 </script>
 
 <template>
@@ -42,9 +42,9 @@ const showTips2 = useLocalStorage('showNekoTips2', true);
       <span class="material-symbols-outlined text-sm! leading-none"> close </span>
     </KButton>
   </div>
-  <div v-if="showTips2" class="flex items-center justify-between gap-2 text-sm text-white/80">
-    <p>网站纯自己手写|我知道自己写的丑喵|暑假会进行重制的喵|唔，就是这样</p>
-    <KButton round text size="mini" @click="showTips2 = false">
+  <div v-if="showTips3" class="flex items-center justify-between gap-2 text-sm text-white/80">
+    <p>{{ $t('app.bar.tip-3') }}</p>
+    <KButton round text size="mini" @click="showTips3 = false">
       <span class="material-symbols-outlined text-sm! leading-none"> close </span>
     </KButton>
   </div>
