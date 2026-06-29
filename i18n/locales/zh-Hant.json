@@ -81,5 +81,13 @@
   "weather.wind-speed": "風速",
   "weixi-chan": "未晞醬",
   "global.birthdayCountdown": "距離我的 {0} 歲生日還有 {1}",
-  "blog.reading-time": "{0} 分鐘，{1} 字/詞"
+  "blog.reading-time": "{0} 分鐘，{1} 字/詞",
+  "global.language": "語言",
+  "ask-box.title": "提問箱",
+  "background.name.columbina": "「哥倫比婭」- 來自原神網頁活動",
+  "background.name.loli-api": "LoliAPI 隨機二次元圖片",
+  "background.name.bing": "Bing 每日壁紙",
+  "global.submit-success": "提交成功",
+  "global.submit-fail": "提交失敗",
+  "ask-box.ask-me": "向未晞醬提問"
 }

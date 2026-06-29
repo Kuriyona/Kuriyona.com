@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const { t } = useI18n();
 const { data: questions } = useAsyncData(
   'questions',
   async () => {
@@ -18,7 +19,7 @@ const { data: questions } = useAsyncData(
   },
   { server: false },
 );
-useSeoMeta({ title: '提问箱' });
+useSeoMeta({ title: t('ask-box.title') });
 </script>
 
 <template>

@@ -2,6 +2,8 @@
 const mainStore = useMainStore();
 const showTurnstile = ref(false);
 
+const { t } = useI18n();
+
 const formRef = useTemplateRef('form');
 const form = ref({
   name: '',
@@ -21,13 +23,13 @@ const submit = async () => {
     body: JSON.stringify(form.value),
   });
   if (res.status === 200) {
-    Snackbar.success('提交成功');
+    Snackbar.success(t('global.submit-success'));
   } else {
-    Snackbar.error('提交失败');
+    Snackbar.error(t('global.submit-fail'));
   }
 };
 
-useSeoMeta({ title: '提问箱 - 向未晞酱提问' });
+useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
 </script>
 
 <template>
@@ -37,7 +39,7 @@ useSeoMeta({ title: '提问箱 - 向未晞酱提问' });
         <span class="material-symbols-outlined"> arrow_back </span>
       </KButton>
     </NuxtLinkLocale>
-    <h2 class="text-xl font-bold">向未晞酱提问</h2>
+    <h2 class="text-xl font-bold">{{ t('ask-box.ask-me') }}</h2>
     <p>请在下方填写并提交你的问题，留下身份或者匿名都行的喵。</p>
     <KCard class="my-4">
       <var-form ref="form" class="flex flex-col gap-4">

@@ -81,5 +81,13 @@
   "weather.wind-speed": "風速",
   "weixi-chan": "未晞ちゃん",
   "global.birthdayCountdown": "私の {0} 歳の誕生日まであと {1} です。",
-  "blog.reading-time": "{0} 分、{1} 語"
+  "blog.reading-time": "{0} 分、{1} 語",
+  "global.language": "言語",
+  "ask-box.title": "アスクボックス",
+  "background.name.columbina": "「コロンビーナ」 - 原神 Web イベントより",
+  "background.name.loli-api": "LoliAPI ランダム二次元画像",
+  "background.name.bing": "Bing の毎日の壁紙",
+  "global.submit-success": "送信成功",
+  "global.submit-fail": "送信に失敗しました",
+  "ask-box.ask-me": "Weixi-chanに質問する"
 }

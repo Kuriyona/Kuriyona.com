@@ -1,28 +1,32 @@
-export const BackgroundPresets = [
-  {
-    type: 'video',
-    name: 'Columbina from Genshin Web Event',
-    url: 'https://r2.kuriyona.com/img/Background/Columbina.mp4',
-    brightness: 0.1,
-  },
-  {
-    type: 'image',
-    name: 'LoliAPI Random ACG Image',
-    random: true,
-    url: 'https://www.loliapi.com/acg/',
-    brightness: 0.1,
-  },
-  {
-    type: 'bing',
-    name: 'Bing Daily Image',
-    brightness: 0.1,
-  },
-];
-
 type backgroundType = 'video' | 'image' | 'bing';
 
 export const useBackgroundStore = defineStore('background', () => {
-  const preset = ref(BackgroundPresets[0]!);
+  const { t } = useI18n();
+
+  const BackgroundPresets = computed(() => {
+    return [
+      {
+        type: 'video',
+        name: t('background.name.columbina'),
+        url: 'https://r2.kuriyona.com/img/Background/Columbina.mp4',
+        brightness: 0.1,
+      },
+      {
+        type: 'image',
+        name: t('background.name.loli-api'),
+        random: true,
+        url: 'https://www.loliapi.com/acg/',
+        brightness: 0.1,
+      },
+      {
+        type: 'bing',
+        name: t('background.name.bing'),
+        brightness: 0.1,
+      },
+    ];
+  });
+
+  const preset = ref(BackgroundPresets.value[0]!);
 
   const backgroundFileType = computed(() => (preset.value.type != 'video' ? 'image' : 'video'));
   const backgroundFileUrl = computed(() => {
@@ -34,5 +38,5 @@ export const useBackgroundStore = defineStore('background', () => {
     }
   });
 
-  return { preset, backgroundFileType, backgroundFileUrl };
+  return { BackgroundPresets, preset, backgroundFileType, backgroundFileUrl };
 });

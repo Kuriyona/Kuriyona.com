@@ -31,7 +31,7 @@ const selecting = ref(false);
           </VarButton>
           <NuxtLinkLocale to="/ask-box" class="hidden sm:inline-block">
             <VarButton text size="small">
-              <span class="text-sm!"> Ask Box </span>
+              <span class="text-sm!"> {{ $t('ask-box.title') }} </span>
             </VarButton>
           </NuxtLinkLocale>
           <KButton round @click="mobileMenu = true">
@@ -66,7 +66,7 @@ const selecting = ref(false);
           text="Neko"
           shadow />
         <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" shadow />
-        <KCard shadow title="语言">
+        <KCard shadow :title="$t('global.language')">
           <div class="flex flex-col gap-2">
             <KButton
               v-for="locale in locales"

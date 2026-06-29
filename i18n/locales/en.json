@@ -81,5 +81,13 @@
   "weather.wind-speed": "Wind speed",
   "weixi-chan": "Weixi-chan",
   "global.birthdayCountdown": "There are {1} left until my {0}th birthday.",
-  "blog.reading-time": "{0} minutes, {1} words"
+  "blog.reading-time": "{0} minutes, {1} words",
+  "global.language": "Language",
+  "ask-box.title": "Ask Box",
+  "background.name.columbina": "\"Columbina\" from Genshin Impact Web Event",
+  "background.name.loli-api": "LoliAPI Random ACG Image",
+  "background.name.bing": "Bing Daily Wallpaper",
+  "global.submit-success": "Submission successful",
+  "global.submit-fail": "Submission failed",
+  "ask-box.ask-me": "Ask Weixi-chan a question"
 }

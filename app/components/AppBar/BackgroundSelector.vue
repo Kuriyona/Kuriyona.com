@@ -8,7 +8,7 @@ const backgroundStore = useBackgroundStore();
   <KCard title="背景">
     <div class="flex flex-col gap-2">
       <KButton
-        v-for="preset in BackgroundPresets"
+        v-for="preset in backgroundStore.BackgroundPresets"
         :key="preset.type"
         class="w-full cursor-pointer"
         shadow
