@@ -44,9 +44,9 @@ const selecting = ref(false);
       </div>
       <MusicBar />
       <AppBarTips />
-      <NekoCatPopup v-model:show="popup" />
     </div>
   </div>
+  <NekoCatPopup v-model:show="popup" />
   <Transition name="menu">
     <div v-if="mobileMenu">
       <div class="fixed right-0 top-0 w-screen h-screen bg-black/25" @click="mobileMenu = false" />

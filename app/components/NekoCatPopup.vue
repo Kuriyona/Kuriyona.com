@@ -5,7 +5,7 @@ const show = defineModel<boolean>('show');
 
 <template>
   <VarPopup v-model:show="show" class="rounded-l-xl" position="right">
-    <div class="relative flex flex-col h-full w-120 max-w-[80vw] overflow-hidden">
+    <div class="relative flex flex-col h-screen w-120 max-w-[80vw] overflow-hidden">
       <div class="flex justify-between items-center px-6 py-2">
         <span>{{ $t('neko.title') }}</span>
         <VarButton round text @click="show = false">
