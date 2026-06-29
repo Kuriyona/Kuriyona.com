@@ -28,6 +28,11 @@ const selecting = ref(false);
           <VarButton text @click="popup = true" size="small" class="hidden! sm:block!">
             <span class="text-sm!"> Neko </span>
           </VarButton>
+          <NuxtLinkLocale to="/ask-box" class="hidden sm:inline-block">
+            <VarButton text size="small">
+              <span class="text-sm!"> Ask Box </span>
+            </VarButton>
+          </NuxtLinkLocale>
           <KButton round @click="mobileMenu = true">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-lg! leading-none"> translate </span>
@@ -58,6 +63,7 @@ const selecting = ref(false);
               mobileMenu = false;
             "
             text="Neko" />
+          <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" />
           <KCard>
             <KButton
               v-for="locale in locales"
