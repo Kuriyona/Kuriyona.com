@@ -25,19 +25,17 @@ const verify = async (token: string) => {
 </script>
 
 <template>
-  <var-popup v-model:show="show">
-    <var-card>
-      <div class="flex flex-col gap-2 p-4">
-        <p class="text-center">{{ $t('turnstile.tip') }}</p>
-        <VueTurnstile
-          ref="turnstile"
-          site-key="0x4AAAAAADTR98IL1RUn8gKN"
-          v-model="token"
-          size="flexible" />
-        <var-button @click="verify(token)" :disabled="!token" block :loading="loading">
-          {{ $t('global.verify') }}
-        </var-button>
-      </div>
-    </var-card>
+  <var-popup v-model:show="show" class="rounded-xl">
+    <div class="flex flex-col gap-4 p-8">
+      <p class="text-center">{{ $t('turnstile.tip') }}</p>
+      <VueTurnstile
+        ref="turnstile"
+        site-key="0x4AAAAAADTR98IL1RUn8gKN"
+        v-model="token"
+        size="flexible" />
+      <var-button @click="verify(token)" :disabled="!token" block :loading="loading">
+        {{ $t('global.verify') }}
+      </var-button>
+    </div>
   </var-popup>
 </template>
