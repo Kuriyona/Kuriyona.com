@@ -2,6 +2,7 @@
 const mainStore = useMainStore();
 const showTurnstile = ref(false);
 
+const formRef = useTemplateRef('form');
 const form = ref({
   name: '',
   showName: true,
@@ -28,6 +29,10 @@ const { data: questions } = useAsyncData(
   { server: false },
 );
 const submit = async () => {
+  const valid = await formRef.value?.validate();
+  if (!valid) {
+    return;
+  }
   const res = await fetchApi.post('/ask-box', {
     headers: { 'Content-Type': 'application/json', Authorization: mainStore.jwt },
     body: JSON.stringify(form.value),
@@ -47,10 +52,11 @@ useSeoMeta({ title: '提问箱' });
     <h2 class="text-xl font-bold">向未晞酱提问</h2>
     <p>请在下方填写并提交你的问题，留下身份或者匿名都行喵。</p>
     <p>第一版就先这样吧，后面再调整 UI。</p>
-    <var-form class="my-4 flex flex-col gap-2">
+    <var-form ref="form" class="my-4 flex flex-col gap-2">
       <var-input placeholder="昵称（可选）" v-model="form.name" variant="outlined" />
       <var-input
         placeholder="问题（支持 Markdown）"
+        :rules="(e) => e.trim().length > 0 || '请输入文本（'"
         textarea
         v-model="form.question"
         variant="outlined" />
