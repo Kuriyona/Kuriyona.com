@@ -56,15 +56,15 @@ useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
         </p>
         <p class="flex items-center justify-between">
           <span>公开展示 IP 属地：</span> <var-switch v-model="form.showIP" />
-        </p> </var-form
-    ></KCard>
-    <KTurnstile v-model:show="showTurnstile" />
-    <KCard v-if="!mainStore.jwt">
-      <var-alert class="mb-2"> {{ $t('turnstile.please-verify') }} </var-alert>
-      <var-button @click="showTurnstile = true" block> {{ $t('global.start') }} </var-button>
+        </p>
+        <KTurnstile v-model:show="showTurnstile" />
+        <KButton v-if="!mainStore.jwt" @click="showTurnstile = true" block>
+          {{ $t('turnstile.please-verify') }}
+        </KButton>
+        <KButton v-if="mainStore.jwt" type="primary" block @click="submit">
+          {{ $t('global.submit') }}
+        </KButton>
+      </var-form>
     </KCard>
-    <var-button v-if="mainStore.jwt" type="primary" block @click="submit">
-      {{ $t('global.submit') }}
-    </var-button>
   </AppPage>
 </template>
