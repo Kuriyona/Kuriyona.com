@@ -6,15 +6,16 @@ const { data: questions, refresh } = useAsyncData(
     await fetchApi('/ask-box/admin').json<
       {
         id: number;
-        name: string;
+        name?: string;
         showName: number;
-        ip: string;
+        ip?: string;
         showIP: number;
         question: string;
-        answer: string;
+        answer?: string;
+        note?: string;
         public: number;
         askedAt: number;
-        answeredAt: number;
+        answeredAt?: number;
       }[]
     >(),
   { server: false },
@@ -50,8 +51,9 @@ const answerQuestion = async (id: number) => {
           <span>{{ question.ip }}</span>
           <span>{{ question.public }}</span>
         </div>
-        <pre>{{ question.question }}</pre>
-        <pre>{{ question.answer }}</pre>
+        <pre>{{ question.question || '无' }}</pre>
+        <pre>{{ question.note || '无' }}</pre>
+        <pre>{{ question.answer || '无' }}</pre>
       </div>
       <var-button @click="setPublic(question.id, 1)">公开</var-button>
       <var-button @click="setPublic(question.id, 0)">不公开</var-button>
