@@ -67,7 +67,9 @@ useSeoMeta({ title: '提问箱' });
       <var-alert class="mb-2"> {{ $t('turnstile.please-verify') }} </var-alert>
       <var-button @click="showTurnstile = true" block> {{ $t('global.start') }} </var-button>
     </KCard>
-    <var-button type="primary" block @click="submit"> {{ $t('global.submit') }} </var-button>
+    <var-button v-if="mainStore.jwt" type="primary" block @click="submit">
+      {{ $t('global.submit') }}
+    </var-button>
 
     <template v-if="questions?.length">
       <var-divider class="my-8!" />
