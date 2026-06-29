@@ -3,6 +3,7 @@ const popup = ref(false);
 const mobileMenu = ref(false);
 import { useI18n } from '@/scripts/i18n';
 import KButton from './KButton.vue';
+import BackgroundSelector from './AppBar/BackgroundSelector.vue';
 const { setLocale, locales } = useI18n();
 const selecting = ref(false);
 </script>
@@ -77,6 +78,7 @@ const selecting = ref(false);
               >{{ locale.name }}
             </KButton>
           </KCard>
+          <BackgroundSelector />
         </div>
       </div>
     </Transition>
