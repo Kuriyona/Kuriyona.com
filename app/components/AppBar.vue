@@ -66,18 +66,21 @@ const selecting = ref(false);
           text="Neko"
           shadow />
         <KCardLink to="/ask-box" @click="mobileMenu = false" text="Ask Box" shadow />
-        <KCard shadow>
-          <KButton
-            v-for="locale in locales"
-            :key="locale.code"
-            block
-            @click="
-              setLocale(locale.code);
-              selecting = false;
-            "
-            class="text-xs"
-            >{{ locale.name }}
-          </KButton>
+        <KCard shadow title="语言">
+          <div class="flex flex-col gap-2">
+            <KButton
+              v-for="locale in locales"
+              :key="locale.code"
+              block
+              shadow
+              @click="
+                setLocale(locale.code);
+                selecting = false;
+              "
+              class="text-xs"
+              >{{ locale.name }}
+            </KButton>
+          </div>
         </KCard>
         <BackgroundSelector />
       </div>

@@ -7,14 +7,14 @@ const backgroundStore = useBackgroundStore();
 <template>
   <KCard title="背景">
     <div class="flex flex-col gap-2">
-      <KCard
+      <KButton
         v-for="preset in BackgroundPresets"
         :key="preset.type"
         class="w-full cursor-pointer"
         shadow
-        @click="backgroundStore.preset = preset">
-        {{ preset.name }}
-      </KCard>
+        @click="backgroundStore.preset = preset"
+        >{{ preset.name }}
+      </KButton>
     </div>
   </KCard>
 </template>
