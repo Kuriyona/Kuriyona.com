@@ -24,7 +24,7 @@ useSeoMeta({ title: $t('blog.title') });
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.desc }}</p>
       <br />
-      <p class="justify-end flex gap-2">
+      <p class="justify-end flex gap-2 flex-wrap">
         <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm!"> schedule </span>
           <span class="text-sm">{{
