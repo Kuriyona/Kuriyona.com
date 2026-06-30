@@ -101,32 +101,34 @@ watch(
 </script>
 
 <template>
-  <div class="relative h-full flex flex-col gap-4 p-4 overflow-hidden">
-    <div ref="chatRef" class="overflow-y-auto flex flex-col flex-1 gap-2 px-1">
-      <div
-        v-for="(msg, i) in messages"
-        :key="i"
-        class="flex"
-        :class="msg.role === 'user' ? 'justify-end text-right' : 'justify-start text-left'">
-        <var-card class="max-w-[80%] w-fit">
-          <div class="whitespace-pre-wrap">
-            {{ msg.content }}
-          </div>
-        </var-card>
+  <div class="fixed top-(--app-bar-height) left-0 right-0 bottom-0 flex justify-center">
+    <div class="relative w-200 h-full flex flex-col gap-4 p-4 overflow-hidden">
+      <div ref="chatRef" class="overflow-y-auto flex flex-col flex-1 gap-2 px-1">
+        <div
+          v-for="(msg, i) in messages"
+          :key="i"
+          class="flex"
+          :class="msg.role === 'user' ? 'justify-end text-right' : 'justify-start text-left'">
+          <var-card class="max-w-[80%] w-fit">
+            <div class="whitespace-pre-wrap">
+              {{ msg.content }}
+            </div>
+          </var-card>
+        </div>
       </div>
-    </div>
-    <KTurnstile v-model:show="showTurnstile" />
-    <div v-if="mainStore.jwt" class="flex flex-col gap-2">
-      <VarInput
-        v-model="input"
-        maxlength="50"
-        :placeholder="$t('neko.placeholder')"
-        @keyup.enter="send"
-        :disabled="loading"
-        class="flex-1" />
-      <VarButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>
-        {{ $t('neko.meow') }}
-      </VarButton>
+      <KTurnstile v-model:show="showTurnstile" />
+      <div v-if="mainStore.jwt" class="flex flex-col gap-2">
+        <VarInput
+          v-model="input"
+          maxlength="50"
+          :placeholder="$t('neko.placeholder')"
+          @keyup.enter="send"
+          :disabled="loading"
+          class="flex-1" />
+        <VarButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>
+          {{ $t('neko.meow') }}
+        </VarButton>
+      </div>
     </div>
   </div>
 </template>

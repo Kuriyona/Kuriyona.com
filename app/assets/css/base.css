@@ -9,6 +9,7 @@ body {
   transition:
     color 0.25s,
     background-color 0.25s;
+  --app-bar-height: 90px;
 }
 
 * {

@@ -23,9 +23,11 @@ const mobileMenu = ref(false);
               <span class="text-sm!"> Blog </span>
             </VarButton>
           </NuxtLinkLocale>
-          <VarButton text @click="popup = true" size="small" class="hidden! sm:block!">
-            <span class="text-sm!"> Neko </span>
-          </VarButton>
+          <NuxtLinkLocale to="/neko" class="hidden sm:inline-block">
+            <VarButton text size="small">
+              <span class="text-sm!"> Neko </span>
+            </VarButton>
+          </NuxtLinkLocale>
           <NuxtLinkLocale to="/ask-box" class="hidden sm:inline-block">
             <VarButton text size="small">
               <span class="text-sm!"> {{ $t('ask-box.title') }} </span>
@@ -43,6 +45,5 @@ const mobileMenu = ref(false);
       <AppBarTips />
     </div>
   </div>
-  <NekoCatPopup v-model:show="popup" />
   <AppMenu v-model="mobileMenu" @open-neko="popup = true" />
 </template>
