@@ -14,7 +14,7 @@ const { data: questions } = useAsyncData(
       }[]
     >();
     return res.sort(
-      (a, b) => Math.max(a.answeredAt || 0, a.askedAt) - Math.max(b.answeredAt || 0, b.askedAt),
+      (a, b) => Math.max(b.answeredAt || 0, b.askedAt) - Math.max(a.answeredAt || 0, a.askedAt),
     );
   },
   { server: false },
