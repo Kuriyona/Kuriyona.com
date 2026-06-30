@@ -54,7 +54,7 @@ useSeoMeta({ title: t('ask-box.title') });
         </p>
         <hr />
         <p class="text-sm">
-          <span class="font-bold">@{{ question.name || $t('global.anonymous') }}</span>
+          <span class="font-bold">@{{ $t('weixi-chan') }}</span>
           {{ $t('ask-box.answered-at', [formatTime(question.answeredAt)]) }}
         </p>
         <p class="text-base">
