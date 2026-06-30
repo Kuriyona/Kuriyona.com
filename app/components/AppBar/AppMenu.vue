@@ -10,7 +10,7 @@ const emit = defineEmits(['open-neko']);
     <div v-if="show">
       <div class="fixed right-0 top-0 w-screen h-screen bg-black/25" @click="show = false" />
       <div
-        class="fixed w-80 max-w-[95vw] right-0 top-0 h-screen bg-black/50 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-visible">
+        class="fixed w-80 max-[400px]:w-screen right-0 top-0 h-screen bg-black/50 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-visible">
         <div class="flex justify-end">
           <KButton round @click="show = false">
             <span class="material-symbols-outlined text-lg! leading-none"> close </span>
