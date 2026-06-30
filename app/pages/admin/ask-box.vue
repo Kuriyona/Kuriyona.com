@@ -9,6 +9,7 @@ const { data: questions, refresh } = useAsyncData(
         name?: string;
         showName: number;
         ip?: string;
+        ua?: string;
         showIP: number;
         question: string;
         answer?: string;
@@ -45,15 +46,17 @@ const answerQuestion = async (id: number) => {
     <div
       v-for="question in questions?.filter((q) => (onlyUnanswered ? !q.answer : true))"
       :key="question.id">
-      <div>
+      <div class="flex flex-col gap-2">
         <div class="flex gap-2">
           <span>{{ question.name }}</span>
           <span>{{ question.ip }}</span>
           <span>{{ question.public }}</span>
+          <span>{{ formatTime(question.askedAt) }}</span>
         </div>
-        <pre>{{ question.question || '无' }}</pre>
-        <pre>{{ question.note || '无' }}</pre>
-        <pre>{{ question.answer || '无' }}</pre>
+        <pre class="whitespace-pre-wrap">{{ question.ua || '无 User-Agent' }}</pre>
+        <pre class="whitespace-pre-wrap">{{ question.question || '无问题' }}</pre>
+        <pre class="whitespace-pre-wrap">{{ question.note || '无备注' }}</pre>
+        <pre class="whitespace-pre-wrap">{{ question.answer || '无回答' }}</pre>
       </div>
       <var-button @click="setPublic(question.id, 1)">公开</var-button>
       <var-button @click="setPublic(question.id, 0)">不公开</var-button>
