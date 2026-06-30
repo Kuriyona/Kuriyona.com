@@ -26,7 +26,7 @@ const handleProgressClick = (event: MouseEvent) => {
             <span class="material-symbols-outlined text-lg! leading-none"> close </span>
           </KButton>
         </div>
-        <KCard v-if="store.currentSong">
+        <KCard v-if="store.currentSong" shadow>
           <div class="flex items-center gap-2 overflow-x-hidden">
             <img :src="store.cover" class="h-16 w-16 rounded-md" />
             <div class="relative w-full flex flex-col items-center gap-2">
