@@ -20,17 +20,14 @@ async function send() {
   if (!text || loading.value) return;
   input.value = '';
   messages.value.push({ role: 'user', content: text });
-  while (messages.value.length >= 6) {
-    messages.value.shift();
-  }
   loading.value = true;
   messages.value.push({ role: 'assistant', content: '' });
   try {
-    const res = await fetch(`${HOST}/neko/chat/stream`, {
+    const res = await fetch(`${HOST}neko/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: mainStore.jwt },
       body: JSON.stringify({
-        messages: messages.value.slice(0, -1),
+        messages: messages.value.slice(-6, -1),
       }),
     });
     if (!res.ok) {
@@ -109,11 +106,9 @@ watch(
           :key="i"
           class="flex"
           :class="msg.role === 'user' ? 'justify-end text-right' : 'justify-start text-left'">
-          <var-card class="max-w-[80%] w-fit">
-            <div class="whitespace-pre-wrap">
-              {{ msg.content }}
-            </div>
-          </var-card>
+          <KCard class="max-w-[80%] w-fit">
+            <KMarkdown :content="msg.content" class="text-sm!" />
+          </KCard>
         </div>
       </div>
       <KTurnstile v-model:show="showTurnstile" />
@@ -125,9 +120,9 @@ watch(
           @keyup.enter="send"
           :disabled="loading"
           class="flex-1" />
-        <VarButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>
+        <KButton @click="send" :disabled="loading || !input.trim().length" type="primary" block>
           {{ $t('neko.meow') }}
-        </VarButton>
+        </KButton>
       </div>
     </div>
   </div>
