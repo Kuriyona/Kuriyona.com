@@ -24,7 +24,6 @@
             <span class="material-symbols-outlined text-sm!"> arrow_forward </span>
           </div>
         </KButton>
-        <KButton block text round></KButton>
       </NuxtLinkLocale>
       <p class="absolute text-center text-sm text-white/20 top-full w-full pt-4">
         <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="underline">
