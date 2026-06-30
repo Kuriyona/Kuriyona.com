@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const { t } = useI18n();
-const { data: questions } = useAsyncData(
+const { data: rawQuestions, refresh } = useAsyncData(
   'questions',
   async () => {
     const res = await fetchApi.get('/ask-box').json<
@@ -19,6 +19,12 @@ const { data: questions } = useAsyncData(
   },
   { server: false },
 );
+const search = ref({
+  text: '',
+});
+const questions = computed(() => {
+  return rawQuestions.value?.filter((q) => q.question.includes(search.value.text));
+});
 useSeoMeta({ title: t('ask-box.title') });
 </script>
 
@@ -27,7 +33,13 @@ useSeoMeta({ title: t('ask-box.title') });
     <h2 class="text-2xl font-bold">未晞酱的提问箱</h2>
     <h3 class="text-xl font-bold">你可以...</h3>
     <KCardLink to="/ask-box/ask" text="向未晞酱提问" />
-    <h3 class="text-xl font-bold">或者浏览公开的问题...</h3>
+    <h3 class="text-xl font-bold flex items-center justify-between">
+      <span>或者浏览公开的问题...</span>
+      <KButton round text @click="refresh">
+        <span class="material-symbols-outlined"> refresh </span>
+      </KButton>
+    </h3>
+    <var-input placeholder="搜索" v-model="search.text" variant="outlined" />
     <KCard
       v-if="questions && questions.length > 0"
       v-for="(question, index) in questions"
