@@ -1,8 +1,6 @@
 <script setup lang="ts">
 const store = useMusicStore();
 
-const cover = computed(() => store.currentSong?.album?.picUrl + '?param=64x64');
-
 const handleProgressClick = (event: MouseEvent) => {
   if (!store.currentSong) return;
   const target = event.currentTarget as HTMLElement;
@@ -19,7 +17,7 @@ const handleProgressClick = (event: MouseEvent) => {
     v-if="store.currentSong"
     id="music-bar"
     class="h-10 flex hover:h-16 items-center gap-2 text-nowrap truncate">
-    <img :src="cover" class="h-full hidden" />
+    <img :src="store.cover" class="h-full hidden" />
     <div class="flex justify-between w-full gap-2">
       <div id="main" class="flex items-center gap-1 min-w-0 h-fit w-full max-sm:w-fit max-w-[40%]">
         <div class="flex items-center">

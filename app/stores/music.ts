@@ -30,6 +30,8 @@ export const useMusicStore = defineStore('music', () => {
   const currentTime = ref(0);
   const currentAudioId = ref<number>();
 
+  const cover = computed(() => currentSong.value?.album?.picUrl + '?param=64x64');
+
   (async () => {
     const res = await ky(`${API_BASE}/playlist/18007101553.json`).json<PlaylistDetails>();
     playlist.value = res;
@@ -122,6 +124,7 @@ export const useMusicStore = defineStore('music', () => {
   });
 
   return {
+    cover,
     playing,
     currentTime,
     setCurrentTime,
