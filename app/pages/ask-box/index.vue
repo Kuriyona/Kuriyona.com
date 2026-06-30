@@ -10,7 +10,7 @@ const { data: rawQuestions, refresh } = useAsyncData(
         question: string;
         answer: string;
         askedAt: number;
-        answeredAt?: number;
+        answeredAt: number;
       }[]
     >();
     return res.sort(
@@ -30,37 +30,37 @@ useSeoMeta({ title: t('ask-box.title') });
 
 <template>
   <AppPage>
-    <h2 class="text-2xl font-bold">未晞酱的提问箱</h2>
-    <h3 class="text-xl font-bold">你可以...</h3>
-    <KCardLink to="/ask-box/ask" text="向未晞酱提问" />
+    <h2 class="text-2xl font-bold">{{ $t('ask-box.weixi-askbox') }}</h2>
+    <h3 class="text-xl font-bold">{{ $t('ask-box.you-can') }}</h3>
+    <KCardLink to="/ask-box/ask" :text="$t('ask-box.ask-me')" />
     <h3 class="text-xl font-bold flex items-center justify-between">
-      <span>或者浏览公开的问题...</span>
+      <span>{{ $t('ask-box.browse-public-questions') }}</span>
       <KButton round text @click="refresh">
         <span class="material-symbols-outlined"> refresh </span>
       </KButton>
     </h3>
-    <var-input placeholder="搜索" v-model="search.text" variant="outlined" />
+    <var-input :placeholder="$t('global.search')" v-model="search.text" variant="outlined" />
     <KCard
       v-if="questions && questions.length > 0"
       v-for="(question, index) in questions"
       :key="index">
       <div class="flex flex-col gap-2">
         <p class="text-sm">
-          来自<span class="font-bold">&nbsp;{{ question.name || '匿名' }}&nbsp;</span
-          ><span v-if="question.askedAt">在 {{ formatTime(question.askedAt) }} </span> 的提问
+          <span class="font-bold">@{{ question.name || $t('global.anonymous') }}</span>
+          {{ $t('ask-box.asked-at', [formatTime(question.askedAt)]) }}
         </p>
         <p class="text-base">
           <KMarkdown :content="question.question" />
         </p>
         <hr />
         <p class="text-sm">
-          由<span class="font-bold">&nbsp;未晞酱&nbsp;</span
-          ><span v-if="question.answeredAt">于 {{ formatTime(question.answeredAt) }} 写下的</span
-          >回答
+          <span class="font-bold">@{{ question.name || $t('global.anonymous') }}</span>
+          {{ $t('ask-box.answered-at', [formatTime(question.answeredAt)]) }}
         </p>
         <p class="text-base">
           <KMarkdown :content="question.answer" />
         </p>
-      </div> </KCard
-  ></AppPage>
+      </div>
+    </KCard>
+  </AppPage>
 </template>
