@@ -90,5 +90,6 @@
   "global.submit-success": "Submission successful",
   "global.submit-fail": "Submission failed",
   "ask-box.ask-me": "Ask Weixi-chan a question",
-  "app.bar.tip-3": "Click the title bar menu button to open the menu to switch the web page background"
+  "app.bar.tip-3": "Click the title bar menu button to open the menu to switch the web page background",
+  "global.verifyFail": "Authentication failed"
 }

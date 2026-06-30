@@ -2,9 +2,12 @@
 import VueTurnstile from 'vue-turnstile';
 import { useMainStore } from '@/stores/main';
 
-const show = defineModel<boolean>('show');
+const show = ref(true);
 
 const mainStore = useMainStore();
+if (mainStore.jwt) {
+  show.value = false;
+}
 const Turnstile = useTemplateRef('turnstile');
 const token = ref('');
 const loading = ref(false);
@@ -15,27 +18,29 @@ const verify = async (token: string) => {
   }).text();
   if (res) {
     mainStore.jwt = res;
-    Snackbar.success($t('global.verifySuccess'));
     show.value = false;
   } else {
+    Snackbar.error($t('global.verifyFail'));
     Turnstile.value?.reset();
   }
   loading.value = false;
 };
+watch(token, (newVal) => {
+  if (newVal !== '') {
+    verify(newVal);
+  }
+});
 </script>
 
 <template>
-  <var-popup v-model:show="show" class="rounded-xl">
-    <div class="flex flex-col gap-4 p-8">
+  <KCard v-if="show">
+    <div class="flex flex-col gap-4">
       <p class="text-center">{{ $t('turnstile.tip') }}</p>
       <VueTurnstile
         ref="turnstile"
         site-key="0x4AAAAAADTR98IL1RUn8gKN"
         v-model="token"
         size="flexible" />
-      <var-button @click="verify(token)" :disabled="!token" block :loading="loading">
-        {{ $t('global.verify') }}
-      </var-button>
     </div>
-  </var-popup>
+  </KCard>
 </template>

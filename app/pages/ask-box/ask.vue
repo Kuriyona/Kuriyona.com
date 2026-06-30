@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 const mainStore = useMainStore();
-const showTurnstile = ref(false);
 
 const { t } = useI18n();
 
@@ -57,10 +56,7 @@ useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
         <p class="flex items-center justify-between">
           <span>公开展示 IP 属地：</span> <var-switch v-model="form.showIP" />
         </p>
-        <KTurnstile v-model:show="showTurnstile" />
-        <KButton v-if="!mainStore.jwt" @click="showTurnstile = true" block>
-          {{ $t('turnstile.please-verify') }}
-        </KButton>
+        <KTurnstile />
         <KButton v-if="mainStore.jwt" type="primary" block @click="submit">
           {{ $t('global.submit') }}
         </KButton>

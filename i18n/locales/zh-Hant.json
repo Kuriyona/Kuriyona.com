@@ -90,5 +90,6 @@
   "global.submit-success": "提交成功",
   "global.submit-fail": "提交失敗",
   "ask-box.ask-me": "向未晞醬提問",
-  "app.bar.tip-3": "點擊標題列選單按鈕開啟選單可以切換網頁背景"
+  "app.bar.tip-3": "點擊標題列選單按鈕開啟選單可以切換網頁背景",
+  "global.verifyFail": "驗證失敗"
 }

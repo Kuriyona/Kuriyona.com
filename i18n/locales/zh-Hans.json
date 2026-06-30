@@ -90,5 +90,6 @@
   "global.submit-success": "提交成功",
   "global.submit-fail": "提交失败",
   "ask-box.ask-me": "向未晞酱提问",
-  "app.bar.tip-3": "点击标题栏菜单按钮打开菜单可以切换网页背景"
+  "app.bar.tip-3": "点击标题栏菜单按钮打开菜单可以切换网页背景",
+  "global.verifyFail": "验证失败"
 }

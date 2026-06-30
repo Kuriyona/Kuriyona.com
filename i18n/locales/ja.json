@@ -90,5 +90,6 @@
   "global.submit-success": "送信成功",
   "global.submit-fail": "送信に失敗しました",
   "ask-box.ask-me": "Weixi-chanに質問する",
-  "app.bar.tip-3": "タイトルバーのメニューボタンをクリックしてメニューを開き、Webページの背景を切り替えます"
+  "app.bar.tip-3": "タイトルバーのメニューボタンをクリックしてメニューを開き、Webページの背景を切り替えます",
+  "global.verifyFail": "認証に失敗しました"
 }
