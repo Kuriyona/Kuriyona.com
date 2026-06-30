@@ -33,8 +33,8 @@ const handleProgressClick = (event: MouseEvent) => {
   <div
     v-if="store.currentSong"
     id="music-bar"
-    class="h-10 hover:h-16 flex items-center gap-2 text-nowrap truncate">
-    <audio ref="audio" :src="url" autoplay></audio>
+    class="h-10 hidden sm:flex hover:h-16 items-center gap-2 text-nowrap truncate">
+    <audio ref="audio" :src="url"></audio>
     <img :src="cover" class="h-full hidden" />
     <div class="flex justify-between w-full gap-2">
       <div id="main" class="flex items-center gap-1 min-w-0 h-fit w-full max-w-80">
