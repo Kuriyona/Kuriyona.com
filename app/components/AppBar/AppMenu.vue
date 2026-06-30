@@ -8,9 +8,9 @@ const emit = defineEmits(['open-neko']);
 <template>
   <Transition name="menu">
     <div v-if="show">
-      <div class="fixed right-0 top-0 w-screen h-screen bg-black/25" @click="show = false" />
+      <div class="fixed right-0 top-0 w-screen h-dvh bg-black/25" @click="show = false" />
       <div
-        class="fixed w-80 max-[400px]:w-screen right-0 top-0 h-screen bg-black/50 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-y-auto">
+        class="fixed w-80 max-[400px]:w-screen right-0 top-0 h-dvh bg-black/50 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-y-auto">
         <div class="flex justify-end">
           <KButton round @click="show = false">
             <span class="material-symbols-outlined text-lg! leading-none"> close </span>
@@ -24,7 +24,7 @@ const emit = defineEmits(['open-neko']);
           "
           text="Neko"
           shadow />
-        <KCardLink @click="show = false" text="Ask Box" shadow />
+        <KCardLink to="/ask-box" @click="show = false" text="Ask Box" shadow />
         <KCard shadow :title="$t('global.language')">
           <div class="flex flex-col gap-2">
             <KButton
