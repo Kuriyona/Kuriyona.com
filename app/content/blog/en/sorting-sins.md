@@ -15,13 +15,24 @@ And how would different languages handle this kind of "violation" or undefined b
 
 Thus, this repository was born: [sorting-sins](https://github.com/Kuriyona/sorting-sins)
 
+The languages tested in this project are:
+
+- JavaScript (Node.js/Bun.js/Deno)
+- Python
+- Go
+- C++
+- C#
+- Java
+- Dart
+- Rust (latest & v1.80.0)
+
 > I wrote the code for JavaScript, Python, and Go myself; the other languages were generated with AI assistance.
 
 ## Initial Guesses
 
 Initially, I thought other languages might produce something resembling random output, or perhaps throw an error.
 
-I did expect JavaScript to produce a random result, and maybe Rust to fail at compile time — that’s the stereotype I have of these two languages.
+I did expect JavaScript to produce a random result, and maybe Rust to fail at compile time — that's the stereotype I have of these two languages.
 
 ## Behavior by Language
 
@@ -161,25 +172,51 @@ This was expected. **Rust is the only language that panics** (though not at comp
 
 But it does detect at runtime whether your comparator implements a total order, and panics immediately if it doesn't. This kind of language-level safety boundary checks is exactly the stereotype I have of Rust. Better to crash than to let undefined behavior participate in program execution.
 
+## Rust: But Is That Really the Whole Story?
+
+When I finished testing Rust and shared the results with a friend [LaunchPad](https://launchpadx.top/), they tried to reproduce it in Grok and found that it did **not** panic.
+
+![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.jpg)
+
+This puzzled me, because on my local machine it definitely panicked.
+
+We naturally suspected a version difference. It turned out the Grok VM was using Rust 1.80.0.
+
+![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.jpg)
+
+![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.jpg)
+
+My local version was `cargo 1.97.0 (c980f4866 2026-06-30)`, so we tentatively concluded it was a version issue. I initially didn't plan to dig deeper right away, and published the first version of this blog post.
+
+Shortly after publishing, my friend [lfcypo](https://github.com/lfcypo) provided historical version details and a specific explanation of the changes.
+
+With his help and subsequent research, the conclusion is that **two key PRs** shaped the current behavior:
+
+| PR                                                       | Summary                                                                                                                                                                                                                                                                    | Merged     | Released in |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
+| [#124032](https://github.com/rust-lang/rust/pull/124032) | Replaces sorting implementation — introduces **driftsort** (for `slice::sort`) and **ipnsort** (for `slice::sort_unstable`). The new implementation actively detects **strict weak ordering** violations and panics; older Timsort/pdqsort could not reliably detect them. | 2024-06-21 | Rust 1.81.0 |
+| [#128273](https://github.com/rust-lang/rust/pull/128273) | Improves Ord violation help message — changes panic message to `user-provided comparison function does not correctly implement a total order` and improves documentation.                                                                                                  | 2024-08-11 | Rust 1.81.0 |
+
+The new implementation adds runtime consistency checks, actively panicking for many comparators that violate total order, whereas older sort implementations generally did not perform such checks.
+
+Before 1.81.0 (e.g., 1.80.0): in limited tests, passing a non-deterministic comparator would silently produce seemingly random permutations. Starting from 1.81.0: the sort implementation can detect comparator inconsistency with high probability and panic.
+
 ## Summary
 
-| Language   | Behavior                      |
-| ---------- | ----------------------------- |
-| JavaScript | (seemingly) silently shuffles |
-| Python     | (seemingly) silently shuffles |
-| Go         | (seemingly) silently shuffles |
-| C++        | (seemingly) silently shuffles |
-| C#         | (seemingly) silently shuffles |
-| Java       | (seemingly) silently shuffles |
-| Dart       | (seemingly) silently shuffles |
-| Rust       | **panic**                     |
+| Language      | Behavior                      |
+| ------------- | ----------------------------- |
+| JavaScript    | (seemingly) silently shuffles |
+| Python        | (seemingly) silently shuffles |
+| Go            | (seemingly) silently shuffles |
+| C++           | (seemingly) silently shuffles |
+| C#            | (seemingly) silently shuffles |
+| Java          | (seemingly) silently shuffles |
+| Dart          | (seemingly) silently shuffles |
+| Rust(latest)  | **panic**                     |
+| Rust(v1.80.0) | (seemingly) silently shuffles |
 
-Seven languages chose to "pretend nothing happened" in the face of a random comparator, while only Rust chose to panic.
+Seven languages chose to "pretend nothing happened" in the face of a random comparator, while only Rust (since v1.81.0) chose to panic.
 
 This repository may be extended with more languages in the future (Zig, Swift, Kotlin, etc.), or dive deeper into the output of non-panic languages — to see whether different sorting algorithms exhibit statistical biases under a random comparator.
 
 That's it for now. I'll tinker more when I have time.
-
-## Interesting Note
-
-In a discussion with a friend ([LaunchPad](https://launchpadx.top/)), we偶然 discovered that older versions of Rust (e.g., 1.75.0) do not panic, but instead produce seemingly random permutations. This might be because older Rust sorting implementations did not enforce strict total ordering checks. I may investigate the behavioral differences between Rust versions in future experiments.

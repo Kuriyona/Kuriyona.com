@@ -15,7 +15,18 @@ edit: 2026-07-15
 
 于是就有了这个仓库：[sorting-sins](https://github.com/Kuriyona/sorting-sins)
 
-> 对 JavaScript、Python、Go 的代码我是自己动手写的，其他几个语言是在 AI 写的
+本项目测试的语言有：
+
+- JavaScript (Node.js/Bun.js/Deno)
+- Python
+- Go
+- C++
+- C#
+- Java
+- Dart
+- Rust (latest & v1.80.0)
+
+> 对 JavaScript、Python、Go 的代码我是自己动手写的，其他几个语言是在 AI 的帮助下写的
 
 ## 对结果的猜想
 
@@ -161,25 +172,51 @@ user-provided comparison function does not correctly implement a total order
 
 但是它会在运行期检测你的比较器有没有实现 total order（全序），如果没有就当场 panic 给你看。这种在语言层面做安全边界检查的做法，确实是我对 Rust 刻板印象的一贯风格。宁可程序挂了，也不让未定义行为参与入程序运算。
 
+## Rust：可是，当真如此吗？
+
+当我测试完 Rust 之后，与一个朋友 [LaunchPad](https://launchpadx.top/) 分享的时候。对方尝试在 Grok 中复现时，发现并没有 panic。
+
+![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.jpg)
+
+这让我很奇怪，因为我在本地运行时，确实会 panic。
+
+于是我们自然而然地怀疑到了版本的问题，是否是因为 Rust 版本的问题导致的？然后发现 Gork VM 中使用的 Rust 版本是 1.80.0。
+
+![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.jpg)
+
+![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.jpg)
+
+而我本地测试用的版本是 `cargo 1.97.0 (c980f4866 2026-06-30)`，我们自然而然就基本肯定了是版本的问题，不过我本来短期内也没打算先深入研究，发布了这篇博客的第一个版本。
+
+而发布出没多久，我的朋友 [lfcypo](https://github.com/lfcypo) 便在后续提供了历史版本和具体变更的解释。
+
+经过他的帮助和后续研究，结论是两个关键 PR 塑造了当前行为：
+
+| PR                                                       | PR 信息摘要                                                                                                                                                                            | 合并日期   | 发布版本    |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
+| [#124032](https://github.com/rust-lang/rust/pull/124032) | 替换排序实现——引入 **driftsort**（`slice::sort`）和 **ipnsort**（`slice::sort_unstable`）。新实现能主动检测 **strict weak ordering** 违例并 panic，旧版 Timsort/pdqsort 无法可靠检测。 | 2024-06-21 | Rust 1.81.0 |
+| [#128273](https://github.com/rust-lang/rust/pull/128273) | 改进 Ord 违例帮助信息——将 panic 信息优化为 `user-provided comparison function does not correctly implement a total order`，并完善文档。                                                | 2024-08-11 | Rust 1.81.0 |
+
+新实现增加了运行时的一致性检查，对于许多违反 total order 的比较器会主动 panic，而旧版排序实现通常不会进行此类检测。
+
+在 1.81.0 之前（如 1.80.0）：在有限的测试中，传入非确定性比较器时，排序静默输出看似随机的排列。自 1.81.0 起：排序实现能以高概率检测到比较器不一致并 panic。
+
 ## 总结
 
-| 语言       | 行为             |
-| ---------- | ---------------- |
-| JavaScript | （疑似）静默乱序 |
-| Python     | （疑似）静默乱序 |
-| Go         | （疑似）静默乱序 |
-| C++        | （疑似）静默乱序 |
-| C#         | （疑似）静默乱序 |
-| Java       | （疑似）静默乱序 |
-| Dart       | （疑似）静默乱序 |
-| Rust       | **panic**        |
+| 语言          | 行为             |
+| ------------- | ---------------- |
+| JavaScript    | （疑似）静默乱序 |
+| Python        | （疑似）静默乱序 |
+| Go            | （疑似）静默乱序 |
+| C++           | （疑似）静默乱序 |
+| C#            | （疑似）静默乱序 |
+| Java          | （疑似）静默乱序 |
+| Dart          | （疑似）静默乱序 |
+| Rust(latest)  | **panic**        |
+| Rust(v1.80.0) | （疑似）静默乱序 |
 
-7 种语言在随机比较器面前都选择了「当作啥都没发生」，而只有 Rust 选择了 panic。
+7 种语言在随机比较器面前都选择了「当作啥都没发生」，而只有 Rust 的 v1.81.0 及以后版本选择了 panic。
 
 这个仓库未来可能还会加更多语言（Zig、Swift、Kotlin 啥的），或者对非 panic 语言的输出做更深入的分析——看看不同的排序算法在随机比较器面前，到底有没有统计上的偏好。
 
 先这样吧，有空再折腾。
-
-## 有趣的事情
-
-在与朋友（[LaunchPad](https://launchpadx.top/)）的讨论中偶然发现，Rust 在早期版本（如 1.75.0）并不会 panic，而是输出一个看似随机的排列。可能是由于 Rust 旧版排序实现未做严格的全序检查，我或许会在后续折腾中进一步探究 Rust 版本间的行为差异。
