@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { existsSync, watch } from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { createMarkdownExit } from 'markdown-exit';
@@ -89,6 +90,20 @@ async function getAllArticles() {
 }
 
 let Articles = undefined as Article[] | undefined;
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+if (existsSync(MARKDOWN_ROOT)) {
+  const watcher = watch(MARKDOWN_ROOT, { recursive: true }, (eventType, filename) => {
+    if (filename && filename.endsWith('.md')) {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        Articles = undefined;
+      }, 100);
+    }
+  });
+
+  process.on('exit', () => watcher.close());
+}
 
 export const getArticles = async () => {
   if (!Articles) {

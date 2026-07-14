@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
-.link, .markdown-body a {
+.link,
+.markdown-body a {
   color: #cbc3e3 !important;
   text-decoration: underline !important;
   transition: all 0.3s ease-in-out !important;
@@ -8,7 +9,8 @@
   border-radius: 4px !important;
 }
 
-.link:hover, .markdown-body a:hover {
+.link:hover,
+.markdown-body a:hover {
   color: #000 !important;
   text-decoration: none !important;
   background-color: #cbc3e3 !important;
