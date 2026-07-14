@@ -8,6 +8,7 @@ const slug = route.params.slug;
 const { locale } = useI18n();
 
 useCodeCopy();
+useHeadingAnchor();
 
 const { data: articlesData } = await useFetch(`/api/articles/${slug}`);
 const article = computed(() =>

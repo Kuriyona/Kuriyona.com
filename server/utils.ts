@@ -31,6 +31,19 @@ md.use(
     theme: 'one-dark-pro',
   }),
 );
+md.renderer.rules.heading_open = (tokens, idx, _options, _env, slf) => {
+  const token = tokens[idx];
+  const next = tokens[idx + 1];
+  if (next?.type === 'inline' && next.content) {
+    const slug = next.content
+      .toLowerCase()
+      .replace(/[^\w\u4e00-\u9fff]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .replace(/-+/g, '-');
+    token.attrSet('id', slug);
+  }
+  return slf.renderToken(tokens, idx, _options);
+};
 
 async function getAllMarkdownFiles() {
   try {

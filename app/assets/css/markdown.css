@@ -4,6 +4,11 @@
   code {
     font-family: var(--font-family-monos) !important;
   }
+  h2, h3, h4 {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
   pre {
     background-color: transparent !important;
     backdrop-filter: brightness(0.75);
