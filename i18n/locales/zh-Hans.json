@@ -103,5 +103,6 @@
   "weather.weather": "天气",
   "weather.wind-dir": "风向",
   "weather.wind-speed": "风速",
-  "weixi-chan": "未晞酱"
+  "weixi-chan": "未晞酱",
+  "global.copy-success": "已复制至剪贴板"
 }

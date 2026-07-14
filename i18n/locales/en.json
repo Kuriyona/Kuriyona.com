@@ -103,5 +103,6 @@
   "weather.weather": "Weather",
   "weather.wind-dir": "Wind direction",
   "weather.wind-speed": "Wind speed",
-  "weixi-chan": "Weixi-chan"
+  "weixi-chan": "Weixi-chan",
+  "global.copy-success": "Copied to clipboard"
 }
