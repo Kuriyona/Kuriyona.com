@@ -35,6 +35,7 @@ md.use(
   }),
 );
 let currentTOC: TocItem[] = [];
+let externalLinkDepth = 0;
 
 function slugifyHeading(text: string) {
   return text
@@ -57,6 +58,27 @@ md.renderer.rules.heading_open = (tokens, idx, _options, _env, slf) => {
     }
   }
   return slf.renderToken(tokens, idx, _options);
+};
+
+const isExternal = (href: string) => /^https?:\/\//i.test(href) && !href.includes('kuriyona.com');
+
+md.renderer.rules.link_open = (tokens, idx, _options, _env, slf) => {
+  const token = tokens[idx];
+  const href = token.attrGet('href');
+  if (href && isExternal(href)) {
+    token.attrSet('target', '_blank');
+    token.attrSet('rel', 'noopener noreferrer');
+    externalLinkDepth++;
+  }
+  return slf.renderToken(tokens, idx, _options);
+};
+
+md.renderer.rules.link_close = (_tokens, _idx, _options, _env, _slf) => {
+  if (externalLinkDepth > 0) {
+    externalLinkDepth--;
+    return '<span class="material-symbols-outlined" style="font-size:1em;vertical-align:middle;margin-left:2px;">open_in_new</span></a>';
+  }
+  return '</a>';
 };
 
 async function getAllMarkdownFiles() {
@@ -82,6 +104,7 @@ async function parseMarkdownFile(filePath: string) {
   const fileContent = await fs.readFile(fullPath, 'utf-8');
   const { data: frontmatter, content } = matter(fileContent);
   currentTOC = [];
+  externalLinkDepth = 0;
   const html = await md.renderAsync(content);
   return {
     frontmatter,
