@@ -3,10 +3,16 @@
   font-family: inherit !important;
   background-color: transparent !important;
   code {
-    font-family: var(--font-family-monos);
+    font-family: var(--font-family-monos) !important;
   }
   pre {
     background-color: transparent !important;
     backdrop-filter: brightness(0.75);
+  }
+  a {
+    color: #cbc3e3 !important;
+  }
+  tr {
+    background-color: transparent !important;
   }
 }
