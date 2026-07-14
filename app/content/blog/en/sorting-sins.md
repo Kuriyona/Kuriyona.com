@@ -17,14 +17,14 @@ Thus, this repository was born: [sorting-sins](https://github.com/Kuriyona/sorti
 
 The languages tested in this project are:
 
-- JavaScript (Node.js/Bun.js/Deno)
+- JavaScript (Node.js & Bun.js & Deno)
 - Python
 - Go
 - C++
 - C#
 - Java
 - Dart
-- Rust (latest & v1.80.0)
+- Rust (latest & **v1.80.0**)
 
 > I wrote the code for JavaScript, Python, and Go myself; the other languages were generated with AI assistance.
 
@@ -180,17 +180,17 @@ When I finished testing Rust and shared the results with a friend [LaunchPad](ht
 
 This puzzled me, because on my local machine it definitely panicked.
 
-We naturally suspected a version difference. It turned out the Grok VM was using Rust 1.80.0.
+We naturally suspected a version difference. It turned out the Grok VM was using Rust `1.75.0 (82e1608df 2023-12-21)`.
 
 ![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.jpg)
 
 ![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.jpg)
 
-My local version was `cargo 1.97.0 (c980f4866 2026-06-30)`, so we tentatively concluded it was a version issue. I initially didn't plan to dig deeper right away, and published the first version of this blog post.
+My local version was `1.97.0 (c980f4866 2026-06-30)`, so we tentatively concluded it was a version issue. I initially didn't plan to dig deeper right away, and published the first version of this blog post.
 
-Shortly after publishing, my friend [lfcypo](https://github.com/lfcypo) provided historical version details and a specific explanation of the changes.
+Shortly after publishing, one of my sisters [lfcypo](https://github.com/lfcypo) provided historical version details and a specific explanation of the changes.
 
-With his help and subsequent research, the conclusion is that **two key PRs** shaped the current behavior:
+With her help and subsequent research, the conclusion is that **two key PRs** shaped the current behavior:
 
 | PR                                                       | Summary                                                                                                                                                                                                                                                                    | Merged     | Released in |
 | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
