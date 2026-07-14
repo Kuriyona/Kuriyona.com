@@ -15,6 +15,11 @@ const article = computed(() =>
     (post) => post.lang.toLowerCase() == locale.value.toLowerCase(),
   ),
 );
+const otherLangs = computed(() =>
+  (articlesData.value as ArticleMeta[]).filter(
+    (post) => post.lang.toLowerCase() != locale.value.toLowerCase(),
+  ),
+);
 
 useSeoMeta({
   title: `${article.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
@@ -61,6 +66,17 @@ useSeoMeta({
       <div class="markdown-body bg-transparent!">
         <div v-html="article.content"></div>
       </div>
+      <var-divider />
+      <KCard :title="$t('blog.other-lang')">
+        <div class="flex flex-col gap-2">
+          <KCardLink
+            shadow
+            v-for="lang in otherLangs"
+            :key="lang.lang"
+            :to="`/blog/${lang.slug}`"
+            :text="lang.title" />
+        </div>
+      </KCard>
     </template>
   </AppPage>
 </template>
