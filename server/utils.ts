@@ -6,6 +6,8 @@ import { createMarkdownExit } from 'markdown-exit';
 import Shiki from '@shikijs/markdown-exit';
 import readingTime from 'reading-time';
 
+export type TocItem = { level: number; text: string; slug: string };
+
 export type ArticleMeta = {
   slug: string;
   lang: string;
@@ -13,6 +15,7 @@ export type ArticleMeta = {
   desc: string;
   date: string;
   readingTime: any;
+  toc: TocItem[];
   [key: string]: any;
 };
 
@@ -31,16 +34,27 @@ md.use(
     theme: 'one-dark-pro',
   }),
 );
+let currentTOC: TocItem[] = [];
+
+function slugifyHeading(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\u4e00-\u9fff]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-');
+}
+
 md.renderer.rules.heading_open = (tokens, idx, _options, _env, slf) => {
   const token = tokens[idx];
   const next = tokens[idx + 1];
   if (next?.type === 'inline' && next.content) {
-    const slug = next.content
-      .toLowerCase()
-      .replace(/[^\w\u4e00-\u9fff]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .replace(/-+/g, '-');
+    const text = next.content;
+    const slug = slugifyHeading(text);
+    const level = Number(token.tag.slice(1));
     token.attrSet('id', slug);
+    if (level <= 3) {
+      currentTOC.push({ level, text, slug });
+    }
   }
   return slf.renderToken(tokens, idx, _options);
 };
@@ -67,9 +81,12 @@ async function parseMarkdownFile(filePath: string) {
   const fullPath = filePath;
   const fileContent = await fs.readFile(fullPath, 'utf-8');
   const { data: frontmatter, content } = matter(fileContent);
+  currentTOC = [];
+  const html = await md.renderAsync(content);
   return {
     frontmatter,
-    content: await md.renderAsync(content),
+    content: html,
+    toc: [...currentTOC],
     readingTime: readingTime(content),
   };
 }
@@ -92,6 +109,7 @@ async function getAllArticles() {
       tags: frontmatter.tags || [],
       edit: frontmatter.edit || '',
       readingTime: result.readingTime,
+      toc: result.toc,
       content,
     });
   }

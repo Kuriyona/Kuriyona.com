@@ -64,6 +64,17 @@ useSeoMeta({
         </div>
       </div>
       <var-divider />
+      <template v-if="article.toc?.length">
+        <ul class="toc">
+          <li
+            v-for="item in article.toc"
+            :key="item.slug"
+            :style="{ paddingLeft: (item.level - 2) * 16 + 'px' }">
+            <a :href="`#${item.slug}`">· {{ item.text }}</a>
+          </li>
+        </ul>
+        <var-divider />
+      </template>
       <div class="markdown-body bg-transparent!">
         <div v-html="article.content"></div>
       </div>
