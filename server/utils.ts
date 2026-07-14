@@ -147,7 +147,7 @@ let Articles = undefined as Article[] | undefined;
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 if (existsSync(MARKDOWN_ROOT)) {
-  const watcher = watch(MARKDOWN_ROOT, { recursive: true }, (eventType, filename) => {
+  const watcher = watch(MARKDOWN_ROOT, { recursive: true, persistent: false }, (eventType, filename) => {
     if (filename && filename.endsWith('.md')) {
       if (debounceTimer) clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
