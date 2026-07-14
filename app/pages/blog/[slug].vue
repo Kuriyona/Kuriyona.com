@@ -66,18 +66,18 @@ useSeoMeta({
       <div class="markdown-body bg-transparent!">
         <div v-html="article.content"></div>
       </div>
-      <var-divider />
-      <KCard :title="$t('blog.other-lang')">
-        <div class="flex flex-col gap-2">
-          <KCardLink
-            shadow
-            v-for="lang in otherLangs"
-            :key="lang.lang"
-            :to="`/blog/${lang.slug}`"
-            :text="lang.title" />
-        </div>
-      </KCard>
     </template>
+    <var-divider />
+    <KCard :title="$t('blog.other-lang')">
+      <div class="flex flex-col gap-2">
+        <KCardLink
+          shadow
+          v-for="lang in otherLangs"
+          :key="lang.lang"
+          :to="`/blog/${lang.slug}`"
+          :text="lang.title" />
+      </div>
+    </KCard>
   </AppPage>
 </template>
 
