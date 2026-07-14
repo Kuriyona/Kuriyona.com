@@ -20,13 +20,3 @@ const html = computed(() => md.render(props.content));
 <template>
   <div class="markdown-body" v-html="html"></div>
 </template>
-
-<style style="css" scoped>
-.markdown-body {
-  font-family: inherit !important;
-  background-color: transparent !important;
-  code {
-    font-family: var(--font-family-monos);
-  }
-}
-</style>

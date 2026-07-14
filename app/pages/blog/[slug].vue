@@ -69,14 +69,4 @@ p:has(img) {
   justify-content: center;
   align-items: center;
 }
-.markdown-body {
-  font-family: inherit !important;
-  code {
-    font-family: var(--font-family-monos);
-  }
-  pre {
-    background-color: transparent !important;
-    backdrop-filter: brightness(0.75);
-  }
-}
 </style>
