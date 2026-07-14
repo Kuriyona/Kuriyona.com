@@ -74,6 +74,7 @@ useSeoMeta({
           shadow
           v-for="lang in otherLangs"
           :key="lang.lang"
+          :locale="lang.lang"
           :to="`/blog/${lang.slug}`"
           :text="lang.title" />
       </div>
