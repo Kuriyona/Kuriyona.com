@@ -6,8 +6,8 @@ import type { LayoutDefinition } from '@kuriyona/yona-svg';
 import { Article, getArticles } from '../server/utils';
 import dayjs from 'dayjs';
 
-const WIDTH = 1280;
-const HEIGHT = 640;
+const WIDTH = 1200;
+const HEIGHT = 630;
 const BG = '#f0f0f0';
 
 const L10N: Record<string, { label: string; font: string; langPrefix: string; wordLabel: string }> =
