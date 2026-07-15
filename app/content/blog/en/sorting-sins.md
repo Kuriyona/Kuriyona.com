@@ -217,6 +217,4 @@ Before 1.81.0 (e.g., 1.80.0): in limited tests, passing a non-deterministic comp
 
 Seven languages chose to "pretend nothing happened" in the face of a random comparator, while only Rust (since v1.81.0) chose to panic.
 
-This repository may be extended with more languages in the future (Zig, Swift, Kotlin, etc.), or dive deeper into the output of non-panic languages — to see whether different sorting algorithms exhibit statistical biases under a random comparator.
-
-That's it for now. I'll tinker more when I have time.
+I will analyze the actual number of executions for various languages ​​and whether there are any patterns in the sorting results later. Anyway, let's leave it at that for now and work on it again when I have time.

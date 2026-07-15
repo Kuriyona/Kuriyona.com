@@ -217,6 +217,4 @@ user-provided comparison function does not correctly implement a total order
 
 7 種語言在隨機比較器面前都選擇了「當作啥都沒發生」，而只有 Rust 的 v1.81.0 及以後版本選擇了 panic。
 
-這個倉庫未來可能還會加更多語言（Zig、Swift、Kotlin 啥的），或者對非 panic 語言的輸出做更深入的分析——看看不同的排序算法在隨機比較器面前，到底有沒有統計上的偏好。
-
-先這樣吧，有空再折騰。
+後續我將對各種語言的實際執行次數以及排序結果是否存在規律性進行分析，總之就先這樣吧，有空再折騰。
