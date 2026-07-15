@@ -28,6 +28,8 @@ useSeoMeta({
 });
 useSeoMeta({
   ogImage: `https://r2.kuriyona.com/static/og/blog/${slug}/${locale.value}.png`,
+  ogTitle: article.value?.title || $t('global.notFound'),
+  ogDescription: article.value?.desc as string,
 });
 </script>
 

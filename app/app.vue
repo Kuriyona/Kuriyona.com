@@ -2,6 +2,7 @@
 import AppBar from './components/AppBar.vue';
 import { greet } from './utils/console.js';
 const { locale } = useI18n();
+const route = useRoute();
 watch(
   () => locale.value,
   (newLocale) => {
@@ -26,6 +27,10 @@ useHead({
 });
 useSeoMeta({
   ogImage: `https://r2.kuriyona.com/static/intro/intro-${locale.value.slice(0, 2) || 'en'}.png`,
+  ogUrl: route.path,
+  ogTitle: "Kuriyona' Space",
+  ogDescription: $t('about.description'),
+  twitterCard: 'summary_large_image',
 });
 onMounted(() => {
   greet();
