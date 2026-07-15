@@ -26,6 +26,9 @@ useSeoMeta({
   title: `${article.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
   description: article.value?.desc as string,
 });
+useSeoMeta({
+  ogImage: `https://r2.kuriyona.com/static/og/blog/${slug}/${locale.value}.png`,
+});
 </script>
 
 <template>

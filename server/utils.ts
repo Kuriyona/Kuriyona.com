@@ -151,14 +151,18 @@ let Articles = undefined as Article[] | undefined;
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 if (existsSync(MARKDOWN_ROOT)) {
-  const watcher = watch(MARKDOWN_ROOT, { recursive: true, persistent: false }, (eventType, filename) => {
-    if (filename && filename.endsWith('.md')) {
-      if (debounceTimer) clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        Articles = undefined;
-      }, 100);
-    }
-  });
+  const watcher = watch(
+    MARKDOWN_ROOT,
+    { recursive: true, persistent: false },
+    (eventType, filename) => {
+      if (filename && filename.endsWith('.md')) {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          Articles = undefined;
+        }, 100);
+      }
+    },
+  );
 
   process.on('exit', () => watcher.close());
 }

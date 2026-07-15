@@ -9,11 +9,12 @@ export const useHeadingAnchor = () => {
 
     headings.forEach((heading) => {
       if (!heading.id) {
-        heading.id = heading.textContent
-          ?.toLowerCase()
-          .replace(/[^\w\u4e00-\u9fff]+/g, '-')
-          .replace(/^-+|-+$/g, '')
-          .replace(/-+/g, '-') ?? '';
+        heading.id =
+          heading.textContent
+            ?.toLowerCase()
+            .replace(/[^\w\u4e00-\u9fff]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .replace(/-+/g, '-') ?? '';
       }
 
       heading.style.cursor = 'pointer';
