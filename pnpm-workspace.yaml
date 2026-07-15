@@ -32,3 +32,4 @@ minimumReleaseAgeExclude:
   - ws@8.20.1
   - nuxt@4.4.6
   - '@nuxt/nitro-server@4.4.6'
+  - '@kuriyona/yona-svg@0.1.0'

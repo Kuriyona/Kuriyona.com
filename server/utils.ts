@@ -84,18 +84,22 @@ md.renderer.rules.link_close = (_tokens, _idx, _options, _env, _slf) => {
 async function getAllMarkdownFiles() {
   try {
     await fs.access(MARKDOWN_ROOT);
-  } catch (error) {
-    console.error('目录不存在：', error);
+  } catch {
     return [];
   }
   const files: string[] = [];
-  const entries = fs.glob(path.join(MARKDOWN_ROOT, '**/*.md'), { withFileTypes: true });
-  for await (const entry of entries) {
-    const fullPath = path.join(entry.parentPath, entry.name);
-    if (entry.isFile() && entry.name.endsWith('.md')) {
-      files.push(fullPath);
+  async function walk(dir: string) {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        files.push(fullPath);
+      }
     }
   }
+  await walk(MARKDOWN_ROOT);
   return files;
 }
 

@@ -9,6 +9,8 @@
     "fmt": "oxfmt"
   },
   "dependencies": {
+    "@chenglou/pretext": "^0.0.8",
+    "@kuriyona/yona-svg": "^0.1.0",
     "@nuxtjs/i18n": "^10.4.0",
     "@nuxtjs/sitemap": "8.2.2",
     "@pinia/nuxt": "^0.11.3",
@@ -32,6 +34,7 @@
     "pinia": "^3.0.4",
     "qrcode.vue": "^3.10.0",
     "reading-time": "^1.5.0",
+    "sharp": "^0.35.3",
     "shiki": "^4.3.0",
     "tailwindcss": "^4.3.1",
     "vue-turnstile": "^1.0.11"
