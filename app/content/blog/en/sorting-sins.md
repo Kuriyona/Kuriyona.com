@@ -23,7 +23,6 @@ The languages tested in this project are:
 - C++
 - C#
 - Java
-- Dart
 - Rust (latest & **v1.80.0**)
 
 > I wrote the code for JavaScript, Python, and Go myself; the other languages were generated with AI assistance.
@@ -118,6 +117,14 @@ Run 2: [3, 27, 58, 98, 56, 28, 39, 82, 94, 53, 9, 50, ...]
 Run 3: [77, 19, 2, 61, 4, 15, 92, 95, 21, 7, 62, 84, ...]
 ```
 
+However, when the array size increases to N = 100,000, the situation changes.
+
+```
+Unhandled exception. System.ArgumentException: Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: 'System.Comparison`1[System.Int32]'.
+```
+
+C# can detect the inconsistent comparer once the array reaches a certain size.
+
 ### Java (JDK 26.0.1)
 
 ```java
@@ -130,17 +137,15 @@ Run 2: [25, 79, 1, 8, 14, 17, 2, 5, 16, 9, 3, 24, ...]
 Run 3: [50, 12, 0, 5, 11, 1, 22, 2, 3, 19, 16, 4, ...]
 ```
 
-### Dart (Dart SDK 3.11.4)
-
-```dart
-arr.sort((a, b) => rng.nextInt(3) - 1);
-```
+Like C#, when the array size increases to N = 100,000, the situation changes.
 
 ```
-Run 1: [2, 3, 96, 93, 10, 58, 91, 14, 33, 17, 85, 21, ...]
-Run 2: [97, 4, 93, 66, 90, 92, 17, 11, 18, 86, 22, 0, ...]
-Run 3: [98, 67, 3, 4, 93, 9, 14, 33, 17, 10, 88, 22, ...]
+Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
 ```
+
+Java can also detect the comparer issue once the array reaches a certain size.
+
+This check was introduced in Java 7. Before Java 7, Java would silently produce a jumbled result without throwing an error.
 
 ### Rust (rustc 1.97.0)
 
@@ -203,18 +208,17 @@ Before 1.81.0 (e.g., 1.80.0): in limited tests, passing a non-deterministic comp
 
 ## Summary
 
-| Language      | Behavior                      |
-| ------------- | ----------------------------- |
-| JavaScript    | (seemingly) silently shuffles |
-| Python        | (seemingly) silently shuffles |
-| Go            | (seemingly) silently shuffles |
-| C++           | (seemingly) silently shuffles |
-| C#            | (seemingly) silently shuffles |
-| Java          | (seemingly) silently shuffles |
-| Dart          | (seemingly) silently shuffles |
-| Rust(latest)  | **panic**                     |
-| Rust(v1.80.0) | (seemingly) silently shuffles |
+| **Language**                          | **Behavior**                                    |
+| ------------------------------------- | ----------------------------------------------- |
+| **C++(Clang)**                        | (seemingly) randomly shuffles                   |
+| **Python**                            | (seemingly) randomly shuffles                   |
+| **JavaScript (Node.js / Bun / Deno)** | (seemingly) randomly shuffles                   |
+| **Go**                                | (seemingly) randomly shuffles                   |
+| **Java**                              | N=100 randomly shuffles, N=1,000,000 **throws** |
+| **C#**                                | N=100 randomly shuffles, N=1,000,000 **throws** |
+| **Rust(latest)**                      | **panic**                                       |
+| **Rust(v1.80.0)**                     | (seemingly) randomly shuffles                   |
 
-Seven languages chose to "pretend nothing happened" in the face of a random comparator, while only Rust (since v1.81.0) chose to panic.
+Five languages chose to "pretend nothing happened" in the face of a random comparator, while only Rust (since v1.81.0) chose to panic, and Java and C# may throw errors once the array reaches a certain size.
 
 I will analyze the actual number of executions for various languages ​​and whether there are any patterns in the sorting results later. Anyway, let's leave it at that for now and work on it again when I have time.

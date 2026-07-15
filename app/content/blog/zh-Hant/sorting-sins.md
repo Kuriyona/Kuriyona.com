@@ -23,7 +23,6 @@ edit: 2026-07-15
 - C++
 - C#
 - Java
-- Dart
 - Rust (latest & **v1.80.0**)
 
 > 對 JavaScript、Python、Go 的代碼我是自己動手寫的，其他幾個語言是在 AI 的幫助下寫的
@@ -118,6 +117,14 @@ Array.Sort(arr, (a, b) => rng.Next(2) == 0 ? -1 : 1);
 第三次：[77, 19, 2, 61, 4, 15, 92, 95, 21, 7, 62, 84, ...]
 ```
 
+然而當數量級增加至 N = 100000，情況就不同了。
+
+```
+Unhandled exception. System.ArgumentException: Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: 'System.Comparison`1[System.Int32]'.
+```
+
+C# 在陣列長度達到一定規模後，才能檢測出比較器的不一致問題。
+
 ### Java（JDK 26.0.1）
 
 ```java
@@ -130,17 +137,15 @@ arr.sort((a, b) -> rng.nextInt(3) - 1);
 第三次：[50, 12, 0, 5, 11, 1, 22, 2, 3, 19, 16, 4, ...]
 ```
 
-### Dart（Dart SDK 3.11.4）
-
-```dart
-arr.sort((a, b) => rng.nextInt(3) - 1);
-```
+和 C# 一樣，當數量級增加至 N = 100000，情況就不同了。
 
 ```
-第一次：[2, 3, 96, 93, 10, 58, 91, 14, 33, 17, 85, 21, ...]
-第二次：[97, 4, 93, 66, 90, 92, 17, 11, 18, 86, 22, 0, ...]
-第三次：[98, 67, 3, 4, 93, 9, 14, 33, 17, 10, 88, 22, ...]
+Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
 ```
+
+Java 在陣列長度達到一定規模後，同樣能檢測出比較器的問題。
+
+此檢查自 Java 7 起引入。在 Java 7 之前，即便比較器有缺陷，Java 也不會報錯，只會直接給出一個亂序的結果。
 
 ### Rust（rustc 1.97.0）
 
@@ -203,18 +208,17 @@ user-provided comparison function does not correctly implement a total order
 
 ## 總結
 
-| 語言          | 行爲             |
-| ------------- | ---------------- |
-| JavaScript    | （疑似）靜默亂序 |
-| Python        | （疑似）靜默亂序 |
-| Go            | （疑似）靜默亂序 |
-| C++           | （疑似）靜默亂序 |
-| C#            | （疑似）靜默亂序 |
-| Java          | （疑似）靜默亂序 |
-| Dart          | （疑似）靜默亂序 |
-| Rust(latest)  | **panic**        |
-| Rust(v1.80.0) | （疑似）靜默亂序 |
+| **語言**                              | **行爲**                               |
+| ------------------------------------- | -------------------------------------- |
+| **C++(Clang)**                        | （疑似）隨機排列                       |
+| **Python**                            | （疑似）隨機排列                       |
+| **JavaScript (Node.js / Bun / Deno)** | （疑似）隨機排列                       |
+| **Go**                                | （疑似）隨機排列                       |
+| **Java**                              | N=100 隨機排列，N=1,000,000 **拋異常** |
+| **C#**                                | N=100 隨機排列，N=1,000,000 **拋異常** |
+| **Rust(latest)**                      | **panic**                              |
+| **Rust(v1.80.0)**                     | （疑似）隨機排列                       |
 
-7 種語言在隨機比較器面前都選擇了「當作啥都沒發生」，而只有 Rust 的 v1.81.0 及以後版本選擇了 panic。
+5 種語言在隨機比較器面前都選擇了「當作啥都沒發生」，而只有 Rust 的 v1.81.0 及以後版本選擇了 panic，Java 和 C# 在陣列長度達到一定規模後可能拋出錯誤。
 
 後續我將對各種語言的實際執行次數以及排序結果是否存在規律性進行分析，總之就先這樣吧，有空再折騰。

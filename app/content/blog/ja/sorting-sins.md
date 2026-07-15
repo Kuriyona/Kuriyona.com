@@ -23,7 +23,6 @@ edit: 2026-07-15
 - C++
 - C#
 - Java
-- Dart
 - Rust (latest & **v1.80.0**)
 
 > JavaScript、Python、Go のコードは自分で書いたが、他の言語は AI の助けを借りて書いた。
@@ -118,6 +117,14 @@ Array.Sort(arr, (a, b) => rng.Next(2) == 0 ? -1 : 1);
 3回目：[77, 19, 2, 61, 4, 15, 92, 95, 21, 7, 62, 84, ...]
 ```
 
+しかし、配列サイズが N = 100000 に増えると、状況が変わります。
+
+```
+Unhandled exception. System.ArgumentException: Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: 'System.Comparison`1[System.Int32]'.
+```
+
+C# は配列がある程度のサイズに達すると、比較関数の不整合を検出できます。
+
 ### Java（JDK 26.0.1）
 
 ```java
@@ -130,17 +137,15 @@ arr.sort((a, b) -> rng.nextInt(3) - 1);
 3回目：[50, 12, 0, 5, 11, 1, 22, 2, 3, 19, 16, 4, ...]
 ```
 
-### Dart（Dart SDK 3.11.4）
-
-```dart
-arr.sort((a, b) => rng.nextInt(3) - 1);
-```
+C# と同様に、配列サイズが N = 100000 に増えると、状況が変わります。
 
 ```
-1回目：[2, 3, 96, 93, 10, 58, 91, 14, 33, 17, 85, 21, ...]
-2回目：[97, 4, 93, 66, 90, 92, 17, 11, 18, 86, 22, 0, ...]
-3回目：[98, 67, 3, 4, 93, 9, 14, 33, 17, 10, 88, 22, ...]
+Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
 ```
+
+Java も配列がある程度のサイズに達すると、比較関数の問題を検出できます。
+
+このチェックは Java 7 から導入されました。Java 7 より前では、比較関数に欠陥があってもエラーは発生せず、単に順序が乱れた結果が返されていました。
 
 ### Rust（rustc 1.97.0）
 
@@ -203,18 +208,17 @@ Rust をテストし終えた後、友人の [LaunchPad](https://launchpadx.top/
 
 ## まとめ
 
-| 言語          | 振る舞い               |
-| ------------- | ---------------------- |
-| JavaScript    | （疑似的に）黙って乱順 |
-| Python        | （疑似的に）黙って乱順 |
-| Go            | （疑似的に）黙って乱順 |
-| C++           | （疑似的に）黙って乱順 |
-| C#            | （疑似的に）黙って乱順 |
-| Java          | （疑似的に）黙って乱順 |
-| Dart          | （疑似的に）黙って乱順 |
-| Rust(latest)  | **panic**              |
-| Rust(v1.80.0) | （疑似的に）黙って乱順 |
+| **言語**                              | **振る舞い**                             |
+| ------------------------------------- | ---------------------------------------- |
+| **C++(Clang)**                        | （疑似的に）ランダム順列                 |
+| **Python**                            | （疑似的に）ランダム順列                 |
+| **JavaScript (Node.js / Bun / Deno)** | （疑似的に）ランダム順列                 |
+| **Go**                                | （疑似的に）ランダム順列                 |
+| **Java**                              | N=100 ランダム順列、N=1,000,000 **例外** |
+| **C#**                                | N=100 ランダム順列、N=1,000,000 **例外** |
+| **Rust(latest)**                      | **panic**                                |
+| **Rust(v1.80.0)**                     | （疑似的に）ランダム順列                 |
 
-7つの言語がランダム比較関数に対して「何事もなかったかのように振る舞う」のに対し、Rust の v1.81.0 以降だけが panic を選択した。
+5つの言語がランダム比較関数に対して「何事もなかったかのように振る舞う」のに対し、Rust の v1.81.0 以降だけが panic を選択し、Java と C# は配列がある程度のサイズに達するとエラーを投げる可能性がある。
 
 今後、各言語の実際の実行回数やソート結果に規則性があるかどうかを分析する予定だ。とりあえずはここまでにして、また時間があれば続ける。
