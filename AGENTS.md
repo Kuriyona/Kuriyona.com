@@ -21,12 +21,53 @@ Personal website — **Nuxt 4** (SSR) + Vue 3 + Tailwind CSS v4.
 ```
 pnpm dev             Nuxt dev server (hot reload)
 pnpm generate        Nuxt static generation
+pnpm index           PageFind search indexing (requires `generate` first)
 pnpm preview         Nuxt preview build output
-pnpm build           submodule init + pnpm generate
+pnpm build           submodule init + pnpm generate + pnpm index
 pnpm fmt             Format with oxfmt
 ```
 
 `postinstall` auto-runs `nuxt prepare`. No lint, typecheck, or test commands.
+
+## Search (PageFind)
+
+Full-text search powered by [PageFind](https://pagefind.app/) (Component UI). Search triggers via `Ctrl+K` or the search button in the AppBar.
+
+### Workflow
+
+- **Dev mode**: `pnpm generate && pnpm index && pnpm dev`
+  The Vite dev server serves `/pagefind/*` from `.output/public/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
+  Changes to `--pf-*` CSS variables in `main.css` are hot-reloaded.
+- **Production**: `pnpm build` automatically runs `generate` + `index` in sequence.
+
+### Style customization
+
+PageFind uses Shadow DOM. Theme via `--pf-*` CSS variables on `:root` (defined in `main.css`). Key variables:
+
+```
+--pf-background / --pf-text / --pf-text-secondary / --pf-border
+--pf-border-focus / --pf-hover / --pf-mark / --pf-skeleton
+--pf-modal-backdrop / --pf-modal-max-width / --pf-input-height
+--pf-border-radius / --pf-font
+```
+
+For deeper customization (result layout, etc.), see [PageFind Component UI custom templates](https://pagefind.app/docs/ui/#custom-templates).
+
+### How it works
+
+1. `nuxt generate` builds static HTML to `.output/public/`
+2. `pagefind --site .output/public` crawls the output, builds language-separated search indexes, and outputs to `.output/public/pagefind/`
+3. `app/plugins/pagefind.client.ts` registers the Component UI web components (client-side only)
+4. `app/components/AppBar.vue` contains `<pagefind-modal-trigger>` + `<pagefind-modal>`
+5. Blog articles have `data-pagefind-body` so PageFind indexes only content (not nav, footer)
+6. Language switching re-initializes PageFind via `new Function('return import("/pagefind/pagefind.js")')()` (bypasses Vite bundler resolution)
+
+### Index scope
+
+Only pages with `data-pagefind-body` are indexed. Currently applied to:
+- Blog article content (`app/pages/blog/[slug].vue`)
+
+Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in search results.
 
 ## Architecture
 

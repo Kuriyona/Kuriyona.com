@@ -38,6 +38,9 @@ const mobileMenu = ref(false);
               <span class="text-sm!"> {{ $t('ask-box.title') }} </span>
             </VarButton>
           </NuxtLinkLocale>
+          <ClientOnly>
+            <pagefind-modal-trigger></pagefind-modal-trigger>
+          </ClientOnly>
           <KButton round @click="mobileMenu = true">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-lg! leading-none"> translate </span>
@@ -46,6 +49,9 @@ const mobileMenu = ref(false);
             </div>
           </KButton>
         </div>
+        <ClientOnly>
+          <pagefind-modal></pagefind-modal>
+        </ClientOnly>
       </div>
       <MusicBar />
       <AppBarTips />

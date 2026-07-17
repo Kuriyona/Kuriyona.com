@@ -3,3 +3,19 @@
 @import url('./utilities.css');
 @import url('./markdown.css');
 @import 'tailwindcss';
+
+:root {
+  --pf-background: var(--color-body);
+  --pf-text: var(--color-text);
+  --pf-text-secondary: hsla(var(--hsl-text-disabled), 1);
+  --pf-border: rgba(255, 255, 255, 0.12);
+  --pf-border-focus: var(--color-primary);
+  --pf-hover: rgba(255, 255, 255, 0.04);
+  --pf-mark: var(--color-primary);
+  --pf-skeleton: rgba(255, 255, 255, 0.06);
+  --pf-modal-backdrop: rgba(0, 0, 0, 0.6);
+  --pf-modal-max-width: 600px;
+  --pf-input-height: 40px;
+  --pf-border-radius: 8px;
+  --pf-font: inherit;
+}

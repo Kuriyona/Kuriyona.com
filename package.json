@@ -4,7 +4,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "build": "pnpm run init-submodules && pnpm run generate",
+    "index": "pagefind --site .output/public",
+    "build": "pnpm run init-submodules && pnpm run generate && pnpm run index",
     "init-submodules": "git submodule init && git submodule update",
     "sort-i18n": "bun scripts/sort-i18n.ts",
     "fmt": "pnpm run sort-i18n && oxfmt"
@@ -14,6 +15,7 @@
     "@kuriyona/yona-svg": "^0.1.0",
     "@nuxtjs/i18n": "^10.4.0",
     "@nuxtjs/sitemap": "8.2.2",
+    "@pagefind/component-ui": "^1.5.2",
     "@pinia/nuxt": "^0.11.3",
     "@shikijs/markdown-exit": "^4.3.0",
     "@tailwindcss/vite": "^4.3.1",
@@ -42,7 +44,8 @@
   },
   "devDependencies": {
     "@types/node": "^26.0.1",
-    "oxfmt": "^0.56.0"
+    "oxfmt": "^0.56.0",
+    "pagefind": "^1.5.2"
   },
   "packageManager": "pnpm@11.4.0"
 }

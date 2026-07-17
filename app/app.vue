@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import AppBar from './components/AppBar.vue';
 import { greet } from './utils/console.js';
+import { reinitPagefind } from './utils/pagefind.ts';
 const { locale } = useI18n();
 const route = useRoute();
 setLocale(locale.value);
 watch(
   () => locale.value,
-  (newLocale) => {
+  async (newLocale) => {
     useHead({
       htmlAttrs: {
         lang: newLocale,
       },
     });
     setLocale(newLocale);
+    if (import.meta.client) {
+      await reinitPagefind();
+    }
   },
 );
 useHead({

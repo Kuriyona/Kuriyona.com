@@ -80,7 +80,7 @@ useSeoMeta({
         </ul>
         <var-divider />
       </template>
-      <div class="markdown-body bg-transparent!">
+      <div class="markdown-body bg-transparent!" data-pagefind-body>
         <div v-html="article.content"></div>
       </div>
     </template>

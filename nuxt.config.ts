@@ -1,5 +1,7 @@
 ﻿import tailwindcss from '@tailwindcss/vite';
 import child_process from 'child_process';
+import { existsSync, readFileSync } from 'fs';
+import { resolve, extname } from 'path';
 
 const gitHash = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 
@@ -23,7 +25,35 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      {
+        name: 'pagefind-dev',
+        configureServer(server) {
+          const pagefindDir = resolve('.output/public/pagefind');
+          const mimeMap: Record<string, string> = {
+            '.js': 'application/javascript',
+            '.css': 'text/css',
+            '.wasm': 'application/wasm',
+            '.json': 'application/json',
+            '.html': 'text/html',
+            '.pf_meta': 'application/octet-stream',
+            '.pf_fragment': 'application/octet-stream',
+          };
+          server.middlewares.use((req, res, next) => {
+            const url = new URL(req.url || '/', 'http://localhost');
+            if (!url.pathname.startsWith('/pagefind/')) return next();
+            const filePath = resolve(pagefindDir, '.' + url.pathname.replace('/pagefind/', '/'));
+            if (!filePath.startsWith(pagefindDir)) return next();
+            if (!existsSync(filePath)) return next();
+            const ext = extname(filePath);
+            if (mimeMap[ext]) res.setHeader('Content-Type', mimeMap[ext]);
+            res.statusCode = 200;
+            res.end(readFileSync(filePath));
+          });
+        },
+      },
+    ],
     define: {
       GIT_HASH: JSON.stringify(gitHash),
       BUILD_TIME: JSON.stringify(new Date().toISOString()),
@@ -37,6 +67,7 @@ export default defineNuxtConfig({
         'vue-turnstile',
         'qrcode.vue',
         'gsap',
+        '@pagefind/component-ui',
       ],
     },
   },
