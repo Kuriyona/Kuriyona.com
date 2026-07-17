@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       { code: 'en', name: 'English', file: 'en.json' },
       { code: 'ja', name: '日本語', file: 'ja.json' },
     ],
-    strategy: 'prefix_and_default',
+    strategy: 'prefix_except_default',
   },
   vite: {
     plugins: [
