@@ -3,12 +3,12 @@ const config = useAppConfig();
 </script>
 
 <template>
-  <AppPage>
+  <AppPage data-pagefind-body>
     <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10 mb-10">
       <h1 class="text-2xl font-bold font-monos">
         <span>{{ $t('about.welcome-to') }}</span>
         <br />
-        <span>Kuriyona's Space</span>
+        <span data-pagefind-meta="title">Kuriyona's Space</span>
       </h1>
     </div>
     <div class="flex justify-center gap-4 max-[600px]:flex-col">
