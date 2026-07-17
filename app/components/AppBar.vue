@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import AppMenu from './AppBar/AppMenu.vue';
 import KButton from './KButton.vue';
+import { useSearch } from '~/composables/useSearch';
 const popup = ref(false);
 const mobileMenu = ref(false);
+
+const search = useSearch();
+
+onMounted(() => {
+  function globalKeydown(e: KeyboardEvent) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      search.toggle();
+    }
+  }
+  document.addEventListener('keydown', globalKeydown);
+});
 </script>
 
 <template>
@@ -38,9 +51,9 @@ const mobileMenu = ref(false);
               <span class="text-sm!"> {{ $t('ask-box.title') }} </span>
             </VarButton>
           </NuxtLinkLocale>
-          <ClientOnly>
-            <pagefind-modal-trigger></pagefind-modal-trigger>
-          </ClientOnly>
+          <KButton round @click="search.toggle()">
+            <span class="material-symbols-outlined text-lg! leading-none"> search </span>
+          </KButton>
           <KButton round @click="mobileMenu = true">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-lg! leading-none"> translate </span>
@@ -49,13 +62,11 @@ const mobileMenu = ref(false);
             </div>
           </KButton>
         </div>
-        <ClientOnly>
-          <pagefind-modal></pagefind-modal>
-        </ClientOnly>
       </div>
       <MusicBar />
       <AppBarTips />
     </div>
   </div>
   <AppMenu v-model="mobileMenu" @open-neko="popup = true" />
+  <SearchModal />
 </template>

@@ -31,36 +31,39 @@ pnpm fmt             Format with oxfmt
 
 ## Search (PageFind)
 
-Full-text search powered by [PageFind](https://pagefind.app/) (Component UI). Search triggers via `Ctrl+K` or the search button in the AppBar.
+Full-text search powered by [PageFind](https://pagefind.app/) (custom Vue components via JS API). Search triggers via `Ctrl+K` or the search button in the AppBar.
 
 ### Workflow
 
 - **Dev mode**: `pnpm generate && pnpm index && pnpm dev`
   The Vite dev server serves `/pagefind/*` from `.output/public/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
-  Changes to `--pf-*` CSS variables in `main.css` are hot-reloaded.
+  Modify styles in `app/components/SearchModal.vue` (Tailwind classes / scoped CSS).
 - **Production**: `pnpm build` automatically runs `generate` + `index` in sequence.
-
-### Style customization
-
-PageFind uses Shadow DOM. Theme via `--pf-*` CSS variables on `:root` (defined in `main.css`). Key variables:
-
-```
---pf-background / --pf-text / --pf-text-secondary / --pf-border
---pf-border-focus / --pf-hover / --pf-mark / --pf-skeleton
---pf-modal-backdrop / --pf-modal-max-width / --pf-input-height
---pf-border-radius / --pf-font
-```
-
-For deeper customization (result layout, etc.), see [PageFind Component UI custom templates](https://pagefind.app/docs/ui/#custom-templates).
 
 ### How it works
 
 1. `nuxt generate` builds static HTML to `.output/public/`
 2. `pagefind --site .output/public` crawls the output, builds language-separated search indexes, and outputs to `.output/public/pagefind/`
-3. `app/plugins/pagefind.client.ts` registers the Component UI web components (client-side only)
-4. `app/components/AppBar.vue` contains `<pagefind-modal-trigger>` + `<pagefind-modal>`
-5. Blog articles have `data-pagefind-body` so PageFind indexes only content (not nav, footer)
-6. Language switching re-initializes PageFind via `new Function('return import("/pagefind/pagefind.js")')()` (bypasses Vite bundler resolution)
+3. `app/composables/useSearch.ts` — singleton composable managing search state (query, results, loading, activeIndex)
+4. `app/utils/pagefind.ts` — wraps PageFind JS API with `new Function()` to bypass Vite bundler
+5. `app/components/SearchModal.vue` — custom search UI (Teleport to body, no Shadow DOM)
+6. `app/components/AppBar.vue` — search button trigger + global `Ctrl+K` listener
+7. Blog articles have `data-pagefind-body` so PageFind indexes only content (not nav, footer)
+8. Language switching calls `pagefindReinit()` to destroy & re-init the search index
+
+### Customizing the search UI
+
+Edit `app/components/SearchModal.vue`. The component has minimal built-in styles — add Tailwind classes or scoped CSS as needed. Key states:
+
+| State | Template condition | Description |
+|-------|--------------------|-------------|
+| Hidden | `v-if="s.visible"` | Modal teleported to body |
+| Loading | `v-if="s.loading"` | Searching... |
+| Error | `v-else-if="s.error"` | Error message |
+| Empty | `v-else-if="s.query.length >= 2 && s.results.length === 0"` | No results |
+| Results | `v-else-if="s.results.length"` | Result list with keyboard nav |
+
+Available via the composable: `s.query`, `s.results`, `s.loading`, `s.error`, `s.activeIndex`, `s.open()`, `s.close()`, `s.toggle()`, `s.clear()`.
 
 ### Index scope
 

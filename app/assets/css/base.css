@@ -23,6 +23,11 @@ button * {
   cursor: url('https://r2.kuriyona.com/static/cursor/windows_11_cursors_concept/hand.cur'), pointer;
 }
 
+mark{
+  background-color: #cbc3e3;
+  color: #000;
+}
+
 ::selection {
   background-color: #cbc3e3;
   color: #000;

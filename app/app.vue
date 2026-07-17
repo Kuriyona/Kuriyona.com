@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import AppBar from './components/AppBar.vue';
 import { greet } from './utils/console.js';
-import { reinitPagefind } from './utils/pagefind.ts';
+import { useSearch } from './composables/useSearch';
 const { locale } = useI18n();
 const route = useRoute();
 setLocale(locale.value);
+const { reinit } = useSearch();
 watch(
   () => locale.value,
   async (newLocale) => {
@@ -15,7 +16,7 @@ watch(
     });
     setLocale(newLocale);
     if (import.meta.client) {
-      await reinitPagefind();
+      await reinit();
     }
   },
 );

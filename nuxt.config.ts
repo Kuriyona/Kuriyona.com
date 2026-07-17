@@ -67,7 +67,6 @@ export default defineNuxtConfig({
         'vue-turnstile',
         'qrcode.vue',
         'gsap',
-        '@pagefind/component-ui',
       ],
     },
   },
