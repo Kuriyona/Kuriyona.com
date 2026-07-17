@@ -36,14 +36,14 @@ Full-text search powered by [PageFind](https://pagefind.app/) (custom Vue compon
 ### Workflow
 
 - **Dev mode**: `pnpm generate && pnpm index && pnpm dev`
-  The Vite dev server serves `/pagefind/*` from `.output/public/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
+  The Vite dev server serves `/pagefind/*` from `dist/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
   Modify styles in `app/components/SearchModal.vue` (Tailwind classes / scoped CSS).
 - **Production**: `pnpm build` automatically runs `generate` + `index` in sequence.
 
 ### How it works
 
-1. `nuxt generate` builds static HTML to `.output/public/`
-2. `pagefind --site .output/public` crawls the output, builds language-separated search indexes, and outputs to `.output/public/pagefind/`
+1. `nuxt generate` builds static HTML to `dist/`
+2. `pagefind --site dist` crawls the output, builds language-separated search indexes, and outputs to `dist/pagefind/`
 3. `app/composables/useSearch.ts` — singleton composable managing search state (query, results, loading, activeIndex)
 4. `app/utils/pagefind.ts` — wraps PageFind JS API with `new Function()` to bypass Vite bundler
 5. `app/components/SearchModal.vue` — custom search UI (Teleport to body, no Shadow DOM)

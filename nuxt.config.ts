@@ -10,6 +10,10 @@ export default defineNuxtConfig({
   ssr: true,
   modules: ['@varlet/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxtjs/sitemap', '@pinia/nuxt'],
   nitro: {
+    output: {
+      dir: '.output',
+      publicDir: 'dist',
+    },
     prerender: {
       ignore: ['/admin/**'],
     },
@@ -30,7 +34,7 @@ export default defineNuxtConfig({
       {
         name: 'pagefind-dev',
         configureServer(server) {
-          const pagefindDir = resolve('.output/public/pagefind');
+          const pagefindDir = resolve('dist/pagefind');
           const mimeMap: Record<string, string> = {
             '.js': 'application/javascript',
             '.css': 'text/css',

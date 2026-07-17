@@ -4,7 +4,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "index": "pagefind --site .output/public",
+    "index": "pagefind --site dist",
     "build": "pnpm run init-submodules && pnpm run generate && pnpm run index",
     "init-submodules": "git submodule init && git submodule update",
     "sort-i18n": "bun scripts/sort-i18n.ts",
