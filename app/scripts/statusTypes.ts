@@ -1,3 +1,9 @@
+export interface Status {
+  weather: Weather;
+  github_activity: GithubActivity;
+  steam: Steam;
+}
+
 export interface Weather {
   code: string;
   updateTime: string;
@@ -27,4 +33,16 @@ interface Now {
 interface Refer {
   sources: string[];
   license: string[];
+}
+
+export interface GithubActivity {
+  [repo: string]: string;
+}
+
+export interface Steam {
+  personaName: string;
+  personaState: number;
+  realName: string;
+  gameExtraInfo: string;
+  gameId: string;
 }

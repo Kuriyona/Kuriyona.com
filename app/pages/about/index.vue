@@ -43,23 +43,6 @@ const config = useAppConfig();
         </p>
       </template>
     </KCardLink>
-    <div class="flex justify-center gap-4 max-[600px]:flex-col">
-      <KCard :title="$t('about.location')" class="flex-1">
-        <div class="relative max-h-40 h-full w-full">
-          <p
-            class="absolute bottom-0 left-0 text-black/80 text-sm backdrop-blur-md p-1 rounded-tr-md">
-            {{ $t('about.location-value') }}
-          </p>
-          <img
-            class="h-full w-full object-cover max-[400px]:hidden"
-            src="https://r2.kuriyona.com/static/image/site/location-map-600.png" />
-          <img
-            class="h-full w-full object-cover min-[400px]:hidden"
-            src="https://r2.kuriyona.com/static/image/site/location-map-400.png" />
-        </div>
-      </KCard>
-      <CardWeather />
-    </div>
     <KCard :title="$t('about.skills')">
       <div class="flex justify-center gap-2 max-[600px]:flex-col">
         <div class="flex gap-2 flex-wrap justify-center">

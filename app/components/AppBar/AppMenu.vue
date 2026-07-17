@@ -66,14 +66,9 @@ const handleProgressClick = (event: MouseEvent) => {
           </div>
         </KCard>
         <KCardLink to="/blog" @click="show = false" text="Blog" shadow />
-        <KCardLink
-          @click="
-            emit('open-neko');
-            show = false;
-          "
-          text="Neko"
-          shadow />
-        <KCardLink to="/ask-box" @click="show = false" text="Ask Box" shadow />
+        <KCardLink to="/blog" @click="show = false" text="Neko" shadow />
+        <KCardLink to="/blog" @click="show = false" :text="$t('status.title')" shadow />
+        <KCardLink to="/ask-box" @click="show = false" :text="$t('ask-box.title')" shadow />
         <KCard shadow :title="$t('global.language')">
           <div class="flex flex-col gap-2">
             <KButton

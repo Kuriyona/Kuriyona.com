@@ -104,5 +104,18 @@
   "weather.wind-dir": "Wind direction",
   "weather.wind-speed": "Wind speed",
   "weixi-chan": "Weixi-chan",
-  "global.copy-success": "Copied to clipboard"
+  "global.copy-success": "Copied to clipboard",
+  "status.commit-to": "Committed to",
+  "steam.name": "Name",
+  "steam.status": "Status",
+  "steam.playing": "Playing",
+  "steam.state-0": "Offline",
+  "steam.state-1": "Online",
+  "steam.state-2": "Busy",
+  "steam.state-3": "Away",
+  "steam.state-4": "Snooze",
+  "steam.state-5": "Looking to Trade",
+  "steam.state-6": "Looking to Play",
+  "steam.not-playing": "Not playing",
+  "status.title": "Stalker Cam"
 }

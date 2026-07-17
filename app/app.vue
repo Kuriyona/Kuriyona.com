@@ -3,6 +3,7 @@ import AppBar from './components/AppBar.vue';
 import { greet } from './utils/console.js';
 const { locale } = useI18n();
 const route = useRoute();
+setLocale(locale.value);
 watch(
   () => locale.value,
   (newLocale) => {
@@ -11,6 +12,7 @@ watch(
         lang: newLocale,
       },
     });
+    setLocale(newLocale);
   },
 );
 useHead({

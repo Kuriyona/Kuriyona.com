@@ -104,5 +104,18 @@
   "weather.wind-dir": "風向",
   "weather.wind-speed": "風速",
   "weixi-chan": "未晞醬",
-  "global.copy-success": "已複製至剪貼簿"
+  "global.copy-success": "已複製至剪貼簿",
+  "status.commit-to": "提交了",
+  "steam.name": "名稱",
+  "steam.status": "狀態",
+  "steam.playing": "正在遊玩",
+  "steam.state-0": "離線",
+  "steam.state-1": "在線",
+  "steam.state-2": "忙碌",
+  "steam.state-3": "離開",
+  "steam.state-4": "小睡",
+  "steam.state-5": "想要交易",
+  "steam.state-6": "想要玩",
+  "steam.not-playing": "未在遊玩",
+  "status.title": "視姦我喵"
 }

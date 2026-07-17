@@ -28,6 +28,11 @@ const mobileMenu = ref(false);
               <span class="text-sm!"> Neko </span>
             </VarButton>
           </NuxtLinkLocale>
+          <NuxtLinkLocale to="/status" class="hidden sm:inline-block">
+            <VarButton text size="small">
+              <span class="text-sm!"> {{ $t('status.title') }} </span>
+            </VarButton>
+          </NuxtLinkLocale>
           <NuxtLinkLocale to="/ask-box" class="hidden sm:inline-block">
             <VarButton text size="small">
               <span class="text-sm!"> {{ $t('ask-box.title') }} </span>

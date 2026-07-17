@@ -104,5 +104,18 @@
   "weather.wind-dir": "风向",
   "weather.wind-speed": "风速",
   "weixi-chan": "未晞酱",
-  "global.copy-success": "已复制至剪贴板"
+  "global.copy-success": "已复制至剪贴板",
+  "status.commit-to": "提交了",
+  "steam.name": "名称",
+  "steam.status": "状态",
+  "steam.playing": "正在游玩",
+  "steam.state-0": "离线",
+  "steam.state-1": "在线",
+  "steam.state-2": "忙碌",
+  "steam.state-3": "离开",
+  "steam.state-4": "小睡",
+  "steam.state-5": "想要交易",
+  "steam.state-6": "想要玩",
+  "steam.not-playing": "未在游玩",
+  "status.title": "视奸我喵"
 }

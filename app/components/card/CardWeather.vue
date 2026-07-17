@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import type { Weather } from './types';
+import type { Weather } from '~/scripts/statusTypes';
 
-const weather = ref<Weather>();
-
-onMounted(() => {
-  fetchApi.get('/weather').then(async (res) => {
-    weather.value = await res.json<Weather>();
-  });
-});
+const props = defineProps<{
+  weather: Weather;
+}>();
 </script>
 
 <template>

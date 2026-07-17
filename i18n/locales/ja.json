@@ -104,5 +104,18 @@
   "weather.wind-dir": "風向き",
   "weather.wind-speed": "風速",
   "weixi-chan": "未晞ちゃん",
-  "global.copy-success": "クリップボードにコピーされました"
+  "global.copy-success": "クリップボードにコピーされました",
+  "status.commit-to": "コミット済み",
+  "steam.name": "名前",
+  "steam.status": "ステータス",
+  "steam.playing": "プレイ中",
+  "steam.state-0": "オフライン",
+  "steam.state-1": "オンライン",
+  "steam.state-2": "取り込み中",
+  "steam.state-3": "退席中",
+  "steam.state-4": "休憩中",
+  "steam.state-5": "トレード希望",
+  "steam.state-6": "プレイ希望",
+  "steam.not-playing": "遊んでいない",
+  "status.title": "生ステ"
 }
