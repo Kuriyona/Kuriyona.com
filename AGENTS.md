@@ -4,15 +4,15 @@ Personal website — **Nuxt 4** (SSR) + Vue 3 + Tailwind CSS v4.
 
 ## Stack
 
-| Layer           | Choice                                                    |
-| --------------- | --------------------------------------------------------- |
-| Runtime         | **Bun** (not Node)                                        |
-| Package manager | **pnpm** (v11.4.0)                                        |
-| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                          |
-| UI library      | Varlet UI (`<var-input>`, `<var-card>`, etc.)             |
-| Animation       | GSAP                                                      |
-| I18n            | `@nuxtjs/i18n` (`prefix_and_default`, 4 locales)          |
-| Formatter       | `oxfmt` (not Prettier)                                    |
+| Layer           | Choice                                           |
+| --------------- | ------------------------------------------------ |
+| Runtime         | **Bun** (not Node)                               |
+| Package manager | **pnpm** (v11.4.0)                               |
+| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                 |
+| UI library      | Varlet UI (`<var-input>`, `<var-card>`, etc.)    |
+| Animation       | GSAP                                             |
+| I18n            | `@nuxtjs/i18n` (`prefix_and_default`, 4 locales) |
+| Formatter       | `oxfmt` (not Prettier)                           |
 
 **Backend is NOT in this repo.** See [Kuriyona/api.kuriyona.com](https://github.com/Kuriyona/api.kuriyona.com) (Elysia on Bun).
 

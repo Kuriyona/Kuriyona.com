@@ -6,7 +6,8 @@
     "postinstall": "nuxt prepare",
     "build": "pnpm run init-submodules && pnpm run generate",
     "init-submodules": "git submodule init && git submodule update",
-    "fmt": "oxfmt"
+    "sort-i18n": "bun scripts/sort-i18n.ts",
+    "fmt": "pnpm run sort-i18n && oxfmt"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.8",
