@@ -21,5 +21,6 @@ const backgroundStore = useBackgroundStore();
       class="w-full h-full object-cover object-[27%]"
       :src="backgroundStore.backgroundFileUrl"
       alt="Background" />
+    <div class="fixed top-0 w-full h-full bg-white/10" />
   </div>
 </template>

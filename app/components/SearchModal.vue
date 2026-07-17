@@ -53,16 +53,13 @@ function onKeydown(e: KeyboardEvent) {
             @clear="s.clear" />
         </div>
 
-        <KCard shadow v-if="s.loading" class="search-modal-loading">Searching...</KCard>
+        <KCard v-if="s.loading" class="search-modal-loading">Searching...</KCard>
 
-        <KCard shadow v-else-if="s.error" class="search-modal-error">
+        <KCard v-else-if="s.error" class="search-modal-error">
           {{ s.error }}
         </KCard>
 
-        <KCard
-          shadow
-          v-else-if="s.query.length >= 1 && s.results.length === 0"
-          class="search-modal-empty">
+        <KCard v-else-if="s.query.length >= 1 && s.results.length === 0" class="search-modal-empty">
           No results found
         </KCard>
 
@@ -70,7 +67,6 @@ function onKeydown(e: KeyboardEvent) {
           v-else-if="s.flatResults.length"
           class="search-modal-results overflow-y-auto p-2 flex flex-col gap-2">
           <KCard
-            shadow
             v-for="(item, i) in s.flatResults"
             :key="item.url"
             :ref="

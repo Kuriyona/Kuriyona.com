@@ -18,15 +18,15 @@ const handleProgressClick = (event: MouseEvent) => {
 <template>
   <Transition name="menu">
     <div v-if="show">
-      <div class="fixed right-0 top-0 w-screen h-dvh bg-black/25" @click="show = false" />
+      <div class="fixed left-0 top-0 w-screen h-dvh bg-black/50" @click="show = false" />
       <div
-        class="fixed w-80 max-[400px]:w-screen right-0 top-0 h-dvh bg-black/50 backdrop-blur-sm border-l border-white/5 flex flex-col gap-4 p-4 overflow-y-auto">
+        class="fixed w-80 max-[400px]:w-screen right-0 top-0 h-dvh bg-white/2 border-l border-white/5 flex flex-col gap-4 p-4 overflow-y-auto backdrop-blur-3xl">
         <div class="flex justify-end">
           <KButton round @click="show = false">
             <span class="material-symbols-outlined text-lg! leading-none"> close </span>
           </KButton>
         </div>
-        <KCard v-if="store.currentSong" shadow>
+        <KCard v-if="store.currentSong">
           <div class="flex items-center gap-2 overflow-x-hidden">
             <img :src="store.cover" class="h-16 w-16 rounded-md" />
             <div class="relative w-full flex flex-col items-center gap-2">
@@ -56,7 +56,7 @@ const handleProgressClick = (event: MouseEvent) => {
           </div>
           <div
             id="progress"
-            class="h-1 bg-white/25 transition-all duration-300 rounded-full"
+            class="mt-0.5 h-1 bg-white/25 transition-all duration-300 rounded-full"
             @click="handleProgressClick">
             <div
               class="h-full bg-white/50 transition-width duration-100"
@@ -65,17 +65,16 @@ const handleProgressClick = (event: MouseEvent) => {
               }"></div>
           </div>
         </KCard>
-        <KCardLink to="/blog" @click="show = false" text="Blog" shadow />
-        <KCardLink to="/blog" @click="show = false" text="Neko" shadow />
-        <KCardLink to="/blog" @click="show = false" :text="$t('status.title')" shadow />
-        <KCardLink to="/ask-box" @click="show = false" :text="$t('ask-box.title')" shadow />
-        <KCard shadow :title="$t('global.language')">
+        <KCardLink to="/blog" @click="show = false" text="Blog" />
+        <KCardLink to="/blog" @click="show = false" text="Neko" />
+        <KCardLink to="/blog" @click="show = false" :text="$t('status.title')" />
+        <KCardLink to="/ask-box" @click="show = false" :text="$t('ask-box.title')" />
+        <KCard :title="$t('global.language')">
           <div class="flex flex-col gap-2">
             <KButton
               v-for="locale in locales"
               :key="locale.code"
               block
-              shadow
               @click="
                 setLocale(locale.code);
                 show = false;

@@ -11,7 +11,6 @@ const backgroundStore = useBackgroundStore();
         v-for="preset in backgroundStore.BackgroundPresets"
         :key="preset.type"
         class="w-full cursor-pointer"
-        shadow
         @click="backgroundStore.preset = preset"
         >{{ preset.name }}
       </KButton>

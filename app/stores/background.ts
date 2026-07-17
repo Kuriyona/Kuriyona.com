@@ -12,16 +12,9 @@ export const useBackgroundStore = defineStore('background', () => {
         brightness: 0.1,
       },
       {
-        type: 'image',
-        name: t('background.name.loli-api'),
-        random: true,
-        url: 'https://www.loliapi.com/acg/',
-        brightness: 0.1,
-      },
-      {
         type: 'bing',
         name: t('background.name.bing'),
-        brightness: 0.1,
+        brightness: 0.25,
       },
     ];
   });
@@ -31,8 +24,7 @@ export const useBackgroundStore = defineStore('background', () => {
   const backgroundFileType = computed(() => (preset.value.type != 'video' ? 'image' : 'video'));
   const backgroundFileUrl = computed(() => {
     if (preset.value.type != 'bing') {
-      console.log(preset.value.random);
-      return preset.value.random ? `${preset.value.url}?timestamp=${Date.now()}` : preset.value.url;
+      return preset.value.url;
     } else {
       return 'https://bing.img.run/1920x1080.php';
     }

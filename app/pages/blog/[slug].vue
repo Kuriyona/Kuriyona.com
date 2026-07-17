@@ -89,7 +89,6 @@ useSeoMeta({
       <KCard :title="$t('blog.other-lang')">
         <div class="flex flex-col gap-2">
           <KCardLink
-            shadow
             v-for="lang in otherLangs"
             :key="lang.lang"
             :locale="lang.lang"
