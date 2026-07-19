@@ -41,6 +41,12 @@ export default defineAppConfig({
         desc: '自留地、日常记录、经验分享。',
         avatar: 'https://avatars.githubusercontent.com/u/90670998',
       },
+      {
+        url: 'https://blog.rhen.cloud',
+        title: "RhenCloud's Blog",
+        desc: '趁世界还未重启之前 约一次爱恋',
+        avatar: 'https://blog.rhen.cloud/avatar.webp',
+      },
     ],
   },
 });
