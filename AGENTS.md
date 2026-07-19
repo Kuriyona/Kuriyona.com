@@ -4,15 +4,15 @@ Personal website — **Nuxt 4** (SSR) + Vue 3 + Tailwind CSS v4.
 
 ## Stack
 
-| Layer           | Choice                                           |
-| --------------- | ------------------------------------------------ |
-| Runtime         | **Bun** (not Node)                               |
-| Package manager | **pnpm** (v11.4.0)                               |
-| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                 |
-| UI library      | Varlet UI (`<var-input>`, `<var-card>`, etc.)    |
-| Animation       | GSAP                                             |
+| Layer           | Choice                                              |
+| --------------- | --------------------------------------------------- |
+| Runtime         | **Bun** (not Node)                                  |
+| Package manager | **pnpm** (v11.4.0)                                  |
+| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                    |
+| UI library      | Varlet UI (`<var-input>`, `<var-card>`, etc.)       |
+| Animation       | GSAP                                                |
 | I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales) |
-| Formatter       | `oxfmt` (not Prettier)                           |
+| Formatter       | `oxfmt` (not Prettier)                              |
 
 **Backend is NOT in this repo.** See [Kuriyona/api.kuriyona.com](https://github.com/Kuriyona/api.kuriyona.com) (Elysia on Bun).
 
@@ -55,19 +55,20 @@ Full-text search powered by [PageFind](https://pagefind.app/) (custom Vue compon
 
 Edit `app/components/SearchModal.vue`. The component has minimal built-in styles — add Tailwind classes or scoped CSS as needed. Key states:
 
-| State | Template condition | Description |
-|-------|--------------------|-------------|
-| Hidden | `v-if="s.visible"` | Modal teleported to body |
-| Loading | `v-if="s.loading"` | Searching... |
-| Error | `v-else-if="s.error"` | Error message |
-| Empty | `v-else-if="s.query.length >= 2 && s.results.length === 0"` | No results |
-| Results | `v-else-if="s.results.length"` | Result list with keyboard nav |
+| State   | Template condition                                          | Description                   |
+| ------- | ----------------------------------------------------------- | ----------------------------- |
+| Hidden  | `v-if="s.visible"`                                          | Modal teleported to body      |
+| Loading | `v-if="s.loading"`                                          | Searching...                  |
+| Error   | `v-else-if="s.error"`                                       | Error message                 |
+| Empty   | `v-else-if="s.query.length >= 2 && s.results.length === 0"` | No results                    |
+| Results | `v-else-if="s.results.length"`                              | Result list with keyboard nav |
 
 Available via the composable: `s.query`, `s.results`, `s.loading`, `s.error`, `s.activeIndex`, `s.open()`, `s.close()`, `s.toggle()`, `s.clear()`.
 
 ### Index scope
 
 Only pages with `data-pagefind-body` are indexed. Currently applied to:
+
 - Blog article content (`app/pages/blog/[slug].vue`)
 
 Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in search results.

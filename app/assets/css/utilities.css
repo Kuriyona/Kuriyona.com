@@ -23,20 +23,25 @@
   display: inline-block;
 }
 
+.trans-bg {
+  background-image: linear-gradient(
+    to bottom,
+    #5bcffa 0% 20%,
+    #f5abb9 20% 40%,
+    #ffffff 40% 60%,
+    #f5abb9 60% 80%,
+    #5bcffa 80% 100%
+  );
+}
+
 .pride-bg {
   background-image: linear-gradient(
     to bottom,
-    #e50000 0%,
-    #e50000 16.6%,
-    #ff8d00 16.6%,
-    #ff8d00 33.2%,
-    #ffee00 33.2%,
-    #ffee00 49.8%,
-    #028121 49.8%,
-    #028121 66.4%,
-    #004cff 66.4%,
-    #004cff 83%,
-    #770088 83%,
-    #770088 100%
+    #e50000 0% 16.6%,
+    #ff8d00 16.6% 33.2%,
+    #ffee00 33.2% 49.8%,
+    #028121 49.8% 66.4%,
+    #004cff 66.4% 83%,
+    #770088 83% 100%
   );
 }
