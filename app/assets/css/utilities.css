@@ -2,7 +2,7 @@
 
 .link,
 .markdown-body a {
-  color: #cbc3e3 !important;
+  color: var(--color-theme) !important;
   text-decoration: underline !important;
   transition: all 0.3s ease-in-out !important;
   padding: 0 2px !important;
@@ -13,7 +13,7 @@
 .markdown-body a:hover {
   color: #000 !important;
   text-decoration: none !important;
-  background-color: #cbc3e3 !important;
+  background-color: var(--color-theme) !important;
 }
 
 .trans-text {

@@ -92,6 +92,6 @@ function onKeydown(e: KeyboardEvent) {
 
 <style lang="css" scoped>
 .is-active {
-  outline: 2px solid #cbc3e3;
+  outline: 2px solid var(--color-theme);
 }
 </style>

@@ -10,6 +10,7 @@ body {
     color 0.25s,
     background-color 0.25s;
   --app-bar-height: 90px;
+  --color-theme: #e6ccff;
 }
 
 * {
@@ -24,12 +25,12 @@ button * {
 }
 
 mark {
-  background-color: #cbc3e3;
+  background-color: var(--color-theme);
   color: #000;
 }
 
 ::selection {
-  background-color: #cbc3e3;
+  background-color: var(--color-theme);
   color: #000;
 }
 
@@ -43,6 +44,6 @@ mark {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbc3e3 !important;
+  background: var(--color-theme) !important;
   border-radius: 2.5px;
 }
