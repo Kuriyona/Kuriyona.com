@@ -8,14 +8,6 @@ const isJune = computed(() => dayjs().month() == 5);
 
 const data = computed(() => [
   {
-    title: 'MtF.Wiki',
-    href: t('urls.mtf_wiki'),
-  },
-  {
-    title: '2345.lgbt',
-    href: t('urls.2345-lgbt'),
-  },
-  {
     title: '跨性别 - 百度百科',
     href: 'https://baike.baidu.com/item/%E8%B7%A8%E6%80%A7%E5%88%AB',
   },
@@ -34,6 +26,14 @@ const data = computed(() => [
   {
     title: t('about.mtf.sites.title.gd-fyi'),
     href: t('urls.gd_fyi'),
+  },
+  {
+    title: 'MtF.Wiki',
+    href: t('urls.mtf_wiki'),
+  },
+  {
+    title: '2345.lgbt',
+    href: t('urls.2345-lgbt'),
   },
 ]);
 useSeoMeta({ title: $t('about.mtf.as-mtf') });
