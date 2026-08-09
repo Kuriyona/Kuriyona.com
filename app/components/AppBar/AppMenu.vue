@@ -4,6 +4,7 @@ import BackgroundSelector from '../AppBar/BackgroundSelector.vue';
 const { setLocale, locales } = useI18n();
 const show = defineModel<boolean>();
 const emit = defineEmits(['open-neko']);
+const nav = useNav();
 const handleProgressClick = (event: MouseEvent) => {
   if (!store.currentSong) return;
   const target = event.currentTarget as HTMLElement;
@@ -65,10 +66,12 @@ const handleProgressClick = (event: MouseEvent) => {
               }"></div>
           </div>
         </KCard>
-        <KCardLink to="/blog" @click="show = false" text="Blog" />
-        <KCardLink to="/blog" @click="show = false" text="Neko" />
-        <KCardLink to="/blog" @click="show = false" :text="$t('status.title')" />
-        <KCardLink to="/ask-box" @click="show = false" :text="$t('ask-box.title')" />
+        <KCardLink
+          v-for="item in nav"
+          :key="item.to"
+          :to="item.to"
+          @click="show = false"
+          :text="item.title" />
         <KCard :title="$t('global.language')">
           <div class="flex flex-col gap-2">
             <KButton

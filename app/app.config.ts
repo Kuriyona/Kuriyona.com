@@ -2,6 +2,12 @@ import Config from '../Kuriyona/config.json';
 
 export default defineAppConfig({
   ...Config,
+  nav: [
+    { to: '/blog', title: 'Blog' },
+    { to: '/neko', title: 'Neko' },
+    { to: '/status', titleKey: 'status.title' },
+    { to: '/ask-box', titleKey: 'ask-box.title' },
+  ],
   links: {
     main: [
       {

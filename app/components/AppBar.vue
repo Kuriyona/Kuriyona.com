@@ -6,6 +6,7 @@ const popup = ref(false);
 const mobileMenu = ref(false);
 
 const search = useSearch();
+const nav = useNav();
 
 onMounted(() => {
   function globalKeydown(e: KeyboardEvent) {
@@ -31,24 +32,9 @@ onMounted(() => {
           </NuxtLinkLocale>
         </div>
         <div id="actions" class="flex items-center gap-2">
-          <NuxtLinkLocale to="/blog" class="hidden sm:inline-block">
+          <NuxtLinkLocale v-for="item in nav" :key="item.to" :to="item.to" class="hidden sm:inline-block">
             <VarButton text size="small">
-              <span class="text-sm!"> Blog </span>
-            </VarButton>
-          </NuxtLinkLocale>
-          <NuxtLinkLocale to="/neko" class="hidden sm:inline-block">
-            <VarButton text size="small">
-              <span class="text-sm!"> Neko </span>
-            </VarButton>
-          </NuxtLinkLocale>
-          <NuxtLinkLocale to="/status" class="hidden sm:inline-block">
-            <VarButton text size="small">
-              <span class="text-sm!"> {{ $t('status.title') }} </span>
-            </VarButton>
-          </NuxtLinkLocale>
-          <NuxtLinkLocale to="/ask-box" class="hidden sm:inline-block">
-            <VarButton text size="small">
-              <span class="text-sm!"> {{ $t('ask-box.title') }} </span>
+              <span class="text-sm!"> {{ item.title }} </span>
             </VarButton>
           </NuxtLinkLocale>
           <KButton round @click="search.toggle()">
