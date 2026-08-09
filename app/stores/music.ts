@@ -39,7 +39,7 @@ export const useMusicStore = defineStore('music', () => {
     const songEntries = await Promise.all(
       playlist.value.songs.map(async (song) => {
         const url = await getSongUrl(song.id);
-        return [song.id, new Howl({ src: [url] })] as const;
+        return [song.id, new Howl({ src: [url], preload: 'metadata' })] as const;
       }),
     );
     audioMap.value = new Map(songEntries);
