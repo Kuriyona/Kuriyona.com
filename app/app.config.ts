@@ -15,13 +15,18 @@ export default defineAppConfig({
         title: '鱼块糯 - 哔哩哔哩',
         avatar: 'https://r2.kuriyona.com/img/xFurina/xFurina.jpg',
       },
+    ],
+    others: [
       {
         url: 'https://github.com/lfcypo',
         title: 'lfcypo - GitHub',
         avatar: 'https://avatars.githubusercontent.com/u/110813385',
       },
-    ],
-    others: [
+      {
+        url: 'https://maao.cc/',
+        title: "Here's Mars",
+        avatar: 'https://maao.cc/favicon.ico',
+      },
       {
         url: 'https://launchpadx.top',
         title: '启动台の小窝',
