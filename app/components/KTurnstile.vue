@@ -20,7 +20,7 @@ const verify = async (token: string) => {
     mainStore.jwt = res;
     show.value = false;
   } else {
-    Snackbar.error($t('global.verifyFail'));
+    toast.error($t('global.verifyFail'));
     Turnstile.value?.reset();
   }
   loading.value = false;

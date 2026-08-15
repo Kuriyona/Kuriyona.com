@@ -113,7 +113,7 @@ watch(
       </div>
       <KTurnstile v-model:show="showTurnstile" />
       <div v-if="mainStore.jwt" class="flex flex-col gap-2">
-        <VarInput
+        <KInput
           v-model="input"
           maxlength="50"
           :placeholder="$t('neko.placeholder')"

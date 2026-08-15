@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import type { VarFile } from '@varlet/ui';
 import dayjs from 'dayjs';
 import ky from 'ky';
 
-const fileList = ref<VarFile[]>([]);
+interface UploadFile {
+  file: File;
+  name: string;
+}
+
+const fileList = ref<UploadFile[]>([]);
 const lastFileURL = ref('');
 const key = ref('');
 
@@ -22,12 +26,21 @@ const handleRead = () => {
   key.value = `${dayjs().format('YYYY/MM/DD/')}${name}`;
 };
 
+const handleSelect = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  fileList.value = [{ file, name: file.name }];
+  handleRead();
+  input.value = '';
+};
+
 const handleUpload = async () => {
   if (fileList.value.length == 0) return;
   const file = fileList.value[0]!;
-  const signedUrl = await getSignedUrl(key.value, file.file!.type);
+  const signedUrl = await getSignedUrl(key.value, file.file.type);
   if (!signedUrl) return;
-  const res = await ky.put(signedUrl, { body: file.file! });
+  const res = await ky.put(signedUrl, { body: file.file });
   lastFileURL.value = `https://r2.kuriyona.com/static/${key.value}`;
   if (res.status != 200) return;
 };
@@ -39,12 +52,12 @@ const handlePasteFile = async (event: ClipboardEvent) => {
     if (item.type.indexOf('image') !== -1 || item.type.indexOf('file') !== -1) {
       const file = item.getAsFile();
       if (!file) continue;
-      const varFile: VarFile = {
+      const uploadFile: UploadFile = {
         file: file,
         name: file.name || `paste-${Date.now()}.${file.type.split('/')[1] || 'png'}`,
       };
-      fileList.value = [varFile];
-      const name = varFile.name;
+      fileList.value = [uploadFile];
+      const name = uploadFile.name;
       key.value = `${dayjs().format('YYYY/MM/DD/')}${name}`;
     }
   }
@@ -61,12 +74,16 @@ onUnmounted(() => {
 
 <template>
   <AppPage>
-    <VarUploader v-model="fileList" accept="*" maxlength="1" @after-read="handleRead" />
-    <VarInput v-model="key" />
-    <VarButton type="primary" @click="handleUpload" :disabled="fileList.length == 0">
+    <input type="file" accept="*" @change="handleSelect" />
+    <KInput v-model="key" />
+    <button
+      type="button"
+      class="px-3 py-1 rounded-md bg-(--color-theme) text-black font-medium hover:opacity-80 transition-opacity duration-300 text-sm disabled:opacity-50"
+      @click="handleUpload"
+      :disabled="fileList.length == 0">
       上传
-    </VarButton>
-    <var-divider />
+    </button>
+    <KDivider />
     <p>文件URL为：{{ lastFileURL }}</p>
   </AppPage>
 </template>

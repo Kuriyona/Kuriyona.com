@@ -20,7 +20,7 @@ export const useCodeCopy = () => {
         if (!code) return;
         try {
           await navigator.clipboard.writeText(code.textContent || '');
-          Snackbar.success(t('global.copy-success'));
+          toast.success(t('global.copy-success'));
           btn.innerHTML =
             '<span class="material-symbols-outlined" style="font-size:18px">check</span>';
           setTimeout(() => {

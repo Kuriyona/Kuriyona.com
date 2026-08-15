@@ -33,9 +33,9 @@ onMounted(() => {
         </div>
         <div id="actions" class="flex items-center gap-2">
           <NuxtLinkLocale v-for="item in nav" :key="item.to" :to="item.to" class="hidden sm:inline-block">
-            <VarButton text size="small">
-              <span class="text-sm!"> {{ item.title }} </span>
-            </VarButton>
+            <button type="button" class="text-sm! py-1 hover:underline">
+              {{ item.title }}
+            </button>
           </NuxtLinkLocale>
           <KButton round @click="search.toggle()">
             <span class="material-symbols-outlined text-lg! leading-none"> search </span>

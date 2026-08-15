@@ -3,7 +3,6 @@ const mainStore = useMainStore();
 
 const { t } = useI18n();
 
-const formRef = useTemplateRef('form');
 const form = ref({
   name: '',
   showName: true,
@@ -13,8 +12,7 @@ const form = ref({
 });
 
 const submit = async () => {
-  const valid = await formRef.value?.validate();
-  if (!valid) {
+  if (!form.value.question.trim()) {
     return;
   }
   const res = await fetchApi.post('/ask-box', {
@@ -22,9 +20,9 @@ const submit = async () => {
     body: JSON.stringify(form.value),
   });
   if (res.status === 200) {
-    Snackbar.success(t('global.submit-success'));
+    toast.success(t('global.submit-success'));
   } else {
-    Snackbar.error(t('global.submit-fail'));
+    toast.error(t('global.submit-fail'));
   }
 };
 
@@ -41,29 +39,25 @@ useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
     <h2 class="text-xl font-bold">{{ $t('ask-box.ask-me') }}</h2>
     <p>{{ $t('ask-box.ask-tip') }}</p>
     <KCard class="my-4">
-      <var-form ref="form" class="flex flex-col gap-4">
-        <var-input
+      <div class="flex flex-col gap-4">
+        <KInput
           :placeholder="$t('ask-box.placeholder.nickname')"
-          v-model="form.name"
-          variant="outlined" />
-        <var-input
+          v-model="form.name" />
+        <KInput
           :placeholder="$t('ask-box.placeholder.question')"
-          :rules="(e) => e.trim().length > 0 || '请输入文本（'"
           textarea
-          v-model="form.question"
-          variant="outlined" />
-        <var-input
+          v-model="form.question" />
+        <KInput
           :placeholder="$t('ask-box.placeholder.note')"
-          v-model="form.note"
-          variant="outlined" />
+          v-model="form.note" />
         <p class="mt-2 flex items-center justify-between">
-          <span>{{ $t('ask-box.publish-nickname') }}</span> <var-switch v-model="form.showName" />
+          <span>{{ $t('ask-box.publish-nickname') }}</span> <KSwitch v-model="form.showName" />
         </p>
         <KTurnstile />
         <KButton v-if="mainStore.jwt" type="primary" block @click="submit">
           {{ $t('global.submit') }}
         </KButton>
-      </var-form>
+      </div>
     </KCard>
   </AppPage>
 </template>

@@ -43,7 +43,7 @@ useSeoMeta({
     <h1 class="text-2xl">{{ article?.title || $t('global.notFound') }}</h1>
     <p class="text-sm">{{ article?.desc || $t('blog.notFound') }}</p>
     <template v-if="!article">
-      <var-divider />
+      <KDivider />
       <KCardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />
     </template>
     <template v-else>
@@ -68,7 +68,7 @@ useSeoMeta({
           </span>
         </div>
       </div>
-      <var-divider />
+      <KDivider />
       <template v-if="article.toc?.length">
         <ul class="toc">
           <li
@@ -78,14 +78,14 @@ useSeoMeta({
             <a :href="`#${item.slug}`">· {{ item.text }}</a>
           </li>
         </ul>
-        <var-divider />
+        <KDivider />
       </template>
       <div class="markdown-body bg-transparent!" data-pagefind-body>
         <div v-html="article.content"></div>
       </div>
     </template>
     <template v-if="otherLangs?.length">
-      <var-divider />
+      <KDivider />
       <KCard :title="$t('blog.other-lang')">
         <div class="flex flex-col gap-2">
           <KCardLink

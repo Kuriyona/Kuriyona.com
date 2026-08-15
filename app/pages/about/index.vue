@@ -52,8 +52,8 @@ const config = useAppConfig();
             :alt="item.name"
             :src="`https://img.shields.io/badge/${encodeURIComponent(item.name)}-black?style=for-the-badge&logo=${item.icon}`" />
         </div>
-        <var-divider vertical class="max-[600px]:hidden" />
-        <var-divider class="min-[600px]:hidden" />
+        <KDivider vertical class="max-[600px]:hidden" />
+        <KDivider class="min-[600px]:hidden" />
         <div class="flex gap-2 flex-wrap justify-center">
           <img
             v-for="item in config.languages"

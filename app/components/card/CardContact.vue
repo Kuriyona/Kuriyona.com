@@ -6,10 +6,9 @@ const config = useAppConfig();
 <template>
   <KCard :title="$t('about.find-me')">
     <div class="hidden sm:flex flex-wrap gap-2 justify-center">
-      <var-tooltip v-for="link in config.contact">
+      <div v-for="link in config.contact" :key="link.name" class="relative group">
         <KCardLink
           level
-          :key="link.name"
           :to="!link.qrOnly ? link.link : undefined"
           :text="link.value"
           :new="true">
@@ -25,13 +24,14 @@ const config = useAppConfig();
             </div>
           </div>
         </KCardLink>
-        <template #content>
+        <div
+          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 rounded-xl bg-black/80 backdrop-blur-md shadow-lg shadow-black/40 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100">
           <div class="flex flex-col items-center gap-1">
             <QRCode :value="link.link" class="w-16 h-16" />
             <p>{{ link.value }}</p>
           </div>
-        </template>
-      </var-tooltip>
+        </div>
+      </div>
     </div>
     <div class="flex sm:hidden flex-wrap gap-2 justify-center">
       <KCardLink

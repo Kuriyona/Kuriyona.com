@@ -21,8 +21,13 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col gap-2 m-4">
-    <VarInput textarea v-model="promptRaw" />
-    <VarButton @click="updatePrompt">Update</VarButton>
-    <VarInput textarea v-model="prompt" disabled />
+    <KInput textarea v-model="promptRaw" />
+    <button
+      type="button"
+      class="px-3 py-1 rounded-md bg-(--color-theme) text-black font-medium hover:opacity-80 transition-opacity duration-300 text-sm"
+      @click="updatePrompt">
+      Update
+    </button>
+    <KInput textarea v-model="prompt" disabled />
   </div>
 </template>

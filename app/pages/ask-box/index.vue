@@ -39,7 +39,7 @@ useSeoMeta({ title: t('ask-box.title') });
         <span class="material-symbols-outlined"> refresh </span>
       </KButton>
     </h3>
-    <var-input :placeholder="$t('global.search')" v-model="search.text" variant="outlined" />
+    <KInput :placeholder="$t('global.search')" v-model="search.text" />
     <KCard
       v-if="questions && questions.length > 0"
       v-for="(question, index) in questions"

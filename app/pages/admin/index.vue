@@ -15,6 +15,6 @@ const updateStatus = (awake: boolean) => {
 
 <template>
   <div class="flex flex-col gap-2 m-4">
-    <var-input v-model="key" />
+    <KInput v-model="key" />
   </div>
 </template>

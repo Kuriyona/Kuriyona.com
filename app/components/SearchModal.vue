@@ -42,7 +42,7 @@ function onKeydown(e: KeyboardEvent) {
       <KCard
         class="search-modal-container relative mt-[10vh] h-fit max-h-[85vh] w-full max-w-150 mx-4 flex flex-col gap-2">
         <div class="search-modal-input-wrap flex items-center gap-2">
-          <var-input
+          <KInput
             ref="inputRef"
             v-model="s.query"
             class="search-modal-input flex-1 min-w-0 outline-none"
