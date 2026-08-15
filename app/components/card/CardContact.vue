@@ -7,11 +7,7 @@ const config = useAppConfig();
   <KCard :title="$t('about.find-me')">
     <div class="hidden sm:flex flex-wrap gap-2 justify-center">
       <div v-for="link in config.contact" :key="link.name" class="relative group">
-        <KCardLink
-          level
-          :to="!link.qrOnly ? link.link : undefined"
-          :text="link.value"
-          :new="true">
+        <KCardLink level :to="!link.qrOnly ? link.link : undefined" :text="link.value" :new="true">
           <div class="flex items-center gap-2">
             <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
             <img

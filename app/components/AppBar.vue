@@ -32,7 +32,11 @@ onMounted(() => {
           </NuxtLinkLocale>
         </div>
         <div id="actions" class="flex items-center gap-2">
-          <NuxtLinkLocale v-for="item in nav" :key="item.to" :to="item.to" class="hidden sm:inline-block">
+          <NuxtLinkLocale
+            v-for="item in nav"
+            :key="item.to"
+            :to="item.to"
+            class="hidden sm:inline-block">
             <button type="button" class="text-sm! py-1 hover:underline">
               {{ item.title }}
             </button>

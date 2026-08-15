@@ -41,15 +41,15 @@ Conventional Commits (CC 规范)，描述使用中文。
 
 常用 type：
 
-| Type       | 用途                                        |
-| ---------- | ------------------------------------------- |
-| `feat`     | 新功能 / 新组件                             |
-| `fix`      | 修复 bug                                    |
-| `refactor` | 重构（不改行为）                            |
-| `style`    | 样式 / 格式调整（不改逻辑）                 |
-| `chore`    | 构建、依赖、配置等杂项                      |
-| `docs`     | 文档（含 AGENTS.md）                        |
-| `perf`     | 性能优化                                    |
+| Type       | 用途                        |
+| ---------- | --------------------------- |
+| `feat`     | 新功能 / 新组件             |
+| `fix`      | 修复 bug                    |
+| `refactor` | 重构（不改行为）            |
+| `style`    | 样式 / 格式调整（不改逻辑） |
+| `chore`    | 构建、依赖、配置等杂项      |
+| `docs`     | 文档（含 AGENTS.md）        |
+| `perf`     | 性能优化                    |
 
 示例：`refactor: 移除 Varlet 组件替换为原生实现`、`feat: 新增 KInput 组件替换 var-input`。
 
@@ -142,6 +142,7 @@ Kuriyona.com/
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
 │   │   ├── links/index.vue      友链页（申请友链链接到 GitHub Issue 模板）
+│   │   ├── timeline/index.vue   时间线页（个人重要时刻，条目描述保持中文）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
 │   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动）
 │   │   ├── neko/index.vue       Neko AI 聊天（SSE 流式，KMarkdown 渲染）
@@ -186,44 +187,45 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件            | 用途                                             |
-| --------------- | ------------------------------------------------ |
-| `KCard`         | 毛玻璃卡片容器（可选 title）                     |
-| `KButton`       | 毛玻璃按钮（支持 round/text/block）              |
-| `KCardLink`     | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标） |
-| `KInput`        | 输入框/textarea（支持 clearable/disabled/maxlength） |
-| `KSwitch`       | 开关                                          |
-| `KDivider`      | 分隔线（horizontal/vertical）                    |
-| `KMarkdown`     | Markdown 渲染（markdown-exit + github-markdown-css） |
-| `KTable`        | 表格布局（th 左对齐/td 右对齐）                  |
-| `KMenu`         | 下拉菜单（direction/align，点击外部关闭）        |
+| 组件        | 用途                                                    |
+| ----------- | ------------------------------------------------------- |
+| `KCard`     | 毛玻璃卡片容器（可选 title）                            |
+| `KButton`   | 毛玻璃按钮（支持 round/text/block）                     |
+| `KCardLink` | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标） |
+| `KInput`    | 输入框/textarea（支持 clearable/disabled/maxlength）    |
+| `KSwitch`   | 开关                                                    |
+| `KDivider`  | 分隔线（horizontal/vertical）                           |
+| `KMarkdown` | Markdown 渲染（markdown-exit + github-markdown-css）    |
+| `KTable`    | 表格布局（th 左对齐/td 右对齐）                         |
+| `KMenu`     | 下拉菜单（direction/align，点击外部关闭）               |
 
 ### 页面路由总览
 
-| 路由            | 文件                          | 说明                    |
-| --------------- | ----------------------------- | ----------------------- |
-| `/`             | `pages/index.vue`             | 欢迎页                  |
-| `/about`        | `pages/about/index.vue`       | 关于（含 data-pagefind-body）|
-| `/about/as-mtf` | `pages/about/as-mtf/index.vue`| MtF 页面                |
-| `/blog`         | `pages/blog/index.vue`        | 文章列表                |
-| `/blog/:slug`   | `pages/blog/[slug].vue`       | 文章详情（多语言）      |
-| `/links`        | `pages/links/index.vue`       | 友链页                  |
-| `/ask-box`      | `pages/ask-box/index.vue`     | 提问箱列表              |
-| `/ask-box/ask`  | `pages/ask-box/ask.vue`       | 提交提问                |
-| `/status`       | `pages/status/index.vue`      | 状态页（Steam/天气/GitHub）|
-| `/neko`         | `pages/neko/index.vue`        | Neko AI 聊天            |
-| `/admin`        | `pages/admin/index.vue`       | API key 管理            |
-| `/admin/r2`     | `pages/admin/r2.vue`          | R2 文件上传             |
-| `/admin/neko`   | `pages/admin/neko.vue`        | Neko 提示词管理         |
-| `/admin/ask-box`| `pages/admin/ask-box.vue`     | 提问审核                |
+| 路由             | 文件                           | 说明                          |
+| ---------------- | ------------------------------ | ----------------------------- |
+| `/`              | `pages/index.vue`              | 欢迎页                        |
+| `/about`         | `pages/about/index.vue`        | 关于（含 data-pagefind-body） |
+| `/about/as-mtf`  | `pages/about/as-mtf/index.vue` | MtF 页面                      |
+| `/blog`          | `pages/blog/index.vue`         | 文章列表                      |
+| `/blog/:slug`    | `pages/blog/[slug].vue`        | 文章详情（多语言）            |
+| `/timeline`      | `pages/timeline/index.vue`     | 时间线（条目描述保持中文）    |
+| `/links`         | `pages/links/index.vue`        | 友链页                        |
+| `/ask-box`       | `pages/ask-box/index.vue`      | 提问箱列表                    |
+| `/ask-box/ask`   | `pages/ask-box/ask.vue`        | 提交提问                      |
+| `/status`        | `pages/status/index.vue`       | 状态页（Steam/天气/GitHub）   |
+| `/neko`          | `pages/neko/index.vue`         | Neko AI 聊天                  |
+| `/admin`         | `pages/admin/index.vue`        | API key 管理                  |
+| `/admin/r2`      | `pages/admin/r2.vue`           | R2 文件上传                   |
+| `/admin/neko`    | `pages/admin/neko.vue`         | Neko 提示词管理               |
+| `/admin/ask-box` | `pages/admin/ask-box.vue`      | 提问审核                      |
 
 ### API 概览
 
-| 端点                         | 来源         | 说明                     |
-| ---------------------------- | ------------ | ------------------------ |
-| `GET /api/articles`          | server/      | 文章元信息列表（无 content）|
-| `GET /api/articles/:slug`    | server/      | 指定文章（所有语言版本） |
-| 其余 `/status`、`/ask-box`、`/r2`、`/neko`、`/turnstile` | 后端 api.kuriyona.com | 通过 `fetchApi` 调用 |
+| 端点                                                     | 来源                  | 说明                         |
+| -------------------------------------------------------- | --------------------- | ---------------------------- |
+| `GET /api/articles`                                      | server/               | 文章元信息列表（无 content） |
+| `GET /api/articles/:slug`                                | server/               | 指定文章（所有语言版本）     |
+| 其余 `/status`、`/ask-box`、`/r2`、`/neko`、`/turnstile` | 后端 api.kuriyona.com | 通过 `fetchApi` 调用         |
 
 ## Architecture
 

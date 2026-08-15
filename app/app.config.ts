@@ -2,6 +2,7 @@ import Config from '../Kuriyona/config.json';
 
 const nav = [
   { to: '/blog', title: 'Blog' },
+  { to: '/timeline', titleKey: 'timeline.title' },
   { to: '/neko', title: 'Neko', enabled: false },
   { to: '/status', titleKey: 'status.title', enabled: false },
   { to: '/ask-box', titleKey: 'ask-box.title' },

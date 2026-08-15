@@ -41,7 +41,11 @@ const answerQuestion = async (id: number) => {
       <span>只显示未回答问题</span>
       <KSwitch v-model="onlyUnanswered" />
     </p>
-    <button class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm" @click="refresh()">刷新</button>
+    <button
+      class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm"
+      @click="refresh()">
+      刷新
+    </button>
     <KInput textarea v-model="answer" />
     <div
       v-for="question in questions?.filter((q) => (onlyUnanswered ? !q.answer : true))"
@@ -58,10 +62,26 @@ const answerQuestion = async (id: number) => {
         <pre class="whitespace-pre-wrap">{{ question.note || '无备注' }}</pre>
         <pre class="whitespace-pre-wrap">{{ question.answer || '无回答' }}</pre>
       </div>
-      <button class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm" @click="setPublic(question.id, 1)">公开</button>
-      <button class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm" @click="setPublic(question.id, 0)">不公开</button>
-      <button class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm" @click="deleteQuestion(question.id)">删除</button>
-      <button class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm" @click="answerQuestion(question.id)">回答</button>
+      <button
+        class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm"
+        @click="setPublic(question.id, 1)">
+        公开
+      </button>
+      <button
+        class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm"
+        @click="setPublic(question.id, 0)">
+        不公开
+      </button>
+      <button
+        class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm"
+        @click="deleteQuestion(question.id)">
+        删除
+      </button>
+      <button
+        class="px-3 py-1 rounded-md bg-black/10 backdrop-blur-xs hover:bg-white/5 transition-bg duration-300 text-sm"
+        @click="answerQuestion(question.id)">
+        回答
+      </button>
     </div>
   </AppPage>
 </template>

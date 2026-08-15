@@ -63,14 +63,7 @@ export default defineNuxtConfig({
       BUILD_TIME: JSON.stringify(new Date().toISOString()),
     },
     optimizeDeps: {
-      include: [
-        'dayjs',
-        'ky',
-        'dayjs/plugin/duration',
-        'vue-turnstile',
-        'qrcode.vue',
-        'gsap',
-      ],
+      include: ['dayjs', 'ky', 'dayjs/plugin/duration', 'vue-turnstile', 'qrcode.vue', 'gsap'],
     },
   },
   css: ['./app/assets/css/main.css'],

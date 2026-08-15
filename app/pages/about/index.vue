@@ -34,6 +34,15 @@ const config = useAppConfig();
         </p>
       </template>
     </KCardLink>
+    <KCardLink to="/timeline">
+      <template #content>
+        <p>
+          <span>{{ $t('global.read-more') }}</span>
+          <span>&nbsp;·&nbsp;</span>
+          <span>「{{ $t('timeline.title') }}」</span>
+        </p>
+      </template>
+    </KCardLink>
     <KCardLink to="/about/as-mtf">
       <template #content>
         <p class="trans-text">

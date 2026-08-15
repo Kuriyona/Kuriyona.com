@@ -10,7 +10,7 @@ export const useNav = () => {
   return computed(() =>
     (config.nav as NavItem[]).map((item) => ({
       to: item.to,
-      title: item.titleKey ? t(item.titleKey) : item.title ?? '',
+      title: item.titleKey ? t(item.titleKey) : (item.title ?? ''),
     })),
   );
 };

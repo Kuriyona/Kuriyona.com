@@ -40,16 +40,12 @@ useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
     <p>{{ $t('ask-box.ask-tip') }}</p>
     <KCard class="my-4">
       <div class="flex flex-col gap-4">
-        <KInput
-          :placeholder="$t('ask-box.placeholder.nickname')"
-          v-model="form.name" />
+        <KInput :placeholder="$t('ask-box.placeholder.nickname')" v-model="form.name" />
         <KInput
           :placeholder="$t('ask-box.placeholder.question')"
           textarea
           v-model="form.question" />
-        <KInput
-          :placeholder="$t('ask-box.placeholder.note')"
-          v-model="form.note" />
+        <KInput :placeholder="$t('ask-box.placeholder.note')" v-model="form.note" />
         <p class="mt-2 flex items-center justify-between">
           <span>{{ $t('ask-box.publish-nickname') }}</span> <KSwitch v-model="form.showName" />
         </p>
