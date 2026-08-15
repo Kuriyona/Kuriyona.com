@@ -20,6 +20,7 @@ useSeoMeta({ title: $t('blog.title') });
       </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
+    <p v-if="$t('blog.desc')" class="text-white/60">{{ $t('blog.desc') }}</p>
     <KCardLink v-for="post in articles" :key="post.slug" :href="`/blog/${post.slug}`">
       <h2 class="text-lg">{{ post.title }}</h2>
       <p class="text-sm">{{ post.desc }}</p>

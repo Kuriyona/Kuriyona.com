@@ -1,11 +1,22 @@
 import Config from '../Kuriyona/config.json';
 
 const nav = [
-  { to: '/blog', title: 'Blog' },
-  { to: '/timeline', titleKey: 'timeline.title' },
-  { to: '/neko', title: 'Neko', enabled: false },
-  { to: '/status', titleKey: 'status.title', enabled: false },
-  { to: '/ask-box', titleKey: 'ask-box.title' },
+  {
+    to: '/blog',
+    shortTitleKey: 'blog.short-title',
+    titleKey: 'blog.title',
+    descKey: 'blog.desc',
+  },
+  { to: '/timeline', titleKey: 'timeline.title', descKey: 'timeline.desc' },
+  {
+    to: '/neko',
+    shortTitleKey: 'neko.short-title',
+    titleKey: 'neko.title',
+    descKey: 'neko.desc',
+    enabled: false,
+  },
+  { to: '/status', titleKey: 'status.title', descKey: 'status.desc', enabled: false },
+  { to: '/ask-box', titleKey: 'ask-box.title', descKey: 'ask-box.desc' },
 ];
 
 const timeline = [

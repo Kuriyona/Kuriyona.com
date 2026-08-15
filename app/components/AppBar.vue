@@ -38,7 +38,7 @@ onMounted(() => {
             :to="item.to"
             class="hidden sm:inline-block">
             <KButton round>
-              {{ item.title }}
+              {{ item.shortTitle || item.title }}
             </KButton>
           </NuxtLinkLocale>
           <KButton round @click="search.toggle()">

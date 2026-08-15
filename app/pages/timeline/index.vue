@@ -36,7 +36,7 @@ useSeoMeta({ title: $t('timeline.title') });
       </KButton>
     </NuxtLinkLocale>
     <h1 class="text-2xl font-bold">{{ $t('timeline.title') }}</h1>
-    <p class="text-white/60">{{ $t('timeline.description') }}</p>
+    <p class="text-white/60">{{ $t('timeline.desc') }}</p>
     <div class="relative flex flex-col gap-8 py-6">
       <div class="absolute inset-y-0 left-4 w-px -translate-x-1/2 bg-white/15"></div>
       <template v-for="node in nodes" :key="node.type === 'year' ? node.year : node.item?.date">

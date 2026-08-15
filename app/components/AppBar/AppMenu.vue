@@ -71,7 +71,8 @@ const handleProgressClick = (event: MouseEvent) => {
           :key="item.to"
           :to="item.to"
           @click="show = false"
-          :text="item.title" />
+          :text="item.shortTitle || item.title"
+          :desc="item.desc || undefined" />
         <KCard :title="$t('global.language')">
           <div class="flex flex-col gap-2">
             <KButton
