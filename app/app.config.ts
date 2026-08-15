@@ -1,13 +1,15 @@
 import Config from '../Kuriyona/config.json';
 
+const nav = [
+  { to: '/blog', title: 'Blog' },
+  { to: '/neko', title: 'Neko', enabled: false },
+  { to: '/status', titleKey: 'status.title', enabled: false },
+  { to: '/ask-box', titleKey: 'ask-box.title' },
+];
+
 export default defineAppConfig({
   ...Config,
-  nav: [
-    { to: '/blog', title: 'Blog' },
-    { to: '/neko', title: 'Neko' },
-    { to: '/status', titleKey: 'status.title' },
-    { to: '/ask-box', titleKey: 'ask-box.title' },
-  ],
+  nav: nav.filter((item) => item.enabled !== false),
   links: {
     main: [
       {
