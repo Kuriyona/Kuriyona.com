@@ -37,9 +37,9 @@ onMounted(() => {
             :key="item.to"
             :to="item.to"
             class="hidden sm:inline-block">
-            <button type="button" class="text-sm! py-1 hover:underline">
+            <KButton round>
               {{ item.title }}
-            </button>
+            </KButton>
           </NuxtLinkLocale>
           <KButton round @click="search.toggle()">
             <span class="material-symbols-outlined text-lg! leading-none"> search </span>
