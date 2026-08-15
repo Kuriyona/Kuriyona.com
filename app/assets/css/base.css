@@ -5,6 +5,7 @@ html {
 
 body {
   color: #fff;
+  background-color: #000; /* 作为背景未加载出来的 Fallback */
   transition:
     color 0.25s,
     background-color 0.25s;
