@@ -92,7 +92,7 @@ const timeInfo = computed(() => {
         {{ $t('about.mtf.pride-month') }}
       </p>
     </KCard>
-    <KCard class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-white">
+    <KCard v-if="false" class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-white">
       <div
         class="absolute top-0 left-0 h-full w-full trans-bg rounded-xl brightness-25 transition-[filter] duration-300"></div>
       <p class="relative text-sm text-center transition-colors duration-300">
@@ -100,28 +100,54 @@ const timeInfo = computed(() => {
       </p>
     </KCard>
     <KCard :title="$t('about.mtf.as-mtf')">
-      <div class="flex gap-2 justify-between items-center">
-        <div class="flex flex-col items-start trans-text">
-          <p>{{ $t('about.mtf.im-mtf') }}</p>
-          <p>
-            {{ $t('about.days_on_earth', [timeInfo.years, timeInfo.months, timeInfo.days]) }}
+      <p class="mb-4 trans-text">{{ $t('about.mtf.im-mtf') }}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <KCard class="flex flex-col gap-1">
+          <p class="text-2xl font-bold text-white">
+            <span>{{ timeInfo.years }}</span>
+            <span>&nbsp;</span>
+            <span class="text-sm text-white/60">{{ $t('global.unit.year') }}</span>
           </p>
-          <p>
-            {{ $t('about.mtf.be-a-girl', [timeInfo.wantYears]) }}
+          <p class="text-white/60">{{ $t('about.mtf.count.birth-for') }}</p>
+        </KCard>
+        <KCard class="flex flex-col gap-1">
+          <p class="text-2xl font-bold text-white">
+            <span>{{ timeInfo.wantYears }}</span>
+            <span>&nbsp;</span>
+            <span class="text-sm text-white/60">{{ $t('global.unit.year') }}</span>
+          </p>
+          <p class="text-white/60">
+            {{ $t('about.mtf.count.want-for') }}
+            <br />
             ({{ $t('about.mtf.percent-life', [timeInfo.percentWant]) }})
           </p>
-          <p>
-            {{ $t('about.mtf.identify_days', [timeInfo.identifyMonths]) }}
+        </KCard>
+        <KCard class="flex flex-col gap-1">
+          <p class="text-2xl font-bold text-white">
+            <span>{{ timeInfo.identifyMonths }}</span>
+            <span>&nbsp;</span>
+            <span class="text-sm text-white/60">{{ $t('global.unit.month') }}</span>
+          </p>
+          <p class="text-white/60">
+            {{ $t('about.mtf.count.identify-for') }}
+            <br />
             ({{ $t('about.mtf.percent-life', [timeInfo.percentIdentify]) }})
           </p>
+        </KCard>
+        <KCard class="flex flex-col gap-1">
           <ClientOnly>
-            <p>
-              {{ $t('about.mtf.hrt_days', [timeInfo.hrtDays]) }}
-              ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
+            <p class="text-2xl font-bold text-white">
+              <span>{{ timeInfo.hrtDays }}</span>
+              <span>&nbsp;</span>
+              <span class="text-sm text-white/60">{{ $t('global.unit.day') }}</span>
             </p>
           </ClientOnly>
-        </div>
-        <div class="text-4xl large:text-nowrap">🏳️‍⚧️<br />🍥</div>
+          <p class="text-white/60">
+            {{ $t('about.mtf.count.hrt-for') }}
+            <br />
+            ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
+          </p>
+        </KCard>
       </div>
     </KCard>
     <KCard :title="$t('about.about-me')">
