@@ -8,9 +8,28 @@ const nav = [
   { to: '/ask-box', titleKey: 'ask-box.title' },
 ];
 
+const timeline = [
+  { date: '2008/06/28', text: '出生' },
+  { date: '2024/07/04', text: '与第一任相识', tag: '情感' },
+  { date: '2025/11/22', text: '性别认同的初步确定', tag: '性别认同' },
+  { date: '2025/11/27', text: '取名「未晞」', tag: '性别认同' },
+  { date: '2025/12/17', text: '第一段感情开始', tag: '情感' },
+  { date: '2026/01/14', text: '开始 GAHT', tag: '性别认同' },
+  { date: '2026/03/22', text: '与家人出柜', tag: '性别认同' },
+  { date: '2026/03/29', text: '离死亡/自杀最近的一次？' },
+  { date: '2026/04/18', text: '第一段感情结束', tag: '情感' },
+  { date: '2026/06/10', text: '高考结束' },
+  { date: '2026/06/11', text: '与第二任相识', tag: '情感' },
+  { date: '2026/06/28', text: '成年' },
+  { date: '2026/06/30', text: '放下第一任', tag: '情感' },
+  { date: '2026/07/22', text: '开到「小证」', tag: '性别认同' },
+  { date: '2026/07/25', text: '第二段感情开始', tag: '情感' },
+];
+
 export default defineAppConfig({
   ...Config,
   nav: nav.filter((item) => item.enabled !== false),
+  timeline,
   links: {
     main: [
       {

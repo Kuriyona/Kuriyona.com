@@ -1,32 +1,15 @@
 <script setup lang="ts">
-interface TimelineItem {
-  date: string;
-  text: string;
-}
+import { useAppConfig } from '#app';
+
+const { timeline } = useAppConfig();
+
+type TimelineItem = (typeof timeline)[number];
 
 interface TimelineNode {
   type: 'year' | 'item';
   year?: string;
   item?: TimelineItem;
 }
-
-const timeline: TimelineItem[] = [
-  { date: '2008/06/28', text: '出生' },
-  { date: '2024/07/04', text: '与第一任相识' },
-  { date: '2025/11/22', text: '性别认同的初步确定' },
-  { date: '2025/11/27', text: '取名「未晞」' },
-  { date: '2025/12/17', text: '第一段感情开始' },
-  { date: '2026/01/14', text: '开始 GAHT' },
-  { date: '2026/03/22', text: '与家人出柜' },
-  { date: '2026/03/29', text: '离死亡/自杀最近的一次？' },
-  { date: '2026/04/18', text: '第一段感情结束' },
-  { date: '2026/06/10', text: '高考结束' },
-  { date: '2026/06/11', text: '与第二任相识' },
-  { date: '2026/06/28', text: '成年' },
-  { date: '2026/06/30', text: '放下第一任' },
-  { date: '2026/07/22', text: '开到「小证」' },
-  { date: '2026/07/25', text: '第二段感情开始' },
-];
 
 const nodes = computed<TimelineNode[]>(() => {
   const result: TimelineNode[] = [];
@@ -66,9 +49,16 @@ useSeoMeta({ title: $t('timeline.title') });
         <div v-else class="relative ml-8" :key="node.item!.date">
           <KCard>
             <div class="flex flex-col gap-1">
-              <p class="font-monos font-bold text-[var(--color-theme)]">
-                {{ node.item!.date }}
-              </p>
+              <div class="flex items-center gap-2">
+                <p class="font-monos font-bold text-[var(--color-theme)]">
+                  {{ node.item!.date }}
+                </p>
+                <span
+                  v-if="node.item!.tag"
+                  class="bg-[var(--color-theme)]/20 text-[var(--color-theme)] text-xs px-2 py-0.5 rounded-full">
+                  {{ node.item!.tag }}
+                </span>
+              </div>
               <p class="text-white/80">{{ node.item!.text }}</p>
             </div>
           </KCard>
