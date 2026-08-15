@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false });
+
 withDefaults(
   defineProps<{
     modelValue?: string;
@@ -15,6 +17,13 @@ const emit = defineEmits<{
   'update:modelValue': [value: string];
   clear: [];
 }>();
+
+const attrs = useAttrs();
+const rootClass = computed(() => attrs.class);
+const inputAttrs = computed(() => {
+  const { class: _class, ...rest } = attrs;
+  return rest;
+});
 
 const innerRef = useTemplateRef<HTMLInputElement | HTMLTextAreaElement>('inner');
 
@@ -33,7 +42,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="relative w-full">
+  <div class="relative w-full" :class="rootClass">
     <textarea
       v-if="textarea"
       ref="inner"
@@ -41,7 +50,7 @@ defineExpose({
       :placeholder="placeholder"
       :disabled="disabled"
       :maxlength="maxlength"
-      v-bind="$attrs"
+      v-bind="inputAttrs"
       class="w-full rounded-md border border-white/20 bg-black/10 p-3 text-sm outline-none backdrop-blur-xs transition-bg duration-300 placeholder:text-white/40 focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60"
       @input="onInput" />
     <input
@@ -51,7 +60,7 @@ defineExpose({
       :placeholder="placeholder"
       :disabled="disabled"
       :maxlength="maxlength"
-      v-bind="$attrs"
+      v-bind="inputAttrs"
       class="w-full rounded-md border border-white/20 bg-black/10 p-3 text-sm outline-none backdrop-blur-xs transition-bg duration-300 placeholder:text-white/40 focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60"
       @input="onInput" />
     <button
