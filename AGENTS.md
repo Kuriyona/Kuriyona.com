@@ -53,6 +53,10 @@ Conventional Commits (CC 规范)，描述使用中文。
 
 示例：`refactor: 移除 Varlet 组件替换为原生实现`、`feat: 新增 KInput 组件替换 var-input`。
 
+### 提交前必须更新 AGENTS.md
+
+**每次提交前**都必须检查并更新 `AGENTS.md`，确保其内容（项目结构、组件、路由、命令、约定等）与当前代码一致。若本次改动涉及新增/删除/修改文件、目录、组件、路由、配置或约定，应在提交前同步更新到 AGENTS.md 中。
+
 ## Search (PageFind)
 
 Full-text search powered by [PageFind](https://pagefind.app/) (custom Vue components via JS API). Search triggers via `Ctrl+K` or the search button in the AppBar.
