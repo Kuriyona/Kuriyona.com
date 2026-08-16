@@ -11,6 +11,8 @@ if (mainStore.jwt) {
 const Turnstile = useTemplateRef('turnstile');
 const token = ref('');
 const loading = ref(false);
+const siteKey = ref(import.meta.dev ? '1x00000000000000000000AA' : '0x4AAAAAADTR98IL1RUn8gKN');
+
 const verify = async (token: string) => {
   loading.value = true;
   const res = await fetchApi('/turnstile', {
@@ -36,11 +38,7 @@ watch(token, (newVal) => {
   <KCard v-if="show">
     <div class="flex flex-col gap-4">
       <p class="text-center">{{ $t('turnstile.tip') }}</p>
-      <VueTurnstile
-        ref="turnstile"
-        site-key="0x4AAAAAADTR98IL1RUn8gKN"
-        v-model="token"
-        size="flexible" />
+      <VueTurnstile ref="turnstile" :site-key="siteKey" v-model="token" size="flexible" />
     </div>
   </KCard>
 </template>
