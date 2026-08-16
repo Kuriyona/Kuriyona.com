@@ -240,7 +240,7 @@ Kuriyona.com/
 
 - **Path aliases**: `@/` and `~/` both work, used interchangeably.
 - **I18n**: `app/scripts/i18n.ts` re-exports `useI18n` from `vue-i18n`. Templates also use `$t()` directly.
-- **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `http://api-kuriyona-com.localhost/` (not `localhost:62802`).
+- **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `https://api-kuriyona-com.localhost/` (not `localhost:62802`).
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`.
 - **UI components**: Custom `K*` components in `app/components/` (KCard, KButton, KCardLink, KInput, KSwitch, KDivider, KMarkdown, KTable, KMenu, etc.) styled with Tailwind — no UI library. Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
