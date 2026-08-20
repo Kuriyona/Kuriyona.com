@@ -43,6 +43,15 @@ const config = useAppConfig();
         </p>
       </template>
     </KCardLink>
+    <KCardLink to="/about/devices">
+      <template #content>
+        <p>
+          <span>{{ $t('global.read-more') }}</span>
+          <span>&nbsp;·&nbsp;</span>
+          <span>「{{ $t('about.devices.title') }}」</span>
+        </p>
+      </template>
+    </KCardLink>
     <KCardLink to="/about/as-mtf">
       <template #content>
         <p class="trans-text">

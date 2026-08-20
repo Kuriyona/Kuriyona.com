@@ -100,6 +100,7 @@ Only pages with `data-pagefind-body` are indexed. Currently applied to:
 - Blog article content (`app/pages/blog/[slug].vue`)
 - `/about` (`app/pages/about/index.vue`)
 - `/about/as-mtf` (`app/pages/about/as-mtf/index.vue`)
+- `/about/devices` (`app/pages/about/devices/index.vue`)
 - `/links` (`app/pages/links/index.vue`)
 
 Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in search results.
@@ -162,7 +163,8 @@ Kuriyona.com/
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
 │   │   └── statusTypes.ts       /status 接口类型（Weather/GithubActivity/Steam）
-│   └── content/blog/            博客 Markdown 源文件（按语言分目录：zh-Hans/zh-Hant/en/ja）
+│   ├── content/blog/            博客 Markdown 源文件（按语言分目录：zh-Hans/zh-Hant/en/ja）
+│   └── data/devices.json        设备配置数据（/about/devices 页面读取）
 ├── server/                      Nitro API 路由
 │   ├── utils.ts                 Markdown 渲染核心（markdown-exit + Shiki 高亮 + TOC + 外链图标 + 缓存/热重载）
 │   └── api/articles.ts          GET /api/articles（不含 content）
@@ -206,6 +208,7 @@ Kuriyona.com/
 | `/`              | `pages/index.vue`              | 欢迎页                        |
 | `/about`         | `pages/about/index.vue`        | 关于（含 data-pagefind-body） |
 | `/about/as-mtf`  | `pages/about/as-mtf/index.vue` | MtF 页面                      |
+| `/about/devices` | `pages/about/devices/index.vue`| 设备配置（含 data-pagefind-body） |
 | `/blog`          | `pages/blog/index.vue`         | 文章列表                      |
 | `/blog/:slug`    | `pages/blog/[slug].vue`        | 文章详情（多语言）            |
 | `/timeline`      | `pages/timeline/index.vue`     | 时间线（条目描述保持中文）    |
