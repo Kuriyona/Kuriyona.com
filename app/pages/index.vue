@@ -54,6 +54,20 @@ const aboutNav = useAboutNav();
         </div>
       </KCardLink>
     </div>
+    <KCardLink to="/links" class="min-h-28">
+      <div class="w-full h-full flex flex-col gap-2">
+        <div>
+          <p class="text-xl font-bold">{{ $t('about.links.title') }}</p>
+          <p class="text-sm text-white/50">{{ $t('about.links.desc') }}</p>
+        </div>
+        <div class="mt-auto flex justify-end">
+          <span
+            class="icon material-symbols-outlined text-white/40 transition-transform duration-300 group-hover:[&_.icon]:scale-100 [&_.icon]:scale-90">
+            arrow_forward
+          </span>
+        </div>
+      </div>
+    </KCardLink>
     <KCard :title="$t('about.skills')">
       <div class="flex gap-2 flex-wrap justify-center">
         <div
@@ -80,17 +94,5 @@ const aboutNav = useAboutNav();
       </div>
     </KCard>
     <CardContact />
-    <KCard :title="$t('about.links.title')">
-      <div class="flex flex-col gap-2">
-        <KCardLink
-          v-for="link in config.links.main"
-          level
-          :to="link.url"
-          :text="link.title"
-          :img="link.avatar"
-          :new="true" />
-        <KCardLink level to="/links" :text="$t('global.more')" />
-      </div>
-    </KCard>
   </AppPage>
 </template>
