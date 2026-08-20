@@ -34,10 +34,7 @@ useSeoMeta({ title: $t('about.devices.title') });
         </div>
         <KDivider />
         <div class="flex flex-col gap-1.5">
-          <div
-            v-for="spec in device.specs"
-            :key="spec.labelKey"
-            class="flex justify-between gap-4">
+          <div v-for="spec in device.specs" :key="spec.labelKey" class="flex justify-between gap-4">
             <span class="text-white/60 shrink-0">{{ $t(spec.labelKey) }}</span>
             <span class="text-white/90 text-right">{{ spec.value }}</span>
           </div>

@@ -203,24 +203,24 @@ Kuriyona.com/
 
 ### 页面路由总览
 
-| 路由             | 文件                           | 说明                          |
-| ---------------- | ------------------------------ | ----------------------------- |
-| `/`              | `pages/index.vue`              | 欢迎页                        |
-| `/about`         | `pages/about/index.vue`        | 关于（含 data-pagefind-body） |
-| `/about/as-mtf`  | `pages/about/as-mtf/index.vue` | MtF 页面                      |
-| `/about/devices` | `pages/about/devices/index.vue`| 设备配置（含 data-pagefind-body） |
-| `/blog`          | `pages/blog/index.vue`         | 文章列表                      |
-| `/blog/:slug`    | `pages/blog/[slug].vue`        | 文章详情（多语言）            |
-| `/timeline`      | `pages/timeline/index.vue`     | 时间线（条目描述保持中文）    |
-| `/links`         | `pages/links/index.vue`        | 友链页                        |
-| `/ask-box`       | `pages/ask-box/index.vue`      | 提问箱列表                    |
-| `/ask-box/ask`   | `pages/ask-box/ask.vue`        | 提交提问                      |
-| `/status`        | `pages/status/index.vue`       | 状态页（Steam/天气/GitHub）   |
-| `/neko`          | `pages/neko/index.vue`         | Neko AI 聊天                  |
-| `/admin`         | `pages/admin/index.vue`        | API key 管理                  |
-| `/admin/r2`      | `pages/admin/r2.vue`           | R2 文件上传                   |
-| `/admin/neko`    | `pages/admin/neko.vue`         | Neko 提示词管理               |
-| `/admin/ask-box` | `pages/admin/ask-box.vue`      | 提问审核                      |
+| 路由             | 文件                            | 说明                              |
+| ---------------- | ------------------------------- | --------------------------------- |
+| `/`              | `pages/index.vue`               | 欢迎页                            |
+| `/about`         | `pages/about/index.vue`         | 关于（含 data-pagefind-body）     |
+| `/about/as-mtf`  | `pages/about/as-mtf/index.vue`  | MtF 页面                          |
+| `/about/devices` | `pages/about/devices/index.vue` | 设备配置（含 data-pagefind-body） |
+| `/blog`          | `pages/blog/index.vue`          | 文章列表                          |
+| `/blog/:slug`    | `pages/blog/[slug].vue`         | 文章详情（多语言）                |
+| `/timeline`      | `pages/timeline/index.vue`      | 时间线（条目描述保持中文）        |
+| `/links`         | `pages/links/index.vue`         | 友链页                            |
+| `/ask-box`       | `pages/ask-box/index.vue`       | 提问箱列表                        |
+| `/ask-box/ask`   | `pages/ask-box/ask.vue`         | 提交提问                          |
+| `/status`        | `pages/status/index.vue`        | 状态页（Steam/天气/GitHub）       |
+| `/neko`          | `pages/neko/index.vue`          | Neko AI 聊天                      |
+| `/admin`         | `pages/admin/index.vue`         | API key 管理                      |
+| `/admin/r2`      | `pages/admin/r2.vue`            | R2 文件上传                       |
+| `/admin/neko`    | `pages/admin/neko.vue`          | Neko 提示词管理                   |
+| `/admin/ask-box` | `pages/admin/ask-box.vue`       | 提问审核                          |
 
 ### API 概览
 
@@ -250,4 +250,5 @@ Kuriyona.com/
 - **Env vars**: Loaded via `dotenv/config` in backend only. Required: `AUTH_KEY`, `JWT_SECRET`, `WEATHER_API_KEY`, `LLM_API_KEY`, `TURNSTILE_SECRET_KEY`, `PUSHPLUS_API_KEY`, `ENDPOINT`, `ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `BUCKET_NAME`.
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.
+- **I18n key 约定**: 全部使用 kebab-case（如 `blog.not-found`、`global.birthday-countdown`），全局通用文本归入 `global.*` 命名空间；4 个语言文件 key 集合必须一致，新增/修改后需 `pnpm fmt` 触发 `sort-i18n.ts` 自动排序。
 - **No tests or CI**.

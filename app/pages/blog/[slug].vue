@@ -23,12 +23,12 @@ const otherLangs = computed(() =>
 );
 
 useSeoMeta({
-  title: `${article.value?.title || $t('global.notFound')}  - ${$t('blog.title')}`,
+  title: `${article.value?.title || $t('global.not-found')}  - ${$t('blog.title')}`,
   description: article.value?.desc as string,
 });
 useSeoMeta({
   ogImage: `https://r2.kuriyona.com/static/og/blog/${slug}/${locale.value}.png`,
-  ogTitle: article.value?.title || $t('global.notFound'),
+  ogTitle: article.value?.title || $t('global.not-found'),
   ogDescription: article.value?.desc as string,
 });
 </script>
@@ -40,8 +40,8 @@ useSeoMeta({
         <span class="material-symbols-outlined"> arrow_back </span>
       </KButton>
     </NuxtLinkLocale>
-    <h1 class="text-2xl">{{ article?.title || $t('global.notFound') }}</h1>
-    <p class="text-sm">{{ article?.desc || $t('blog.notFound') }}</p>
+    <h1 class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
+    <p class="text-sm">{{ article?.desc || $t('blog.not-found') }}</p>
     <template v-if="!article">
       <KDivider />
       <KCardLink to="/blog" :text="$t('blog.title')" icon="arrow_back" />

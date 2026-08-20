@@ -28,7 +28,7 @@ const showTips3 = useLocalStorage('showNekoTips3', true);
 <template>
   <div v-if="show" class="flex items-center justify-between gap-2 text-sm text-white/80">
     <p>
-      {{ $t('global.birthdayCountdown', [age, countdownDays.format('D [d] H [h] m [m] s [s]')]) }}
+      {{ $t('global.birthday-countdown', [age, countdownDays.format('D [d] H [h] m [m] s [s]')]) }}
     </p>
     <KButton round text size="mini" @click="closed = true">
       <span class="material-symbols-outlined text-sm! leading-none"> close </span>

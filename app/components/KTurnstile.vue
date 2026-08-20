@@ -22,7 +22,7 @@ const verify = async (token: string) => {
     mainStore.jwt = res;
     show.value = false;
   } else {
-    toast.error($t('global.verifyFail'));
+    toast.error($t('global.verify-fail'));
     Turnstile.value?.reset();
   }
   loading.value = false;

@@ -92,7 +92,7 @@ const config = useAppConfig();
           :text="link.title"
           :img="link.avatar"
           :new="true" />
-        <KCardLink level to="/links" :text="$t('more')" />
+        <KCardLink level to="/links" :text="$t('global.more')" />
       </div>
     </KCard>
   </AppPage>

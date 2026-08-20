@@ -10,7 +10,7 @@ const { currentNodeName, location } = useCloudflareStatus();
   <KCard>
     <div class="text-center font-monos">
       <p>
-        {{ $t('opensource') }} (MIT) :
+        {{ $t('global.opensource') }} (MIT) :
         <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="link"
           >Kuriyona/Kuriyona.com</a
         >
@@ -22,7 +22,9 @@ const { currentNodeName, location } = useCloudflareStatus();
           {{ gitHash }}
         </a>
       </p>
-      <p>{{ $t('copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.</p>
+      <p>
+        {{ $t('global.copyright') }} © {{ dayjs().format('YYYY') }} Kuriyona. All rights reserved.
+      </p>
       <p>{{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}</p>
       <p>
         <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="link">

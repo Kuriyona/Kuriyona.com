@@ -16,7 +16,12 @@ const nav = [
     enabled: false,
   },
   { to: '/status', titleKey: 'status.title', descKey: 'status.desc', enabled: false },
-  { to: '/about/devices', titleKey: 'about.devices.title', descKey: 'about.devices.desc', enabled: false },
+  {
+    to: '/about/devices',
+    titleKey: 'about.devices.title',
+    descKey: 'about.devices.desc',
+    enabled: false,
+  },
   { to: '/ask-box', titleKey: 'ask-box.title', descKey: 'ask-box.desc' },
 ];
 

@@ -12,24 +12,24 @@ const data = computed(() => [
     href: 'https://baike.baidu.com/item/%E8%B7%A8%E6%80%A7%E5%88%AB',
   },
   {
-    title: `${t('trans')} - Wikipedia`,
-    href: t('urls.trans_wikipedia'),
+    title: `${t('global.trans')} - Wikipedia`,
+    href: t('urls.trans-wikipedia'),
   },
   {
-    title: `${t('trans')} - Bing`,
-    href: `https://www.bing.com/search?q=${t('trans')}`,
+    title: `${t('global.trans')} - Bing`,
+    href: `https://www.bing.com/search?q=${t('global.trans')}`,
   },
   {
-    title: `${t('trans')} - Google`,
-    href: `https://www.google.com/search?q=${t('trans')}`,
+    title: `${t('global.trans')} - Google`,
+    href: `https://www.google.com/search?q=${t('global.trans')}`,
   },
   {
     title: t('about.mtf.sites.title.gd-fyi'),
-    href: t('urls.gd_fyi'),
+    href: t('urls.gd-fyi'),
   },
   {
     title: 'MtF.Wiki',
-    href: t('urls.mtf_wiki'),
+    href: t('urls.mtf-wiki'),
   },
   {
     title: '2345.lgbt',
