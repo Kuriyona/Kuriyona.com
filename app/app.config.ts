@@ -77,6 +77,12 @@ export default defineAppConfig({
         title: '蜜酱胡萝卜派蒙',
         avatar: 'https://paimon.com.cn/assets/img/logo.png',
       },
+      {
+        url: 'https://qrasa.cn',
+        title: 'Qrasa 的小站',
+        avatar:
+          'https://blog.qrasa.cn/wp-content/uploads/2025/11/cropped-1764501521-3ca59cafd35748c38efd5d624a25243a-e1765684431787.jpeg',
+      },
     ],
     links: [
       {
