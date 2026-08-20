@@ -34,40 +34,15 @@ const aboutNav = useAboutNav();
       <CardInfo class="min-w-[25%]" />
     </div>
     <div class="grid grid-cols-1 min-[900px]:grid-cols-2 gap-4">
-      <KCardLink v-for="item in aboutNav" :key="item.to" :to="item.to" class="min-h-28">
-        <div class="w-full h-full flex flex-col gap-2">
-          <div>
-            <p
-              :class="
-                item.to === '/about/as-mtf' ? 'trans-text text-xl font-bold' : 'text-xl font-bold'
-              ">
-              {{ item.title }}
-            </p>
-            <p v-if="item.desc" class="text-sm text-white/50">{{ item.desc }}</p>
-          </div>
-          <div class="mt-auto flex justify-end">
-            <span
-              class="icon material-symbols-outlined text-white/40 transition-transform duration-300 group-hover:[&_.icon]:scale-100 [&_.icon]:scale-90">
-              arrow_forward
-            </span>
-          </div>
-        </div>
-      </KCardLink>
+      <KNavCard
+        v-for="item in aboutNav"
+        :key="item.to"
+        :to="item.to"
+        :title="item.title"
+        :desc="item.desc"
+        :trans="item.to === '/about/as-mtf'" />
     </div>
-    <KCardLink to="/links" class="min-h-28">
-      <div class="w-full h-full flex flex-col gap-2">
-        <div>
-          <p class="text-xl font-bold">{{ $t('about.links.title') }}</p>
-          <p class="text-sm text-white/50">{{ $t('about.links.desc') }}</p>
-        </div>
-        <div class="mt-auto flex justify-end">
-          <span
-            class="icon material-symbols-outlined text-white/40 transition-transform duration-300 group-hover:[&_.icon]:scale-100 [&_.icon]:scale-90">
-            arrow_forward
-          </span>
-        </div>
-      </div>
-    </KCardLink>
+    <KNavCard to="/links" :title="$t('about.links.title')" :desc="$t('about.links.desc')" />
     <KCard :title="$t('about.skills')">
       <div class="flex gap-2 flex-wrap justify-center">
         <div
