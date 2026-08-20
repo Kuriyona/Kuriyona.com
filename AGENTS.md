@@ -23,7 +23,7 @@ pnpm dev             Nuxt dev server (hot reload)
 pnpm generate        Nuxt static generation
 pnpm index           PageFind search indexing (requires `generate` first)
 pnpm preview         Nuxt preview build output
-pnpm build           submodule init + pnpm generate + pnpm index
+pnpm build           pnpm generate + pnpm index
 pnpm fmt             Format with oxfmt
 ```
 
@@ -111,7 +111,8 @@ Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in s
 Kuriyona.com/
 ├── app/                        Nuxt 应用（核心代码）
 │   ├── app.vue                 根组件：背景、NuxtPage、AppBar、ToastHost；i18n locale watcher
-│   ├── app.config.ts           defineAppConfig：导航 + 友链（main/others/links），合并 Kuriyona 子模块 config.json
+│   ├── app.config.ts           defineAppConfig：导航 + 友链（main/others/links），合并 app/config.json
+│   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
 │   │   └── css/                main.css（@import 汇总）· base.css（主题变量/滚动条/光标）· utilities.css（.link/.trans-text 等）
 │   ├── components/             自动导入组件
@@ -174,10 +175,6 @@ Kuriyona.com/
 │   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量）
 │   └── sort-i18n.ts             i18n JSON 按键名排序（pnpm fmt 时自动执行）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
-├── Kuriyona/                    Git 子模块（配置/资产仓库）
-│   ├── config.json              个人信息配置（tech_stack/languages/info/contact/games…）
-│   ├── scripts/                 intro 图生成与上传（generate-intro/upload-intro/music）
-│   └── …                        Kuriyona/Kuriyona.git
 ├── public/                      robots.txt（静态资源实际托管在 R2）
 ├── temp/                        OG 图生成中间产物（gitignored）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、GIT_HASH/BUILD_TIME define）
@@ -235,7 +232,7 @@ Kuriyona.com/
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`) and upload (`upload-blog-og.ts`). Import from `server/utils.ts`.
-- `Kuriyona/` — Git submodule (`config.json`, intros, assets). Imported by `app/app.config.ts` (friend links, profile data). Must be initialized via `git submodule update --init`.
+- `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
 - `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/neko`, `/admin/ask-box`. Auth via `API_KEY` in `localStorage`, passed as `?auth=` param.
 

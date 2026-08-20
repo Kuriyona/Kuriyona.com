@@ -1,4 +1,4 @@
-import Config from '../Kuriyona/config.json';
+import Config from './config.json';
 
 const nav = [
   {
