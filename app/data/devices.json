@@ -4,6 +4,7 @@
       "name": "Apple iPhone 16 Pro",
       "subtitle": "黑色钛金属 · 512 GiB",
       "subtitleKey": "about.devices.subtitle.black-titanium",
+      "primary": true,
       "specs": [
         { "labelKey": "about.devices.specs.processor", "value": "Apple A18 Pro" },
         { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
@@ -25,6 +26,7 @@
     {
       "name": "Apple Watch Series 9",
       "subtitle": "41mm GPS",
+      "primary": true,
       "specs": [
         { "labelKey": "about.devices.specs.processor", "value": "Apple S9" },
         { "labelKey": "about.devices.specs.storage", "value": "64 GiB" },
@@ -34,6 +36,7 @@
     {
       "name": "Apple MacBook Pro",
       "subtitle": "M1 8+512",
+      "primary": true,
       "specs": [
         { "labelKey": "about.devices.specs.processor", "value": "Apple M1" },
         { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
@@ -45,6 +48,7 @@
       "name": "台式 PC",
       "nameKey": "about.devices.name.desktop",
       "subtitle": "ITX",
+      "primary": true,
       "specs": [
         { "labelKey": "about.devices.specs.processor", "value": "Intel Core i5-12400F" },
         { "labelKey": "about.devices.specs.gpu", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
