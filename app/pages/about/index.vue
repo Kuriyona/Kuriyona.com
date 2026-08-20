@@ -73,6 +73,17 @@ const config = useAppConfig();
             class="w-5 h-5 p-0.5 bg-white rounded-sm" />
           <span>{{ item.name }}</span>
         </div>
+        <span class="hidden min-[600px]:block self-center w-px h-8 bg-white/10 mx-1"></span>
+        <div
+          v-for="item in config.languages"
+          :key="item.name"
+          class="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/20 backdrop-blur-sm text-sm hover:bg-white/5 transition-colors duration-300">
+          <span
+            class="px-1.5 py-0.5 bg-white rounded-sm text-[10px] font-bold text-black leading-none"
+            >{{ item.icon }}</span
+          >
+          <span>{{ $t(item.name) }}</span>
+        </div>
       </div>
     </KCard>
     <CardContact />
