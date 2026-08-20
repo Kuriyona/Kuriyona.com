@@ -19,7 +19,7 @@ useSeoMeta({ title: $t('about.devices.title') });
           <h2 class="text-lg font-bold text-white">
             {{ device.nameKey ? $t(device.nameKey) : device.name }}
           </h2>
-          <p v-if="device.subtitle || device.subtitleKey" class="text-white/60 text-sm">
+          <p class="text-white/60 text-sm leading-6 min-h-6">
             {{ device.subtitleKey ? $t(device.subtitleKey) : device.subtitle }}
           </p>
         </div>

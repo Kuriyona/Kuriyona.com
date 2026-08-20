@@ -1,7 +1,7 @@
 {
   "devices": [
     {
-      "name": "iPhone 16 Pro",
+      "name": "Apple iPhone 16 Pro",
       "subtitle": "黑色钛金属 · 512 GiB",
       "subtitleKey": "about.devices.subtitle.black-titanium",
       "specs": [
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "name": "MacBook Pro",
+      "name": "Apple MacBook Pro",
       "subtitle": "M1 8+512",
       "specs": [
         { "labelKey": "about.devices.specs.processor", "value": "Apple M1" },
@@ -50,6 +50,15 @@
         { "labelKey": "about.devices.specs.gpu", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
         { "labelKey": "about.devices.specs.memory", "value": "32 GiB" },
         { "labelKey": "about.devices.specs.monitor", "value": "27″ 2K 200Hz" }
+      ]
+    },
+    {
+      "name": "Lenovo ThinkPad X270",
+      "specs": [
+        { "labelKey": "about.devices.specs.processor", "value": "Intel Core i5-6300U" },
+        { "labelKey": "about.devices.specs.gpu", "value": "Intel HD Graphics 520" },
+        { "labelKey": "about.devices.specs.memory", "value": "16 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "12″ 1920×1080 60Hz" }
       ]
     }
   ]
