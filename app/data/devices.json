@@ -3,50 +3,53 @@
     {
       "name": "iPhone 16 Pro",
       "subtitle": "黑色钛金属 · 512 GiB",
+      "subtitleKey": "about.devices.subtitle.black-titanium",
       "specs": [
-        { "label": "处理器", "value": "Apple A18 Pro" },
-        { "label": "内存", "value": "8 GiB" },
-        { "label": "存储", "value": "512 GiB" },
-        { "label": "屏幕", "value": "6.3″ 120Hz OLED" }
+        { "labelKey": "about.devices.specs.processor", "value": "Apple A18 Pro" },
+        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "6.3″ 120Hz OLED" }
       ]
     },
     {
       "name": "OnePlus Ace 5",
       "subtitle": "引力钛 · 12+256",
+      "subtitleKey": "about.devices.subtitle.gravity-titanium",
       "specs": [
-        { "label": "处理器", "value": "Qualcomm Snapdragon 8 Gen 3" },
-        { "label": "内存", "value": "12 GiB" },
-        { "label": "存储", "value": "256 GiB" },
-        { "label": "屏幕", "value": "6.78″ 120Hz 1.5K" }
+        { "labelKey": "about.devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
+        { "labelKey": "about.devices.specs.memory", "value": "12 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "6.78″ 120Hz 1.5K" }
       ]
     },
     {
       "name": "Apple Watch Series 9",
       "subtitle": "41mm GPS",
       "specs": [
-        { "label": "处理器", "value": "Apple S9" },
-        { "label": "存储", "value": "64 GiB" },
-        { "label": "尺寸", "value": "41mm" }
+        { "labelKey": "about.devices.specs.processor", "value": "Apple S9" },
+        { "labelKey": "about.devices.specs.storage", "value": "64 GiB" },
+        { "labelKey": "about.devices.specs.size", "value": "41mm" }
       ]
     },
     {
       "name": "MacBook Pro",
       "subtitle": "M1 8+512",
       "specs": [
-        { "label": "处理器", "value": "Apple M1" },
-        { "label": "内存", "value": "8 GiB" },
-        { "label": "存储", "value": "512 GiB" },
-        { "label": "屏幕", "value": "13.3″ Retina" }
+        { "labelKey": "about.devices.specs.processor", "value": "Apple M1" },
+        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "13.3″ Retina" }
       ]
     },
     {
       "name": "台式 PC",
+      "nameKey": "about.devices.name.desktop",
       "subtitle": "ITX",
       "specs": [
-        { "label": "处理器", "value": "Intel Core i5-12400F" },
-        { "label": "显卡", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
-        { "label": "内存", "value": "32 GiB" },
-        { "label": "显示器", "value": "27″ 2K 200Hz" }
+        { "labelKey": "about.devices.specs.processor", "value": "Intel Core i5-12400F" },
+        { "labelKey": "about.devices.specs.gpu", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
+        { "labelKey": "about.devices.specs.memory", "value": "32 GiB" },
+        { "labelKey": "about.devices.specs.monitor", "value": "27″ 2K 200Hz" }
       ]
     }
   ]
