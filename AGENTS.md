@@ -119,7 +119,6 @@ Kuriyona.com/
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听
 │   │   ├── AppBar/             AppMenu.vue（移动端抽屉：音乐/导航/语言/背景）+ BackgroundSelector.vue
-│   │   ├── AppBarTips.vue      生日倒计时 / Neko 提示条（可关闭，useLocalStorage 记忆）
 │   │   ├── AppFooter.vue       版权 + GIT_HASH 链接 + Cloudflare 节点
 │   │   ├── AppBackground.vue   全屏背景（视频/必应图片，useBackgroundStore）
 │   │   ├── MusicBar.vue        音乐播放条（歌词滚动、播放控制）
@@ -247,5 +246,5 @@ Kuriyona.com/
 - **Env vars**: Loaded via `dotenv/config` in backend only. Required: `AUTH_KEY`, `JWT_SECRET`, `WEATHER_API_KEY`, `LLM_API_KEY`, `TURNSTILE_SECRET_KEY`, `PUSHPLUS_API_KEY`, `ENDPOINT`, `ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `BUCKET_NAME`.
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.
-- **I18n key 约定**: 全部使用 kebab-case（如 `blog.not-found`、`global.birthday-countdown`），全局通用文本归入 `global.*` 命名空间；4 个语言文件 key 集合必须一致，新增/修改后需 `pnpm fmt` 触发 `sort-i18n.ts` 自动排序。
+- **I18n key 约定**: 全部使用 kebab-case（如 `blog.not-found`），全局通用文本归入 `global.*` 命名空间；4 个语言文件 key 集合必须一致，新增/修改后需 `pnpm fmt` 触发 `sort-i18n.ts` 自动排序。
 - **No tests or CI**.

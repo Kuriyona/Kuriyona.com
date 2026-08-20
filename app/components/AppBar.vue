@@ -54,7 +54,6 @@ onMounted(() => {
         </div>
       </div>
       <MusicBar />
-      <AppBarTips />
     </div>
   </div>
   <AppMenu v-model="mobileMenu" @open-neko="popup = true" />
