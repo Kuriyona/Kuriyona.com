@@ -25,11 +25,9 @@ useSeoMeta({ title: $t('about.devices.title') });
           </h2>
           <p class="text-white/60 text-sm leading-6 min-h-6 flex items-center gap-2">
             <span>{{ device.subtitleKey ? $t(device.subtitleKey) : device.subtitle }}</span>
-            <span
-              v-if="device.primary"
-              class="shrink-0 bg-[var(--color-theme)]/20 text-[var(--color-theme)] text-xs px-2 py-0.5 rounded-full">
+            <KBadge v-if="device.primary" class="shrink-0">
               {{ $t('about.devices.primary') }}
-            </span>
+            </KBadge>
           </p>
         </div>
         <KDivider />

@@ -25,11 +25,7 @@ useSeoMeta({ title: $t('about.links.title') });
           :new="true">
           <div class="w-full">
             <div class="flex items-center gap-2">
-              <span
-                v-if="link.relationKey"
-                class="px-2 py-0.5 text-xs font-bold rounded-full bg-[var(--color-theme)]/20 text-[var(--color-theme)]"
-                >{{ $t(link.relationKey) }}</span
-              >
+              <KBadge v-if="link.relationKey">{{ $t(link.relationKey) }}</KBadge>
               <span>{{ link.title }}</span>
             </div>
             <p v-if="link.url" class="text-xs text-white/50 max-w-full truncate">

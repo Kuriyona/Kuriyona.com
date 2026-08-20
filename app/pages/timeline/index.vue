@@ -53,11 +53,9 @@ useSeoMeta({ title: $t('timeline.title') });
                 <p class="font-monos font-bold text-[var(--color-theme)]">
                   {{ node.item!.date }}
                 </p>
-                <span
-                  v-if="node.item!.tag"
-                  class="bg-[var(--color-theme)]/20 text-[var(--color-theme)] text-xs px-2 py-0.5 rounded-full">
+                <KBadge v-if="node.item!.tag">
                   {{ node.item!.tag }}
-                </span>
+                </KBadge>
               </div>
               <p class="text-white/80">{{ node.item!.text }}</p>
             </div>

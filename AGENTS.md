@@ -193,6 +193,7 @@ Kuriyona.com/
 | `KInput`    | 输入框/textarea（支持 clearable/disabled/maxlength）    |
 | `KSwitch`   | 开关                                                    |
 | `KDivider`  | 分隔线（horizontal/vertical）                           |
+| `KBadge`    | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备） |
 | `KMarkdown` | Markdown 渲染（markdown-exit + github-markdown-css）    |
 | `KTable`    | 表格布局（th 左对齐/td 右对齐）                         |
 | `KMenu`     | 下拉菜单（direction/align，点击外部关闭）               |
