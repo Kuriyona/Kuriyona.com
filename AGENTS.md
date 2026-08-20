@@ -111,7 +111,7 @@ Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in s
 Kuriyona.com/
 ├── app/                        Nuxt 应用（核心代码）
 │   ├── app.vue                 根组件：背景、NuxtPage、AppBar、ToastHost；i18n locale watcher
-│   ├── app.config.ts           defineAppConfig：导航 + 友链（main/others/links），合并 app/config.json
+│   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main/others/links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
 │   │   └── css/                main.css（@import 汇总）· base.css（主题变量/滚动条/光标）· utilities.css（.link/.trans-text 等）
@@ -131,14 +131,14 @@ Kuriyona.com/
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
-│   │   ├── useNav.ts           导航项（读取 app.config nav + i18n 标题）
+│   │   ├── useNav.ts           导航项（读取 app.config nav/aboutNav + i18n 标题）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（欢迎 + 两个入口按钮）
-│   │   ├── about/index.vue      关于页（自我介绍、技能、卡片、联系方式）
+│   │   ├── about/index.vue      关于页（自我介绍、技能、卡片、联系方式、nav 矩形导航卡）
 │   │   ├── about/as-mtf/        MtF 相关页面（pride 主题卡）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
@@ -232,6 +232,7 @@ Kuriyona.com/
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`) and upload (`upload-blog-og.ts`). Import from `server/utils.ts`.
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
+- `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
 - `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/neko`, `/admin/ask-box`. Auth via `API_KEY` in `localStorage`, passed as `?auth=` param.
 

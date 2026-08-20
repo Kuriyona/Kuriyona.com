@@ -6,8 +6,9 @@ const nav = [
     shortTitleKey: 'blog.short-title',
     titleKey: 'blog.title',
     descKey: 'blog.desc',
+    onAbout: true,
   },
-  { to: '/timeline', titleKey: 'timeline.title', descKey: 'timeline.desc' },
+  { to: '/timeline', titleKey: 'timeline.title', descKey: 'timeline.desc', onAbout: true },
   {
     to: '/neko',
     shortTitleKey: 'neko.short-title',
@@ -21,6 +22,14 @@ const nav = [
     titleKey: 'about.devices.title',
     descKey: 'about.devices.desc',
     enabled: false,
+    onAbout: true,
+  },
+  {
+    to: '/about/as-mtf',
+    titleKey: 'about.mtf.as-mtf',
+    descKey: 'about.mtf.desc',
+    enabled: false,
+    onAbout: true,
   },
   { to: '/ask-box', titleKey: 'ask-box.title', descKey: 'ask-box.desc' },
 ];
@@ -46,6 +55,7 @@ const timeline = [
 export default defineAppConfig({
   ...Config,
   nav: nav.filter((item) => item.enabled !== false),
+  aboutNav: nav.filter((item) => item.onAbout),
   timeline,
   links: {
     main: [

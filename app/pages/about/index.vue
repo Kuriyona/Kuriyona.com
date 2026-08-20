@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const config = useAppConfig();
+const aboutNav = useAboutNav();
 </script>
 
 <template>
@@ -25,42 +26,27 @@ const config = useAppConfig();
       </KCard>
       <CardInfo class="min-w-[25%]" />
     </div>
-    <KCardLink to="/blog">
-      <template #content>
-        <p>
-          <span>{{ $t('global.read-more') }}</span>
-          <span>&nbsp;·&nbsp;</span>
-          <span>「{{ $t('blog.title') }}」</span>
-        </p>
-      </template>
-    </KCardLink>
-    <KCardLink to="/timeline">
-      <template #content>
-        <p>
-          <span>{{ $t('global.read-more') }}</span>
-          <span>&nbsp;·&nbsp;</span>
-          <span>「{{ $t('timeline.title') }}」</span>
-        </p>
-      </template>
-    </KCardLink>
-    <KCardLink to="/about/devices">
-      <template #content>
-        <p>
-          <span>{{ $t('global.read-more') }}</span>
-          <span>&nbsp;·&nbsp;</span>
-          <span>「{{ $t('about.devices.title') }}」</span>
-        </p>
-      </template>
-    </KCardLink>
-    <KCardLink to="/about/as-mtf">
-      <template #content>
-        <p class="trans-text">
-          <span>{{ $t('global.read-more') }}</span>
-          <span>&nbsp;·&nbsp;</span>
-          <span>「{{ $t('about.mtf.as-mtf') }}」</span>
-        </p>
-      </template>
-    </KCardLink>
+    <div class="grid grid-cols-1 min-[900px]:grid-cols-2 gap-4">
+      <KCardLink v-for="item in aboutNav" :key="item.to" :to="item.to" class="min-h-28">
+        <div class="w-full h-full flex flex-col gap-2">
+          <div>
+            <p
+              :class="
+                item.to === '/about/as-mtf' ? 'trans-text text-xl font-bold' : 'text-xl font-bold'
+              ">
+              {{ item.title }}
+            </p>
+            <p v-if="item.desc" class="text-sm text-white/50">{{ item.desc }}</p>
+          </div>
+          <div class="mt-auto flex justify-end">
+            <span
+              class="icon material-symbols-outlined text-white/40 transition-transform duration-300 group-hover:[&_.icon]:scale-100 [&_.icon]:scale-90">
+              arrow_forward
+            </span>
+          </div>
+        </div>
+      </KCardLink>
+    </div>
     <KCard :title="$t('about.skills')">
       <div class="flex gap-2 flex-wrap justify-center">
         <div
