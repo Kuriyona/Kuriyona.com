@@ -38,7 +38,7 @@ useSeoMeta({ title: $t('about.links.title') });
           :new="true" />
       </div>
     </KCard>
-    <KCard :title="$t('about.links.title')">
+    <KCard :title="$t('about.links.friends')">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
         <KCardLink
           v-for="link in config.links.links"
