@@ -21,9 +21,22 @@ useSeoMeta({ title: $t('about.links.title') });
           v-for="link in config.links.main"
           level
           :to="link.url"
-          :text="link.title"
           :img="link.avatar"
-          :new="true" />
+          :new="true">
+          <div class="w-full">
+            <div class="flex items-center gap-2">
+              <span
+                v-if="link.relationKey"
+                class="px-2 py-0.5 text-xs font-bold rounded-full bg-[var(--color-theme)]/20 text-[var(--color-theme)]"
+                >{{ $t(link.relationKey) }}</span
+              >
+              <span>{{ link.title }}</span>
+            </div>
+            <p v-if="link.url" class="text-xs text-white/50 max-w-full truncate">
+              {{ link.url }}
+            </p>
+          </div>
+        </KCardLink>
       </div>
     </KCard>
     <KCard :title="$t('about.links.other-friends')">

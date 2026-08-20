@@ -62,10 +62,12 @@ export default defineAppConfig({
       {
         url: 'https://x.com/bluse50',
         title: 'Bluse',
+        relationKey: 'link-relation.partner',
       },
       {
         url: 'https://x.com/xFurina_',
         title: '鱼块糯',
+        relationKey: 'link-relation.sister',
       },
     ],
     others: [

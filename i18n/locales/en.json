@@ -101,6 +101,8 @@
   "global.unit.year": "years",
   "global.verify-fail": "Authentication failed",
   "global.weixi": "Weixi",
+  "link-relation.partner": "Lover",
+  "link-relation.sister": "Sister",
   "neko.desc": "Chat with Weixi's neko",
   "neko.greeting": "Hello meow! \nI’m Weixi's neko. Is there anything you want to talk about?",
   "neko.meow": "Meow~",
