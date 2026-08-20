@@ -73,7 +73,6 @@ const aboutNav = useAboutNav();
       </div>
     </KCard>
     <CardContact />
-    <CardGames />
     <KCard :title="$t('about.links.title')">
       <div class="flex flex-col gap-2">
         <KCardLink
