@@ -1,51 +1,101 @@
 <script setup lang="ts">
 import QRCode from 'qrcode.vue';
+
 const config = useAppConfig();
+
+type Contact = {
+  name: string;
+  i18nKey?: string;
+  value?: string;
+  link?: string;
+  icon?: string;
+  mdIcon?: string;
+  qr?: string;
+  qrOnly?: boolean;
+  group?: string;
+};
+
+const groupOrder = ['social', 'contact'];
+
+const groups = computed(() => {
+  const map = new Map<string, Contact[]>();
+  for (const item of config.contact as Contact[]) {
+    const g = item.group || 'social';
+    if (!map.has(g)) map.set(g, []);
+    map.get(g)!.push(item);
+  }
+  return groupOrder.filter((g) => map.has(g)).map((g) => ({ key: g, items: map.get(g)! }));
+});
+
+const activeQr = ref<Contact | null>(null);
+const modal = ref<HTMLElement | null>(null);
+
+onClickOutside(modal, () => {
+  activeQr.value = null;
+});
+
+const cardClass =
+  'flex items-center gap-3 px-4 py-3 rounded-xl bg-black/20 backdrop-blur-sm hover:bg-white/5 transition-colors duration-300 cursor-pointer min-w-[160px]';
 </script>
 
 <template>
-  <KCard :title="$t('about.find-me')">
-    <div class="hidden sm:flex flex-wrap gap-2 justify-center">
-      <div v-for="link in config.contact" :key="link.name" class="relative group">
-        <KCardLink level :to="!link.qrOnly ? link.link : undefined" :text="link.value" :new="true">
-          <div class="flex items-center gap-2">
-            <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
-            <img
-              v-if="link.icon"
-              class="w-4 h-4"
-              :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
-            <div class="flex flex-col items-start">
-              <span>{{ link.i18nKey ? $t(link.i18nKey) : link.name }}</span>
-              <span v-if="link.value" class="text-xs text-white/50">{{ link.value }}</span>
-            </div>
-          </div>
-        </KCardLink>
-        <div
-          class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 rounded-xl bg-black/80 backdrop-blur-md shadow-lg shadow-black/40 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100">
-          <div class="flex flex-col items-center gap-1">
-            <QRCode :value="link.link" class="w-16 h-16" />
-            <p>{{ link.value }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex sm:hidden flex-wrap gap-2 justify-center">
-      <KCardLink
-        v-for="link in config.contact.filter((item) => item.icon && item.name != 'WeChat')"
-        level
-        :key="link.name"
-        :to="!link.qrOnly ? link.link : undefined"
-        :text="link.value"
-        :new="true"
-        class="">
-        <div class="flex items-center gap-2">
-          <span v-if="link.mdIcon" class="material-symbols-outlined"> mail </span>
+  <KCard v-for="group in groups" :key="group.key" :title="$t(`about.contact-group.${group.key}`)">
+    <div class="flex flex-wrap gap-3 justify-center">
+      <template v-for="link in group.items" :key="link.name">
+        <a :href="link.link" target="_blank" :class="cardClass">
+          <span v-if="link.mdIcon" class="material-symbols-outlined text-2xl"> mail </span>
           <img
             v-if="link.icon"
-            class="w-4 h-4"
+            class="w-6 h-6"
+            :alt="link.name"
             :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
-        </div>
-      </KCardLink>
+          <div class="flex flex-col items-start min-w-0">
+            <span class="text-sm font-semibold">
+              {{ link.i18nKey ? $t(link.i18nKey) : link.name }}
+            </span>
+            <span v-if="link.value" class="text-xs text-white/50 truncate max-w-full">{{
+              link.value
+            }}</span>
+          </div>
+          <KButton
+            v-if="link.qr || link.qrOnly"
+            round
+            class="ml-1"
+            @click.prevent.stop="activeQr = link">
+            <span class="material-symbols-outlined text-lg! leading-none"> qr_code </span>
+          </KButton>
+        </a>
+      </template>
     </div>
   </KCard>
+
+  <Teleport to="body">
+    <div v-if="activeQr" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="activeQr = null" />
+      <div
+        ref="modal"
+        class="relative z-10 p-6 rounded-2xl bg-black/80 backdrop-blur-md border border-white/10 flex flex-col items-center gap-3 shadow-xl">
+        <button
+          type="button"
+          class="absolute top-2 right-2 text-white/60 hover:text-white"
+          aria-label="Close"
+          @click="activeQr = null">
+          <span class="material-symbols-outlined"> close </span>
+        </button>
+        <div class="flex items-center gap-2 font-bold">
+          <span v-if="activeQr.mdIcon" class="material-symbols-outlined"> mail </span>
+          <img
+            v-if="activeQr.icon"
+            class="w-5 h-5"
+            :alt="activeQr.name"
+            :src="`https://cdn.simpleicons.org/${activeQr.icon}/white`" />
+          <span>{{ activeQr.i18nKey ? $t(activeQr.i18nKey) : activeQr.name }}</span>
+        </div>
+        <QRCode
+          :value="activeQr.qr || activeQr.link || ''"
+          class="w-40 h-40 bg-white p-2 rounded-lg" />
+        <p v-if="activeQr.value" class="text-xs text-white/50">{{ activeQr.value }}</p>
+      </div>
+    </div>
+  </Teleport>
 </template>
