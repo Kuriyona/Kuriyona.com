@@ -60,9 +60,12 @@ export default defineAppConfig({
   links: {
     main: [
       {
-        url: 'https://space.bilibili.com/1337924642',
-        title: '鱼块糯 - 哔哩哔哩',
-        avatar: 'https://r2.kuriyona.com/img/xFurina/xFurina.jpg',
+        url: 'https://x.com/bluse50',
+        title: 'Bluse',
+      },
+      {
+        url: 'https://x.com/xFurina_',
+        title: '鱼块糯',
       },
     ],
     others: [
