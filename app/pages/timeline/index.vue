@@ -30,7 +30,7 @@ useSeoMeta({ title: $t('timeline.title') });
 
 <template>
   <AppPage>
-    <NuxtLinkLocale to="/about">
+    <NuxtLinkLocale to="/">
       <KButton round text>
         <span class="material-symbols-outlined"> arrow_back </span>
       </KButton>

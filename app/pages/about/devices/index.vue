@@ -6,7 +6,7 @@ useSeoMeta({ title: $t('about.devices.title') });
 
 <template>
   <AppPage data-pagefind-body>
-    <NuxtLinkLocale to="/about">
+    <NuxtLinkLocale to="/">
       <KButton round text>
         <span class="material-symbols-outlined"> arrow_back </span>
       </KButton>

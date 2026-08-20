@@ -98,7 +98,7 @@ Available via the composable: `s.query`, `s.results`, `s.loading`, `s.error`, `s
 Only pages with `data-pagefind-body` are indexed. Currently applied to:
 
 - Blog article content (`app/pages/blog/[slug].vue`)
-- `/about` (`app/pages/about/index.vue`)
+- `/` (首页：全屏欢迎首屏 + 关于内容，`app/pages/index.vue`)
 - `/about/as-mtf` (`app/pages/about/as-mtf/index.vue`)
 - `/about/devices` (`app/pages/about/devices/index.vue`)
 - `/links` (`app/pages/links/index.vue`)
@@ -127,7 +127,7 @@ Kuriyona.com/
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
 │   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact
-│   │   └── IAm.vue             自我介绍横幅
+│   │   └── 
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
@@ -137,8 +137,7 @@ Kuriyona.com/
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── pages/                   路由页面（Nuxt 文件路由）
-│   │   ├── index.vue            首页（欢迎 + 两个入口按钮）
-│   │   ├── about/index.vue      关于页（自我介绍、技能、卡片、联系方式、nav 矩形导航卡）
+│   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
 │   │   ├── about/as-mtf/        MtF 相关页面（pride 主题卡）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
@@ -201,8 +200,7 @@ Kuriyona.com/
 
 | 路由             | 文件                            | 说明                              |
 | ---------------- | ------------------------------- | --------------------------------- |
-| `/`              | `pages/index.vue`               | 欢迎页                            |
-| `/about`         | `pages/about/index.vue`         | 关于（含 data-pagefind-body）     |
+| `/`              | `pages/index.vue`               | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body） |
 | `/about/as-mtf`  | `pages/about/as-mtf/index.vue`  | MtF 页面                          |
 | `/about/devices` | `pages/about/devices/index.vue` | 设备配置（含 data-pagefind-body） |
 | `/blog`          | `pages/blog/index.vue`          | 文章列表                          |
