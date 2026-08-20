@@ -62,22 +62,16 @@ const config = useAppConfig();
       </template>
     </KCardLink>
     <KCard :title="$t('about.skills')">
-      <div class="flex justify-center gap-2 max-[600px]:flex-col">
-        <div class="flex gap-2 flex-wrap justify-center">
+      <div class="flex gap-2 flex-wrap justify-center">
+        <div
+          v-for="item in config.tech_stack"
+          :key="item.name"
+          class="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/20 backdrop-blur-sm text-sm hover:bg-white/5 transition-colors duration-300">
           <img
-            v-for="item in config.tech_stack"
-            :key="item.name"
+            :src="`https://cdn.simpleicons.org/${item.icon}`"
             :alt="item.name"
-            :src="`https://img.shields.io/badge/${encodeURIComponent(item.name)}-black?style=for-the-badge&logo=${item.icon}`" />
-        </div>
-        <KDivider vertical class="max-[600px]:hidden" />
-        <KDivider class="min-[600px]:hidden" />
-        <div class="flex gap-2 flex-wrap justify-center">
-          <img
-            v-for="item in config.languages"
-            :key="item.name"
-            :alt="$t(item.name)"
-            :src="`https://img.shields.io/badge/${item.icon}-${$t(item.name)}-black?style=for-the-badge`" />
+            class="w-5 h-5 p-0.5 bg-white rounded-sm" />
+          <span>{{ item.name }}</span>
         </div>
       </div>
     </KCard>
