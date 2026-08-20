@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { h } from 'vue';
+
 const props = defineProps<{
   to?: string;
   text?: string;
@@ -10,6 +12,34 @@ const props = defineProps<{
 }>();
 
 const imgError = ref(false);
+
+const LinkIcon = defineComponent({
+  props: {
+    new: Boolean,
+    icon: String,
+  },
+  setup(p, { attrs }) {
+    return () =>
+      h(
+        'span',
+        { class: ['icon material-symbols-outlined', (attrs.class as string) ?? ''] },
+        p.icon ?? (p.new ? 'open_in_new' : 'arrow_forward'),
+      );
+  },
+});
+
+const UrlPreview = defineComponent({
+  props: {
+    to: String,
+    new: Boolean,
+  },
+  setup(p) {
+    return () =>
+      p.to && p.new
+        ? h('p', { class: 'text-xs text-white/50 max-w-full truncate' }, p.to)
+        : null;
+  },
+});
 </script>
 
 <template>
@@ -21,26 +51,34 @@ const imgError = ref(false);
     <KCard
       class="hover:bg-white/5 transition-bg duration-300 h-full flex flex-col justify-center"
       v-bind="$attrs">
-      <slot />
-      <div v-if="!$slots.default" class="flex justify-between items-center w-full overflow-hidden">
-        <div class="flex items-center gap-4 min-w-0">
-          <template v-if="img">
-            <img v-if="!imgError" @error="imgError = true" :src="img" class="w-8 h-8 rounded-2xl" />
-            <span v-else class="material-symbols-outlined"> block </span>
-          </template>
-          <div v-if="!$slots.content" class="max-w-full">
-            <p>{{ props.text }}</p>
-            <p v-if="props.desc" class="text-sm text-white/50">{{ props.desc }}</p>
-            <p v-if="props.to && props.new" class="text-xs text-white/50 max-w-full truncate">
-              {{ props.to }}
-            </p>
+      <slot
+        :to="props.to"
+        :text="props.text"
+        :desc="props.desc"
+        :img="props.img"
+        :new="!!props.new"
+        :icon="props.icon"
+        :LinkIcon="LinkIcon"
+        :UrlPreview="UrlPreview">
+        <div class="flex justify-between items-center w-full overflow-hidden">
+          <div class="flex items-center gap-4 min-w-0">
+            <template v-if="img">
+              <img
+                v-if="!imgError"
+                @error="imgError = true"
+                :src="img"
+                class="w-8 h-8 rounded-2xl" />
+              <span v-else class="material-symbols-outlined"> block </span>
+            </template>
+            <div class="max-w-full">
+              <p>{{ props.text }}</p>
+              <p v-if="props.desc" class="text-sm text-white/50">{{ props.desc }}</p>
+              <component :is="UrlPreview" :to="props.to" :new="props.new" />
+            </div>
           </div>
-          <slot name="content" />
+          <component :is="LinkIcon" :new="props.new" :icon="props.icon" />
         </div>
-        <span v-if="props.icon" class="icon material-symbols-outlined">{{ props.icon }}</span>
-        <span v-else-if="!props.new" class="icon material-symbols-outlined"> arrow_forward </span>
-        <span v-else class="icon material-symbols-outlined"> open_in_new </span>
-      </div>
+      </slot>
     </KCard>
   </NuxtLinkLocale>
 </template>

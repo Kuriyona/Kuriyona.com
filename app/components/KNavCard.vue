@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <KCardLink :to="to" class="min-h-28">
+  <KCardLink v-slot="{ LinkIcon }" :to="to" class="min-h-28">
     <div class="w-full h-full flex flex-col gap-2">
       <div>
         <p :class="trans ? 'trans-text text-xl font-bold' : 'text-xl font-bold'">
@@ -17,10 +17,7 @@ defineProps<{
         <p v-if="desc" class="text-sm text-white/50">{{ desc }}</p>
       </div>
       <div class="mt-auto flex justify-end">
-        <span
-          class="icon material-symbols-outlined text-white/40 transition-transform duration-300 group-hover:[&_.icon]:scale-100 [&_.icon]:scale-90">
-          arrow_forward
-        </span>
+        <component :is="LinkIcon" class="text-white/40" />
       </div>
     </div>
   </KCardLink>

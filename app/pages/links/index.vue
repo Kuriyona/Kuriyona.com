@@ -18,6 +18,7 @@ useSeoMeta({ title: $t('about.links.title') });
     <KCard :title="$t('about.links.best-friends')">
       <div class="flex flex-col gap-2">
         <KCardLink
+          v-slot="{ UrlPreview }"
           v-for="link in config.links.main"
           level
           :to="link.url"
@@ -28,9 +29,7 @@ useSeoMeta({ title: $t('about.links.title') });
               <KBadge v-if="link.relationKey">{{ $t(link.relationKey) }}</KBadge>
               <span>{{ link.title }}</span>
             </div>
-            <p v-if="link.url" class="text-xs text-white/50 max-w-full truncate">
-              {{ link.url }}
-            </p>
+            <component :is="UrlPreview" :to="link.url" :new="true" />
           </div>
         </KCardLink>
       </div>
