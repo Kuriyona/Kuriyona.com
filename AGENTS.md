@@ -198,6 +198,7 @@ Kuriyona.com/
 | `KMarkdown` | Markdown 渲染（markdown-exit + github-markdown-css）    |
 | `KTable`    | 表格布局（th 左对齐/td 右对齐）                         |
 | `KMenu`     | 下拉菜单（direction/align，点击外部关闭）               |
+| `KDialog`   | 原生 dialog 弹窗（v-model 开关、title 槽、遮罩/Esc/关闭按钮，KCard+KIconButton 组合） |
 
 ### 页面路由总览
 

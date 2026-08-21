@@ -28,10 +28,11 @@ const groups = computed(() => {
 });
 
 const activeQr = ref<Contact | null>(null);
-const modal = ref<HTMLElement | null>(null);
-
-onClickOutside(modal, () => {
-  activeQr.value = null;
+const showQr = computed({
+  get: () => !!activeQr.value,
+  set: (v) => {
+    if (!v) activeQr.value = null;
+  },
 });
 
 const cardClass =
@@ -75,33 +76,21 @@ const cardClass =
     </div>
   </KCard>
 
-  <Teleport to="body">
-    <div v-if="activeQr" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="activeQr = null" />
-      <div
-        ref="modal"
-        class="relative z-10 p-6 rounded-2xl bg-black/80 backdrop-blur-md border border-white/10 flex flex-col items-center gap-3 shadow-xl">
-        <button
-          type="button"
-          class="absolute top-2 right-2 text-white/60 hover:text-white"
-          aria-label="Close"
-          @click="activeQr = null">
-          <span class="material-symbols-outlined"> close </span>
-        </button>
-        <div class="flex items-center gap-2 font-bold">
-          <span v-if="activeQr.mdIcon" class="material-symbols-outlined"> mail </span>
-          <img
-            v-if="activeQr.icon"
-            class="w-5 h-5"
-            :alt="activeQr.name"
-            :src="`https://cdn.simpleicons.org/${activeQr.icon}/white`" />
-          <span>{{ activeQr.i18nKey ? $t(activeQr.i18nKey) : activeQr.name }}</span>
-        </div>
-        <QRCode
-          :value="activeQr.qr || activeQr.link || ''"
-          class="w-40 h-40 bg-white p-2 rounded-lg" />
-        <p v-if="activeQr.value" class="text-xs text-white/50">{{ activeQr.value }}</p>
-      </div>
+  <KDialog v-model="showQr" width="max-w-sm">
+    <template #title>
+      <span v-if="activeQr?.mdIcon" class="material-symbols-outlined"> mail </span>
+      <img
+        v-if="activeQr?.icon"
+        class="w-5 h-5"
+        :alt="activeQr?.name"
+        :src="`https://cdn.simpleicons.org/${activeQr.icon}/white`" />
+      <span class="truncate">{{ activeQr?.i18nKey ? $t(activeQr.i18nKey) : activeQr?.name }}</span>
+    </template>
+    <div class="flex flex-col items-center gap-3">
+      <QRCode
+        :value="activeQr?.qr || activeQr?.link || ''"
+        class="w-40 h-40 bg-white p-2 rounded-lg" />
+      <p v-if="activeQr?.value" class="text-xs text-white/50">{{ activeQr.value }}</p>
     </div>
-  </Teleport>
+  </KDialog>
 </template>
