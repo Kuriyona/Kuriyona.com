@@ -35,7 +35,7 @@ onClickOutside(modal, () => {
 });
 
 const cardClass =
-  'flex items-center gap-3 px-4 py-3 rounded-xl bg-black/20 backdrop-blur-sm hover:bg-white/5 transition-colors duration-300 cursor-pointer min-w-[160px]';
+  'flex items-center gap-2 px-3 py-2 rounded-xl bg-black/20 backdrop-blur-sm hover:bg-white/5 transition-colors duration-300 cursor-pointer min-w-0 sm:gap-3 sm:px-4 sm:py-3 sm:min-w-[160px]';
 </script>
 
 <template>
@@ -43,26 +43,32 @@ const cardClass =
     <div class="flex flex-wrap gap-3 justify-center">
       <template v-for="link in group.items" :key="link.name">
         <a :href="link.link" target="_blank" :class="cardClass">
-          <span v-if="link.mdIcon" class="material-symbols-outlined text-2xl"> mail </span>
+          <span v-if="link.mdIcon" class="material-symbols-outlined text-lg! leading-none sm:text-2xl">
+            mail
+          </span>
           <img
             v-if="link.icon"
-            class="w-6 h-6"
+            class="w-4 h-4 sm:w-6 sm:h-6"
             :alt="link.name"
             :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
-          <div class="flex flex-col items-start min-w-0">
-            <span class="text-sm font-semibold">
+          <div class="flex flex-col items-center min-w-0 sm:items-start">
+            <span class="text-xs font-semibold sm:text-sm">
               {{ link.i18nKey ? $t(link.i18nKey) : link.name }}
             </span>
-            <span v-if="link.value" class="text-xs text-white/50 truncate max-w-full">{{
-              link.value
-            }}</span>
+            <span
+              v-if="link.value"
+              class="hidden text-xs text-white/50 truncate max-w-full sm:block">{{
+                link.value
+              }}</span>
           </div>
           <KButton
             v-if="link.qr || link.qrOnly"
             round
-            class="ml-1"
+            class="ml-auto shrink-0 sm:ml-1"
             @click.prevent.stop="activeQr = link">
-            <span class="material-symbols-outlined text-lg! leading-none"> qr_code </span>
+            <span class="material-symbols-outlined text-base! leading-none sm:text-lg">
+              qr_code
+            </span>
           </KButton>
         </a>
       </template>
