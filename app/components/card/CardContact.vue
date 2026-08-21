@@ -43,7 +43,9 @@ const cardClass =
     <div class="flex flex-wrap gap-3 justify-center">
       <template v-for="link in group.items" :key="link.name">
         <a :href="link.link" target="_blank" :class="cardClass">
-          <span v-if="link.mdIcon" class="material-symbols-outlined text-lg! leading-none sm:text-2xl">
+          <span
+            v-if="link.mdIcon"
+            class="material-symbols-outlined text-lg! leading-none sm:text-2xl">
             mail
           </span>
           <img
@@ -57,19 +59,17 @@ const cardClass =
             </span>
             <span
               v-if="link.value"
-              class="hidden text-xs text-white/50 truncate max-w-full sm:block">{{
-                link.value
-              }}</span>
+              class="hidden text-xs text-white/50 truncate max-w-full sm:block"
+              >{{ link.value }}</span
+            >
           </div>
-          <KButton
+          <KIconButton
             v-if="link.qr || link.qrOnly"
-            round
+            icon="qr_code"
+            size="base"
+            icon-class="sm:text-lg"
             class="ml-auto shrink-0 sm:ml-1"
-            @click.prevent.stop="activeQr = link">
-            <span class="material-symbols-outlined text-base! leading-none sm:text-lg">
-              qr_code
-            </span>
-          </KButton>
+            @click.prevent.stop="activeQr = link" />
         </a>
       </template>
     </div>

@@ -15,9 +15,7 @@ useSeoMeta({ title: $t('blog.title') });
 <template>
   <AppPage>
     <NuxtLinkLocale to="/">
-      <KButton round text>
-        <span class="material-symbols-outlined"> arrow_back </span>
-      </KButton>
+      <KIconButton icon="arrow_back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
     <p v-if="$t('blog.desc')" class="text-white/60">{{ $t('blog.desc') }}</p>

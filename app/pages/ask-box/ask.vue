@@ -32,9 +32,7 @@ useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
 <template>
   <AppPage>
     <NuxtLinkLocale to="/ask-box">
-      <KButton round text>
-        <span class="material-symbols-outlined"> arrow_back </span>
-      </KButton>
+      <KIconButton icon="arrow_back" />
     </NuxtLinkLocale>
     <h2 class="text-xl font-bold">{{ $t('ask-box.ask-me') }}</h2>
     <p>{{ $t('ask-box.ask-tip') }}</p>

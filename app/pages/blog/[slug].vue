@@ -36,9 +36,7 @@ useSeoMeta({
 <template>
   <AppPage>
     <NuxtLinkLocale to="/blog">
-      <KButton round text>
-        <span class="material-symbols-outlined"> arrow_back </span>
-      </KButton>
+      <KIconButton icon="arrow_back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
     <p class="text-sm">{{ article?.desc || $t('blog.not-found') }}</p>

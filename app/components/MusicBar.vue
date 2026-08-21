@@ -21,18 +21,12 @@ const handleProgressClick = (event: MouseEvent) => {
     <div class="flex justify-between w-full gap-2">
       <div id="main" class="flex items-center gap-1 min-w-0 h-fit w-full max-sm:w-fit max-w-[40%]">
         <div class="flex items-center">
-          <KButton round text @click="store.playing = !store.playing">
-            <span class="material-symbols-outlined">
-              {{ store.playing ? 'pause' : 'play_arrow' }}
-            </span>
-          </KButton>
+          <KIconButton
+            :icon="store.playing ? 'pause' : 'play_arrow'"
+            @click="store.playing = !store.playing" />
           <!--反向切歌是特意行为-->
-          <KButton round text class="hover-show" @click="store.currentIndex++">
-            <span class="material-symbols-outlined"> skip_previous </span>
-          </KButton>
-          <KButton round text class="hover-show" @click="store.currentIndex--">
-            <span class="material-symbols-outlined"> skip_next </span>
-          </KButton>
+          <KIconButton icon="skip_previous" class="hover-show" @click="store.currentIndex++" />
+          <KIconButton icon="skip_next" class="hover-show" @click="store.currentIndex--" />
         </div>
         <div class="w-full flex-col gap-1 hidden sm:flex">
           <p id="name" class="text-sm truncate">{{ store.currentSong.name }}</p>

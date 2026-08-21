@@ -23,9 +23,7 @@ const handleProgressClick = (event: MouseEvent) => {
       <div
         class="fixed w-80 max-[400px]:w-screen right-0 top-0 h-dvh bg-white/2 border-l border-white/5 flex flex-col gap-4 p-4 overflow-y-auto backdrop-blur-3xl">
         <div class="flex justify-end">
-          <KButton round @click="show = false">
-            <span class="material-symbols-outlined text-lg! leading-none"> close </span>
-          </KButton>
+          <KIconButton icon="close" @click="show = false" />
         </div>
         <KCard v-if="store.currentSong">
           <div class="flex items-center gap-2 overflow-x-hidden">
@@ -35,19 +33,20 @@ const handleProgressClick = (event: MouseEvent) => {
                 {{ store.currentSong.name }}
               </p>
               <div class="flex items-center gap-4">
-                <KButton round text class="hover-show" @click="store.currentIndex++">
-                  <span class="material-symbols-outlined text-sm! leading-none">
-                    skip_previous
-                  </span>
-                </KButton>
-                <KButton round text @click="store.playing = !store.playing">
-                  <span class="material-symbols-outlined text-sm! leading-none">
-                    {{ store.playing ? 'pause' : 'play_arrow' }}
-                  </span>
-                </KButton>
-                <KButton round text class="hover-show" @click="store.currentIndex--">
-                  <span class="material-symbols-outlined text-sm! leading-none"> skip_next </span>
-                </KButton>
+                <KIconButton
+                  icon="skip_previous"
+                  size="sm"
+                  class="hover-show"
+                  @click="store.currentIndex++" />
+                <KIconButton
+                  :icon="store.playing ? 'pause' : 'play_arrow'"
+                  size="sm"
+                  @click="store.playing = !store.playing" />
+                <KIconButton
+                  icon="skip_next"
+                  size="sm"
+                  class="hover-show"
+                  @click="store.currentIndex--" />
               </div>
             </div>
           </div>

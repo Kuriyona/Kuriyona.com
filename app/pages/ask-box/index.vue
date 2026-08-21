@@ -35,9 +35,7 @@ useSeoMeta({ title: t('ask-box.title') });
     <KCardLink to="/ask-box/ask" :text="$t('ask-box.ask-me')" />
     <h3 class="text-xl font-bold flex items-center justify-between">
       <span>{{ $t('ask-box.browse-public-questions') }}</span>
-      <KButton round text @click="refresh">
-        <span class="material-symbols-outlined"> refresh </span>
-      </KButton>
+      <KIconButton icon="refresh" @click="refresh" />
     </h3>
     <KInput :placeholder="$t('global.search')" v-model="search.text" />
     <KCard

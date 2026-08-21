@@ -41,9 +41,7 @@ onMounted(() => {
               {{ item.shortTitle || item.title }}
             </KButton>
           </NuxtLinkLocale>
-          <KButton round @click="search.toggle()">
-            <span class="material-symbols-outlined text-lg! leading-none"> search </span>
-          </KButton>
+          <KIconButton icon="search" @click="search.toggle()" />
           <KButton round @click="mobileMenu = true">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-lg! leading-none"> translate </span>

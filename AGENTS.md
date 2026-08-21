@@ -188,6 +188,7 @@ Kuriyona.com/
 | ----------- | ------------------------------------------------------- |
 | `KCard`     | 毛玻璃卡片容器（可选 title）                            |
 | `KButton`   | 毛玻璃按钮（支持 round/text/block）                     |
+| `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore） |
 | `KCardLink` | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标） |
 | `KNavCard`  | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用） |
 | `KInput`    | 输入框/textarea（支持 clearable/disabled/maxlength）    |
