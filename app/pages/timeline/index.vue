@@ -14,7 +14,7 @@ interface TimelineNode {
 const nodes = computed<TimelineNode[]>(() => {
   const result: TimelineNode[] = [];
   let prevYear = '';
-  for (const item of timeline) {
+  for (const item of [...timeline].reverse()) {
     const year = item.date.slice(0, 4);
     if (year !== prevYear) {
       result.push({ type: 'year', year });
@@ -24,6 +24,18 @@ const nodes = computed<TimelineNode[]>(() => {
   }
   return result;
 });
+
+const isExternal = (link: string) => link.startsWith('http');
+
+const localePath = useLocalePath();
+
+function handleLinkClick(link: string) {
+  if (isExternal(link)) {
+    window.open(link, '_blank', 'noopener');
+  } else {
+    navigateTo(localePath(link));
+  }
+}
 
 useSeoMeta({ title: $t('timeline.title') });
 </script>
@@ -48,16 +60,27 @@ useSeoMeta({ title: $t('timeline.title') });
         </div>
         <div v-else class="relative ml-8" :key="node.item!.date">
           <KCard>
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center gap-2">
-                <p class="font-monos font-bold text-[var(--color-theme)]">
-                  {{ node.item!.date }}
-                </p>
-                <KBadge v-if="node.item!.tag">
-                  {{ node.item!.tag }}
-                </KBadge>
+            <div class="flex items-stretch gap-3">
+              <div class="flex flex-col gap-1 flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <p class="font-monos font-bold text-[var(--color-theme)]">
+                    {{ node.item!.date }}
+                  </p>
+                  <KBadge v-if="node.item!.tag">
+                    {{ node.item!.tag }}
+                  </KBadge>
+                </div>
+                <p class="text-white/80">{{ node.item!.text }}</p>
               </div>
-              <p class="text-white/80">{{ node.item!.text }}</p>
+              <KButton
+                v-if="node.item!.link"
+                round
+                class="self-stretch aspect-square"
+                @click="handleLinkClick(node.item!.link)">
+                <span class="material-symbols-outlined text-2xl! leading-none">
+                  {{ isExternal(node.item!.link) ? 'open_in_new' : 'arrow_forward' }}
+                </span>
+              </KButton>
             </div>
           </KCard>
         </div>
