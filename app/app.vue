@@ -48,7 +48,7 @@ onMounted(() => {
   <div class="overflow-x-hidden">
     <AppBackground />
     <NuxtPage id="main" class="z-0" />
-    <AppBar class="z-100" />
+    <AppBar />
     <ToastHost />
   </div>
 </template>
