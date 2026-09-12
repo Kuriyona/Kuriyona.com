@@ -3,7 +3,6 @@ const store = useMusicStore();
 import BackgroundSelector from '../AppBar/BackgroundSelector.vue';
 const { setLocale, locales } = useI18n();
 const show = defineModel<boolean>();
-const emit = defineEmits(['open-neko']);
 const nav = useNav();
 const handleProgressClick = (event: MouseEvent) => {
   if (!store.currentSong) return;

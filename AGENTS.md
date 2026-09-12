@@ -4,16 +4,16 @@
 
 ## Stack
 
-| Layer           | Choice                                              |
-| --------------- | --------------------------------------------------- |
-| Runtime         | **Bun** (not Node)                                  |
-| Package manager | **pnpm** (v11.4.0)                                  |
-| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                    |
-| UI components   | Custom `K*` components (Tailwind, no UI library)    |
-| Animation       | GSAP                                                |
-| I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales) |
+| Layer           | Choice                                               |
+| --------------- | ---------------------------------------------------- |
+| Runtime         | **Bun** (not Node)                                   |
+| Package manager | **pnpm** (v11.4.0)                                   |
+| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                     |
+| UI components   | Custom `K*` components (Tailwind, no UI library)     |
+| Animation       | GSAP                                                 |
+| I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales)  |
 | Backend         | Elysia + Drizzle ORM + MySQL（`backend/`，独立子包） |
-| Formatter       | `oxfmt` (not Prettier)                              |
+| Formatter       | `oxfmt` (not Prettier)                               |
 
 ## Commands
 
@@ -136,7 +136,7 @@ Kuriyona.com/
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
 │   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact
-│   │   └── 
+│   │   └──
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
@@ -154,8 +154,7 @@ Kuriyona.com/
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
 │   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动）
-│   │   ├── neko/index.vue       Neko AI 聊天（SSE 流式，KMarkdown 渲染）
-│   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/neko 提示词、/admin/ask-box 审核）
+│   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核）
 │   ├── stores/                  Pinia stores
 │   │   ├── main.ts              JWT（Turnstile 验证后存储）
 │   │   ├── music.ts             Neko 音乐播放（Howl + Meting API + 歌词）
@@ -204,49 +203,47 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件        | 用途                                                    |
-| ----------- | ------------------------------------------------------- |
-| `KCard`     | 毛玻璃卡片容器（可选 title）                            |
-| `KButton`   | 毛玻璃按钮（支持 round/text/block）                     |
+| 组件          | 用途                                                                                                                         |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `KCard`       | 毛玻璃卡片容器（可选 title）                                                                                                 |
+| `KButton`     | 毛玻璃按钮（支持 round/text/block）                                                                                          |
 | `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore） |
-| `KCardLink` | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标） |
-| `KNavCard`  | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用） |
-| `KInput`    | 输入框/textarea（支持 clearable/disabled/maxlength）    |
-| `KSwitch`   | 开关                                                    |
-| `KDivider`  | 分隔线（horizontal/vertical）                           |
-| `KBadge`    | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备） |
-| `KMarkdown` | Markdown 渲染（markdown-exit + github-markdown-css）    |
-| `KTable`    | 表格布局（th 左对齐/td 右对齐）                         |
-| `KMenu`     | 下拉菜单（direction/align，点击外部关闭）               |
-| `KDialog`   | 原生 dialog 弹窗（v-model 开关、title 槽、遮罩/Esc/关闭按钮，KCard+KIconButton 组合） |
+| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                      |
+| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                              |
+| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                         |
+| `KSwitch`     | 开关                                                                                                                         |
+| `KDivider`    | 分隔线（horizontal/vertical）                                                                                                |
+| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                   |
+| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                         |
+| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                              |
+| `KMenu`       | 下拉菜单（direction/align，点击外部关闭）                                                                                    |
+| `KDialog`     | 原生 dialog 弹窗（v-model 开关、title 槽、遮罩/Esc/关闭按钮，KCard+KIconButton 组合）                                        |
 
 ### 页面路由总览
 
-| 路由             | 文件                            | 说明                              |
-| ---------------- | ------------------------------- | --------------------------------- |
+| 路由             | 文件                            | 说明                                             |
+| ---------------- | ------------------------------- | ------------------------------------------------ |
 | `/`              | `pages/index.vue`               | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body） |
-| `/about/as-mtf`  | `pages/about/as-mtf/index.vue`  | MtF 页面                          |
-| `/about/devices` | `pages/about/devices/index.vue` | 设备配置（含 data-pagefind-body） |
-| `/blog`          | `pages/blog/index.vue`          | 文章列表                          |
-| `/blog/:slug`    | `pages/blog/[slug].vue`         | 文章详情（多语言）                |
-| `/timeline`      | `pages/timeline/index.vue`      | 时间线（条目描述保持中文）        |
-| `/links`         | `pages/links/index.vue`         | 友链页                            |
-| `/ask-box`       | `pages/ask-box/index.vue`       | 提问箱列表                        |
-| `/ask-box/ask`   | `pages/ask-box/ask.vue`         | 提交提问                          |
-| `/status`        | `pages/status/index.vue`        | 状态页（Steam/天气/GitHub）       |
-| `/neko`          | `pages/neko/index.vue`          | Neko AI 聊天                      |
-| `/admin`         | `pages/admin/index.vue`         | API key 管理                      |
-| `/admin/r2`      | `pages/admin/r2.vue`            | R2 文件上传                       |
-| `/admin/neko`    | `pages/admin/neko.vue`          | Neko 提示词管理                   |
-| `/admin/ask-box` | `pages/admin/ask-box.vue`       | 提问审核                          |
+| `/about/as-mtf`  | `pages/about/as-mtf/index.vue`  | MtF 页面                                         |
+| `/about/devices` | `pages/about/devices/index.vue` | 设备配置（含 data-pagefind-body）                |
+| `/blog`          | `pages/blog/index.vue`          | 文章列表                                         |
+| `/blog/:slug`    | `pages/blog/[slug].vue`         | 文章详情（多语言）                               |
+| `/timeline`      | `pages/timeline/index.vue`      | 时间线（条目描述保持中文）                       |
+| `/links`         | `pages/links/index.vue`         | 友链页                                           |
+| `/ask-box`       | `pages/ask-box/index.vue`       | 提问箱列表                                       |
+| `/ask-box/ask`   | `pages/ask-box/ask.vue`         | 提交提问                                         |
+| `/status`        | `pages/status/index.vue`        | 状态页（Steam/天气/GitHub）                      |
+| `/admin`         | `pages/admin/index.vue`         | API key 管理                                     |
+| `/admin/r2`      | `pages/admin/r2.vue`            | R2 文件上传                                      |
+| `/admin/ask-box` | `pages/admin/ask-box.vue`       | 提问审核                                         |
 
 ### API 概览
 
-| 端点                                                     | 来源                  | 说明                         |
-| -------------------------------------------------------- | --------------------- | ---------------------------- |
-| `GET /api/articles`                                      | server/   | 文章元信息列表（无 content） |
-| `GET /api/articles/:slug`                                | server/   | 指定文章（所有语言版本）     |
-| `/status`、`/ask-box`、`/r2`、`/turnstile`               | backend/  | 通过 `fetchApi` 调用         |
+| 端点                                       | 来源     | 说明                         |
+| ------------------------------------------ | -------- | ---------------------------- |
+| `GET /api/articles`                        | server/  | 文章元信息列表（无 content） |
+| `GET /api/articles/:slug`                  | server/  | 指定文章（所有语言版本）     |
+| `/status`、`/ask-box`、`/r2`、`/turnstile` | backend/ | 通过 `fetchApi` 调用         |
 
 ## Architecture
 
@@ -257,7 +254,7 @@ Kuriyona.com/
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/neko`, `/admin/ask-box`. Auth via `API_KEY` in `localStorage`, passed as `?auth=` param.
+- `app/pages/admin/` — 3 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`. Auth via `API_KEY` in `localStorage`, passed as `?auth=` param.
 
 ## Key Conventions
 

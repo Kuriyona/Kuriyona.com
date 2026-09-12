@@ -2,7 +2,6 @@
 import AppMenu from './AppBar/AppMenu.vue';
 import KButton from './KButton.vue';
 import { useSearch } from '~/composables/useSearch';
-const popup = ref(false);
 const mobileMenu = ref(false);
 
 const search = useSearch();
@@ -55,6 +54,6 @@ onMounted(() => {
       <MusicBar />
     </div>
   </div>
-  <AppMenu v-model="mobileMenu" @open-neko="popup = true" />
+  <AppMenu v-model="mobileMenu" />
   <SearchModal />
 </template>

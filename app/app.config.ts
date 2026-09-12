@@ -9,13 +9,6 @@ const nav = [
     onAbout: true,
   },
   { to: '/timeline', titleKey: 'timeline.title', descKey: 'timeline.desc', onAbout: true },
-  {
-    to: '/neko',
-    shortTitleKey: 'neko.short-title',
-    titleKey: 'neko.title',
-    descKey: 'neko.desc',
-    enabled: false,
-  },
   { to: '/status', titleKey: 'status.title', descKey: 'status.desc', enabled: false },
   {
     to: '/about/devices',
