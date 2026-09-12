@@ -7,7 +7,17 @@
     "index": "pagefind --site dist",
     "build": "pnpm run generate && pnpm run index",
     "sort-i18n": "bun scripts/sort-i18n.ts",
-    "fmt": "pnpm run sort-i18n && oxfmt"
+    "fmt": "pnpm run sort-i18n && oxfmt",
+    "api:install": "pnpm --dir backend install",
+    "api:dev": "pnpm --dir backend run dev",
+    "api:run": "pnpm --dir backend run run",
+    "api:build": "pnpm --dir backend run build",
+    "api:orm-generate": "pnpm --dir backend run orm-generate",
+    "api:orm-migrate": "pnpm --dir backend run orm-migrate",
+    "api:image:build": "pnpm --dir backend run image:build",
+    "api:image:save": "pnpm --dir backend run image:save",
+    "api:image:load": "pnpm --dir backend run image:load",
+    "api:image:all": "pnpm --dir backend run image:all"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.8",

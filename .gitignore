@@ -33,7 +33,7 @@ coverage
 /.nuxt
 /.output
 *.zip
-/backend-dist
-/backend/prompt.md
+# 已合并为 backend/，此处保留原后端仓库本地检出（待删除后可移除本行）
+/api.kuriyona.com/
 public/intro.png
 /temp

@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "private": true,
+  "scripts": {
+    "run": "bun index.ts",
+    "dev": "bun --watch index.ts",
+    "build": "bun build --target=bun index.ts --outfile ./dist/backend.js --minify && rm -rf ./dist/drizzle && cp -r ./drizzle ./dist/drizzle",
+    "orm-generate": "pnpm exec drizzle-kit generate",
+    "orm-migrate": "pnpm exec drizzle-kit migrate",
+    "image:build": "bash scripts/image.sh build",
+    "image:save": "bash scripts/image.sh save",
+    "image:load": "bash scripts/image.sh load",
+    "image:all": "bash scripts/image.sh all"
+  },
+  "dependencies": {
+    "@elysia/jwt": "^1.4.2",
+    "@elysiajs/cors": "^1.4.2",
+    "drizzle-orm": "1.0.0-rc.4",
+    "elysia": "^1.4.29",
+    "ky": "^2.0.2",
+    "mysql2": "^3.15.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "@types/node": "^26.0.1",
+    "drizzle-kit": "1.0.0-rc.4",
+    "oxfmt": "^0.56.0"
+  },
+  "packageManager": "pnpm@11.4.0"
+}

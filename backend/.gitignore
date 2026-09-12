@@ -1,0 +1,9 @@
+/node_modules
+.env
+.env.production
+prompt.md
+*.sqlite
+/dist
+/output
+*.tar
+*:Zone.Identifier

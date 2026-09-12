@@ -1,6 +1,6 @@
 # Kuriyona.com
 
-Personal website — **Nuxt 4** (SSR) + Vue 3 + Tailwind CSS v4.
+个人网站 monorepo：根目录为 **Nuxt 4**（SSR）前端，`backend/` 为 **Bun + Elysia + Drizzle + MySQL** API（原 [Kuriyona/api.kuriyona.com](https://github.com/Kuriyona/api.kuriyona.com) 仓库）。
 
 ## Stack
 
@@ -12,22 +12,31 @@ Personal website — **Nuxt 4** (SSR) + Vue 3 + Tailwind CSS v4.
 | UI components   | Custom `K*` components (Tailwind, no UI library)    |
 | Animation       | GSAP                                                |
 | I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales) |
+| Backend         | Elysia + Drizzle ORM + MySQL（`backend/`，独立子包） |
 | Formatter       | `oxfmt` (not Prettier)                              |
-
-**Backend is NOT in this repo.** See [Kuriyona/api.kuriyona.com](https://github.com/Kuriyona/api.kuriyona.com) (Elysia on Bun).
 
 ## Commands
 
 ```
+# 前端（根目录）
 pnpm dev             Nuxt dev server (hot reload)
 pnpm generate        Nuxt static generation
 pnpm index           PageFind search indexing (requires `generate` first)
 pnpm preview         Nuxt preview build output
 pnpm build           pnpm generate + pnpm index
 pnpm fmt             Format with oxfmt
+
+# 后端（backend/ 独立子包，通过 api:* 转发）
+pnpm api:install     安装后端依赖
+pnpm api:dev         Elysia dev（watch，需 backend/.env）
+pnpm api:run         直接运行后端
+pnpm api:build       构建 backend/dist/backend.js + dist/drizzle/
+pnpm api:orm-generate  改 schema 后生成 Drizzle 迁移
+pnpm api:orm-migrate   应用迁移
+pnpm api:image:all   Docker 镜像 build + save（见 backend/docs/image.md）
 ```
 
-`postinstall` auto-runs `nuxt prepare`. No lint, typecheck, or test commands.
+`postinstall` auto-runs `nuxt prepare`. No lint, typecheck, or test commands（后端以 `pnpm api:build` 作为构建/类型 sanity check）。
 
 ## Git Commit Convention
 
@@ -172,6 +181,17 @@ Kuriyona.com/
 │   ├── generate-blog-og.ts      OG 图生成（yona-svg + sharp，输出到 temp/）
 │   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量）
 │   └── sort-i18n.ts             i18n JSON 按键名排序（pnpm fmt 时自动执行）
+├── backend/                     后端 API（独立子包，自带 lockfile，非 pnpm workspace 成员）
+│   ├── index.ts                 Elysia 入口（启动时自动 migrate 后 listen 62802）
+│   ├── src/
+│   │   ├── db/schema.ts         Drizzle MySQL 表结构
+│   │   ├── plugin/auth.ts       鉴权插件（AUTH_KEY query / JWT Bearer）
+│   │   ├── router/              路由：ask-box / r2 / status
+│   │   └── utils.ts             数据库/R2/Turnstile 工具 + 启动时校验必需环境变量
+│   ├── drizzle/                 Drizzle 迁移（提交到 Git，运行时从磁盘读取）
+│   ├── scripts/image.sh         Docker 镜像 build/save/load（见 backend/docs/image.md）
+│   ├── Dockerfile               多阶段构建（context = backend/）
+│   └── docs/                    后端文档（development / deployment / image）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt（静态资源实际托管在 R2）
 ├── temp/                        OG 图生成中间产物（gitignored）
@@ -224,15 +244,16 @@ Kuriyona.com/
 
 | 端点                                                     | 来源                  | 说明                         |
 | -------------------------------------------------------- | --------------------- | ---------------------------- |
-| `GET /api/articles`                                      | server/               | 文章元信息列表（无 content） |
-| `GET /api/articles/:slug`                                | server/               | 指定文章（所有语言版本）     |
-| 其余 `/status`、`/ask-box`、`/r2`、`/neko`、`/turnstile` | 后端 api.kuriyona.com | 通过 `fetchApi` 调用         |
+| `GET /api/articles`                                      | server/   | 文章元信息列表（无 content） |
+| `GET /api/articles/:slug`                                | server/   | 指定文章（所有语言版本）     |
+| `/status`、`/ask-box`、`/r2`、`/turnstile`               | backend/  | 通过 `fetchApi` 调用         |
 
 ## Architecture
 
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`) and upload (`upload-blog-og.ts`). Import from `server/utils.ts`.
+- `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Bun + Elysia + Drizzle + MySQL，启动时自动执行 Drizzle 迁移；通过 `pnpm api:*` 调用，Docker 构建 context 为 `backend/`。详见 `backend/AGENTS.md` 与 `backend/docs/`。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
@@ -246,7 +267,7 @@ Kuriyona.com/
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`.
 - **UI components**: Custom `K*` components in `app/components/` (KCard, KButton, KCardLink, KInput, KSwitch, KDivider, KMarkdown, KTable, KMenu, etc.) styled with Tailwind — no UI library. Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
-- **Env vars**: Loaded via `dotenv/config` in backend only. Required: `AUTH_KEY`, `JWT_SECRET`, `WEATHER_API_KEY`, `LLM_API_KEY`, `TURNSTILE_SECRET_KEY`, `PUSHPLUS_API_KEY`, `ENDPOINT`, `ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `BUCKET_NAME`.
+- **Env vars**: 后端从 `process.env` 读取，启动时校验必需项（缺失即退出）。模板见 `backend/.env.example`；必需 8 项：`DATABASE_URL`、`JWT_SECRET`、`AUTH_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`、`TURNSTILE_SECRET_KEY`。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.
 - **I18n key 约定**: 全部使用 kebab-case（如 `blog.not-found`），全局通用文本归入 `global.*` 命名空间；4 个语言文件 key 集合必须一致，新增/修改后需 `pnpm fmt` 触发 `sort-i18n.ts` 自动排序。
