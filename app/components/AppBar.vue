@@ -45,13 +45,11 @@ onMounted(() => {
           <KButton round @click="mobileMenu = true">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-lg! leading-none"> translate </span>
-              <span class="material-symbols-outlined text-lg! leading-none"> music_note </span>
               <span class="material-symbols-outlined text-lg! leading-none"> menu </span>
             </div>
           </KButton>
         </div>
       </div>
-      <MusicBar />
     </div>
   </div>
   <AppMenu v-model="mobileMenu" />

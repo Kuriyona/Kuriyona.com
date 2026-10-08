@@ -1,18 +1,8 @@
 <script setup lang="ts">
-const store = useMusicStore();
 import BackgroundSelector from '../AppBar/BackgroundSelector.vue';
 const { setLocale, locales } = useI18n();
 const show = defineModel<boolean>();
 const nav = useNav();
-const handleProgressClick = (event: MouseEvent) => {
-  if (!store.currentSong) return;
-  const target = event.currentTarget as HTMLElement;
-  const rect = target.getBoundingClientRect();
-  const clickX = event.clientX - rect.left;
-  const percentage = clickX / rect.width;
-  const newTime = percentage * store.currentSong.duration;
-  store.setCurrentTime(newTime / 1000);
-};
 </script>
 
 <template>
@@ -24,46 +14,6 @@ const handleProgressClick = (event: MouseEvent) => {
         <div class="flex justify-end">
           <KIconButton icon="close" @click="show = false" />
         </div>
-        <KCard v-if="store.currentSong">
-          <div class="flex items-center gap-2 overflow-x-hidden">
-            <img :src="store.cover" class="h-16 w-16 rounded-md" />
-            <div class="relative w-full flex flex-col items-center gap-2">
-              <p id="name" class="text-center w-full text-sm">
-                {{ store.currentSong.name }}
-              </p>
-              <div class="flex items-center gap-4">
-                <KIconButton
-                  icon="skip_previous"
-                  size="sm"
-                  class="hover-show"
-                  @click="store.currentIndex++" />
-                <KIconButton
-                  :icon="store.playing ? 'pause' : 'play_arrow'"
-                  size="sm"
-                  @click="store.playing = !store.playing" />
-                <KIconButton
-                  icon="skip_next"
-                  size="sm"
-                  class="hover-show"
-                  @click="store.currentIndex--" />
-              </div>
-            </div>
-          </div>
-          <div class="mt-2 flex justify-between">
-            <span>{{ formatDuration(store.currentTime * 1000) }}</span>
-            <span>{{ formatDuration(store.currentSong.duration) }}</span>
-          </div>
-          <div
-            id="progress"
-            class="mt-0.5 h-1 bg-white/25 transition-all duration-300 rounded-full"
-            @click="handleProgressClick">
-            <div
-              class="h-full bg-white/50 transition-width duration-100"
-              :style="{
-                width: `${(store.currentTime / store.currentSong.duration) * 100 * 1000}%`,
-              }"></div>
-          </div>
-        </KCard>
         <KCardLink
           v-for="item in nav"
           :key="item.to"

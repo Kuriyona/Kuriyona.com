@@ -127,10 +127,8 @@ Kuriyona.com/
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听
-│   │   ├── AppBar/             AppMenu.vue（移动端抽屉：音乐/导航/语言/背景）+ BackgroundSelector.vue
 │   │   ├── AppFooter.vue       版权 + GIT_HASH 链接 + Cloudflare 节点
 │   │   ├── AppBackground.vue   全屏背景（视频/必应图片，useBackgroundStore）
-│   │   ├── MusicBar.vue        音乐播放条（歌词滚动、播放控制）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -157,7 +155,6 @@ Kuriyona.com/
 │   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核）
 │   ├── stores/                  Pinia stores
 │   │   ├── main.ts              JWT（Turnstile 验证后存储）
-│   │   ├── music.ts             Neko 音乐播放（Howl + Meting API + 歌词）
 │   │   └── background.ts        背景预设（视频/必应）
 │   ├── utils/                   @/ 别名工具函数
 │   │   ├── api.ts               ky 实例 fetchApi（自动注入 auth，开发环境用本地 host）
@@ -166,7 +163,6 @@ Kuriyona.com/
 │   │   ├── emoji.ts             国家码 → 国旗 emoji
 │   │   ├── console.ts           console 欢迎信息（greet.txt）
 │   │   ├── pagefind.ts          PageFind JS API 封装（new Function 绕过打包器）
-│   │   └── types/music.ts       网易云歌曲/歌词类型
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
 │   │   └── statusTypes.ts       /status 接口类型（Weather/GithubActivity/Steam）
