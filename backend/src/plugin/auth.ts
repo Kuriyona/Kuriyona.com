@@ -1,28 +1,21 @@
-import jwt from "@elysia/jwt";
-import { Elysia, t } from "elysia";
+import type { MiddlewareHandler } from 'hono';
+import { verify } from 'hono/jwt';
+import type { Env } from '../env';
 
-export const validateAuth = (app: Elysia) => {
-  return app.onBeforeHandle(async ({ query, set }) => {
-    if (query.auth !== process.env.AUTH_KEY) {
-      set.status = 401;
-      return { message: "Unauthorized" };
-    }
-  });
+export const requireAuthKey: MiddlewareHandler<{ Bindings: Env }> = async (c, next) => {
+  if (c.req.query('auth') !== c.env.AUTH_KEY) {
+    return c.json({ message: 'Unauthorized' }, 401);
+  }
+  await next();
 };
 
-export const validateJWT = (app: Elysia) => {
-  return app
-    .use(
-      jwt({
-        name: "jwt",
-        secret: process.env.JWT_SECRET!,
-      }),
-    )
-    .onBeforeHandle(async ({ headers, jwt, set }) => {
-      const payload = await jwt.verify(headers["authorization"]);
-      if (!payload) {
-        set.status = 401;
-        return;
-      }
-    });
+export const requireJwt: MiddlewareHandler<{ Bindings: Env }> = async (c, next) => {
+  const header = c.req.header('Authorization') ?? '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : header;
+  try {
+    await verify(token, c.env.JWT_SECRET, 'HS256');
+  } catch {
+    return c.body(null, 401);
+  }
+  await next();
 };

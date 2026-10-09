@@ -5,7 +5,7 @@ const { data: questions, refresh } = useAsyncData(
   async () =>
     await fetchApi('/ask-box/admin').json<
       {
-        id: number;
+        id: string;
         name?: string;
         showName: number;
         ip?: string;
@@ -21,15 +21,15 @@ const { data: questions, refresh } = useAsyncData(
     >(),
   { server: false },
 );
-const setPublic = async (id: number, isPublic: number) => {
+const setPublic = async (id: string, isPublic: number) => {
   await fetchApi.put(`/ask-box/admin/${id}/public/${isPublic}`);
   refresh();
 };
-const deleteQuestion = async (id: number) => {
+const deleteQuestion = async (id: string) => {
   await fetchApi.delete(`/ask-box/admin/${id}`);
   refresh();
 };
-const answerQuestion = async (id: number) => {
+const answerQuestion = async (id: string) => {
   await fetchApi.put(`/ask-box/admin/${id}/answer/${encodeURIComponent(answer.value)}`);
   refresh();
 };

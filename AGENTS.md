@@ -1,19 +1,19 @@
 # Kuriyona.com
 
-个人网站 monorepo：根目录为 **Nuxt 4**（SSR）前端，`backend/` 为 **Bun + Elysia + Drizzle + MySQL** API（原 [Kuriyona/api.kuriyona.com](https://github.com/Kuriyona/api.kuriyona.com) 仓库）。
+个人网站 monorepo：根目录为 **Nuxt 4**（SSG）前端，`backend/` 为 **Cloudflare Workers + Hono + Drizzle + D1** API（单 Worker 同托管静态站点与 `/api/*`；原 [Kuriyona/api.kuriyona.com](https://github.com/Kuriyona/api.kuriyona.com) 仓库）。
 
 ## Stack
 
-| Layer           | Choice                                               |
-| --------------- | ---------------------------------------------------- |
-| Runtime         | **Bun** (not Node)                                   |
-| Package manager | **pnpm** (v11.4.0)                                   |
-| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                     |
-| UI components   | Custom `K*` components (Tailwind, no UI library)     |
-| Animation       | GSAP                                                 |
-| I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales)  |
-| Backend         | Elysia + Drizzle ORM + MySQL（`backend/`，独立子包） |
-| Formatter       | `oxfmt` (not Prettier)                               |
+| Layer           | Choice                                                |
+| --------------- | ----------------------------------------------------- |
+| Runtime         | **Bun** (not Node)                                    |
+| Package manager | **pnpm** (v11.4.0)                                    |
+| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                      |
+| UI components   | Custom `K*` components (Tailwind, no UI library)      |
+| Animation       | GSAP                                                  |
+| I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales)   |
+| Backend         | Cloudflare Workers + Hono + Drizzle + D1 (`backend/`) |
+| Formatter       | `oxfmt` (not Prettier)                                |
 
 ## Commands
 
@@ -26,14 +26,13 @@ pnpm preview         Nuxt preview build output
 pnpm build           pnpm generate + pnpm index
 pnpm fmt             Format with oxfmt
 
-# 后端（backend/ 独立子包，通过 api:* 转发）
+# 后端（backend/ 独立子包，通过 api:* 转发；wrangler 装在根目录）
 pnpm api:install     安装后端依赖
-pnpm api:dev         Elysia dev（watch，需 backend/.env）
-pnpm api:run         直接运行后端
-pnpm api:build       构建 backend/dist/backend.js + dist/drizzle/
+pnpm api:dev         wrangler dev --port 62802（需根 .dev.vars 与 dist/）
 pnpm api:orm-generate  改 schema 后生成 Drizzle 迁移
-pnpm api:orm-migrate   应用迁移
-pnpm api:image:all   Docker 镜像 build + save（见 backend/docs/image.md）
+pnpm api:d1:migrate:local   应用迁移到本地 D1
+pnpm api:d1:migrate:remote  应用迁移到远程 D1
+pnpm deploy          构建前端 + wrangler deploy（= pnpm build && wrangler deploy）
 ```
 
 `postinstall` auto-runs `nuxt prepare`. No lint, typecheck, or test commands（后端以 `pnpm api:build` 作为构建/类型 sanity check）。
@@ -177,22 +176,23 @@ Kuriyona.com/
 │   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量）
 │   └── sort-i18n.ts             i18n JSON 按键名排序（pnpm fmt 时自动执行）
 ├── backend/                     后端 API（独立子包，自带 lockfile，非 pnpm workspace 成员）
-│   ├── index.ts                 Elysia 入口（启动时自动 migrate 后 listen 62802）
+│   ├── index.ts                 Worker 入口（Hono app，导出 default；不做 listen/migrate）
 │   ├── src/
-│   │   ├── db/schema.ts         Drizzle MySQL 表结构
-│   │   ├── plugin/auth.ts       鉴权插件（AUTH_KEY query / JWT Bearer）
+│   │   ├── env.ts               Env 接口 + REQUIRED_ENV
+│   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table / status_data，UUID 主键）
+│   │   ├── plugin/auth.ts       鉴权中间件（AUTH_KEY query / JWT Bare 或 Bearer）
 │   │   ├── router/              路由：ask-box / r2 / status
-│   │   └── utils.ts             数据库/R2/Turnstile 工具 + 启动时校验必需环境变量
-│   ├── drizzle/                 Drizzle 迁移（提交到 Git，运行时从磁盘读取）
-│   ├── scripts/image.sh         Docker 镜像 build/save/load（见 backend/docs/image.md）
-│   ├── Dockerfile               多阶段构建（context = backend/）
-│   └── docs/                    后端文档（development / deployment / image）
+│   │   └── utils.ts             D1/R2 预签名/Turnstile 工具
+│   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
+│   └── docs/                    后端文档（development / deployment）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
-├── public/                      robots.txt（静态资源实际托管在 R2）
+├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）
 ├── temp/                        OG 图生成中间产物（gitignored）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、GIT_HASH/BUILD_TIME define）
-├── package.json                 依赖与脚本（无 lint/typecheck/test）
-├── pnpm-workspace.yaml          pnpm 构建白名单
+├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding，main=backend/index.ts）
+├── .dev.vars.example            本地开发环境变量模板（复制为 .dev.vars，gitignored）
+├── package.json                 依赖与脚本（无 lint/typecheck/test；含 api:* 与 deploy）
+├── pnpm-workspace.yaml          pnpm 构建白名单（含 workerd）
 ├── vite-env.d.ts                GIT_HASH / BUILD_TIME 全局声明
 └── .oxfmtrc.json                oxfmt 配置（singleQuote、bracketSameLine）
 ```
@@ -235,18 +235,19 @@ Kuriyona.com/
 
 ### API 概览
 
-| 端点                                       | 来源     | 说明                         |
-| ------------------------------------------ | -------- | ---------------------------- |
-| `GET /api/articles`                        | server/  | 文章元信息列表（无 content） |
-| `GET /api/articles/:slug`                  | server/  | 指定文章（所有语言版本）     |
-| `/status`、`/ask-box`、`/r2`、`/turnstile` | backend/ | 通过 `fetchApi` 调用         |
+| 端点                                                         | 来源     | 说明                                               |
+| ------------------------------------------------------------ | -------- | -------------------------------------------------- |
+| `GET /api/articles`                                          | server/  | 文章元信息列表（无 content）                       |
+| `GET /api/articles/:slug`                                    | server/  | 指定文章（所有语言版本）                           |
+| `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用 |
 
 ## Architecture
 
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`) and upload (`upload-blog-og.ts`). Import from `server/utils.ts`.
-- `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Bun + Elysia + Drizzle + MySQL，启动时自动执行 Drizzle 迁移；通过 `pnpm api:*` 调用，Docker 构建 context 为 `backend/`。详见 `backend/AGENTS.md` 与 `backend/docs/`。
+- `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
+- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
@@ -256,11 +257,11 @@ Kuriyona.com/
 
 - **Path aliases**: `@/` and `~/` both work, used interchangeably.
 - **I18n**: `app/scripts/i18n.ts` re-exports `useI18n` from `vue-i18n`. Templates also use `$t()` directly.
-- **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `https://api-kuriyona-com.localhost/` (not `localhost:62802`).
+- **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `https://api-kuriyona-com.localhost/api` (TLS proxy → `wrangler dev` 的 62802); 生产同源相对路径 `/api`（无需 CORS）。
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`.
 - **UI components**: Custom `K*` components in `app/components/` (KCard, KButton, KCardLink, KInput, KSwitch, KDivider, KMarkdown, KTable, KMenu, etc.) styled with Tailwind — no UI library. Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
-- **Env vars**: 后端从 `process.env` 读取，启动时校验必需项（缺失即退出）。模板见 `backend/.env.example`；必需 8 项：`DATABASE_URL`、`JWT_SECRET`、`AUTH_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`、`TURNSTILE_SECRET_KEY`。
+- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.
 - **I18n key 约定**: 全部使用 kebab-case（如 `blog.not-found`），全局通用文本归入 `global.*` 命名空间；4 个语言文件 key 集合必须一致，新增/修改后需 `pnpm fmt` 触发 `sort-i18n.ts` 自动排序。

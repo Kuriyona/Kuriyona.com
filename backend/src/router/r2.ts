@@ -1,25 +1,44 @@
-import Elysia from 'elysia';
-import { validateAuth } from '../plugin/auth';
-import { s3 } from '../utils';
+import type { Handler } from 'hono';
+import type { Env } from '../env';
+import { getR2, presignR2Put, r2ObjectUrl } from '../utils';
 
-const app = new Elysia({ prefix: '/r2' })
-  .use(validateAuth)
-  .get('/list', async () => {
-    const list = await s3.list({
-      prefix: 'static',
-    });
-    return list.contents;
-  })
-  .get('/upload-signed-url', async ({ query: { key, mime } }) => {
-    const _key = `static/${key}`;
-    const url = s3.presign(_key, {
-      type: mime,
-      method: 'PUT',
-    });
-    return {
-      url,
-      key,
-    };
-  });
+type H = Handler<{ Bindings: Env }>;
 
-export { app as RouterR2 };
+const decodeXml = (s: string) =>
+  s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+
+const parseListObjects = (xml: string) => {
+  const out: { key: string; size: number; lastModified: string; eTag: string }[] = [];
+  for (const m of xml.matchAll(/<Contents>([\s\S]*?)<\/Contents>/g)) {
+    const body = m[1] ?? '';
+    const pick = (tag: string) =>
+      body.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1] ?? '';
+    out.push({
+      key: decodeXml(pick('Key')),
+      size: Number(pick('Size') || 0),
+      lastModified: pick('LastModified'),
+      eTag: decodeXml(pick('ETag')).replace(/^"|"$/g, ''),
+    });
+  }
+  return out;
+};
+
+export const listR2: H = async (c) => {
+  const res = await getR2(c.env).fetch(`${r2ObjectUrl(c.env, '')}?list-type=2&prefix=static`);
+  if (!res.ok) {
+    return c.json({ message: 'R2 list failed' }, 502);
+  }
+  return c.json(parseListObjects(await res.text()));
+};
+
+export const signedUrl: H = async (c) => {
+  const key = c.req.query('key') ?? '';
+  const mime = c.req.query('mime') ?? '';
+  const url = await presignR2Put(c.env, `static/${key}`, mime || undefined);
+  return c.json({ url, key });
+};

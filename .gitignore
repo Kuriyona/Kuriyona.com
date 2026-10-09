@@ -37,3 +37,5 @@ coverage
 /api.kuriyona.com/
 public/intro.png
 /temp
+.wrangler
+.dev.vars

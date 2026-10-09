@@ -9,15 +9,11 @@
     "sort-i18n": "bun scripts/sort-i18n.ts",
     "fmt": "pnpm run sort-i18n && oxfmt",
     "api:install": "pnpm --dir backend install",
-    "api:dev": "pnpm --dir backend run dev",
-    "api:run": "pnpm --dir backend run run",
-    "api:build": "pnpm --dir backend run build",
+    "api:dev": "wrangler dev --port 62802",
     "api:orm-generate": "pnpm --dir backend run orm-generate",
-    "api:orm-migrate": "pnpm --dir backend run orm-migrate",
-    "api:image:build": "pnpm --dir backend run image:build",
-    "api:image:save": "pnpm --dir backend run image:save",
-    "api:image:load": "pnpm --dir backend run image:load",
-    "api:image:all": "pnpm --dir backend run image:all"
+    "api:d1:migrate:local": "wrangler d1 migrations apply kuriyona-db --local",
+    "api:d1:migrate:remote": "wrangler d1 migrations apply kuriyona-db --remote",
+    "deploy": "pnpm run build && wrangler deploy"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.8",
@@ -49,7 +45,8 @@
   "devDependencies": {
     "@types/node": "^26.0.1",
     "oxfmt": "^0.56.0",
-    "pagefind": "^1.5.2"
+    "pagefind": "^1.5.2",
+    "wrangler": "^4.149.0"
   },
   "packageManager": "pnpm@11.4.0"
 }

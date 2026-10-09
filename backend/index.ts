@@ -1,49 +1,55 @@
-import { Elysia, t } from "elysia";
-import { RouterR2 } from "./src/router/r2";
-import { RouteStatus } from "./src/router/status";
-import { cors } from "@elysiajs/cors";
-import { jwt } from "@elysia/jwt";
-import { verifyTurnstile, db } from "./src/utils";
-import { migrate } from "drizzle-orm/mysql2/migrator";
-import { RouteAskBox } from "./src/router/ask-box";
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { sign } from 'hono/jwt';
+import type { Handler } from 'hono';
+import { REQUIRED_ENV, type Env } from './src/env';
+import { requireAuthKey, requireJwt } from './src/plugin/auth';
+import {
+  answerAsk,
+  createAsk,
+  deleteAsk,
+  listAllAsks,
+  listPublicAsks,
+  setAskPublic,
+} from './src/router/ask-box';
+import { listR2, signedUrl } from './src/router/r2';
+import { deleteStatus, getStatus, postStatus } from './src/router/status';
+import { verifyTurnstile } from './src/utils';
 
-await migrate(db, { migrationsFolder: import.meta.dir + "/drizzle" });
-
-const app = new Elysia()
-  .use(
-    cors({
-      origin: "*",
-    }),
-  )
-  .use(
-    jwt({
-      name: "jwt",
-      secret: process.env.JWT_SECRET!,
-    }),
-  )
-  .get("/", () => "This API site of Kuriyona.com")
-  .use(RouterR2)
-  .use(RouteStatus)
-  .use(RouteAskBox)
-  .get(
-    "/turnstile",
-    async ({ jwt, query: { token } }) => {
-      const result = await verifyTurnstile(token);
-      if (result) {
-        const value = await jwt.sign({
-          pass: true,
-          exp: "2h",
-        });
-        return value;
+const api = new Hono<{ Bindings: Env }>()
+  .use('*', cors({ origin: '*', allowHeaders: ['Content-Type', 'Authorization'] }))
+  .use('*', async (c, next) => {
+    for (const key of REQUIRED_ENV) {
+      if (!(c.env as Record<string, unknown>)[key]) {
+        return c.json({ message: `[config] 缺少必需的环境变量: ${key}` }, 500);
       }
-      return null;
-    },
-    {
-      query: t.Object({
-        token: t.String(),
-      }),
-    },
-  );
+    }
+    await next();
+  })
+  .get('/', (c) => c.text('This API site of Kuriyona.com'))
+  .get('/turnstile', async (c) => {
+    const ok = await verifyTurnstile(c.env, c.req.query('token') ?? '');
+    if (!ok) return c.json(null);
+    const token = await sign(
+      { pass: true, exp: Math.floor(Date.now() / 1000) + 7200 },
+      c.env.JWT_SECRET,
+    );
+    return c.text(token);
+  })
+  .post('/ask-box', requireJwt, createAsk)
+  .get('/ask-box', listPublicAsks)
+  .get('/ask-box/admin', requireAuthKey, listAllAsks)
+  .delete('/ask-box/admin/:id', requireAuthKey, deleteAsk)
+  .put('/ask-box/admin/:id/public/:isPublic', requireAuthKey, setAskPublic)
+  .put('/ask-box/admin/:id/answer/:answer', requireAuthKey, answerAsk)
+  .get('/status', getStatus)
+  .post('/status', requireAuthKey, postStatus)
+  .delete('/status', requireAuthKey, deleteStatus)
+  .get('/r2/list', requireAuthKey, listR2)
+  .get('/r2/upload-signed-url', requireAuthKey, signedUrl);
 
-app.listen(process.env.PORT || 62802);
-console.log(`Server is running on port ${process.env.PORT || 62802}`);
+const text: Handler<{ Bindings: Env }> = (c) => c.text('This API site of Kuriyona.com');
+
+const app = new Hono<{ Bindings: Env }>().get('/api', text).get('/api/', text).route('/api', api);
+
+export default app;

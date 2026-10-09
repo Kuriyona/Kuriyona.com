@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kuriyona-web",
+  "main": "backend/index.ts",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api", "/api/*"],
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "kuriyona-db",
+      "database_id": "cb0b9a6d-8ba3-46e8-8111-dd6c40c54e74",
+      "migrations_dir": "backend/drizzle",
+      "migrations_pattern": "backend/drizzle/*/migration.sql",
+    },
+  ],
+  "routes": [{ "pattern": "kuriyona.com", "custom_domain": true }],
+}

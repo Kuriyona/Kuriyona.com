@@ -1,98 +1,62 @@
-# 多设备本地开发
+# 本地开发
 
-本项目使用 MySQL,在 Windows PC(WSL2)与 MacBook 上各跑一个本地实例。
-两台设备的数据库**数据各自独立**,通过 Git 中的 drizzle 迁移文件保持 schema 同步。
+后端现在是跑在 **Cloudflare Workers + D1** 上的 Hono 应用，前端是 Nuxt 静态站点。`wrangler dev` 会在本地模拟 Worker + D1（本地 D1 状态存在根目录 `.wrangler/state`）。
 
 ## 1. 环境准备
 
-需要 [Bun](https://bun.sh)（开发运行）与 Docker（仅构建/部署镜像时需要）。
+需要 [Node](https://nodejs.org) ≥ 22 与 pnpm（wrangler 4 要求 Node ≥ 22）。
 
 ```bash
-pnpm install       # 安装依赖
-cp .env.example .env   # 生成环境变量文件并填写
+pnpm install                    # 根目录（Nuxt 前端 + wrangler）
+pnpm api:install                # backend/ 子包依赖
 ```
 
-## 2. 数据库引擎
+## 2. 环境变量
 
-- 驱动:`drizzle-orm/mysql2` + `mysql2`
-- 连接串:`DATABASE_URL`(见 `.env.example`)
-- 数据库名:`kuriyona-api-dev`
-
-## 3. 各平台安装与建库
-
-### Windows PC(WSL2)
+后端从 `c.env` 读取环境变量。本地开发由根目录 `.dev.vars` 提供：
 
 ```bash
-sudo apt update && sudo apt install -y mysql-server
-sudo service mysql start
-sudo mysql -e "CREATE DATABASE \`kuriyona-api-dev\`;"
-sudo mysql -e "CREATE USER 'Kuriyona'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD';"
-sudo mysql -e "GRANT ALL PRIVILEGES ON \`kuriyona-api-dev\`.* TO 'Kuriyona'@'localhost'; FLUSH PRIVILEGES;"
+cp backend/.env .dev.vars
+# 删除 .dev.vars 里的 DATABASE_URL 与 PORT 行（Workers 不需要）
 ```
 
-在 `.env` 设置:
+必需键（缺任一项 API 请求返回 500）：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。可选：`TURNSTILE_DEV_SECRET_KEY`（本地覆盖 Turnstile 密钥，生产不要设置）、`WEATHER_API_KEY`、`GITHUB_API_TOKEN`、`STEAM_API_KEY`。
 
-```
-DATABASE_URL=mysql://Kuriyona:YOUR_PASSWORD@localhost:3306/kuriyona-api-dev
-```
+键名清单见根目录 `.dev.vars.example`。
 
-### MacBook
+## 3. 本地 D1 建表
+
+D1 是本地 SQLite，schema 由 `backend/drizzle/` 下的 drizzle 迁移文件（提交到 Git）定义：
 
 ```bash
-brew install mysql
-brew services start mysql
-mysql -uroot -e "CREATE DATABASE \`kuriyona-api-dev\`;"
+pnpm api:d1:migrate:local       # wrangler d1 migrations apply kuriyona-db --local
 ```
 
-在 `.env` 设置:
+本地数据库文件与状态在根目录 `.wrangler/state`，**两台设备各自独立**；schema 仍靠 git 里的迁移文件同步（取代原先 MySQL 的多设备建库章节）。
 
-```
-DATABASE_URL=mysql://root@localhost:3306/kuriyona-api-dev
-```
-
-> 每台设备的 `.env` 各自独立,由 Git 忽略,不会互相覆盖。
-
-## 4. 初始化表结构
-
-首次(或 schema 变更后)运行一次:
+## 4. 运行
 
 ```bash
-pnpm exec drizzle-kit push
+# API + 静态站点（单 Worker）。要求根目录 dist/ 存在，否则先 `pnpm generate`
+pnpm api:dev                    # wrangler dev --port 62802
 ```
 
-之后通过迁移文件管理:
+- API 全部挂在 `/api/*`，例如 `http://localhost:62802/api`、`http://localhost:62802/api/status`。
+- 同 Worker 也会从 `./dist` 提供 Nuxt 静态产物。
+
+前端 dev（另开终端）：
 
 ```bash
-bun run orm-generate   # 改 schema 后生成迁移(drizzle-kit generate)
-# 提交生成的 drizzle/ 目录
-pnpm exec drizzle-kit migrate   # 两端拉代码后应用迁移
+pnpm generate && pnpm index && pnpm dev
 ```
 
-## 5. 开发运行
+`pnpm dev` 的 DEV API host 为 `https://api-kuriyona-com.localhost/api`（仓库外的 TLS 代理转发到 `127.0.0.1:62802`），因此需要该代理在跑。
 
-```bash
-bun run dev
-```
+## 5. 修改 schema 的流程
 
-服务启动时会自动执行 `migrate()` 应用 `./drizzle` 下的迁移。
-
-## 6. Schema 同步纪律
-
-两台设备数据不同步,仅 schema 通过 Git 同步。改表时**必须**:
-
-1. 修改 `src/db/schema.ts`
-2. 运行 `bun run orm-generate` 生成迁移
-3. 提交 `drizzle/` 目录
-4. 另一台设备 `git pull` 后运行 `pnpm exec drizzle-kit migrate`
+1. 修改 `backend/src/db/schema.ts`
+2. `pnpm api:orm-generate`（= `drizzle-kit generate`，在 `backend/drizzle/` 下产出新迁移目录）
+3. `pnpm api:d1:migrate:local` 应用到本地 D1
+4. 提交生成的 `backend/drizzle/` 目录；部署时执行 `pnpm api:d1:migrate:remote`
 
 不要在未生成迁移的情况下直接改表结构。
-
-## 7. 迁移测试数据(可选)
-
-如需跨设备迁移测试数据:
-
-```bash
-mysqldump -u Kuriyona -p kuriyona-api-dev > dump.sql
-# 在目标设备
-mysql -u Kuriyona -p kuriyona-api-dev < dump.sql
-```

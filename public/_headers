@@ -1,0 +1,8 @@
+/*
+	X-Content-Type-Options: nosniff
+
+/_nuxt/*
+	Cache-Control: public, max-age=14400, must-revalidate
+
+/pagefind/*
+	Cache-Control: public, max-age=14400, must-revalidate

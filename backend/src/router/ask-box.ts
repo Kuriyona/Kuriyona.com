@@ -1,42 +1,45 @@
-import Elysia, { t } from "elysia";
-import { askBoxTable } from "../db/schema";
-import { db } from "../utils";
-import { eq } from "drizzle-orm";
-import { validateAuth, validateJWT } from "../plugin/auth";
+import { eq } from 'drizzle-orm';
+import type { Handler } from 'hono';
+import { askBoxTable } from '../db/schema';
+import type { Env } from '../env';
+import { getDb } from '../utils';
 
-const app = new Elysia({ prefix: "/ask-box" });
+type H = Handler<{ Bindings: Env }>;
 
-app.use(
-  new Elysia().use(validateJWT).post(
-    "/",
-    async ({ body, headers }) => {
-      const q: typeof askBoxTable.$inferInsert = {
-        name: body.name.length > 0 ? body.name : undefined,
-        showName: Number(body.showName),
-        ua: headers["user-agent"] || undefined,
-        showIP: Number(body.showIP),
-        question: body.question,
-        note: body.note.length > 0 ? body.note : undefined,
-        public: 0,
-        askedAt: Date.now(),
-      };
-      await db.insert(askBoxTable).values(q);
-      return { message: "Success" };
-    },
-    {
-      body: t.Object({
-        name: t.String(),
-        showName: t.Boolean(),
-        showIP: t.Boolean(),
-        question: t.String(),
-        note: t.String(),
-      }),
-    },
-  ),
-);
+export const createAsk: H = async (c) => {
+  let body: Record<string, unknown>;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ message: 'Invalid body' }, 400);
+  }
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    typeof body.name !== 'string' ||
+    typeof body.question !== 'string' ||
+    typeof body.note !== 'string' ||
+    typeof body.showName !== 'boolean' ||
+    typeof body.showIP !== 'boolean'
+  ) {
+    return c.json({ message: 'Invalid body' }, 400);
+  }
+  const q: typeof askBoxTable.$inferInsert = {
+    name: body.name.length > 0 ? body.name : undefined,
+    showName: Number(body.showName),
+    ua: c.req.header('user-agent') || undefined,
+    showIP: Number(body.showIP),
+    question: body.question,
+    note: body.note.length > 0 ? body.note : undefined,
+    public: 0,
+    askedAt: Date.now(),
+  };
+  await getDb(c.env).insert(askBoxTable).values(q);
+  return c.json({ message: 'Success' });
+};
 
-app.get("/", async () => {
-  const res = await db
+export const listPublicAsks: H = async (c) => {
+  const res = await getDb(c.env)
     .select({
       name: askBoxTable.name,
       showName: askBoxTable.showName,
@@ -49,40 +52,41 @@ app.get("/", async () => {
     })
     .from(askBoxTable)
     .where(eq(askBoxTable.public, 1));
-  return res.map((item) => ({
-    ...item,
-    question: item.question || "",
-    answer: item.answer || "",
-    askedAt: item.askedAt,
-    answeredAt: item.answeredAt !== 0 ? item.answeredAt : undefined,
-  }));
-});
+  return c.json(
+    res.map((item) => ({
+      ...item,
+      question: item.question || '',
+      answer: item.answer || '',
+      askedAt: item.askedAt,
+      answeredAt: item.answeredAt !== 0 ? item.answeredAt : undefined,
+    })),
+  );
+};
 
-app.use(
-  new Elysia()
-    .use(validateAuth)
-    .get("/admin", async () => {
-      const res = await db.select().from(askBoxTable);
-      return res;
-    })
-    .delete("/admin/:id", async ({ params }) => {
-      await db.delete(askBoxTable).where(eq(askBoxTable.id, Number(params.id)));
-      return { message: "Success" };
-    })
-    .put("/admin/:id/public/:isPublic", async ({ params }) => {
-      await db
-        .update(askBoxTable)
-        .set({ public: Number(params.isPublic) })
-        .where(eq(askBoxTable.id, Number(params.id)));
-      return { message: "Success" };
-    })
-    .put("/admin/:id/answer/:answer", async ({ params }) => {
-      await db
-        .update(askBoxTable)
-        .set({ answer: params.answer, answeredAt: Date.now() })
-        .where(eq(askBoxTable.id, Number(params.id)));
-      return { message: "Success" };
-    }),
-);
+export const listAllAsks: H = async (c) => {
+  const res = await getDb(c.env).select().from(askBoxTable);
+  return c.json(res);
+};
 
-export { app as RouteAskBox };
+export const deleteAsk: H = async (c) => {
+  await getDb(c.env)
+    .delete(askBoxTable)
+    .where(eq(askBoxTable.id, c.req.param('id')));
+  return c.json({ message: 'Success' });
+};
+
+export const setAskPublic: H = async (c) => {
+  await getDb(c.env)
+    .update(askBoxTable)
+    .set({ public: Number(c.req.param('isPublic')) })
+    .where(eq(askBoxTable.id, c.req.param('id')));
+  return c.json({ message: 'Success' });
+};
+
+export const answerAsk: H = async (c) => {
+  await getDb(c.env)
+    .update(askBoxTable)
+    .set({ answer: c.req.param('answer'), answeredAt: Date.now() })
+    .where(eq(askBoxTable.id, c.req.param('id')));
+  return c.json({ message: 'Success' });
+};
