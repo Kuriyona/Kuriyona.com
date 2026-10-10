@@ -29,7 +29,7 @@ useHead({
     return titleChunk ? `${titleChunk} - Kuriyona' Space` : "Kuriyona' Space";
   },
   link: [
-    { rel: 'icon', type: 'image/png', href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png' },
+    { rel: 'icon', type: 'image/png', href: 'https://r2.kuriyona.com/img/avatar/Avatar_OLI_256.png' },
   ],
 });
 useSeoMeta({

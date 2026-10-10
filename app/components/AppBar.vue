@@ -27,7 +27,7 @@ onMounted(() => {
         <div class="h-full flex items-center gap-4">
           <img
             class="h-6 rounded-md hidden sm:inline-block"
-            src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
+            src="https://r2.kuriyona.com/img/avatar/Avatar_OLI_256.png" />
           <NuxtLinkLocale to="/">
             <span class="hover:underline">Kuriyona's Space</span>
           </NuxtLinkLocale>

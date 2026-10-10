@@ -61,7 +61,7 @@ useSeoMeta({ title: $t('about.links.title') });
         <p>url : https://kuriyona.com</p>
         <p>title : Kuriyona's Space</p>
         <p>desc : {{ $t('about.description') }}</p>
-        <p>avatar : https://r2.kuriyona.com/img/avatar/Avatar_256.png</p>
+        <p>avatar : https://r2.kuriyona.com/img/avatar/Avatar_OLI_256.png</p>
       </div>
       <br />
       <div>
