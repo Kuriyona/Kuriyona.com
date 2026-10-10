@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { setLocale, locales } = useI18n();
 const show = defineModel<boolean>();
 const nav = useNav();
 </script>
@@ -20,21 +19,6 @@ const nav = useNav();
           @click="show = false"
           :text="item.shortTitle || item.title"
           :desc="item.desc || undefined" />
-        <KCard :title="$t('global.language')">
-          <div class="flex flex-col gap-2">
-            <KButton
-              v-for="locale in locales"
-              :key="locale.code"
-              block
-              @click="
-                setLocale(locale.code);
-                show = false;
-              "
-              class="text-xs"
-              >{{ locale.name }}
-            </KButton>
-          </div>
-        </KCard>
       </div>
     </div>
   </Transition>

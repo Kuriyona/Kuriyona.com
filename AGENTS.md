@@ -127,7 +127,7 @@ Kuriyona.com/
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
-│   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听
+│   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；移动端菜单：AppBar/AppMenu）
 │   │   ├── AppFooter.vue       版权 + GIT_HASH 链接 + Cloudflare 节点
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 跟随光标的光晕与图标加亮）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
@@ -208,6 +208,7 @@ Kuriyona.com/
 | `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                              |
 | `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                      |
 | `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                 |
+| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                               |
 | `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                         |
 | `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                     |
 | `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                           |
