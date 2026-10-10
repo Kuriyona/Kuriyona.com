@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BackgroundSelector from '../AppBar/BackgroundSelector.vue';
 const { setLocale, locales } = useI18n();
 const show = defineModel<boolean>();
 const nav = useNav();
@@ -36,7 +35,6 @@ const nav = useNav();
             </KButton>
           </div>
         </KCard>
-        <BackgroundSelector />
       </div>
     </div>
   </Transition>

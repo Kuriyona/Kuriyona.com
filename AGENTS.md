@@ -122,12 +122,13 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main/others/links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
-│   │   └── css/                main.css（@import 汇总）· base.css（主题变量/滚动条/光标）· utilities.css（.link/.trans-text 等）
+│   │   ├── css/                main.css（@import 汇总）· base.css（主题变量/滚动条/光标）· utilities.css（.link/.trans-text 等）
+│   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听
 │   │   ├── AppFooter.vue       版权 + GIT_HASH 链接 + Cloudflare 节点
-│   │   ├── AppBackground.vue   全屏背景（视频/必应图片，useBackgroundStore）
+│   │   ├── AppBackground.vue   全屏背景（图标 SVG 平铺图案，间距错开）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -153,8 +154,7 @@ Kuriyona.com/
 │   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动）
 │   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核）
 │   ├── stores/                  Pinia stores
-│   │   ├── main.ts              JWT（Turnstile 验证后存储）
-│   │   └── background.ts        背景预设（视频/必应）
+│   │   └── main.ts              JWT（Turnstile 验证后存储）
 │   ├── utils/                   @/ 别名工具函数
 │   │   ├── api.ts               ky 实例 fetchApi（自动注入 auth，开发环境用本地 host）
 │   │   ├── time.ts              dayjs 封装：formatDate/formatTime/formatDuration/formatRelativeTime/setLocale

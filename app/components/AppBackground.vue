@@ -1,26 +1,52 @@
 <script setup lang="ts">
-import { useBackgroundStore } from '@/stores/background';
+import code from '@/assets/icons/code.svg';
+import lambda from '@/assets/icons/lambda.svg';
+import narutomaki from '@/assets/icons/narutomaki.svg';
+import terminal from '@/assets/icons/terminal.svg';
 
-const backgroundStore = useBackgroundStore();
+// 两列错位平铺：列间距 / 行间距均为 GAP，tile = 2 × GAP
+const GAP = 100;
+const SIZE = 20;
+
+// 第一列纵向排列两个；第二列整体下移 50% 间距（GAP / 2），同样排列两个
+const icons = [
+  { href: code, x: 20, y: 20, size: SIZE },
+  { href: terminal, x: 20, y: 20 + GAP, size: SIZE },
+  { href: lambda, x: 20 + GAP, y: 20 + GAP / 2, size: SIZE },
+  { href: narutomaki, x: 20 + GAP, y: 20 + GAP + GAP / 2, size: SIZE },
+];
+
+const TILE = 2 * GAP;
 </script>
 
 <template>
-  <div
-    class="fixed w-full h-full top-0 left-0 z-[-1] select-none"
-    :style="{ filter: `brightness(${backgroundStore.preset.brightness})` }">
-    <video
-      v-if="backgroundStore.backgroundFileType === 'video'"
-      class="w-full h-full object-cover object-[27%]"
-      :src="backgroundStore.backgroundFileUrl"
-      autoplay
-      muted
-      loop
-      playsinline></video>
-    <img
-      v-else
-      class="w-full h-full object-cover object-[27%]"
-      :src="backgroundStore.backgroundFileUrl"
-      alt="Background" />
-    <div class="fixed top-0 w-full h-full bg-white/10" />
+  <div class="fixed top-0 left-0 w-full h-full z-[-1] select-none">
+    <svg class="w-full h-full" aria-hidden="true">
+      <defs>
+        <pattern
+          id="app-background-pattern"
+          patternUnits="userSpaceOnUse"
+          :width="TILE"
+          :height="TILE">
+          <image
+            v-for="(icon, i) in icons"
+            :key="i"
+            :href="icon.href"
+            :x="icon.x"
+            :y="icon.y"
+            :width="icon.size"
+            :height="icon.size"
+            class="app-background-icon" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#app-background-pattern)" />
+    </svg>
   </div>
 </template>
+
+<style scoped>
+.app-background-icon {
+  filter: invert(1);
+  opacity: 0.22;
+}
+</style>
