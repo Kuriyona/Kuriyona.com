@@ -7,6 +7,9 @@ const gitHash = child_process.execSync('git rev-parse --short HEAD').toString().
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  build: {
+    transpile: ['reka-ui'],
+  },
   ssr: true,
   modules: ['@vueuse/nuxt', '@nuxtjs/i18n', '@nuxtjs/sitemap', '@pinia/nuxt'],
   nitro: {

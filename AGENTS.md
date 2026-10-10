@@ -9,7 +9,8 @@
 | Runtime         | **Bun** (not Node)                                    |
 | Package manager | **pnpm** (v11.4.0)                                    |
 | Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                      |
-| UI components   | Custom `K*` components (Tailwind, no UI library)      |
+| UI components   | Custom `K*` components (Tailwind)                     |
+| Headless UI     | **Reka UI**（unstyled primitives，驱动 K\* 交互组件） |
 | Animation       | GSAP                                                  |
 | I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales)   |
 | Backend         | Cloudflare Workers + Hono + Drizzle + D1 (`backend/`) |
@@ -188,7 +189,7 @@ Kuriyona.com/
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）
 ├── temp/                        OG 图生成中间产物（gitignored）
-├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、GIT_HASH/BUILD_TIME define）
+├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、GIT_HASH/BUILD_TIME define）
 ├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding，main=backend/index.ts）
 ├── .dev.vars.example            本地开发环境变量模板（复制为 .dev.vars，gitignored）
 ├── package.json                 依赖与脚本（无 lint/typecheck/test；含 api:* 与 deploy）
@@ -199,21 +200,21 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件          | 用途                                                                                                                         |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `KCard`       | 毛玻璃卡片容器（可选 title）                                                                                                 |
-| `KButton`     | 毛玻璃按钮（支持 round/text/block）                                                                                          |
-| `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore） |
-| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                      |
-| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                              |
-| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                         |
-| `KSwitch`     | 开关                                                                                                                         |
-| `KDivider`    | 分隔线（horizontal/vertical）                                                                                                |
-| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                   |
-| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                         |
-| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                              |
-| `KMenu`       | 下拉菜单（direction/align，点击外部关闭）                                                                                    |
-| `KDialog`     | 原生 dialog 弹窗（v-model 开关、title 槽、遮罩/Esc/关闭按钮，KCard+KIconButton 组合）                                        |
+| 组件          | 用途                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `KCard`       | 毛玻璃卡片容器（可选 title）                                                                                                         |
+| `KButton`     | 毛玻璃按钮（支持 round/text/block）                                                                                                  |
+| `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore）         |
+| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                              |
+| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                      |
+| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                 |
+| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                         |
+| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                     |
+| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                           |
+| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                 |
+| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                      |
+| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                        |
+| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合） |
 
 ### 页面路由总览
 
@@ -260,7 +261,8 @@ Kuriyona.com/
 - **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `https://api-kuriyona-com.localhost/api` (TLS proxy → `wrangler dev` 的 62802); 生产同源相对路径 `/api`（无需 CORS）。
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`.
-- **UI components**: Custom `K*` components in `app/components/` (KCard, KButton, KCardLink, KInput, KSwitch, KDivider, KMarkdown, KTable, KMenu, etc.) styled with Tailwind — no UI library. Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
+- **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
+- **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.

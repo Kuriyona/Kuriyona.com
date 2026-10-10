@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Separator } from 'reka-ui';
+
 withDefaults(
   defineProps<{
     vertical?: boolean;
@@ -8,6 +10,9 @@ withDefaults(
 </script>
 
 <template>
-  <div v-if="vertical" class="w-px self-stretch bg-white/10" />
-  <div v-else class="h-px w-full bg-white/10" />
+  <Separator
+    decorative
+    :orientation="vertical ? 'vertical' : 'horizontal'"
+    class="bg-white/10"
+    :class="vertical ? 'w-px self-stretch' : 'h-px w-full'" />
 </template>

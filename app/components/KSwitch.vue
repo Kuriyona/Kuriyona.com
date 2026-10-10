@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { SwitchRoot, SwitchThumb } from 'reka-ui';
+
 withDefaults(
   defineProps<{
     modelValue?: boolean;
@@ -13,16 +15,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <button
-    type="button"
-    role="switch"
-    :aria-checked="modelValue"
+  <SwitchRoot
+    :model-value="modelValue"
     :disabled="disabled"
-    class="relative h-6 w-11 rounded-full transition-bg duration-300 focus:outline-none focus:ring-2 focus:ring-(--color-theme) disabled:opacity-50"
+    class="relative h-6 w-11 shrink-0 rounded-full transition-bg duration-300 focus:outline-none focus:ring-2 focus:ring-(--color-theme) disabled:opacity-50"
     :class="modelValue ? 'bg-(--color-theme)' : 'bg-white/20'"
-    @click="emit('update:modelValue', !modelValue)">
-    <span
+    @update:model-value="emit('update:modelValue', $event)">
+    <SwitchThumb
       class="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-300"
       :class="modelValue ? 'translate-x-5' : ''" />
-  </button>
+  </SwitchRoot>
 </template>
