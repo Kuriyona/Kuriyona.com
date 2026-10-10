@@ -128,7 +128,7 @@ Kuriyona.com/
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听
 │   │   ├── AppFooter.vue       版权 + GIT_HASH 链接 + Cloudflare 节点
-│   │   ├── AppBackground.vue   全屏背景（图标 SVG 平铺图案，间距错开）
+│   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 跟随光标的光晕与图标加亮）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
