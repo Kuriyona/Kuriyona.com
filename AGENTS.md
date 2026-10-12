@@ -122,7 +122,7 @@ Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in s
 ```
 Kuriyona.com/
 ├── app/                        Nuxt 应用（核心代码）
-│   ├── app.vue                 根组件：背景、NuxtPage、AppBar、ToastHost；i18n locale watcher
+│   ├── app.vue                 根组件：背景、NuxtLayout、NuxtPage、AppBar、ToastHost；i18n locale watcher
 │   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main 最重要的人（每人多平台链接）/ others / links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
@@ -149,6 +149,9 @@ Kuriyona.com/
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
+│   ├── layouts/                 页面布局（Nuxt 自动发现；由 app.vue 的 <NuxtLayout> 应用）
+│   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
+│   │   └── admin.vue            管理面板共享导航壳（三个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
 │   │   ├── about/as-mtf/        MtF 相关页面（pride 主题卡）
@@ -239,17 +242,19 @@ Kuriyona.com/
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                       |
 | `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                         |
 | `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub）                      |
-| `/admin`             | `pages/admin/index.vue`             | API key 管理                                     |
-| `/admin/r2`          | `pages/admin/r2.vue`                | R2 文件上传                                      |
-| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问审核                                         |
+| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                              |
+| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览         |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                     |
 
 ### API 概览
 
-| 端点                                                         | 来源     | 说明                                               |
-| ------------------------------------------------------------ | -------- | -------------------------------------------------- |
-| `GET /api/articles`                                          | server/  | 文章元信息列表（无 content）                       |
-| `GET /api/articles/:slug`                                    | server/  | 指定文章（所有语言版本）                           |
-| `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用 |
+| 端点                                                         | 来源     | 说明                                                                                                                                         |
+| ------------------------------------------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/articles`                                          | server/  | 文章元信息列表（无 content）                                                                                                                 |
+| `GET /api/articles/:slug`                                    | server/  | 指定文章（所有语言版本）                                                                                                                     |
+| `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                           |
+| `PUT /api/ask-box/admin/:id/answer`                          | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                         |
+| `GET /api/r2/list?prefix=&delimiter=`                        | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键） |
 
 ## Architecture
 
@@ -261,7 +266,7 @@ Kuriyona.com/
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 3 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`. Auth via `API_KEY` in `localStorage`, passed as `?auth=` param.
+- `app/pages/admin/` — 3 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
 
 ## Key Conventions
 

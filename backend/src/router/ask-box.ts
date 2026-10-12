@@ -84,9 +84,23 @@ export const setAskPublic: H = async (c) => {
 };
 
 export const answerAsk: H = async (c) => {
+  let body: Record<string, unknown>;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ message: 'Invalid body' }, 400);
+  }
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    typeof body.answer !== 'string' ||
+    body.answer.trim() === ''
+  ) {
+    return c.json({ message: 'Invalid body' }, 400);
+  }
   await getDb(c.env)
     .update(askBoxTable)
-    .set({ answer: c.req.param('answer'), answeredAt: Date.now() })
+    .set({ answer: body.answer, answeredAt: Date.now() })
     .where(eq(askBoxTable.id, c.req.param('id')));
   return c.json({ message: 'Success' });
 };
