@@ -75,7 +75,8 @@ Full-text search powered by [PageFind](https://pagefind.app/) (custom Vue compon
 ### Workflow
 
 - **Dev mode**: `pnpm generate && pnpm index && pnpm dev`
-  The Vite dev server serves `/pagefind/*` from `dist/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
+  `pnpm index` 把索引写到 `temp/pagefind`，再复制一份到 `dist/pagefind`（部署用）。索引**不能**只放 `dist/`：Nitro 的 `prepare()` 在每次 dev 启动时 `rm -rf nitro.output.publicDir`（本仓 = `dist`），`dist/pagefind` 会被删光，`/pagefind/*` 全 404。
+  The Vite dev server serves `/pagefind/*` from `temp/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
   Modify styles in `app/components/SearchModal.vue` (Tailwind classes / scoped CSS).
 - **Production**: `pnpm build` automatically runs `generate` + `index` in sequence.
 
@@ -193,7 +194,7 @@ Kuriyona.com/
 │   └── docs/                    后端文档（development / deployment）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301）
-├── temp/                        OG 图生成中间产物（gitignored）
+├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包）、GIT_HASH/BUILD_TIME define）
 ├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding，main=backend/index.ts）
 ├── .dev.vars.example            本地开发环境变量模板（复制为 .dev.vars，gitignored）
@@ -274,6 +275,8 @@ Kuriyona.com/
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。
+- **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
+- **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.
 - **I18n key 约定**: 全部使用 kebab-case（如 `blog.not-found`），全局通用文本归入 `global.*` 命名空间；4 个语言文件 key 集合必须一致，新增/修改后需 `pnpm fmt` 触发 `sort-i18n.ts` 自动排序。

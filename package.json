@@ -1,11 +1,12 @@
 {
+  "type": "module",
   "scripts": {
     "dev": "PORTLESS_TLD=localhost portless run nuxt dev",
     "dev:plain": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "index": "pagefind --site dist",
+    "index": "pagefind --site dist --output-path temp/pagefind && rm -rf dist/pagefind && cp -R temp/pagefind dist/pagefind",
     "build": "pnpm run generate && pnpm run index",
     "sort-i18n": "bun scripts/sort-i18n.ts",
     "fmt": "pnpm run sort-i18n && oxfmt",

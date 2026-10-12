@@ -43,7 +43,10 @@ export default defineNuxtConfig({
       {
         name: 'pagefind-dev',
         configureServer(server) {
-          const pagefindDir = resolve('dist/pagefind');
+          // dist/ 不能放索引：Nitro 的 prepare() 在每次 dev 启动时 rm -rf output.publicDir
+          // （本仓 publicDir = dist），索引会被删掉、/pagefind/* 全 404。
+          // `pnpm index` 把索引写到 temp/pagefind，再复制一份到 dist/pagefind 供部署。
+          const pagefindDir = resolve('temp/pagefind');
           const mimeMap: Record<string, string> = {
             '.js': 'application/javascript',
             '.css': 'text/css',
