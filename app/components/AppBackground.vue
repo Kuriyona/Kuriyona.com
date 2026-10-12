@@ -18,8 +18,10 @@ const icons = [
 
 const TILE = 2 * GAP;
 
-// 光标光晕半径（视口像素），图标加亮范围与之一致
-const GLOW_RADIUS = 300;
+// 背景亮度（改这三个常量即可调节）
+const BASE_OPACITY = 0.1; // 图标默认亮度（整体降透明度）
+const HIGHLIGHT_OPACITY = 0.4; // 光标处加亮峰值亮度
+const HIGHLIGHT_RADIUS = 300; // 加亮衰减半径（视口像素）
 
 const { x, y } = useMouse({ type: 'client' });
 </script>
@@ -45,22 +47,22 @@ const { x, y } = useMouse({ type: 'client' });
         </pattern>
         <!-- 光标处透明度 1，随距离线性衰减至半径处 0 -->
         <radialGradient
-          id="app-background-glow-gradient"
+          id="app-background-highlight-gradient"
           gradientUnits="userSpaceOnUse"
           :cx="x"
           :cy="y"
-          :r="GLOW_RADIUS">
-          <stop offset="0%" stop-color="#fff" stop-opacity="0.25" />
+          :r="HIGHLIGHT_RADIUS">
+          <stop offset="0%" stop-color="#fff" :stop-opacity="HIGHLIGHT_OPACITY" />
           <stop offset="100%" stop-color="#fff" stop-opacity="0" />
         </radialGradient>
         <mask
-          id="app-background-glow-mask"
+          id="app-background-highlight-mask"
           maskUnits="userSpaceOnUse"
           x="0"
           y="0"
           width="100%"
           height="100%">
-          <rect width="100%" height="100%" fill="url(#app-background-glow-gradient)" />
+          <rect width="100%" height="100%" fill="url(#app-background-highlight-gradient)" />
         </mask>
       </defs>
       <!-- 基础灰：整体降透明度 -->
@@ -68,30 +70,19 @@ const { x, y } = useMouse({ type: 'client' });
         width="100%"
         height="100%"
         fill="url(#app-background-pattern)"
-        class="app-background-base" />
+        :opacity="BASE_OPACITY" />
       <!-- 加亮层：按距光标的距离百分比叠加白光 -->
       <rect
         width="100%"
         height="100%"
         fill="url(#app-background-pattern)"
-        mask="url(#app-background-glow-mask)" />
+        mask="url(#app-background-highlight-mask)" />
     </svg>
-    <div
-      class="app-background-glow absolute top-0 left-0 w-[600px] h-[600px] pointer-events-none"
-      :style="{ transform: `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)` }" />
   </div>
 </template>
 
 <style scoped>
 .app-background-icon {
   filter: invert(1);
-}
-
-.app-background-base {
-  opacity: 0.22;
-}
-
-.app-background-glow {
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 70%);
 }
 </style>
