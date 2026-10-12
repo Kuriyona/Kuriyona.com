@@ -34,6 +34,12 @@
   --color-text-3: #8b8b96; /* 弱化文本（5.30–5.93:1，AA） */
   --color-text-4: #75757f; /* 图标 / 提示（3.92–4.39:1，非文本 3:1） */
 
+  /* 跨性别旗（Trans flag）配色：只用于旗帜渐变字 / 彩带 / 光晕等装饰，
+   * 不承载正文、不参与表面与文本层级，故不由 check-contrast 校验 */
+  --color-trans-sky: #5bcffa;
+  --color-trans-pink: #f5abb9;
+  --color-trans-white: #ffffff;
+
   /* 毛玻璃 / 遮罩 */
   --color-glass-bg: rgb(20 20 26 / 76%); /* 毛玻璃底色 */
   --glass-filter: blur(20px) brightness(0.3) saturate(150%);

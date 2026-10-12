@@ -30,7 +30,12 @@ const nav = [
 const timeline = [
   { date: '2008/06/28', text: '出生' },
   { date: '2024/07/04', text: '与第一任相识', tag: '情感' },
-  { date: '2025/11/22', text: '性别认同的初步确定', tag: '性别认同' },
+  {
+    date: '2025/11/22',
+    text: '性别认同的初步确定',
+    tag: '性别认同',
+    link: '/about/as-mtf',
+  },
   { date: '2025/11/27', text: '取名「未晞」', tag: '性别认同', link: '/blog/about-name' },
   { date: '2025/12/17', text: '第一段感情开始', tag: '情感' },
   { date: '2026/01/14', text: '开始 GAHT', tag: '性别认同' },

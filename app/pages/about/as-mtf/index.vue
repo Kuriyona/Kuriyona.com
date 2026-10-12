@@ -1,77 +1,188 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import { round } from 'es-toolkit';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { t } = useI18n();
 
-const isJune = computed(() => dayjs().month() == 5);
-
-const data = computed(() => [
-  {
-    title: '跨性别 - 百度百科',
-    href: 'https://baike.baidu.com/item/%E8%B7%A8%E6%80%A7%E5%88%AB',
-  },
-  {
-    title: `${t('global.trans')} - Wikipedia`,
-    href: t('urls.trans-wikipedia'),
-  },
-  {
-    title: `${t('global.trans')} - Bing`,
-    href: `https://www.bing.com/search?q=${t('global.trans')}`,
-  },
-  {
-    title: `${t('global.trans')} - Google`,
-    href: `https://www.google.com/search?q=${t('global.trans')}`,
-  },
-  {
-    title: t('about.mtf.sites.title.gd-fyi'),
-    href: t('urls.gd-fyi'),
-  },
-  {
-    title: 'MtF.Wiki',
-    href: t('urls.mtf-wiki'),
-  },
-  {
-    title: '2345.lgbt',
-    href: t('urls.2345-lgbt'),
-  },
-]);
 useSeoMeta({ title: $t('about.mtf.as-mtf') });
 
-const timeInfo = computed(() => {
+const BIRTH = dayjs('2008/06/28');
+
+/**
+ * 性别探索过程的里程碑。数值全由「当前时间 − 里程碑日期」推导，
+ * 服务端预渲染与客户端结果一致，因此不需要 ClientOnly。
+ * dateKey 非 null 表示「说不清具体日期」：只显示近似文案，也不用 <time> 语义（避免伪造精确时间）。
+ */
+const milestones = computed(() => {
   const now = dayjs();
-  const birthday = dayjs('2008/6/28');
-  const wantTime = dayjs('2020');
-  const identifyTime = dayjs('2025/11/17');
-  const hrtStartTime = dayjs('2026/01/14');
+  const totalLife = now.diff(BIRTH);
+  const defs: {
+    id: string;
+    at: ReturnType<typeof dayjs>;
+    dateKey: string | null;
+    labelKey: string;
+    unitKey: string;
+    value: number;
+    /** 「占生命」百分比的小数位；null = 不显示占比（出生格改显示生存天数） */
+    percentDecimals: number | null;
+  }[] = [
+    {
+      id: 'birth',
+      at: BIRTH,
+      dateKey: null,
+      labelKey: 'about.mtf.count.birth-for',
+      unitKey: 'global.unit.year',
+      value: now.diff(BIRTH, 'year'),
+      percentDecimals: null,
+    },
+    {
+      id: 'want',
+      at: dayjs('2020'),
+      dateKey: 'about.mtf.count.want-date',
+      labelKey: 'about.mtf.count.want-for',
+      unitKey: 'global.unit.year',
+      value: now.diff(dayjs('2020'), 'year'),
+      percentDecimals: 0,
+    },
+    {
+      id: 'identify',
+      at: dayjs('2025/11/22'),
+      dateKey: null,
+      labelKey: 'about.mtf.count.identify-for',
+      unitKey: 'global.unit.month',
+      value: now.diff(dayjs('2025/11/22'), 'month'),
+      percentDecimals: 2,
+    },
+    {
+      id: 'hrt',
+      at: dayjs('2026/01/14'),
+      dateKey: null,
+      labelKey: 'about.mtf.count.hrt-for',
+      unitKey: 'global.unit.day',
+      value: now.diff(dayjs('2026/01/14'), 'day') + 1,
+      percentDecimals: 2,
+    },
+  ];
 
-  const years = now.diff(birthday, 'year');
-  const months = now.diff(birthday, 'month');
-  const days = now.diff(birthday, 'day');
-
-  const totalLife = now.diff(birthday);
-
-  const wantYears = now.diff(wantTime, 'year');
-  const percentWant = round((now.diff(wantTime) / totalLife) * 100);
-
-  const identifyMonths = now.diff(identifyTime, 'month');
-  const percentIdentify = round((now.diff(identifyTime) / totalLife) * 100, 2);
-
-  const hrtDays = now.diff(hrtStartTime, 'day') + 1;
-  const percentHrt = round((now.diff(hrtStartTime) / totalLife) * 100, 2);
-
-  return {
-    years,
-    months,
-    days,
-    wantYears,
-    percentWant,
-    identifyMonths,
-    percentIdentify,
-    hrtDays,
-    percentHrt,
-  };
+  return defs.map((def) => ({
+    ...def,
+    approx: def.dateKey !== null,
+    label: t(def.labelKey),
+    unit: t(def.unitKey),
+    date: formatDate(def.at.toISOString()),
+    dateText: def.dateKey ? t(def.dateKey) : formatDate(def.at.toISOString()),
+    percent:
+      def.percentDecimals === null
+        ? null
+        : round((now.diff(def.at) / totalLife) * 100, def.percentDecimals),
+    note:
+      def.percentDecimals === null ? `${now.diff(def.at, 'day')} ${t('global.unit.day')}` : null,
+  }));
 });
+
+/** 需要补间的数值（计数 + 占比），键名与模板中的 anim 一致 */
+const counters = computed(() => {
+  const out: Record<string, number> = {};
+  for (const milestone of milestones.value) {
+    out[`v-${milestone.id}`] = milestone.value;
+    if (milestone.percent !== null) out[`p-${milestone.id}`] = milestone.percent;
+  }
+  return out;
+});
+
+/** 显示值：SSR / 无 JS 时即最终值（HTML 里是真实数字），客户端 mount 后由 GSAP 从 0 补间 */
+const anim = reactive<Record<string, number>>({});
+watchEffect(() => {
+  for (const [key, value] of Object.entries(counters.value)) {
+    if (anim[key] === undefined) anim[key] = value;
+  }
+});
+
+const valueText = (milestone: { id: string; value: number }) =>
+  String(Math.round(anim[`v-${milestone.id}`] ?? milestone.value));
+
+const percentText = (milestone: {
+  id: string;
+  percent: number | null;
+  percentDecimals: number | null;
+}) => (anim[`p-${milestone.id}`] ?? milestone.percent ?? 0).toFixed(milestone.percentDecimals ?? 0);
+
+const barStyle = (milestone: { id: string; percent: number | null }) => ({
+  width: `${Math.min(100, anim[`p-${milestone.id}`] ?? milestone.percent ?? 0)}%`,
+});
+
+const linkGroups = computed(() => [
+  {
+    title: t('about.mtf.links.learn'),
+    items: [
+      {
+        title: '跨性别 - 百度百科',
+        href: 'https://baike.baidu.com/item/%E8%B7%A8%E6%80%A7%E5%88%AB',
+      },
+      { title: `${t('global.trans')} - Wikipedia`, href: t('urls.trans-wikipedia') },
+      {
+        title: `${t('global.trans')} - Bing`,
+        href: `https://www.bing.com/search?q=${t('global.trans')}`,
+      },
+      {
+        title: `${t('global.trans')} - Google`,
+        href: `https://www.google.com/search?q=${t('global.trans')}`,
+      },
+    ],
+  },
+  {
+    title: t('about.mtf.links.resources'),
+    items: [
+      { title: t('about.mtf.sites.title.gd-fyi'), href: t('urls.gd-fyi') },
+      { title: 'MtF.Wiki', href: t('urls.mtf-wiki') },
+      { title: '2345.lgbt', href: t('urls.2345-lgbt') },
+    ],
+  },
+]);
+
+/** GSAP 上下文；onUnmounted 必须在 setup 同步阶段注册（放在异步回调里会失去组件实例而失效） */
+let gsapCtx: { revert: () => void } | null = null;
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const mm = gsap.matchMedia();
+  gsapCtx = mm;
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const tiles = gsap.utils.toArray<HTMLElement>('.mtf-tile');
+    const trigger = { trigger: tiles[0], start: 'top 92%', toggleActions: 'play none none none' };
+
+    // 计数与占比条：滚到里程碑区时从 0 补间到最终值
+    const from: Record<string, number> = {};
+    for (const key of Object.keys(counters.value)) from[key] = 0;
+    gsap.from(anim, { ...from, duration: 1.6, ease: 'power3.out', scrollTrigger: trigger });
+
+    // 里程碑卡入场
+    gsap.from(tiles, {
+      y: 24,
+      autoAlpha: 0,
+      duration: 0.6,
+      stagger: 0.09,
+      ease: 'power2.out',
+      scrollTrigger: trigger,
+    });
+
+    // 关于我卡片内容上升（加载即播放；只动 y 不动透明度，避免 SSR 值首帧闪现）
+    gsap.from(gsap.utils.toArray<HTMLElement>('.mtf-hero-item'), {
+      y: 18,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power2.out',
+      delay: 0.1,
+    });
+
+    ScrollTrigger.refresh();
+  });
+});
+
+onUnmounted(() => gsapCtx?.revert());
 </script>
 
 <template>
@@ -82,91 +193,88 @@ const timeInfo = computed(() => {
         <br />
         <span>Kuriyona's Space</span>
         <span>&nbsp;/&nbsp;</span>
-        <span data-pagefind-meta="title">{{ $t('about.mtf.as-mtf') }}</span>
+        <span class="trans-text trans-text-flow" data-pagefind-meta="title">{{
+          $t('about.mtf.as-mtf')
+        }}</span>
       </h1>
     </div>
-    <KCard
-      v-if="isJune"
-      class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-(--color-text-1)">
-      <div
-        class="absolute top-0 left-0 h-full w-full pride-bg rounded-xl brightness-25 transition-[filter] duration-300"></div>
-      <p class="relative text-sm text-center transition-colors duration-300">
-        {{ $t('about.mtf.pride-month') }}
-      </p>
-    </KCard>
-    <KCard
-      v-if="false"
-      class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-(--color-text-1)">
-      <div
-        class="absolute top-0 left-0 h-full w-full trans-bg rounded-xl brightness-25 transition-[filter] duration-300"></div>
-      <p class="relative text-sm text-center transition-colors duration-300">
-        {{ $t('about.mtf.slogan') }}
-      </p>
-    </KCard>
-    <KCard :title="$t('about.mtf.as-mtf')">
-      <p class="mb-4 trans-text">{{ $t('about.mtf.im-mtf') }}</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KCard class="flex flex-col gap-1">
-          <p class="text-2xl font-bold text-(--color-text-1)">
-            <span>{{ timeInfo.years }}</span>
-            <span>&nbsp;</span>
-            <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.year') }}</span>
-          </p>
-          <p class="text-(--color-text-2)">{{ $t('about.mtf.count.birth-for') }}</p>
-        </KCard>
-        <KCard class="flex flex-col gap-1">
-          <p class="text-2xl font-bold text-(--color-text-1)">
-            <span>{{ timeInfo.wantYears }}</span>
-            <span>&nbsp;</span>
-            <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.year') }}</span>
-          </p>
-          <p class="text-(--color-text-2)">
-            {{ $t('about.mtf.count.want-for') }}
-            <br />
-            ({{ $t('about.mtf.percent-life', [timeInfo.percentWant]) }})
-          </p>
-        </KCard>
-        <KCard class="flex flex-col gap-1">
-          <p class="text-2xl font-bold text-(--color-text-1)">
-            <span>{{ timeInfo.identifyMonths }}</span>
-            <span>&nbsp;</span>
-            <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.month') }}</span>
-          </p>
-          <p class="text-(--color-text-2)">
-            {{ $t('about.mtf.count.identify-for') }}
-            <br />
-            ({{ $t('about.mtf.percent-life', [timeInfo.percentIdentify]) }})
-          </p>
-        </KCard>
-        <KCard class="flex flex-col gap-1">
-          <ClientOnly>
-            <p class="text-2xl font-bold text-(--color-text-1)">
-              <span>{{ timeInfo.hrtDays }}</span>
-              <span>&nbsp;</span>
-              <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.day') }}</span>
-            </p>
-          </ClientOnly>
-          <p class="text-(--color-text-2)">
-            {{ $t('about.mtf.count.hrt-for') }}
-            <br />
-            ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
-          </p>
-        </KCard>
+
+    <KSurface
+      class="relative overflow-hidden rounded-xl px-6 py-8 text-center sm:py-10"
+      :style="{ boxShadow: 'var(--card-glow)' }">
+      <div class="trans-ribbon absolute inset-x-0 top-0 h-1" aria-hidden="true"></div>
+      <div class="trans-ribbon absolute inset-x-0 bottom-0 h-1" aria-hidden="true"></div>
+      <div class="trans-aura absolute inset-0" aria-hidden="true"></div>
+      <div class="relative flex flex-col items-center gap-4">
+        <h2 class="mtf-hero-item text-lg font-bold">{{ $t('about.about-me') }}</h2>
+        <p class="mtf-hero-item trans-text">{{ $t('about.mtf.im-mtf') }}</p>
+        <NuxtLinkLocale
+          to="/"
+          class="k-interactive flex items-center gap-2 rounded-full border border-(--color-control-border) bg-(--color-control-bg) px-4 py-1.5 text-sm text-(--color-text-2) hover:text-(--color-text-1) hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
+          <span>{{ $t('about.my-site-home') }}</span>
+          <span
+            class="icon material-symbols-outlined text-base!"
+            translate="no"
+            aria-hidden="true"
+            data-pagefind-ignore>
+            arrow_forward
+          </span>
+        </NuxtLinkLocale>
       </div>
+    </KSurface>
+
+    <KCard :title="$t('about.mtf.journey.title')">
+      <ol class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <li v-for="milestone in milestones" :key="milestone.id" class="mtf-tile">
+          <KSurface class="flex h-full flex-col gap-3 rounded-xl p-4">
+            <div class="font-monos text-xs text-(--color-text-3)">
+              <time v-if="!milestone.approx" :datetime="milestone.date">
+                {{ milestone.date }}
+              </time>
+              <span v-else>{{ milestone.dateText }}</span>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-(--color-text-1)">
+                {{ valueText(milestone) }}
+                <span class="text-sm font-normal text-(--color-text-2)">{{ milestone.unit }}</span>
+              </p>
+              <p class="text-sm text-(--color-text-2)">{{ milestone.label }}</p>
+            </div>
+            <div class="mt-auto flex flex-col gap-1.5">
+              <div
+                v-if="milestone.percent !== null"
+                class="h-1 w-full overflow-hidden rounded-full bg-(--color-control-bg)">
+                <div
+                  class="h-full rounded-full bg-(--color-theme)"
+                  :style="barStyle(milestone)"></div>
+              </div>
+              <div v-else class="h-1" aria-hidden="true"></div>
+              <p class="text-xs text-(--color-text-3)">
+                {{ milestone.note ?? $t('about.mtf.percent-life', [percentText(milestone)]) }}
+              </p>
+            </div>
+          </KSurface>
+        </li>
+      </ol>
     </KCard>
-    <KCard :title="$t('about.about-me')">
-      <div>
-        <KCardLink to="/" :text="$t('about.my-site-home')" />
-      </div>
-    </KCard>
+
     <KCard :title="$t('about.mtf.about-trans')">
       <div class="flex flex-col gap-4">
-        <KCardLink
-          v-for="item in data"
-          :key="item.href"
-          :to="item.href"
-          :text="item.title"
-          :new="true" />
+        <p class="text-sm text-(--color-text-2)">{{ $t('about.mtf.slogan') }}</p>
+        <template v-for="(group, index) in linkGroups" :key="group.title">
+          <KDivider v-if="index > 0" />
+          <div>
+            <p class="mb-3 font-monos text-xs text-(--color-text-3)">{{ group.title }}</p>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <KCardLink
+                v-for="item in group.items"
+                :key="item.href"
+                :to="item.href"
+                :text="item.title"
+                :new="true" />
+            </div>
+          </div>
+        </template>
       </div>
     </KCard>
   </AppPage>

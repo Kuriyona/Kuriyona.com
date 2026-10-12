@@ -126,7 +126,7 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main 最重要的人（每人多平台链接）/ others / links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
-│   │   ├── css/                main.css（@import 汇总）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text 等）
+│   │   ├── css/                main.css（@import 汇总）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
@@ -154,7 +154,7 @@ Kuriyona.com/
 │   │   └── admin.vue            管理面板共享导航壳（三个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
-│   │   ├── about/as-mtf/        MtF 相关页面（pride 主题卡）
+│   │   ├── about/as-mtf/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
@@ -230,21 +230,21 @@ Kuriyona.com/
 
 ### 页面路由总览
 
-| 路由                 | 文件                                | 说明                                             |
-| -------------------- | ----------------------------------- | ------------------------------------------------ |
-| `/`                  | `pages/index.vue`                   | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body） |
-| `/about/as-mtf`      | `pages/about/as-mtf/index.vue`      | MtF 页面                                         |
-| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                |
-| `/blog`              | `pages/blog/index.vue`              | 文章列表                                         |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言）                               |
-| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                       |
-| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）      |
-| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                       |
-| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                         |
-| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub）                      |
-| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                              |
-| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览         |
-| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                     |
+| 路由                 | 文件                                | 说明                                                                                    |
+| -------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
+| `/`                  | `pages/index.vue`                   | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body）                                        |
+| `/about/as-mtf`      | `pages/about/as-mtf/index.vue`      | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
+| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                       |
+| `/blog`              | `pages/blog/index.vue`              | 文章列表                                                                                |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言）                                                                      |
+| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                              |
+| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                             |
+| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                              |
+| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                |
+| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub）                                                             |
+| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                     |
+| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                            |
 
 ### API 概览
 
@@ -276,7 +276,8 @@ Kuriyona.com/
 - **本地开发（portless）**: `pnpm dev` / `pnpm api:dev` 经 [portless](https://www.npmjs.com/package/portless)（`pnpm add -g portless`，需 Node ≥ 24）提供本地 HTTPS 域名：前端 `https://kuriyona.localhost`、API `https://kuriyona-api.localhost`。首次需 `portless trust` 信任本地 CA；代理默认在 443 起（要 sudo，无 sudo 时 `portless proxy start --port 1355 --https`，URL 会带 `:1355`）。配置全部写在文件里：前端 app 名 = 根 `package.json` 的 `"portless": "kuriyona"`，API app 名 = `api:dev` 脚本里的 `--name kuriyona-api`，TLD = 两个脚本首部内联的 `PORTLESS_TLD=localhost`（**两处成对，改一处必须改另一处**；内联是为了不受环境变量影响，`.env` 不行——`pnpm run` 不加载 `.env`）。`api:dev` 里 `--app-port 62802` 与 `wrangler dev --port 62802` 也是成对的：Nuxt 会读 portless 注入的 `PORT` 所以 `dev` 不写端口，wrangler 不读，必须显式指定并让 portless 指向同一端口。不经 portless 时用 `pnpm dev:plain`（3000）与 `pnpm api:run`（62802），或 `PORTLESS=0 pnpm dev`。
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
-- **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。
+- **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。跨性别旗配色（`--color-trans-sky/pink/white`）与 `utilities.css` 的 `.trans-text`/`.trans-text-flow`/`.trans-ribbon`/`.trans-aura` 只用于旗帜装饰（渐变字 / 彩带 / 光晕），不承载正文、不参与表面与文本层级，也不纳入对比度校验；需要旗面配色时从这里取，不要另写 hex。
+- **动画（GSAP）**: 目前唯一使用处是 `pages/about/as-mtf/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。
