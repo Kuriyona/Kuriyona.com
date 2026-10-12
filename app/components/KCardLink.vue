@@ -35,9 +35,7 @@ const UrlPreview = defineComponent({
   },
   setup(p) {
     return () =>
-      p.to && p.new
-        ? h('p', { class: 'text-xs text-white/50 max-w-full truncate' }, p.to)
-        : null;
+      p.to && p.new ? h('p', { class: 'text-xs text-white/50 max-w-full truncate' }, p.to) : null;
   },
 });
 </script>

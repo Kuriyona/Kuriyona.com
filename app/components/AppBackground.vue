@@ -64,7 +64,11 @@ const { x, y } = useMouse({ type: 'client' });
         </mask>
       </defs>
       <!-- 基础灰：整体降透明度 -->
-      <rect width="100%" height="100%" fill="url(#app-background-pattern)" class="app-background-base" />
+      <rect
+        width="100%"
+        height="100%"
+        fill="url(#app-background-pattern)"
+        class="app-background-base" />
       <!-- 加亮层：按距光标的距离百分比叠加白光 -->
       <rect
         width="100%"
