@@ -40,7 +40,7 @@ const aboutNav = useAboutNav();
         :to="item.to"
         :title="item.title"
         :desc="item.desc"
-        :trans="item.to === '/about/as-mtf'" />
+        :trans="item.to === '/about/trans'" />
     </div>
     <KNavCard
       to="/friends-and-links"

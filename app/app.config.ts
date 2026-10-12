@@ -18,7 +18,7 @@ const nav = [
     onAbout: true,
   },
   {
-    to: '/about/as-mtf',
+    to: '/about/trans',
     titleKey: 'about.mtf.as-mtf',
     descKey: 'about.mtf.desc',
     enabled: false,
@@ -34,7 +34,7 @@ const timeline = [
     date: '2025/11/22',
     text: '性别认同的初步确定',
     tag: '性别认同',
-    link: '/about/as-mtf',
+    link: '/about/trans',
   },
   { date: '2025/11/27', text: '取名「未晞」', tag: '性别认同', link: '/blog/about-name' },
   { date: '2025/12/17', text: '第一段感情开始', tag: '情感' },

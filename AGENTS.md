@@ -111,7 +111,7 @@ Only pages with `data-pagefind-body` are indexed. Currently applied to:
 
 - Blog article content (`app/pages/blog/[slug].vue`)
 - `/` (首页：全屏欢迎首屏 + 关于内容，`app/pages/index.vue`)
-- `/about/as-mtf` (`app/pages/about/as-mtf/index.vue`)
+- `/about/trans` (`app/pages/about/trans/index.vue`)
 - `/about/devices` (`app/pages/about/devices/index.vue`)
 - `/friends-and-links` (`app/pages/friends-and-links/index.vue`)
 
@@ -154,7 +154,7 @@ Kuriyona.com/
 │   │   └── admin.vue            管理面板共享导航壳（三个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
-│   │   ├── about/as-mtf/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
+│   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
@@ -196,7 +196,7 @@ Kuriyona.com/
 │   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
 │   └── docs/                    后端文档（development / deployment）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
-├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301）
+├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301、`/about/as-mtf` → `/about/trans` 301 含 en/ja/zh-Hant 前缀版本）
 ├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包）、GIT_HASH/BUILD_TIME define）
 ├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding，main=backend/index.ts）
@@ -233,7 +233,7 @@ Kuriyona.com/
 | 路由                 | 文件                                | 说明                                                                                    |
 | -------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
 | `/`                  | `pages/index.vue`                   | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body）                                        |
-| `/about/as-mtf`      | `pages/about/as-mtf/index.vue`      | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
+| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
 | `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                       |
 | `/blog`              | `pages/blog/index.vue`              | 文章列表                                                                                |
 | `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言）                                                                      |
@@ -277,7 +277,7 @@ Kuriyona.com/
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。跨性别旗配色（`--color-trans-sky/pink/white`）与 `utilities.css` 的 `.trans-text`/`.trans-text-flow`/`.trans-ribbon`/`.trans-aura` 只用于旗帜装饰（渐变字 / 彩带 / 光晕），不承载正文、不参与表面与文本层级，也不纳入对比度校验；需要旗面配色时从这里取，不要另写 hex。
-- **动画（GSAP）**: 目前唯一使用处是 `pages/about/as-mtf/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
+- **动画（GSAP）**: 目前唯一使用处是 `pages/about/trans/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。
