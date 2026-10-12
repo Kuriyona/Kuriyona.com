@@ -10,10 +10,10 @@
     "hono": "^4.13.13"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261008.1",
-    "@types/node": "^26.0.1",
+    "@cloudflare/workers-types": "^5.20261011.1",
+    "@types/node": "^26.6.5",
     "drizzle-kit": "1.0.0-rc.4",
-    "oxfmt": "^0.56.0"
+    "oxfmt": "^0.72.0"
   },
   "packageManager": "pnpm@11.4.0"
 }

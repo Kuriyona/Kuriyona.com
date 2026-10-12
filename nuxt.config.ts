@@ -32,6 +32,12 @@ export default defineNuxtConfig({
     strategy: 'prefix_except_default',
   },
   vite: {
+    // Vite 8 回归：SSR build 会把裸 CSS `@import 'tailwindcss'` 当外部依赖返回原
+    // specifier，postcss-import 于是尝试打开 <root>/tailwindcss 并 ENOENT。
+    // 上游：vitejs/vite#23096（修复 PR vitejs/vite#23099）。修复发布后可移除。
+    ssr: {
+      noExternal: ['tailwindcss'],
+    },
     plugins: [
       tailwindcss(),
       {
@@ -82,7 +88,7 @@ export default defineNuxtConfig({
       ],
     },
   },
-  css: ['./app/assets/css/main.css'],
+  css: ['~/assets/css/main.css'],
   devtools: { enabled: true },
   site: {
     url: 'https://kuriyona.com',
