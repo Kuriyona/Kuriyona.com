@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import KCardLink from '~/components/KCardLink.vue';
-
 const config = useAppConfig();
 const ISSUE =
   'https://github.com/Kuriyona/Kuriyona.com/issues/new?template=申请友链---apply-for-a-link-exchange.md';
@@ -14,21 +12,8 @@ useSeoMeta({ title: $t('about.links.title') });
     </NuxtLinkLocale>
     <h1 class="text-2xl" data-pagefind-meta="title">{{ $t('about.links.title') }}</h1>
     <KCard :title="$t('about.links.best-friends')">
-      <div class="flex flex-col gap-2">
-        <KCardLink
-          v-slot="{ UrlPreview }"
-          v-for="link in config.links.main"
-          :to="link.url"
-          :img="link.avatar"
-          :new="true">
-          <div class="w-full">
-            <div class="flex items-center gap-2">
-              <KBadge v-if="link.relationKey">{{ $t(link.relationKey) }}</KBadge>
-              <span>{{ link.title }}</span>
-            </div>
-            <component :is="UrlPreview" :to="link.url" :new="true" />
-          </div>
-        </KCardLink>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <KPersonCard v-for="person in config.links.main" :key="person.name" v-bind="person" />
       </div>
     </KCard>
     <KCard :title="$t('about.links.other-friends')">

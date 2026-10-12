@@ -42,7 +42,10 @@ const aboutNav = useAboutNav();
         :desc="item.desc"
         :trans="item.to === '/about/as-mtf'" />
     </div>
-    <KNavCard to="/links" :title="$t('about.links.title')" :desc="$t('about.links.desc')" />
+    <KNavCard
+      to="/friends-and-links"
+      :title="$t('about.links.title')"
+      :desc="$t('about.links.desc')" />
     <KCard :title="$t('about.skills')">
       <div class="flex gap-2 flex-wrap justify-center">
         <KSurface

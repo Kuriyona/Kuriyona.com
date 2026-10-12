@@ -112,7 +112,7 @@ Only pages with `data-pagefind-body` are indexed. Currently applied to:
 - `/` (首页：全屏欢迎首屏 + 关于内容，`app/pages/index.vue`)
 - `/about/as-mtf` (`app/pages/about/as-mtf/index.vue`)
 - `/about/devices` (`app/pages/about/devices/index.vue`)
-- `/links` (`app/pages/links/index.vue`)
+- `/friends-and-links` (`app/pages/friends-and-links/index.vue`)
 
 Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in search results.
 
@@ -122,7 +122,7 @@ Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in s
 Kuriyona.com/
 ├── app/                        Nuxt 应用（核心代码）
 │   ├── app.vue                 根组件：背景、NuxtPage、AppBar、ToastHost；i18n locale watcher
-│   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main/others/links），合并 app/config.json
+│   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main 最重要的人（每人多平台链接）/ others / links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
 │   │   ├── css/                main.css（@import 汇总）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text 等）
@@ -153,7 +153,7 @@ Kuriyona.com/
 │   │   ├── about/as-mtf/        MtF 相关页面（pride 主题卡）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
-│   │   ├── links/index.vue      友链页（申请友链链接到 GitHub Issue 模板）
+│   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
 │   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动）
@@ -192,7 +192,7 @@ Kuriyona.com/
 │   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
 │   └── docs/                    后端文档（development / deployment）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
-├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）
+├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301）
 ├── temp/                        OG 图生成中间产物（gitignored）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包）、GIT_HASH/BUILD_TIME define）
 ├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding，main=backend/index.ts）
@@ -205,41 +205,42 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件          | 用途                                                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                          |
-| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                     |
-| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                            |
-| `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore）         |
-| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                              |
-| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                      |
-| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                 |
-| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                               |
-| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                         |
-| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                     |
-| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                           |
-| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                 |
-| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                      |
-| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                        |
-| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合） |
+| 组件          | 用途                                                                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                       |
+| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                  |
+| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                         |
+| `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore）                      |
+| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                                           |
+| `KPersonCard` | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simpleicons 图标 + 名称） |
+| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                   |
+| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                              |
+| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                            |
+| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                      |
+| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                                  |
+| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                        |
+| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                              |
+| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                   |
+| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                     |
+| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）              |
 
 ### 页面路由总览
 
-| 路由             | 文件                            | 说明                                             |
-| ---------------- | ------------------------------- | ------------------------------------------------ |
-| `/`              | `pages/index.vue`               | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body） |
-| `/about/as-mtf`  | `pages/about/as-mtf/index.vue`  | MtF 页面                                         |
-| `/about/devices` | `pages/about/devices/index.vue` | 设备配置（含 data-pagefind-body）                |
-| `/blog`          | `pages/blog/index.vue`          | 文章列表                                         |
-| `/blog/:slug`    | `pages/blog/[slug].vue`         | 文章详情（多语言）                               |
-| `/timeline`      | `pages/timeline/index.vue`      | 时间线（条目描述保持中文）                       |
-| `/links`         | `pages/links/index.vue`         | 友链页                                           |
-| `/ask-box`       | `pages/ask-box/index.vue`       | 提问箱列表                                       |
-| `/ask-box/ask`   | `pages/ask-box/ask.vue`         | 提交提问                                         |
-| `/status`        | `pages/status/index.vue`        | 状态页（Steam/天气/GitHub）                      |
-| `/admin`         | `pages/admin/index.vue`         | API key 管理                                     |
-| `/admin/r2`      | `pages/admin/r2.vue`            | R2 文件上传                                      |
-| `/admin/ask-box` | `pages/admin/ask-box.vue`       | 提问审核                                         |
+| 路由                 | 文件                                | 说明                                             |
+| -------------------- | ----------------------------------- | ------------------------------------------------ |
+| `/`                  | `pages/index.vue`                   | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body） |
+| `/about/as-mtf`      | `pages/about/as-mtf/index.vue`      | MtF 页面                                         |
+| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                |
+| `/blog`              | `pages/blog/index.vue`              | 文章列表                                         |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言）                               |
+| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                       |
+| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）      |
+| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                       |
+| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                         |
+| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub）                      |
+| `/admin`             | `pages/admin/index.vue`             | API key 管理                                     |
+| `/admin/r2`          | `pages/admin/r2.vue`                | R2 文件上传                                      |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问审核                                         |
 
 ### API 概览
 
