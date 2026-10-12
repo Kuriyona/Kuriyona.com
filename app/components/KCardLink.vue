@@ -47,7 +47,7 @@ const UrlPreview = defineComponent({
     :to="props.to"
     :locale="props.lang as any"
     :target="props.new ? '_blank' : '_self'"
-    class="hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
+    class="block hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
     <KCard class="k-interactive h-full flex flex-col justify-center" v-bind="$attrs">
       <slot
         :to="props.to"
