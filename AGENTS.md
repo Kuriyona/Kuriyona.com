@@ -125,7 +125,7 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main/others/links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
-│   │   ├── css/                main.css（@import 汇总）· base.css（主题变量/滚动条/光标）· utilities.css（.link/.trans-text 等）
+│   │   ├── css/                main.css（@import 汇总）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text 等）
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
@@ -135,6 +135,7 @@ Kuriyona.com/
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
+│   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
 │   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact
 │   │   └──
@@ -144,6 +145,7 @@ Kuriyona.com/
 │   │   ├── useNav.ts           导航项（读取 app.config nav/aboutNav + i18n 标题）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
+│   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── pages/                   路由页面（Nuxt 文件路由）
@@ -177,6 +179,7 @@ Kuriyona.com/
 ├── scripts/                     Bun 独立脚本（非打包进应用）
 │   ├── generate-blog-og.ts      OG 图生成（yona-svg + sharp，输出到 temp/）
 │   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量）
+│   ├── check-contrast.ts        视觉令牌对比度校验（bun scripts/check-contrast.ts）
 │   └── sort-i18n.ts             i18n JSON 按键名排序（pnpm fmt 时自动执行）
 ├── backend/                     后端 API（独立子包，自带 lockfile，非 pnpm workspace 成员）
 │   ├── index.ts                 Worker 入口（Hono app，导出 default；不做 listen/migrate）
@@ -204,8 +207,9 @@ Kuriyona.com/
 
 | 组件          | 用途                                                                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `KCard`       | 毛玻璃卡片容器（可选 title）                                                                                                         |
-| `KButton`     | 毛玻璃按钮（支持 round/text/block）                                                                                                  |
+| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                          |
+| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                     |
+| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                            |
 | `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore）         |
 | `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                              |
 | `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                      |
@@ -249,7 +253,7 @@ Kuriyona.com/
 
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
-- `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`) and upload (`upload-blog-og.ts`). Import from `server/utils.ts`.
+- `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
 - `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
@@ -265,6 +269,7 @@ Kuriyona.com/
 - **本地开发（portless）**: `pnpm dev` / `pnpm api:dev` 经 [portless](https://www.npmjs.com/package/portless)（`pnpm add -g portless`，需 Node ≥ 24）提供本地 HTTPS 域名：前端 `https://kuriyona.localhost`、API `https://kuriyona-api.localhost`。首次需 `portless trust` 信任本地 CA；代理默认在 443 起（要 sudo，无 sudo 时 `portless proxy start --port 1355 --https`，URL 会带 `:1355`）。配置全部写在文件里：前端 app 名 = 根 `package.json` 的 `"portless": "kuriyona"`，API app 名 = `api:dev` 脚本里的 `--name kuriyona-api`，TLD = 两个脚本首部内联的 `PORTLESS_TLD=localhost`（**两处成对，改一处必须改另一处**；内联是为了不受环境变量影响，`.env` 不行——`pnpm run` 不加载 `.env`）。`api:dev` 里 `--app-port 62802` 与 `wrangler dev --port 62802` 也是成对的：Nuxt 会读 portless 注入的 `PORT` 所以 `dev` 不写端口，wrangler 不读，必须显式指定并让 portless 指向同一端口。不经 portless 时用 `pnpm dev:plain`（3000）与 `pnpm api:run`（62802），或 `PORTLESS=0 pnpm dev`。
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
+- **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。

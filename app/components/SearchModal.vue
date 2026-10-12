@@ -36,10 +36,11 @@ function onKeydown(e: KeyboardEvent) {
 
 <template>
   <Teleport to="body">
-    <div v-if="s.visible" class="search-modal fixed inset-0 z-9999 flex justify-center bg-black/50">
+    <div v-if="s.visible" class="search-modal k-scrim fixed inset-0 z-9999 flex justify-center">
       <div class="search-modal-backdrop fixed inset-0" @click="onBackdropClick" />
 
       <KCard
+        glass
         class="search-modal-container relative mt-[10vh] h-fit max-h-[85vh] w-full max-w-150 mx-4 flex flex-col gap-2">
         <div class="search-modal-input-wrap flex items-center gap-2">
           <KInput
@@ -75,7 +76,7 @@ function onKeydown(e: KeyboardEvent) {
               }
             "
             :class="{ 'is-active': i === s.activeIndex, 'is-sub': item.depth === 1 }"
-            class="search-modal-result-item shadow-white/10"
+            class="search-modal-result-item"
             :style="
               item.depth === 1 ? { marginLeft: '12px', fontSize: '12px !important' } : undefined
             ">

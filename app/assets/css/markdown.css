@@ -1,6 +1,7 @@
 .markdown-body {
   font-family: inherit !important;
   background-color: transparent !important;
+  color: var(--color-text-1);
   code {
     font-family: var(--font-family-monos) !important;
   }
@@ -12,8 +13,8 @@
     }
   }
   pre {
-    background-color: transparent !important;
-    backdrop-filter: brightness(0.75);
+    background-color: var(--color-surface-1) !important;
+    border: 1px solid var(--color-line);
     .code-copy-btn {
       position: absolute;
       top: 8px;
@@ -25,8 +26,8 @@
       height: 32px;
       border: none;
       border-radius: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.6);
+      background: var(--color-hover);
+      color: var(--color-text-2);
       cursor: pointer;
       opacity: 0;
       transition:
@@ -38,8 +39,8 @@
       opacity: 1;
     }
     .code-copy-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: rgba(255, 255, 255, 0.9);
+      background: var(--color-hover-strong);
+      color: var(--color-text-1);
     }
   }
   tr {
@@ -51,4 +52,50 @@
   ol {
     list-style-type: decimal;
   }
+}
+
+.markdown-body h1,
+.markdown-body h2 {
+  border-bottom-color: var(--color-line);
+}
+
+.markdown-body h6,
+.markdown-body blockquote,
+.markdown-body .footnotes,
+.markdown-body ::placeholder {
+  color: var(--color-text-3);
+}
+
+.markdown-body hr {
+  background-color: var(--color-line-strong);
+}
+
+.markdown-body blockquote {
+  border-left-color: var(--color-line-strong);
+}
+
+.markdown-body table th,
+.markdown-body table td,
+.markdown-body table tr {
+  border-color: var(--color-line);
+}
+
+.markdown-body kbd {
+  color: var(--color-text-1);
+  background-color: var(--color-surface-2);
+  border-color: var(--color-line);
+}
+
+.markdown-body code,
+.markdown-body tt {
+  background-color: var(--color-surface-2);
+}
+
+.markdown-body mark {
+  color: #000;
+  background-color: var(--color-theme);
+}
+
+.markdown-body span.frame span span {
+  color: var(--color-text-1);
 }

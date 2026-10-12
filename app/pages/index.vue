@@ -14,7 +14,7 @@ const aboutNav = useAboutNav();
       </h1>
       <p class="font-bold">{{ $t('about.description') }}</p>
       <span
-        class="absolute bottom-8 left-1/2 -translate-x-1/2 material-symbols-outlined text-3xl text-white/40 animate-bounce"
+        class="absolute bottom-8 left-1/2 -translate-x-1/2 material-symbols-outlined text-3xl text-(--color-text-4) animate-bounce"
         aria-hidden="true">
         expand_more
       </span>
@@ -45,27 +45,28 @@ const aboutNav = useAboutNav();
     <KNavCard to="/links" :title="$t('about.links.title')" :desc="$t('about.links.desc')" />
     <KCard :title="$t('about.skills')">
       <div class="flex gap-2 flex-wrap justify-center">
-        <div
+        <KSurface
           v-for="item in config.tech_stack"
           :key="item.name"
-          class="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/20 backdrop-blur-sm text-sm hover:bg-white/5 transition-colors duration-300">
+          class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm">
           <img
             :src="`https://cdn.simpleicons.org/${item.icon}`"
             :alt="item.name"
             class="w-5 h-5 p-0.5 bg-white rounded-sm" />
           <span>{{ item.name }}</span>
-        </div>
-        <span class="hidden min-[600px]:block self-center w-px h-8 bg-white/10 mx-1"></span>
-        <div
+        </KSurface>
+        <span
+          class="hidden min-[600px]:block self-center w-px h-8 bg-(--color-line-strong) mx-1"></span>
+        <KSurface
           v-for="item in config.languages"
           :key="item.name"
-          class="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/20 backdrop-blur-sm text-sm hover:bg-white/5 transition-colors duration-300">
+          class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm">
           <span
             class="px-1.5 py-0.5 bg-white rounded-sm text-[10px] font-bold text-black leading-none"
             >{{ item.icon }}</span
           >
           <span>{{ $t(item.name) }}</span>
-        </div>
+        </KSurface>
       </div>
     </KCard>
     <CardContact />

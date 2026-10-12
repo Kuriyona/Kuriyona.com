@@ -41,7 +41,8 @@ const open = computed({
         :side="props.direction"
         :align="props.align"
         :side-offset="8"
-        class="z-500 rounded-lg border border-white/5 bg-black p-2 outline-none">
+        class="k-surface z-500 rounded-lg p-2 outline-none"
+        data-level="3">
         <slot />
       </DropdownMenuContent>
     </DropdownMenuPortal>

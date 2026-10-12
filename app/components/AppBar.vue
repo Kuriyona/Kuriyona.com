@@ -20,8 +20,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="fixed w-screen top-0 z-100 flex justify-center backdrop-brightness-75 backdrop-blur-3xl">
+  <div class="k-surface k-glass fixed w-screen top-0 z-100 flex justify-center">
     <div class="w-200 max-w-screen px-4 *:px-2 *:font-monos">
       <div class="relative min-h-12 py-2 px-3 flex justify-between items-center rounded-xl">
         <div class="h-full flex items-center gap-4">

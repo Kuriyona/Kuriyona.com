@@ -12,9 +12,11 @@ const { currentNodeName } = useCloudflareStatus();
 <template>
   <Transition name="menu">
     <div v-if="show">
-      <div class="fixed left-0 top-0 z-[110] w-screen h-dvh bg-black/50" @click="show = false" />
-      <div
-        class="fixed w-80 max-[400px]:w-screen right-0 top-0 z-[110] h-dvh bg-white/2 border-l border-white/5 flex flex-col gap-4 p-4 overflow-y-auto backdrop-blur-3xl">
+      <div class="k-scrim fixed left-0 top-0 z-[110] w-screen h-dvh" @click="show = false" />
+      <KSurface
+        as="aside"
+        glass
+        class="fixed w-80 max-[400px]:w-screen right-0 top-0 z-[110] h-dvh flex flex-col gap-4 p-4 overflow-y-auto">
         <div class="flex justify-end">
           <KIconButton icon="close" @click="show = false" />
         </div>
@@ -26,7 +28,7 @@ const { currentNodeName } = useCloudflareStatus();
           :text="item.shortTitle || item.title"
           :desc="item.desc || undefined" />
         <KDivider class="mt-auto" />
-        <div class="flex flex-col gap-1 text-xs text-white/60 font-monos">
+        <div class="flex flex-col gap-1 text-xs text-(--color-text-2) font-monos">
           <p>
             {{ $t('global.opensource') }} (MIT) :
             <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="link">
@@ -44,7 +46,7 @@ const { currentNodeName } = useCloudflareStatus();
           </p>
           <p v-if="currentNodeName">{{ $t('app.using-cf') }} : {{ currentNodeName }}</p>
         </div>
-      </div>
+      </KSurface>
     </div>
   </Transition>
 </template>
@@ -54,16 +56,16 @@ const { currentNodeName } = useCloudflareStatus();
 .menu-leave-active {
   transition: opacity 0.25s ease;
 }
-.menu-enter-active > div:last-child,
-.menu-leave-active > div:last-child {
+.menu-enter-active > :last-child,
+.menu-leave-active > :last-child {
   transition: transform 0.25s ease;
 }
 .menu-enter-from,
 .menu-leave-to {
   opacity: 0;
 }
-.menu-enter-from > div:last-child,
-.menu-leave-to > div:last-child {
+.menu-enter-from > :last-child,
+.menu-leave-to > :last-child {
   transform: translateX(100%);
 }
 </style>

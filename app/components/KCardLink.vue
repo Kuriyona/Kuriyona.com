@@ -35,7 +35,9 @@ const UrlPreview = defineComponent({
   },
   setup(p) {
     return () =>
-      p.to && p.new ? h('p', { class: 'text-xs text-white/50 max-w-full truncate' }, p.to) : null;
+      p.to && p.new
+        ? h('p', { class: 'text-xs text-(--color-text-3) max-w-full truncate' }, p.to)
+        : null;
   },
 });
 </script>
@@ -46,9 +48,7 @@ const UrlPreview = defineComponent({
     :locale="props.lang as any"
     :target="props.new ? '_blank' : '_self'"
     class="hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
-    <KCard
-      class="hover:bg-white/5 transition-bg duration-300 h-full flex flex-col justify-center"
-      v-bind="$attrs">
+    <KCard class="k-interactive h-full flex flex-col justify-center" v-bind="$attrs">
       <slot
         :to="props.to"
         :text="props.text"
@@ -70,7 +70,7 @@ const UrlPreview = defineComponent({
             </template>
             <div class="max-w-full">
               <p>{{ props.text }}</p>
-              <p v-if="props.desc" class="text-sm text-white/50">{{ props.desc }}</p>
+              <p v-if="props.desc" class="text-sm text-(--color-text-3)">{{ props.desc }}</p>
               <component :is="UrlPreview" :to="props.to" :new="props.new" />
             </div>
           </div>

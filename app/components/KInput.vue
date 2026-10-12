@@ -51,7 +51,7 @@ defineExpose({
       :disabled="disabled"
       :maxlength="maxlength"
       v-bind="inputAttrs"
-      class="w-full rounded-md border border-white/20 bg-black/10 p-3 text-sm outline-none backdrop-blur-xs transition-bg duration-300 placeholder:text-white/40 focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60"
+      class="w-full rounded-md border border-(--color-line-strong) bg-(--color-surface-inset) p-3 text-sm outline-none transition-colors duration-300 placeholder:text-(--color-text-3) focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60"
       @input="onInput" />
     <input
       v-else
@@ -61,12 +61,12 @@ defineExpose({
       :disabled="disabled"
       :maxlength="maxlength"
       v-bind="inputAttrs"
-      class="w-full rounded-md border border-white/20 bg-black/10 p-3 text-sm outline-none backdrop-blur-xs transition-bg duration-300 placeholder:text-white/40 focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60"
+      class="w-full rounded-md border border-(--color-line-strong) bg-(--color-surface-inset) p-3 text-sm outline-none transition-colors duration-300 placeholder:text-(--color-text-3) focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60"
       @input="onInput" />
     <button
       v-if="clearable && modelValue"
       type="button"
-      class="absolute right-2 top-1/2 -translate-y-1/2 text-white/40 transition-color duration-300 hover:text-white"
+      class="absolute right-2 top-1/2 -translate-y-1/2 text-(--color-text-4) transition-color duration-300 hover:text-(--color-text-1)"
       @click="onClear">
       <span class="material-symbols-outlined text-lg"> close </span>
     </button>

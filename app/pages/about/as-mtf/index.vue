@@ -85,14 +85,18 @@ const timeInfo = computed(() => {
         <span data-pagefind-meta="title">{{ $t('about.mtf.as-mtf') }}</span>
       </h1>
     </div>
-    <KCard v-if="isJune" class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-white">
+    <KCard
+      v-if="isJune"
+      class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-(--color-text-1)">
       <div
         class="absolute top-0 left-0 h-full w-full pride-bg rounded-xl brightness-25 transition-[filter] duration-300"></div>
       <p class="relative text-sm text-center transition-colors duration-300">
         {{ $t('about.mtf.pride-month') }}
       </p>
     </KCard>
-    <KCard v-if="false" class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-white">
+    <KCard
+      v-if="false"
+      class="relative hover:[&>div]:brightness-50 hover:[&>p]:text-(--color-text-1)">
       <div
         class="absolute top-0 left-0 h-full w-full trans-bg rounded-xl brightness-25 transition-[filter] duration-300"></div>
       <p class="relative text-sm text-center transition-colors duration-300">
@@ -103,32 +107,32 @@ const timeInfo = computed(() => {
       <p class="mb-4 trans-text">{{ $t('about.mtf.im-mtf') }}</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KCard class="flex flex-col gap-1">
-          <p class="text-2xl font-bold text-white">
+          <p class="text-2xl font-bold text-(--color-text-1)">
             <span>{{ timeInfo.years }}</span>
             <span>&nbsp;</span>
-            <span class="text-sm text-white/60">{{ $t('global.unit.year') }}</span>
+            <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.year') }}</span>
           </p>
-          <p class="text-white/60">{{ $t('about.mtf.count.birth-for') }}</p>
+          <p class="text-(--color-text-2)">{{ $t('about.mtf.count.birth-for') }}</p>
         </KCard>
         <KCard class="flex flex-col gap-1">
-          <p class="text-2xl font-bold text-white">
+          <p class="text-2xl font-bold text-(--color-text-1)">
             <span>{{ timeInfo.wantYears }}</span>
             <span>&nbsp;</span>
-            <span class="text-sm text-white/60">{{ $t('global.unit.year') }}</span>
+            <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.year') }}</span>
           </p>
-          <p class="text-white/60">
+          <p class="text-(--color-text-2)">
             {{ $t('about.mtf.count.want-for') }}
             <br />
             ({{ $t('about.mtf.percent-life', [timeInfo.percentWant]) }})
           </p>
         </KCard>
         <KCard class="flex flex-col gap-1">
-          <p class="text-2xl font-bold text-white">
+          <p class="text-2xl font-bold text-(--color-text-1)">
             <span>{{ timeInfo.identifyMonths }}</span>
             <span>&nbsp;</span>
-            <span class="text-sm text-white/60">{{ $t('global.unit.month') }}</span>
+            <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.month') }}</span>
           </p>
-          <p class="text-white/60">
+          <p class="text-(--color-text-2)">
             {{ $t('about.mtf.count.identify-for') }}
             <br />
             ({{ $t('about.mtf.percent-life', [timeInfo.percentIdentify]) }})
@@ -136,13 +140,13 @@ const timeInfo = computed(() => {
         </KCard>
         <KCard class="flex flex-col gap-1">
           <ClientOnly>
-            <p class="text-2xl font-bold text-white">
+            <p class="text-2xl font-bold text-(--color-text-1)">
               <span>{{ timeInfo.hrtDays }}</span>
               <span>&nbsp;</span>
-              <span class="text-sm text-white/60">{{ $t('global.unit.day') }}</span>
+              <span class="text-sm text-(--color-text-2)">{{ $t('global.unit.day') }}</span>
             </p>
           </ClientOnly>
-          <p class="text-white/60">
+          <p class="text-(--color-text-2)">
             {{ $t('about.mtf.count.hrt-for') }}
             <br />
             ({{ $t('about.mtf.percent-life', [timeInfo.percentHrt]) }})
@@ -152,14 +156,13 @@ const timeInfo = computed(() => {
     </KCard>
     <KCard :title="$t('about.about-me')">
       <div>
-        <KCardLink to="/" level :text="$t('about.my-site-home')" />
+        <KCardLink to="/" :text="$t('about.my-site-home')" />
       </div>
     </KCard>
     <KCard :title="$t('about.mtf.about-trans')">
       <div class="flex flex-col gap-4">
         <KCardLink
           v-for="item in data"
-          level
           :key="item.href"
           :to="item.href"
           :text="item.title"

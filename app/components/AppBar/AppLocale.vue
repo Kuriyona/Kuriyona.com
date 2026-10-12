@@ -39,7 +39,8 @@ const options = computed(() => locales.value.map((l) => ({ value: l.code, label:
         align="end"
         side="bottom"
         :side-offset="8"
-        class="z-600 rounded-lg border border-white/5 bg-black p-2 outline-none"
+        class="k-surface z-600 rounded-lg p-2 outline-none"
+        data-level="3"
         @interact-outside="guardOutside"
         @pointer-down-outside="guardOutside"
         @focus-outside="guardOutside">

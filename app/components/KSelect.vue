@@ -36,9 +36,9 @@ const emit = defineEmits<{
     @update:model-value="emit('update:modelValue', $event as string)">
     <SelectTrigger
       v-bind="$attrs"
-      class="flex w-full items-center justify-between gap-2 rounded-md border border-white/20 bg-black/10 px-3 py-2 text-sm outline-none backdrop-blur-xs transition-bg duration-300 hover:bg-white/5 focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60">
+      class="k-interactive [--interactive-base:var(--color-surface-inset)] flex w-full items-center justify-between gap-2 rounded-md border border-(--color-line-strong) bg-(--color-surface-inset) px-3 py-2 text-sm outline-none focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60">
       <SelectValue :placeholder="props.placeholder" />
-      <SelectIcon class="text-white/50">
+      <SelectIcon class="text-(--color-text-3)">
         <span class="material-symbols-outlined text-base leading-none"> expand_more </span>
       </SelectIcon>
     </SelectTrigger>
@@ -46,13 +46,14 @@ const emit = defineEmits<{
       <SelectContent
         position="popper"
         :side-offset="4"
-        class="z-700 max-h-60 min-w-[var(--reka-select-trigger-width)] overflow-hidden rounded-lg border border-white/5 bg-black p-2 shadow-lg shadow-black/40">
+        class="k-surface z-700 max-h-60 min-w-[var(--reka-select-trigger-width)] overflow-hidden rounded-lg p-2"
+        data-level="3">
         <SelectViewport>
           <SelectItem
             v-for="opt in props.options"
             :key="opt.value"
             :value="opt.value"
-            class="relative flex cursor-pointer items-center rounded-md py-1.5 pr-8 pl-2 text-sm text-white/80 outline-none select-none transition-bg duration-200 data-[highlighted]:bg-white/10 data-[highlighted]:text-white">
+            class="relative flex cursor-pointer items-center rounded-md py-1.5 pr-8 pl-2 text-sm text-(--color-text-2) outline-none select-none transition-colors duration-200 data-[highlighted]:bg-(--color-hover) data-[highlighted]:text-(--color-text-1)">
             <SelectItemText>{{ opt.label }}</SelectItemText>
             <SelectItemIndicator class="absolute right-2 text-(--color-theme)">
               <span class="material-symbols-outlined text-base leading-none"> check </span>

@@ -1,11 +1,66 @@
+/* 设计令牌（Design Tokens）
+ *
+ * 颜色 / 层级 / 毛玻璃的唯一来源。组件只允许引用变量，禁止再写一次性的半透明/模糊工具类。
+ * 文本令牌后括号为对 bg / surface-1..3 / inset 五个表面实测的对比度区间，以及玻璃最坏情况（背景纯白）实测值。
+ */
+:root {
+  /* 表面（冷调近黑） */
+  --color-bg: #0b0b11; /* 页面底色（非纯黑） */
+  --color-surface-1: #15151a; /* 卡片 L1 */
+  --color-surface-2: #191920; /* 卡片 L2 */
+  --color-surface-3: #24242c; /* 卡片 L3 / 浮层（再暗会让控件上的正文跌破 7:1，见下面控件注释） */
+  --color-surface-inset: #08080c; /* 输入框等内凹面 */
+
+  /* 描边 / 分隔 */
+  --color-line: rgb(255 255 255 / 6%); /* 表面描边 */
+  --color-line-strong: rgb(255 255 255 / 14%); /* 控件描边 / 分隔线 */
+  --color-line-glass: rgb(255 255 255 / 10%); /* 玻璃描边 */
+
+  /* 交互态 */
+  --color-hover: rgb(255 255 255 / 6%); /* 选中 / 高亮底色 */
+  --color-hover-strong: rgb(255 255 255 / 12%); /* 按下态 */
+
+  /* 控件（按钮 / 图标按钮）：半透明提亮，叠加在任何表面或玻璃上都不失效
+   * 底色 6% 是上限：再亮会让控件上的正文（text-1）在 L3 / 玻璃面上跌破 7:1；
+   * 反过来 L3 也不能比 #24242c 更暗。控件底色会抬升所在表面亮度，
+   * text-3 / text-4 不要用于控件内的文本。
+   * 描边与底色同色系（只差约 4 级），避免半透明描边在底色之上二次叠加变亮。 */
+  --color-control-bg: rgb(255 255 255 / 6%);
+  --color-control-border: #1e1e25;
+
+  /* 文本 */
+  --color-text-1: #bfbfc7; /* 正文（9.77–10.94:1；玻璃 8.72） */
+  --color-text-2: #a1a1aa; /* 次要文本（6.97–7.80:1） */
+  --color-text-3: #8b8b96; /* 弱化文本（5.30–5.93:1，AA） */
+  --color-text-4: #75757f; /* 图标 / 提示（3.92–4.39:1，非文本 3:1） */
+
+  /* 毛玻璃 / 遮罩 */
+  --color-glass-bg: rgb(20 20 26 / 76%); /* 毛玻璃底色 */
+  --glass-filter: blur(20px) brightness(0.3) saturate(150%);
+  --color-scrim: rgb(6 6 9 / 68%); /* 遮罩底色 */
+
+  /* 卡片层级：data-level 绑定这些变量（见 surface.css）；比对应 --color-surface-N 再暗一档 */
+  --color-card-1-bg: #121219;
+  --color-card-1-border: var(--color-line);
+  --shadow-card-1: none;
+  --color-card-2-bg: #17171f;
+  --color-card-2-border: var(--color-line);
+  --shadow-card-2: 0 1px 2px rgb(0 0 0 / 25%);
+  --color-card-3-bg: #1d1d26;
+  --color-card-3-border: var(--color-line-strong);
+  --shadow-card-3: 0 6px 24px rgb(0 0 0 / 45%);
+  --shadow-floating: 0 8px 32px rgb(0 0 0 / 50%);
+  --card-glow: 0 0 24px rgb(255 255 255 / 18%);
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 100px;
 }
 
 body {
-  color: #fff;
-  background-color: #000; /* 作为背景未加载出来的 Fallback */
+  color: var(--color-text-1);
+  background-color: var(--color-bg); /* 作为背景未加载出来的 Fallback */
   transition:
     color 0.25s,
     background-color 0.25s;

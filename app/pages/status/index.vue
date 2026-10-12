@@ -20,7 +20,7 @@ const { data: status } = useAsyncData(
       <KCard :title="$t('about.location')" class="flex-1">
         <div class="relative max-h-40 h-full w-full">
           <p
-            class="absolute bottom-0 left-0 text-black/80 text-sm backdrop-blur-md p-1 rounded-tr-md">
+            class="absolute bottom-0 left-0 rounded-tr-md bg-(--color-surface-1) px-1 text-sm text-(--color-text-1)">
             {{ $t('about.location-value') }}
           </p>
           <img

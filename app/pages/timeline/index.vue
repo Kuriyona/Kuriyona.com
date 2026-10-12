@@ -46,9 +46,9 @@ useSeoMeta({ title: $t('timeline.title') });
       <KIconButton icon="arrow_back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl font-bold">{{ $t('timeline.title') }}</h1>
-    <p class="text-white/60">{{ $t('timeline.desc') }}</p>
+    <p class="text-(--color-text-2)">{{ $t('timeline.desc') }}</p>
     <div class="relative flex flex-col gap-8 py-6">
-      <div class="absolute inset-y-0 left-4 w-px -translate-x-1/2 bg-white/15"></div>
+      <div class="absolute inset-y-0 left-4 w-px -translate-x-1/2 bg-(--color-line-strong)"></div>
       <template v-for="node in nodes" :key="node.type === 'year' ? node.year : node.item?.date">
         <div v-if="node.type === 'year'" class="relative py-1.5">
           <span
@@ -68,7 +68,7 @@ useSeoMeta({ title: $t('timeline.title') });
                     {{ node.item!.tag }}
                   </KBadge>
                 </div>
-                <p class="text-white/80">{{ node.item!.text }}</p>
+                <p class="text-(--color-text-1)">{{ node.item!.text }}</p>
               </div>
               <KIconButton
                 v-if="node.item!.link"

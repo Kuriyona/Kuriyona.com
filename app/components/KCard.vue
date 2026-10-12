@@ -1,15 +1,20 @@
 <script setup lang="ts">
-const props = defineProps({
-  title: {
-    type: String,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    level?: 1 | 2 | 3;
+    glass?: boolean;
+  }>(),
+  { glass: false },
+);
 </script>
 
 <template>
-  <div
-    class="p-4 backdrop-brightness-75 bg-black/10 backdrop-blur-xs rounded-xl text-white/80 text-sm shadow-lg shadow-white/2">
+  <KSurface
+    :level="props.level"
+    :glass="props.glass"
+    class="p-4 rounded-xl text-sm text-(--color-text-1)">
     <h2 v-if="props.title" class="text-lg font-bold mb-4">{{ props.title }}</h2>
     <slot />
-  </div>
+  </KSurface>
 </template>

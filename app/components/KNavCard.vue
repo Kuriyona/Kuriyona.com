@@ -14,10 +14,10 @@ defineProps<{
         <p :class="trans ? 'trans-text text-xl font-bold' : 'text-xl font-bold'">
           {{ title }}
         </p>
-        <p v-if="desc" class="text-sm text-white/50">{{ desc }}</p>
+        <p v-if="desc" class="text-sm text-(--color-text-3)">{{ desc }}</p>
       </div>
       <div class="mt-auto flex justify-end">
-        <component :is="LinkIcon" class="text-white/40" />
+        <component :is="LinkIcon" class="text-(--color-text-4)" />
       </div>
     </div>
   </KCardLink>

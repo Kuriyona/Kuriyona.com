@@ -34,16 +34,17 @@ const showQr = computed({
     if (!v) activeQr.value = null;
   },
 });
-
-const cardClass =
-  'flex items-center gap-2 px-3 py-2 rounded-xl bg-black/20 backdrop-blur-sm hover:bg-white/5 transition-colors duration-300 cursor-pointer min-w-0 sm:gap-3 sm:px-4 sm:py-3 sm:min-w-[160px]';
 </script>
 
 <template>
   <KCard v-for="group in groups" :key="group.key" :title="$t(`about.contact-group.${group.key}`)">
     <div class="flex flex-wrap gap-3 justify-center">
       <template v-for="link in group.items" :key="link.name">
-        <a :href="link.link" target="_blank" :class="cardClass">
+        <KSurface
+          as="a"
+          :href="link.link"
+          target="_blank"
+          class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm cursor-pointer min-w-0 sm:gap-3 sm:px-4 sm:py-3 sm:min-w-[160px]">
           <span
             v-if="link.mdIcon"
             class="material-symbols-outlined text-lg! leading-none sm:text-2xl">
@@ -60,7 +61,7 @@ const cardClass =
             </span>
             <span
               v-if="link.value"
-              class="hidden text-xs text-white/50 truncate max-w-full sm:block"
+              class="hidden text-xs text-(--color-text-3) truncate max-w-full sm:block"
               >{{ link.value }}</span
             >
           </div>
@@ -71,7 +72,7 @@ const cardClass =
             icon-class="sm:text-lg"
             class="ml-auto shrink-0 sm:ml-1"
             @click.prevent.stop="activeQr = link" />
-        </a>
+        </KSurface>
       </template>
     </div>
   </KCard>
@@ -90,7 +91,7 @@ const cardClass =
       <QRCode
         :value="activeQr?.qr || activeQr?.link || ''"
         class="w-40 h-40 bg-white p-2 rounded-lg" />
-      <p v-if="activeQr?.value" class="text-xs text-white/50">{{ activeQr.value }}</p>
+      <p v-if="activeQr?.value" class="text-xs text-(--color-text-3)">{{ activeQr.value }}</p>
     </div>
   </KDialog>
 </template>

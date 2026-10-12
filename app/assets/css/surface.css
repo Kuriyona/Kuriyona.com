@@ -1,0 +1,63 @@
+/* 表面体系（Surface System）
+ *
+ * 层级由组件的 data-level 绑定令牌，本文件只负责“怎么画”：
+ *   --color-card-1-bg/border + --shadow-card-1  … L1（默认，无 data-level 时生效）
+ *   --color-card-2-* / --shadow-card-2          … L2
+ *   --color-card-3-* / --shadow-card-3          … L3
+ *
+ * 本文件规则未放入 @layer，因此优先级高于同元素上的 Tailwind 工具类：
+ * 使用 .k-surface 的元素不要再写 background/border/box-shadow 工具类
+ * （交互态用 .k-interactive，玻璃用 .k-glass 或 KSurface 的 glass prop）。
+ */
+
+.k-surface {
+  background-color: var(--card-bg, var(--color-card-1-bg));
+  border: 1px solid var(--card-border, var(--color-card-1-border));
+  box-shadow: var(--card-shadow, var(--shadow-card-1));
+}
+
+/* :where() 保持零优先级，便于 .k-glass 等修饰类只靠优先级即可覆盖 */
+:where([data-level='2']) {
+  --card-bg: var(--color-card-2-bg);
+  --card-border: var(--color-card-2-border);
+  --card-shadow: var(--shadow-card-2);
+}
+
+:where([data-level='3']) {
+  --card-bg: var(--color-card-3-bg);
+  --card-border: var(--color-card-3-border);
+  --card-shadow: var(--shadow-card-3);
+}
+
+/* 深色毛玻璃：唯一允许使用模糊滤镜的表面修饰类 */
+.k-glass {
+  --card-bg: var(--color-glass-bg);
+  --card-border: var(--color-line-glass);
+  --card-shadow: var(--shadow-floating);
+  backdrop-filter: var(--glass-filter);
+}
+
+/* 交互态：按当前表面基色提亮，background-color 可过渡
+ * 默认基色是控件底色（半透明，任何表面都成立）；自带底色的元素
+ * （.k-surface 卡片、KInput/KSelect 触发器）需自行声明 --interactive-base。 */
+.k-surface.k-interactive {
+  --interactive-base: var(--card-bg, var(--color-card-1-bg));
+}
+
+.k-interactive {
+  transition: background-color 0.3s ease;
+}
+
+.k-interactive:hover {
+  background-color: color-mix(in srgb, var(--interactive-base, var(--color-control-bg)) 94%, white);
+}
+
+.k-interactive:active {
+  background-color: color-mix(in srgb, var(--interactive-base, var(--color-control-bg)) 88%, white);
+}
+
+/* 遮罩：压暗 + 轻微模糊，用于弹窗 / 抽屉 / 搜索 */
+.k-scrim {
+  background-color: var(--color-scrim);
+  backdrop-filter: blur(6px);
+}

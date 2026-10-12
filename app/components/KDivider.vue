@@ -13,6 +13,6 @@ withDefaults(
   <Separator
     decorative
     :orientation="vertical ? 'vertical' : 'horizontal'"
-    class="bg-white/10"
+    class="bg-(--color-line-strong)"
     :class="vertical ? 'w-px self-stretch' : 'h-px w-full'" />
 </template>

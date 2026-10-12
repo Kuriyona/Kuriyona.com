@@ -18,7 +18,6 @@ useSeoMeta({ title: $t('about.links.title') });
         <KCardLink
           v-slot="{ UrlPreview }"
           v-for="link in config.links.main"
-          level
           :to="link.url"
           :img="link.avatar"
           :new="true">
@@ -36,7 +35,6 @@ useSeoMeta({ title: $t('about.links.title') });
       <div class="grid grid-cols-1 md:grid-cols-2 content-stretch gap-2">
         <KCardLink
           v-for="link in config.links.others"
-          level
           :to="link.url"
           :text="link.title"
           :desc="link.desc"
@@ -48,7 +46,6 @@ useSeoMeta({ title: $t('about.links.title') });
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
         <KCardLink
           v-for="link in config.links.links"
-          level
           :to="link.url"
           :text="link.title"
           :desc="link.desc"
@@ -65,7 +62,7 @@ useSeoMeta({ title: $t('about.links.title') });
       </div>
       <br />
       <div>
-        <KCardLink level :to="ISSUE" :new="true" :text="$t('about.links.request-exchange')" />
+        <KCardLink :to="ISSUE" :new="true" :text="$t('about.links.request-exchange')" />
       </div>
     </KCard>
   </AppPage>

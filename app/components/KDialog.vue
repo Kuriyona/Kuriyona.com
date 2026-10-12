@@ -37,19 +37,21 @@ watch(
 function onPointerDownOutside(event: Event) {
   if (!props.closeOnBackdrop) event.preventDefault();
 }
+
+resetSurfaceLevel();
 </script>
 
 <template>
   <DialogRoot v-model:open="open">
     <DialogPortal :disabled="!props.teleport">
       <DialogOverlay
-        class="fixed inset-0 z-500 grid place-items-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm data-[state=open]:animate-[k-dialog-fade_0.18s_ease-out]">
+        class="k-scrim fixed inset-0 z-500 grid place-items-center overflow-y-auto p-4 data-[state=open]:animate-[k-dialog-fade_0.18s_ease-out]">
         <DialogContent
           class="w-full outline-none data-[state=open]:animate-[k-dialog-in_0.18s_ease-out]"
           :class="props.width"
           :aria-describedby="undefined"
           @pointer-down-outside="onPointerDownOutside">
-          <KCard class="flex max-h-[85vh] flex-col gap-4 overflow-y-auto p-6! shadow-xl">
+          <KCard glass class="flex max-h-[85vh] flex-col gap-4 overflow-y-auto p-6!">
             <div class="flex shrink-0 items-center justify-between gap-4">
               <DialogTitle class="flex min-w-0 items-center gap-2 text-base font-bold">
                 <slot name="title">{{ props.title }}</slot>
