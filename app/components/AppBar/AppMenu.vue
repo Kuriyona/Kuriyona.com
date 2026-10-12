@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
+
 const show = defineModel<boolean>();
 const nav = useNav();
+
+const gitHash = GIT_HASH;
+const buildTime = BUILD_TIME;
+const { currentNodeName } = useCloudflareStatus();
 </script>
 
 <template>
@@ -19,6 +25,25 @@ const nav = useNav();
           @click="show = false"
           :text="item.shortTitle || item.title"
           :desc="item.desc || undefined" />
+        <KDivider class="mt-auto" />
+        <div class="flex flex-col gap-1 text-xs text-white/60 font-monos">
+          <p>
+            {{ $t('global.opensource') }} (MIT) :
+            <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="link">
+              Kuriyona/Kuriyona.com
+            </a>
+            <a
+              :href="`https://github.com/Kuriyona/Kuriyona.com/commit/${gitHash}`"
+              target="_blank"
+              class="link ml-1">
+              {{ gitHash }}
+            </a>
+          </p>
+          <p>
+            {{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}
+          </p>
+          <p v-if="currentNodeName">{{ $t('app.using-cf') }} : {{ currentNodeName }}</p>
+        </div>
       </div>
     </div>
   </Transition>

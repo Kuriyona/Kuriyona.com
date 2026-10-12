@@ -129,8 +129,8 @@ Kuriyona.com/
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
-│   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；移动端菜单：AppBar/AppMenu）
-│   │   ├── AppFooter.vue       版权 + GIT_HASH 链接 + Cloudflare 节点
+│   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；菜单：AppBar/AppMenu，底部含 GIT_HASH/构建时间/Cloudflare 节点）
+│   │   ├── AppFooter.vue       版权声明 + 萌 ICP 备
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 跟随光标的图标加亮）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
