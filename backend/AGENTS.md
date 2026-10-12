@@ -7,13 +7,14 @@ Cloudflare Workers + Hono + Drizzle + D1 的个人 API 服务，作为 [Kuriyona
 > 在**仓库根目录**用 `pnpm api:*` 转发到本目录 / wrangler：
 >
 > - `pnpm api:install` = `pnpm --dir backend install`
-> - `pnpm api:dev` = `wrangler dev --port 62802`
+> - `pnpm api:dev` = `PORTLESS_TLD=localhost portless run --name kuriyona-api --app-port 62802 wrangler dev --port 62802`（portless 域名 `https://kuriyona-api.localhost`）
+> - `pnpm api:run` = `wrangler dev --port 62802`（不经 portless，`http://localhost:62802`）
 > - `pnpm api:orm-generate` = `pnpm --dir backend run orm-generate`
 > - `pnpm api:d1:migrate:local` / `pnpm api:d1:migrate:remote` = `wrangler d1 migrations apply kuriyona-db --local|--remote`
 > - `pnpm run deploy` = `pnpm run build`（generate + pagefind index）+ `wrangler deploy`
 
 - Install deps: 根 `pnpm install` + `pnpm api:install`（或 `pnpm --dir backend install`）。包管理与运行时统一 pnpm，**不用 npm/Bun**。
-- Run: `pnpm api:dev`（仓库根；需根目录 `dist/` 存在，否则先 `pnpm generate`）。本地 env 来自根 `.dev.vars`。
+- Run: `pnpm api:dev`（仓库根；需根目录 `dist/` 存在，否则先 `pnpm generate`）。本地 env 来自根 `.dev.vars`。两个 62802（`--app-port` 与 `wrangler dev --port`）成对：wrangler 不读 portless 注入的 `PORT`；细节见根 `AGENTS.md`。
 - Type/sanity check: 无 `tsc`、无 test、无 lint。用 `pnpm exec wrangler deploy --dry-run`（仓库根）做构建校验。
 - Migrations: 改 `src/db/schema.ts` → `pnpm api:orm-generate` → `pnpm api:d1:migrate:local`（部署时 `:remote`）。
 - Deploy: 见 `docs/deployment.md`。

@@ -4,11 +4,12 @@
 
 ## 1. 环境准备
 
-需要 [Node](https://nodejs.org) ≥ 22 与 pnpm（wrangler 4 要求 Node ≥ 22）。
+需要 [Node](https://nodejs.org) ≥ 24 与 pnpm（wrangler 4 要求 Node ≥ 22，portless 要求 Node ≥ 24）。
 
 ```bash
 pnpm install                    # 根目录（Nuxt 前端 + wrangler）
 pnpm api:install                # backend/ 子包依赖
+pnpm add -g portless            # 本地 HTTPS 域名映射，见 §5；首次需 `portless trust`
 ```
 
 ## 2. 环境变量
@@ -38,10 +39,11 @@ pnpm api:d1:migrate:local       # wrangler d1 migrations apply kuriyona-db --loc
 
 ```bash
 # API + 静态站点（单 Worker）。要求根目录 dist/ 存在，否则先 `pnpm generate`
-pnpm api:dev                    # wrangler dev --port 62802
+pnpm api:dev                    # portless → https://kuriyona-api.localhost（wrangler dev --port 62802）
+pnpm api:run                    # 不经 portless → http://localhost:62802
 ```
 
-- API 全部挂在 `/api/*`，例如 `http://localhost:62802/api`、`http://localhost:62802/api/status`。
+- API 全部挂在 `/api/*`，例如 `http://localhost:62802/api`、`http://localhost:62802/api/status`；经 portless 时同一路径在 `https://kuriyona-api.localhost/api`。
 - 同 Worker 也会从 `./dist` 提供 Nuxt 静态产物。
 
 前端 dev（另开终端）：
@@ -50,9 +52,35 @@ pnpm api:dev                    # wrangler dev --port 62802
 pnpm generate && pnpm index && pnpm dev
 ```
 
-`pnpm dev` 的 DEV API host 为 `https://api-kuriyona-com.localhost/api`（仓库外的 TLS 代理转发到 `127.0.0.1:62802`），因此需要该代理在跑。
+`pnpm dev` 的 DEV API host 为 `https://kuriyona-api.localhost/api`，因此 `api:dev` 必须经 portless 跑（前端与 API 是两个来源，跨域由 Worker 的 `cors({ origin: '*' })` 兜住）。
 
-## 5. 修改 schema 的流程
+## 5. portless
+
+`pnpm dev` / `pnpm api:dev` 用 [portless](https://www.npmjs.com/package/portless) 把本地端口映射成 HTTPS 域名（`pnpm add -g portless`，需 Node ≥ 24）。首次使用需要信任本地 CA（需 sudo）：
+
+```bash
+portless trust
+```
+
+本地域名不用命令行参数拼，全部来自仓库内的配置文件：
+
+| 项          | 位置                                                                         | 值             |
+| ----------- | ---------------------------------------------------------------------------- | -------------- |
+| 前端 app 名 | 根 `package.json` 的 `"portless"` 键                                         | `kuriyona`     |
+| API app 名  | 根 `package.json` 的 `api:dev` 脚本里的 `--name`                             | `kuriyona-api` |
+| 代理 TLD    | 根 `package.json` 的 `dev` / `api:dev` 脚本内联的 `PORTLESS_TLD`（两处成对） | `localhost`    |
+
+即 `https://<app 名>.localhost`，域名自动解析到 `127.0.0.1`，无需改 hosts。`PORTLESS_TLD` 不能放 `.env`（`pnpm run` 的脚本执行不加载 `.env`，portless 读不到），所以内联在脚本首部。
+
+代理默认在 443 起 HTTPS（需要 sudo）。只能跑非特权端口时：
+
+```bash
+portless proxy start --port 1355 --https   # URL 会变成 https://<name>.localhost:1355
+```
+
+**`api:dev` 里 `--app-port 62802` 与 `wrangler dev --port 62802` 成对**：Nuxt 会读 portless 注入的 `PORT`，但 wrangler 不读，必须显式写死并让 portless 指向同一端口。
+
+## 6. 修改 schema 的流程
 
 1. 修改 `backend/src/db/schema.ts`
 2. `pnpm api:orm-generate`（= `drizzle-kit generate`，在 `backend/drizzle/` 下产出新迁移目录）

@@ -40,10 +40,10 @@ Kuriyona 个人站点的 API 服务。基于 [Cloudflare Workers](https://worker
 ```bash
 cp backend/.env .dev.vars       # 在仓库根（去掉 DATABASE_URL / PORT）
 pnpm api:d1:migrate:local       # 本地 D1 建表
-pnpm api:dev                    # wrangler dev --port 62802（在仓库根执行）
+pnpm api:dev                    # portless → https://kuriyona-api.localhost（在仓库根执行）
 ```
 
-接口在 `http://localhost:62802/api`。
+接口在 `http://localhost:62802/api`（经 portless 时同一路径在 `https://kuriyona-api.localhost/api`）。
 
 ## 环境变量
 
@@ -55,7 +55,8 @@ pnpm api:dev                    # wrangler dev --port 62802（在仓库根执行
 
 ```bash
 pnpm api:install              # 安装本子包依赖
-pnpm api:dev                  # wrangler dev --port 62802
+pnpm api:dev                  # portless → https://kuriyona-api.localhost（wrangler dev --port 62802）
+pnpm api:run                  # 不经 portless → http://localhost:62802
 pnpm api:orm-generate         # 改 schema 后生成迁移
 pnpm api:d1:migrate:local     # 本地 D1 应用迁移
 pnpm api:d1:migrate:remote    # 远程 D1 应用迁移

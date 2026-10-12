@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "nuxt dev",
+    "dev": "PORTLESS_TLD=localhost portless run nuxt dev",
+    "dev:plain": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -9,7 +10,8 @@
     "sort-i18n": "bun scripts/sort-i18n.ts",
     "fmt": "pnpm run sort-i18n && oxfmt",
     "api:install": "pnpm --dir backend install",
-    "api:dev": "wrangler dev --port 62802",
+    "api:dev": "PORTLESS_TLD=localhost portless run --name kuriyona-api --app-port 62802 wrangler dev --port 62802",
+    "api:run": "wrangler dev --port 62802",
     "api:orm-generate": "pnpm --dir backend run orm-generate",
     "api:d1:migrate:local": "wrangler d1 migrations apply kuriyona-db --local",
     "api:d1:migrate:remote": "wrangler d1 migrations apply kuriyona-db --remote",
@@ -49,5 +51,6 @@
     "pagefind": "^1.5.2",
     "wrangler": "^4.149.0"
   },
-  "packageManager": "pnpm@11.4.0"
+  "packageManager": "pnpm@11.4.0",
+  "portless": "kuriyona"
 }

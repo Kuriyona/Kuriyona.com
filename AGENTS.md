@@ -20,7 +20,8 @@
 
 ```
 # 前端（根目录）
-pnpm dev             Nuxt dev server (hot reload)
+pnpm dev             Nuxt dev server，portless → https://kuriyona.localhost
+pnpm dev:plain       Nuxt dev server，不映射域名（默认 3000）
 pnpm generate        Nuxt static generation
 pnpm index           PageFind search indexing (requires `generate` first)
 pnpm preview         Nuxt preview build output
@@ -29,7 +30,8 @@ pnpm fmt             Format with oxfmt
 
 # 后端（backend/ 独立子包，通过 api:* 转发；wrangler 装在根目录）
 pnpm api:install     安装后端依赖
-pnpm api:dev         wrangler dev --port 62802（需根 .dev.vars 与 dist/）
+pnpm api:dev         wrangler dev --port 62802，portless → https://kuriyona-api.localhost（需根 .dev.vars 与 dist/）
+pnpm api:run         wrangler dev --port 62802，不映射域名
 pnpm api:orm-generate  改 schema 后生成 Drizzle 迁移
 pnpm api:d1:migrate:local   应用迁移到本地 D1
 pnpm api:d1:migrate:remote  应用迁移到远程 D1
@@ -259,7 +261,8 @@ Kuriyona.com/
 
 - **Path aliases**: `@/` and `~/` both work, used interchangeably.
 - **I18n**: `app/scripts/i18n.ts` re-exports `useI18n` from `vue-i18n`. Templates also use `$t()` directly.
-- **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `https://api-kuriyona-com.localhost/api` (TLS proxy → `wrangler dev` 的 62802); 生产同源相对路径 `/api`（无需 CORS）。
+- **API client**: `app/utils/api.ts` exports a `ky`-based `fetchApi` that auto-injects `auth` from `localStorage.API_KEY`. Dev host: `https://kuriyona-api.localhost/api`（portless 把 `wrangler dev` 的 62802 映射到该域名，见下条）；生产同源相对路径 `/api`（无需 CORS）。
+- **本地开发（portless）**: `pnpm dev` / `pnpm api:dev` 经 [portless](https://www.npmjs.com/package/portless)（`pnpm add -g portless`，需 Node ≥ 24）提供本地 HTTPS 域名：前端 `https://kuriyona.localhost`、API `https://kuriyona-api.localhost`。首次需 `portless trust` 信任本地 CA；代理默认在 443 起（要 sudo，无 sudo 时 `portless proxy start --port 1355 --https`，URL 会带 `:1355`）。配置全部写在文件里：前端 app 名 = 根 `package.json` 的 `"portless": "kuriyona"`，API app 名 = `api:dev` 脚本里的 `--name kuriyona-api`，TLD = 两个脚本首部内联的 `PORTLESS_TLD=localhost`（**两处成对，改一处必须改另一处**；内联是为了不受环境变量影响，`.env` 不行——`pnpm run` 不加载 `.env`）。`api:dev` 里 `--app-port 62802` 与 `wrangler dev --port 62802` 也是成对的：Nuxt 会读 portless 注入的 `PORT` 所以 `dev` 不写端口，wrangler 不读，必须显式指定并让 portless 指向同一端口。不经 portless 时用 `pnpm dev:plain`（3000）与 `pnpm api:run`（62802），或 `PORTLESS=0 pnpm dev`。
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`).
