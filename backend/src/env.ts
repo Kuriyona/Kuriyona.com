@@ -11,7 +11,6 @@ export interface Env {
   ACCESS_KEY_ID: string;
   SECRET_ACCESS_KEY: string;
   BUCKET_NAME: string;
-  AMAP_KEY: string;
   WEATHER_API_KEY?: string;
   GITHUB_API_TOKEN?: string;
   STEAM_API_KEY?: string;
@@ -25,5 +24,4 @@ export const REQUIRED_ENV = [
   'ACCESS_KEY_ID',
   'SECRET_ACCESS_KEY',
   'BUCKET_NAME',
-  'AMAP_KEY',
 ] as const;

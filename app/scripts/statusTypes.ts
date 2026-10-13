@@ -5,12 +5,11 @@ export interface Status {
   cities: Cities;
 }
 
-/** 状态页地图：后端按城市出图写 R2，`ready` 为 false 时图还没生成好 */
+/** 状态页地图：Worker 返回固定城市名与 R2 公开地址（见 backend/docs/status-map.md） */
 export interface CityMap {
   name: string;
   adcode: string;
   map: string;
-  ready: boolean;
 }
 
 export interface Cities {

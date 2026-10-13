@@ -1,23 +1,34 @@
 <script setup lang="ts">
-const { status, cities } = useCityMaps('status');
+import type { Status } from '@/scripts/statusTypes';
+
+const { data: status } = useAsyncData(
+  'status',
+  () =>
+    fetchApi.get('/status').then(async (res) => {
+      return await res.json<Status>();
+    }),
+  {
+    server: false,
+  },
+);
 </script>
 
 <template>
   <AppPage>
-    <CardSteam v-if="status?.steam" :steam="status.steam" />
+    <CardSteam v-if="status?.steam" :steam="status?.steam" />
     <div class="flex justify-center gap-4 max-[900px]:flex-col">
       <CardCityMap
-        v-if="cities"
+        v-if="status?.cities"
         class="flex-1"
         :title="$t('about.city-resident')"
-        :city="cities.resident" />
+        :city="status.cities.resident" />
       <CardCityMap
-        v-if="cities"
+        v-if="status?.cities"
         class="flex-1"
         :title="$t('about.city-current')"
-        :city="cities.current" />
-      <CardWeather v-if="status?.weather" :weather="status.weather" />
+        :city="status.cities.current" />
+      <CardWeather v-if="status?.weather" :weather="status?.weather" />
     </div>
-    <CardGithub v-if="status?.github_activity" :github_activity="status.github_activity" />
+    <CardGithub v-if="status?.github_activity" :github_activity="status?.github_activity" />
   </AppPage>
 </template>

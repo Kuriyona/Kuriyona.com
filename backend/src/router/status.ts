@@ -1,6 +1,5 @@
 import type { Handler } from 'hono';
 import type { Env } from '../env';
-import { normalizeCities, resolveCities, scheduleCityMap } from '../map';
 
 type H = Handler<{ Bindings: Env }>;
 
@@ -12,6 +11,13 @@ const CACHE_PREFIX = 'cache:';
 const WEATHER_TTL = 1800;
 const GITHUB_TTL = 60;
 const STEAM_TTL = 60;
+
+// ── 城市地图（固定值）──
+// SVG 由离线脚本出图后上传到 R2，键 `img/site/map/<adcode>.svg`（见 backend/docs/status-map.md）。
+// 目前常住城市与当前所在城市都是杭州，Worker 侧不做任何生成。
+const CITY = { name: '杭州', adcode: '330100' };
+const CITY_MAP = { ...CITY, map: `https://r2.kuriyona.com/img/site/map/${CITY.adcode}.svg` };
+const CITY_MAPS = { resident: CITY_MAP, current: CITY_MAP };
 
 export interface SteamInfo {
   personaName: string;
@@ -191,14 +197,13 @@ export const getStatus: H = async (c) => {
     updateSteam(c.env),
     readDynamic(c.env),
   ]);
-  // 原始 `cities`（动态数据）被换成带 map/ready 的组装结果
-  const cities = await resolveCities(c.executionCtx, c.env, dynamic.cities);
   return c.json({
     weather,
     github_activity: githubActivity,
     steam,
+    // 固定值，排在动态数据之后：即使 KV 里被写进了同名键也以它为准
     ...dynamic,
-    cities,
+    cities: CITY_MAPS,
   });
 };
 
@@ -212,18 +217,11 @@ export const postStatus: H = async (c) => {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return c.json({ message: 'Invalid body' }, 400);
   }
-  // 城市先归一化再落库：非法 adcode 直接回退默认值，KV 里不会留下写坏的配置
-  const cities = body.cities === undefined ? undefined : normalizeCities(body.cities);
-  if (cities) body.cities = cities;
   await Promise.all(
     Object.entries(body).map(([key, value]) =>
       c.env.STATUS_KV.put(`${DYNAMIC_PREFIX}${key}`, JSON.stringify(value)),
     ),
   );
-  // 城市被改动 → 立刻按新 adcode 排后台出图（参数版本未变的城市会命中已有标记，直接跳过）
-  for (const adcode of new Set([cities?.resident.adcode, cities?.current.adcode])) {
-    if (adcode) await scheduleCityMap(c.executionCtx, c.env, adcode);
-  }
   return c.json({ message: 'ok' });
 };
 
