@@ -2,6 +2,20 @@ export interface Status {
   weather: Weather;
   github_activity: GithubActivity;
   steam: Steam;
+  cities: Cities;
+}
+
+/** 状态页地图：后端按城市出图写 R2，`ready` 为 false 时图还没生成好 */
+export interface CityMap {
+  name: string;
+  adcode: string;
+  map: string;
+  ready: boolean;
+}
+
+export interface Cities {
+  resident: CityMap;
+  current: CityMap;
 }
 
 export interface Weather {

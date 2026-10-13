@@ -1,5 +1,6 @@
 import type { Handler } from 'hono';
 import type { Env } from '../env';
+import { normalizeCities, resolveCities, scheduleCityMap } from '../map';
 
 type H = Handler<{ Bindings: Env }>;
 
@@ -190,11 +191,14 @@ export const getStatus: H = async (c) => {
     updateSteam(c.env),
     readDynamic(c.env),
   ]);
+  // 原始 `cities`（动态数据）被换成带 map/ready 的组装结果
+  const cities = await resolveCities(c.executionCtx, c.env, dynamic.cities);
   return c.json({
     weather,
     github_activity: githubActivity,
     steam,
     ...dynamic,
+    cities,
   });
 };
 
@@ -208,11 +212,18 @@ export const postStatus: H = async (c) => {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return c.json({ message: 'Invalid body' }, 400);
   }
+  // 城市先归一化再落库：非法 adcode 直接回退默认值，KV 里不会留下写坏的配置
+  const cities = body.cities === undefined ? undefined : normalizeCities(body.cities);
+  if (cities) body.cities = cities;
   await Promise.all(
     Object.entries(body).map(([key, value]) =>
       c.env.STATUS_KV.put(`${DYNAMIC_PREFIX}${key}`, JSON.stringify(value)),
     ),
   );
+  // 城市被改动 → 立刻按新 adcode 排后台出图（参数版本未变的城市会命中已有标记，直接跳过）
+  for (const adcode of new Set([cities?.resident.adcode, cities?.current.adcode])) {
+    if (adcode) await scheduleCityMap(c.executionCtx, c.env, adcode);
+  }
   return c.json({ message: 'ok' });
 };
 

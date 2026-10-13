@@ -141,7 +141,7 @@ Kuriyona.com/
 │   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
 │   │   ├── KIcon.vue          图标（Iconify；name 为 `prefix:name` 全名，尺寸用字号类）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
-│   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact
+│   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact/CardCityMap（城市地图，ClientOnly）
 │   │   └──
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
@@ -151,10 +151,11 @@ Kuriyona.com/
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
+│   │   ├── useCityMaps.ts     状态页城市地图（拉 /status，出图未就绪时轮询）
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── layouts/                 页面布局（Nuxt 自动发现；由 app.vue 的 <NuxtLayout> 应用）
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
-│   │   └── admin.vue            管理面板共享导航壳（三个 admin 页面 definePageMeta({ layout: 'admin' })）
+│   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
@@ -163,8 +164,8 @@ Kuriyona.com/
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
-│   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动）
-│   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核）
+│   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动/常住城市与当前所在城市地图）
+│   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/status 城市配置）
 │   ├── stores/                  Pinia stores
 │   │   └── main.ts              JWT（Turnstile 验证后存储）
 │   ├── utils/                   @/ 别名工具函数
@@ -247,10 +248,11 @@ Kuriyona.com/
 | `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                             |
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                              |
 | `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                |
-| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub）                                                             |
+| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub/城市地图）                                                    |
 | `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                     |
 | `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                |
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                            |
+| `/admin/status`      | `pages/admin/status.vue`            | 城市配置（常住城市 / 当前所在城市，保存后出图写 R2）                                    |
 
 ### API 概览
 
@@ -261,6 +263,7 @@ Kuriyona.com/
 | `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                           |
 | `PUT /api/ask-box/admin/:id/answer`                          | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                         |
 | `GET /api/r2/list?prefix=&delimiter=`                        | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键） |
+| `GET /api/status` 的 `cities`                                | backend/ | `{ resident: { name, adcode, map, ready }, current: {...} }`；没出图的城市会顺带在 `waitUntil` 里按 adcode 出图写 R2 |
 
 ## Architecture
 
@@ -268,11 +271,12 @@ Kuriyona.com/
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
+- **状态页城市地图** — `backend/src/map.ts`。城市配置（常住城市 / 当前所在城市）存在 KV 的 `dynamic:cities`（缺键/非法时回退默认杭州 `330100`），`GET /api/status` 把原始动态数据换成 `{ resident, current }`，每项带 `map`（R2 公开地址）与 `ready`。未出图的城市由 `waitUntil` 跑 `@kuriyona/amap-box`（参数等价 CLI `--up 1 --down 0 --ratio 1 --outside-same-level --no-title --no-context-labels --no-target-label --center target`：画幅 1:1、目标居中，前端因此可以裁到 2:1 ~ 1:2 而不丢目标），SVG 写入 R2 `img/site/map/<adcode>.svg`（=`https://r2.kuriyona.com/img/site/map/<adcode>.svg`）。高德 index/边界缓存在 KV（`amap:index`、`amap:<adcode>`），出图标记 `amap:map:<adcode>` 带参数版本，互斥锁 `amap:lock:<adcode>`（TTL 60s，`waitUntil` 30s 上限被截断后由下一次请求接着出）。
 - `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据与上游缓存）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 3 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
+- `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/status`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
 
 ## Key Conventions
 
@@ -287,7 +291,7 @@ Kuriyona.com/
 - **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
-- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）。
+- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 8 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`、`AMAP_KEY`（高德 Web 服务 key，状态页城市地图出图用；`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）。
 - **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
 - **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).

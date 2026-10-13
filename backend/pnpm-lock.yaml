@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@kuriyona/amap-box':
+        specifier: ^0.2.0
+        version: 0.2.0
       aws4fetch:
         specifier: ^1.0.20
         version: 1.0.20
@@ -198,6 +201,11 @@ packages:
   '@js-temporal/polyfill@0.5.1':
     resolution: {integrity: sha512-hloP58zRVCRSpgDxmqCWJNlizAlUgJFqG2ypq79DCvyv9tHjRYMDOcPFjzfl/A1/YxDvRCZz8wvZvmapQnKwFQ==}
     engines: {node: '>=12'}
+
+  '@kuriyona/amap-box@0.2.0':
+    resolution: {integrity: sha512-XJKdGs/5ZdpMTLezyoBKuAmyWW7aZFDA2aFwZJBSOv0zVkXMzIcGP0RSnf4G+fAshe3Wbwq44JATsDqrzpjK/g==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@oxfmt/binding-android-arm-eabi@0.72.0':
     resolution: {integrity: sha512-u4U1uaDOVBuorGNC/07NLm48nECHOiJJka002YGML16Md2DRvf38RGBt01lH60EOGvNlFVmbLoksQedNBoZHKw==}
@@ -606,6 +614,8 @@ snapshots:
   '@js-temporal/polyfill@0.5.1':
     dependencies:
       jsbi: 4.3.2
+
+  '@kuriyona/amap-box@0.2.0': {}
 
   '@oxfmt/binding-android-arm-eabi@0.72.0':
     optional: true

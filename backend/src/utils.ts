@@ -25,6 +25,16 @@ export const presignR2Put = async (env: Env, key: string, mime?: string) => {
   return signed.url;
 };
 
+/** 直传对象到 R2（S3 API + 签名），供 Worker 侧生成产物落盘 */
+export const putR2 = async (env: Env, key: string, body: string, contentType: string) => {
+  const res = await getR2(env).fetch(r2ObjectUrl(env, key), {
+    method: 'PUT',
+    body,
+    headers: { 'Content-Type': contentType },
+  });
+  if (!res.ok) throw new Error(`R2 PUT ${key} 失败: ${res.status} ${await res.text()}`);
+};
+
 export const verifyTurnstile = async (env: Env, token: string) => {
   const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method: 'POST',
