@@ -42,8 +42,7 @@ const { x, y } = useMouse({ type: 'client' });
             :x="icon.x"
             :y="icon.y"
             :width="icon.size"
-            :height="icon.size"
-            class="app-background-icon" />
+            :height="icon.size" />
         </pattern>
         <!-- 光标处透明度 1，随距离线性衰减至半径处 0 -->
         <radialGradient
@@ -80,9 +79,3 @@ const { x, y } = useMouse({ type: 'client' });
     </svg>
   </div>
 </template>
-
-<style scoped>
-.app-background-icon {
-  filter: invert(1);
-}
-</style>

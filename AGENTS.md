@@ -127,7 +127,7 @@ Kuriyona.com/
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
 │   │   ├── css/                main.css（@import 汇总）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
-│   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal）
+│   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；菜单：AppBar/AppMenu，底部含 GIT_HASH/构建时间/Cloudflare 节点）
