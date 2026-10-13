@@ -23,12 +23,12 @@ Cloudflare Workers + Hono + Drizzle + D1 的个人 API 服务，作为 [Kuriyona
 
 - **DB 是 D1**（SQLite）。`src/utils.ts` 的 `getDb(env)` = `drizzle(env.DB)`，用 `drizzle-orm/d1`；schema 用 `drizzle-orm/sqlite-core`。
 - **迁移由 wrangler 应用，不是运行时**。`wrangler.jsonc` 的 `d1_databases[0]` 配 `migrations_dir: backend/drizzle` + `migrations_pattern: backend/drizzle/*/migration.sql` 消费 drizzle 生成的嵌套目录。`index.ts` 不做 migrate。
-- **Env 从 `c.env` 读**（`Env` 接口见 `src/env.ts`）。API 根 app 上的中间件逐项校验 `REQUIRED_ENV`（7 项），缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`；`DB` 由 D1 binding 提供。本地 `.dev.vars`，生产 `wrangler secret put`。
+- **Env 从 `c.env` 读**（`Env` 接口见 `src/env.ts`）。API 根 app 上的中间件逐项校验 `REQUIRED_ENV`（7 项），缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`；`DB`（D1）与 `STATUS_KV`（KV）由 binding 提供。本地 `.dev.vars`，生产 `wrangler secret put`。
 - **API 全部挂在 `/api/*`**：根 app 显式注册 `/api`、`/api/`，其余用 `app.route("/api", api)`。`wrangler.jsonc` 的 `run_worker_first: ["/api", "/api/*"]` 保证这些路径交给 Worker 而非静态资产。
 - **Auth 两个中间件**（`src/plugin/auth.ts`）：`requireAuthKey` 校验 `?auth=AUTH_KEY`（admin/r2/status 写接口）；`requireJwt` 校验 `Authorization`（裸 token 或 `Bearer ` 前缀均兼容，公开 ask-box POST 用）。JWT 由 `hono/jwt` HS256 签发，`exp = now/1000 + 7200`。
 - **`/turnstile` 成功返回 `c.text(jwt)`（纯文本），失败 `c.json(null)`**——前端用 `.text()` 读取，勿改成 `c.json`。
 - **R2 用 aws4fetch（S3 API），无 R2 binding**：`utils.ts` 的 `presignR2Put` 用 `signQuery` 预签名 PUT（`X-Amz-Expires=86400`），`router/r2.ts` 的 `listR2` 走 `ListObjectsV2` 并手写 XML 解析（无第三方 XML 库）。四变量：`ENDPOINT`/`ACCESS_KEY_ID`/`SECRET_ACCESS_KEY`/`BUCKET_NAME`。
-- **`status_data` 表**存动态数据（key/value 文本，value 为 JSON 字符串）；`/status` GET 读取并 spread 进响应（上游天气/GitHub/Steam 仍是 isolate 内存缓存，TTL 1800s/60s/60s）。
+- **Status 数据全在 Workers KV**（binding `STATUS_KV`，命名空间 `kuriyona-kv`，配在根 `wrangler.jsonc` 的 `kv_namespaces`）。两类键：`dynamic:*`（`POST /status` 写入的动态数据，value 为 JSON 字符串，无 TTL）与 `cache:*`（上游天气/GitHub/Steam 缓存，value 为 `{ at, data }`，KV TTL = 新鲜期×2 —— 新鲜期 1800s/60s/60s，未到期前可作上游失败时的回退值）。`GET /status` 把三者与动态数据合并后返回；`DELETE /status` 只清 `dynamic:*`。KV 的 `list` 是最终一致（最长约 60s 延迟）。
 
 ## Schema conventions
 
@@ -39,7 +39,7 @@ Cloudflare Workers + Hono + Drizzle + D1 的个人 API 服务，作为 [Kuriyona
 
 ## Migration / cleanup state
 
-迁移历史在从 MySQL 切到 D1 时重置：旧的 MySQL / SQLite 迁移与空的 `20261008053904_worthless_kabuki/` 已删除，当前仅 `backend/drizzle/<timestamp>_init/migration.sql`（`ask_table` + `status_data`）。Docker/镜像相关文件（`Dockerfile`、`.dockerignore`、`scripts/image.sh`、`docs/image.md`、`.env.example`）已移除。不要「恢复」这些已删除的文件。
+迁移历史在从 MySQL 切到 D1 时重置：旧的 MySQL / SQLite 迁移与空的 `20261008053904_worthless_kabuki/` 已删除，当前为 `backend/drizzle/<timestamp>_init/migration.sql`（`ask_table` + 已废弃的 `status_data`）与后续删除 `status_data` 的迁移（Status 数据迁到 Workers KV 后 D1 不再有该表）。Docker/镜像相关文件（`Dockerfile`、`.dockerignore`、`scripts/image.sh`、`docs/image.md`、`.env.example`）已移除。不要「恢复」这些已删除的文件。
 
 ## Style
 

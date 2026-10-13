@@ -1,69 +1,16 @@
-import { inArray } from 'drizzle-orm';
 import type { Handler } from 'hono';
-import { statusDataTable } from '../db/schema';
 import type { Env } from '../env';
-import { getDb } from '../utils';
 
 type H = Handler<{ Bindings: Env }>;
 
-// ── Weather ──
-const weatherHost = 'https://nb2mt9vk5n.re.qweatherapi.com';
+// KV 键前缀：`dynamic:` 为 POST 写入的动态数据，`cache:` 为上游接口缓存
+const DYNAMIC_PREFIX = 'dynamic:';
+const CACHE_PREFIX = 'cache:';
 
-let weatherData: any = {};
-let weatherLastUpdate = -1;
-
-const updateWeather = async (env: Env) => {
-  if (Date.now() - weatherLastUpdate < 1800_000) return;
-  weatherLastUpdate = Date.now();
-  const res = await fetch(`${weatherHost}/v7/weather/now?location=101210107`, {
-    headers: { 'X-QW-Api-Key': env.WEATHER_API_KEY! },
-  });
-  weatherData = await res.json();
-};
-
-// ── GitHub Activity ──
-const githubUsername = 'Kuriyona';
-
-let githubData: Record<string, string> = {};
-let githubLastUpdate = -1;
-
-const updateGitHubActivity = async (env: Env) => {
-  if (Date.now() - githubLastUpdate < 60_000) return;
-  githubLastUpdate = Date.now();
-
-  const token = env.GITHUB_API_TOKEN;
-  if (!token) return;
-
-  try {
-    const res = await fetch(`https://api.github.com/users/${githubUsername}/events?per_page=100`, {
-      headers: { Authorization: `Bearer ${token}`, 'User-Agent': 'kuriyona-api' },
-    });
-    if (!res.ok) return;
-    const events: any[] = await res.json();
-
-    const pushEvents: { repo: string; time: string }[] = [];
-    for (const event of events) {
-      if (event.type !== 'PushEvent') continue;
-      pushEvents.push({
-        repo: event.repo.name,
-        time: event.created_at,
-      });
-    }
-
-    const repoSet = new Set(pushEvents.map((e) => e.repo));
-    const repos = Array.from(repoSet);
-    const timeMap = new Map<string, string>();
-    repos.forEach((repo) => {
-      timeMap.set(repo, pushEvents.find((e) => e.repo === repo)?.time ?? '');
-    });
-    githubData = Object.fromEntries(timeMap);
-  } catch {
-    // silently fail
-  }
-};
-
-// ── Steam ──
-const steamId = '76561199158556744';
+// 上游缓存的新鲜期（秒）；KV 实际 TTL 取 2 倍，上游失败时回退旧值
+const WEATHER_TTL = 1800;
+const GITHUB_TTL = 60;
+const STEAM_TTL = 60;
 
 export interface SteamInfo {
   personaName: string;
@@ -73,54 +20,180 @@ export interface SteamInfo {
   gameId: string;
 }
 
-let steamData: SteamInfo | null = null;
-let steamLastUpdate = -1;
+interface CacheEntry<T> {
+  at: number;
+  data: T;
+}
 
-const updateSteam = async (env: Env) => {
-  if (Date.now() - steamLastUpdate < 60_000) return;
-  steamLastUpdate = Date.now();
+// 上游接口响应形状（GitHub Events / Steam Web API），在 fetch 边界断言一次
+interface GitHubEvent {
+  type?: string;
+  repo?: { name?: string };
+  created_at?: string;
+}
 
-  const apiKey = env.STEAM_API_KEY;
-  if (!apiKey) return;
+interface SteamPlayerSummary {
+  personaname?: string;
+  personastate?: number;
+  realname?: string;
+  gameextrainfo?: string;
+  gameid?: string;
+}
+
+interface SteamPlayerSummariesResponse {
+  response?: { players?: SteamPlayerSummary[] };
+}
+
+// 缓存条目统一编码为 { at, data }：at 判断新鲜度，TTL 未到期前可作上游失败时的回退值
+const readCache = async <T>(
+  env: Env,
+  name: string,
+  ttl: number,
+): Promise<{ data: T; fresh: boolean } | null> => {
+  const raw = await env.STATUS_KV.get(`${CACHE_PREFIX}${name}`);
+  if (!raw) return null;
+  try {
+    const entry = JSON.parse(raw) as CacheEntry<T>;
+    return { data: entry.data, fresh: Date.now() - entry.at < ttl * 1000 };
+  } catch {
+    return null;
+  }
+};
+
+const writeCache = async (env: Env, name: string, data: unknown, ttl: number) => {
+  await env.STATUS_KV.put(
+    `${CACHE_PREFIX}${name}`,
+    JSON.stringify({ at: Date.now(), data } satisfies CacheEntry<unknown>),
+    { expirationTtl: ttl * 2 },
+  );
+};
+
+// ── Weather ──
+const weatherHost = 'https://nb2mt9vk5n.re.qweatherapi.com';
+
+const updateWeather = async (env: Env): Promise<unknown> => {
+  const cached = await readCache<unknown>(env, 'weather', WEATHER_TTL);
+  if (cached?.fresh) return cached.data;
+  if (!env.WEATHER_API_KEY) return cached?.data ?? {};
+
+  try {
+    const res = await fetch(`${weatherHost}/v7/weather/now?location=101210107`, {
+      headers: { 'X-QW-Api-Key': env.WEATHER_API_KEY },
+    });
+    if (!res.ok) return cached?.data ?? {};
+    const data: unknown = await res.json();
+    await writeCache(env, 'weather', data, WEATHER_TTL);
+    return data;
+  } catch {
+    return cached?.data ?? {};
+  }
+};
+
+// ── GitHub Activity ──
+const githubUsername = 'Kuriyona';
+
+const updateGitHubActivity = async (env: Env): Promise<Record<string, string>> => {
+  const cached = await readCache<Record<string, string>>(env, 'github', GITHUB_TTL);
+  if (cached?.fresh) return cached.data;
+  if (!env.GITHUB_API_TOKEN) return cached?.data ?? {};
+
+  try {
+    const res = await fetch(`https://api.github.com/users/${githubUsername}/events?per_page=100`, {
+      headers: { Authorization: `Bearer ${env.GITHUB_API_TOKEN}`, 'User-Agent': 'kuriyona-api' },
+    });
+    if (!res.ok) return cached?.data ?? {};
+    const events = (await res.json()) as GitHubEvent[];
+    if (!Array.isArray(events)) return cached?.data ?? {};
+
+    // 每个仓库取最新一条 push（events 按时间倒序）
+    const data: Record<string, string> = {};
+    for (const event of events) {
+      const repo = event?.repo?.name;
+      if (event?.type !== 'PushEvent' || typeof repo !== 'string' || repo in data) continue;
+      data[repo] = event.created_at ?? '';
+    }
+    await writeCache(env, 'github', data, GITHUB_TTL);
+    return data;
+  } catch {
+    return cached?.data ?? {};
+  }
+};
+
+// ── Steam ──
+const steamId = '76561199158556744';
+
+const updateSteam = async (env: Env): Promise<SteamInfo | null> => {
+  const cached = await readCache<SteamInfo>(env, 'steam', STEAM_TTL);
+  if (cached?.fresh) return cached.data;
+  if (!env.STEAM_API_KEY) return cached?.data ?? null;
 
   try {
     const res = await fetch(
-      `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${steamId}`,
+      `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${env.STEAM_API_KEY}&steamids=${steamId}`,
     );
-    if (!res.ok) return;
-    const body: any = await res.json();
+    if (!res.ok) return cached?.data ?? null;
+    const body = (await res.json()) as SteamPlayerSummariesResponse;
     const player = body?.response?.players?.[0];
-    if (!player) return;
+    if (!player) return cached?.data ?? null;
 
-    steamData = {
+    const data: SteamInfo = {
       personaName: player.personaname ?? '',
       personaState: player.personastate ?? 0,
       realName: player.realname ?? '',
       gameExtraInfo: player.gameextrainfo ?? '',
       gameId: player.gameid ?? '',
     };
+    await writeCache(env, 'steam', data, STEAM_TTL);
+    return data;
   } catch {
-    // silently fail
+    return cached?.data ?? null;
   }
+};
+
+// ── 动态数据（`dynamic:` 前缀）──
+const readDynamic = async (env: Env): Promise<Record<string, unknown>> => {
+  const dynamic: Record<string, unknown> = {};
+  let cursor: string | undefined;
+  do {
+    const list = await env.STATUS_KV.list({ prefix: DYNAMIC_PREFIX, cursor });
+    const values = await Promise.all(list.keys.map((k) => env.STATUS_KV.get(k.name)));
+    list.keys.forEach((k, i) => {
+      const raw = values[i];
+      if (raw === null) return;
+      const key = k.name.slice(DYNAMIC_PREFIX.length);
+      try {
+        dynamic[key] = JSON.parse(raw);
+      } catch {
+        dynamic[key] = raw;
+      }
+    });
+    cursor = list.list_complete ? undefined : list.cursor;
+  } while (cursor);
+  return dynamic;
+};
+
+const deleteDynamic = async (env: Env) => {
+  let cursor: string | undefined;
+  do {
+    const list = await env.STATUS_KV.list({ prefix: DYNAMIC_PREFIX, cursor });
+    await Promise.all(list.keys.map((k) => env.STATUS_KV.delete(k.name)));
+    cursor = list.list_complete ? undefined : list.cursor;
+  } while (cursor);
 };
 
 // ── Routes ──
 export const getStatus: H = async (c) => {
-  await Promise.all([updateWeather(c.env), updateGitHubActivity(c.env), updateSteam(c.env)]);
   c.header('cache-control', 'public, max-age=1800');
-  const rows = await getDb(c.env).select().from(statusDataTable);
-  const dynamic: Record<string, unknown> = {};
-  for (const row of rows) {
-    try {
-      dynamic[row.key] = JSON.parse(row.value);
-    } catch {
-      dynamic[row.key] = row.value;
-    }
-  }
+  const [weather, githubActivity, steam, dynamic] = await Promise.all([
+    updateWeather(c.env),
+    updateGitHubActivity(c.env),
+    updateSteam(c.env),
+    readDynamic(c.env),
+  ]);
   return c.json({
-    weather: weatherData,
-    github_activity: githubData,
-    steam: steamData,
+    weather,
+    github_activity: githubActivity,
+    steam,
     ...dynamic,
   });
 };
@@ -135,25 +208,24 @@ export const postStatus: H = async (c) => {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return c.json({ message: 'Invalid body' }, 400);
   }
-  const db = getDb(c.env);
-  for (const [key, value] of Object.entries(body)) {
-    const v = JSON.stringify(value);
-    await db
-      .insert(statusDataTable)
-      .values({ key, value: v })
-      .onConflictDoUpdate({ target: statusDataTable.key, set: { value: v } });
-  }
+  await Promise.all(
+    Object.entries(body).map(([key, value]) =>
+      c.env.STATUS_KV.put(`${DYNAMIC_PREFIX}${key}`, JSON.stringify(value)),
+    ),
+  );
   return c.json({ message: 'ok' });
 };
 
 export const deleteStatus: H = async (c) => {
   const key = c.req.query('key');
-  const db = getDb(c.env);
   if (key) {
-    const keys = key.split(',').map((k) => k.trim());
-    await db.delete(statusDataTable).where(inArray(statusDataTable.key, keys));
+    const keys = key
+      .split(',')
+      .map((k) => k.trim())
+      .filter(Boolean);
+    await Promise.all(keys.map((k) => c.env.STATUS_KV.delete(`${DYNAMIC_PREFIX}${k}`)));
   } else {
-    await db.delete(statusDataTable);
+    await deleteDynamic(c.env);
   }
   return c.json({ message: 'ok' });
 };

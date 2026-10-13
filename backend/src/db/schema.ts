@@ -15,8 +15,3 @@ export const askBoxTable = sqliteTable('ask_table', {
   askedAt: integer('asked_at'),
   answeredAt: integer('answered_at'),
 });
-
-export const statusDataTable = sqliteTable('status_data', {
-  key: text('key').primaryKey(),
-  value: text('value').notNull(),
-});

@@ -19,5 +19,11 @@
       "migrations_pattern": "backend/drizzle/*/migration.sql",
     },
   ],
+  "kv_namespaces": [
+    {
+      "binding": "STATUS_KV",
+      "id": "f233396c2d73476a80bd9beadcbe690e",
+    },
+  ],
   "routes": [{ "pattern": "kuriyona.com", "custom_domain": true }],
 }

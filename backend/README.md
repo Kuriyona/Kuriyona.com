@@ -6,18 +6,19 @@ Kuriyona 个人站点的 API 服务。基于 [Cloudflare Workers](https://worker
 
 - **Ask Box** — 匿名提问箱，支持公开/隐藏、回答、管理端审核（id 为 UUID）
 - **R2 文件** — Cloudflare R2 对象存储的列表与预签名上传（aws4fetch，S3 API）
-- **Status 状态页** — 天气、GitHub 活动、Steam 在线状态与动态数据（D1 `status_data` 表）
+- **Status 状态页** — 天气、GitHub 活动、Steam 在线状态；动态数据与上游缓存都存 Workers KV（binding `STATUS_KV`）
 - **Turnstile** — Cloudflare Turnstile 人机验证，签发 JWT
 
 ## 技术栈
 
-| 层       | 技术                                                  |
-| -------- | ----------------------------------------------------- |
-| 运行时   | Cloudflare Workers                                    |
-| Web 框架 | Hono                                                  |
-| 数据库   | D1（`drizzle-orm/d1` + `drizzle-orm/sqlite-core`）    |
-| 迁移     | Drizzle Kit 生成，`wrangler d1 migrations apply` 应用 |
-| R2       | aws4fetch（S3 API 预签名，无 binding）                |
+| 层       | 技术                                                               |
+| -------- | ------------------------------------------------------------------ |
+| 运行时   | Cloudflare Workers                                                 |
+| Web 框架 | Hono                                                               |
+| 数据库   | D1（`drizzle-orm/d1` + `drizzle-orm/sqlite-core`），仅 `ask_table` |
+| KV       | Workers KV（binding `STATUS_KV`，存 `/status` 动态数据与上游缓存） |
+| 迁移     | Drizzle Kit 生成，`wrangler d1 migrations apply` 应用              |
+| R2       | aws4fetch（S3 API 预签名，无 binding）                             |
 
 ## 目录结构
 

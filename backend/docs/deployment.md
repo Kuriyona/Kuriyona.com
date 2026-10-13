@@ -1,12 +1,12 @@
-# 生产部署（Cloudflare Workers + D1）
+# 生产部署（Cloudflare Workers + D1 + KV）
 
-单 Worker `kuriyona-web` 同时提供 Nuxt 静态站点（`assets.directory = ./dist`）与 API（`/api/*`，`run_worker_first`）。数据库为 D1，R2 通过 S3 API（aws4fetch）访问，不使用 R2 binding。
+单 Worker `kuriyona-web` 同时提供 Nuxt 静态站点（`assets.directory = ./dist`）与 API（`/api/*`，`run_worker_first`）。数据库为 D1（仅 `ask_table`），`/api/status` 的动态数据与上游缓存存 Workers KV，R2 通过 S3 API（aws4fetch）访问，不使用 R2 binding。
 
 ## 0. 前置
 
 - Cloudflare 账号。认证二选一（`wrangler` 在仓库根目录运行）：
   - `wrangler login`（OAuth，权限足够）；
-  - 或在使用环境变量 `CLOUDFLARE_API_TOKEN` 时，确保该 Token 具备 **Workers Scripts:Edit** 与 **D1:Edit** 权限。
+  - 或在使用环境变量 `CLOUDFLARE_API_TOKEN` 时，确保该 Token 具备 **Workers Scripts:Edit**、**D1:Edit** 与 **Workers KV Storage:Edit** 权限。
 - ⚠️ 仓库根 `.env` 若包含 `CLOUDFLARE_API_TOKEN`，wrangler 会自动加载它，**会覆盖 OAuth 登录**。若该 Token 权限不足，`pnpm deploy` 会报 `Authentication error [code: 10000]` / `No access to the specified resource`。此时要么给该 Token 补齐权限，要么从根 `.env` 移除该行（改用 OAuth 登录）。
 - 本机 Node ≥ 22、已 `pnpm install`。
 
@@ -20,7 +20,17 @@ pnpm exec wrangler d1 create kuriyona-db
 
 把输出的 `database_id` 填入仓库根 `wrangler.jsonc` 的 `d1_databases[0].database_id`（替换占位值 `00000000-0000-0000-0000-000000000000`）。
 
-## 2. 写入生产密钥
+## 2. 创建 KV 命名空间
+
+`/api/status` 的动态数据与上游缓存存在 Workers KV：
+
+```bash
+pnpm exec wrangler kv namespace create kuriyona-kv
+```
+
+把输出的 `id` 填入仓库根 `wrangler.jsonc` 的 `kv_namespaces[0].id`（binding `STATUS_KV`）。**当前仓库里已填好**（命名空间 `kuriyona-kv`），除非换账号/重建命名空间，否则不需要再执行。
+
+## 3. 写入生产密钥
 
 生产环境变量用 `wrangler secret put` 写入（值取自 `backend/.env`，**不要**提交任何密钥）：
 
@@ -32,13 +42,15 @@ done
 
 必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。**不要设置 `TURNSTILE_DEV_SECRET_KEY`**（那是本地测试用）。
 
-## 3. 应用迁移
+## 4. 应用迁移
 
 ```bash
 pnpm exec wrangler d1 migrations apply kuriyona-db --remote
 ```
 
-## 4. 部署
+迁移里包含删除 `status_data`（Status 数据已迁到 Workers KV，该表不再使用）。注意顺序：**先部署新 Worker 再删表**，或在删表后立即部署 —— 旧代码仍会查该表，删表到部署之间的 `/api/status` 会 500。
+
+## 5. 部署
 
 ```bash
 pnpm run deploy                 # = pnpm build（generate + pagefind index）+ wrangler deploy
@@ -53,7 +65,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://kuriyona-web.<sub>.workers.dev/
 curl -s -o /dev/null -w '%{http_code}\n' https://kuriyona-web.<sub>.workers.dev/pagefind/pagefind.js  # 200
 ```
 
-## 5. 自定义域（本次未执行）
+## 6. 自定义域（本次未执行）
 
 当前 `kuriyona.com` 仍指向 Cloudflare Pages，未绑定到 Worker。切换步骤：
 

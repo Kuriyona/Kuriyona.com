@@ -2,6 +2,7 @@
 
 export interface Env {
   DB: D1Database;
+  STATUS_KV: KVNamespace;
   JWT_SECRET: string;
   AUTH_KEY: string;
   TURNSTILE_SECRET_KEY: string;

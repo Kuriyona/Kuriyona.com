@@ -1,6 +1,6 @@
 # 本地开发
 
-后端现在是跑在 **Cloudflare Workers + D1** 上的 Hono 应用，前端是 Nuxt 静态站点。`wrangler dev` 会在本地模拟 Worker + D1（本地 D1 状态存在根目录 `.wrangler/state`）。
+后端现在是跑在 **Cloudflare Workers + D1 + KV** 上的 Hono 应用，前端是 Nuxt 静态站点。`wrangler dev` 会在本地模拟 Worker + D1 + KV（本地状态存在根目录 `.wrangler/state`，D1 在 `v3/d1`、KV 在 `v3/kv`）。
 
 ## 1. 环境准备
 
@@ -25,7 +25,7 @@ cp backend/.env .dev.vars
 
 键名清单见根目录 `.dev.vars.example`。
 
-## 3. 本地 D1 建表
+## 3. 本地 D1 建表与 KV
 
 D1 是本地 SQLite，schema 由 `backend/drizzle/` 下的 drizzle 迁移文件（提交到 Git）定义：
 
@@ -34,6 +34,14 @@ pnpm api:d1:migrate:local       # wrangler d1 migrations apply kuriyona-db --loc
 ```
 
 本地数据库文件与状态在根目录 `.wrangler/state`，**两台设备各自独立**；schema 仍靠 git 里的迁移文件同步（取代原先 MySQL 的多设备建库章节）。
+
+**KV**（`/api/status` 的动态数据与上游缓存）**不需要建表**：命名空间与 id 已写在根 `wrangler.jsonc` 的 `kv_namespaces`（binding `STATUS_KV`，命名空间 `kuriyona-kv`）。`wrangler dev` 会自动按该绑定额模拟 KV，数据落在 `.wrangler/state/v3/kv`。
+
+只在**新建**命名空间时才需要：
+
+```bash
+pnpm exec wrangler kv namespace create kuriyona-kv   # 输出 id 填回 wrangler.jsonc 的 kv_namespaces[0].id
+```
 
 ## 4. 运行
 

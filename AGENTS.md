@@ -189,7 +189,7 @@ Kuriyona.com/
 │   ├── index.ts                 Worker 入口（Hono app，导出 default；不做 listen/migrate）
 │   ├── src/
 │   │   ├── env.ts               Env 接口 + REQUIRED_ENV
-│   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table / status_data，UUID 主键）
+│   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table，UUID 主键）
 │   │   ├── plugin/auth.ts       鉴权中间件（AUTH_KEY query / JWT Bare 或 Bearer）
 │   │   ├── router/              路由：ask-box / r2 / status
 │   │   └── utils.ts             D1/R2 预签名/Turnstile 工具
@@ -199,7 +199,7 @@ Kuriyona.com/
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301、`/about/as-mtf` → `/about/trans` 301 含 en/ja/zh-Hant 前缀版本）
 ├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包）、GIT_HASH/BUILD_TIME define）
-├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding，main=backend/index.ts）
+├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding DB，KV binding STATUS_KV，main=backend/index.ts）
 ├── .dev.vars.example            本地开发环境变量模板（复制为 .dev.vars，gitignored）
 ├── package.json                 依赖与脚本（无 lint/typecheck/test；含 api:* 与 deploy）
 ├── pnpm-workspace.yaml          pnpm 构建白名单（含 workerd）
@@ -262,7 +262,7 @@ Kuriyona.com/
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
-- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）。`pnpm deploy` 部署。
+- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据与上游缓存）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
@@ -280,7 +280,7 @@ Kuriyona.com/
 - **动画（GSAP）**: 目前唯一使用处是 `pages/about/trans/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
-- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding 提供）。
+- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）。
 - **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
 - **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
