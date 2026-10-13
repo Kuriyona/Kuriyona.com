@@ -73,10 +73,15 @@ md.renderer.rules.link_open = (tokens, idx, _options, _env, slf) => {
   return slf.renderToken(tokens, idx, _options);
 };
 
+/** Material Symbols open_in_new（几何数据取自 @iconify-json/material-symbols） */
+const externalLinkIcon =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-left:2px;">' +
+  '<path d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h14v-7h2v7q0 .825-.587 1.413T19 21zm4.7-5.3l-1.4-1.4L17.6 5H14V3h7v7h-2V6.4z"/></svg>';
+
 md.renderer.rules.link_close = (_tokens, _idx, _options, _env, _slf) => {
   if (externalLinkDepth > 0) {
     externalLinkDepth--;
-    return '<span class="material-symbols-outlined" style="font-size:1em;vertical-align:middle;margin-left:2px;">open_in_new</span></a>';
+    return `${externalLinkIcon}</a>`;
   }
   return '</a>';
 };

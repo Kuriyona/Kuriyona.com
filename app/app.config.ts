@@ -69,21 +69,23 @@ export default defineAppConfig({
       {
         name: 'Bluse',
         relationKey: 'link-relation.partner',
-        links: [{ url: 'https://x.com/bluse50', icon: 'x', i18nKey: 'link-platform.x' }],
+        links: [
+          { url: 'https://x.com/bluse50', icon: 'simple-icons:x', i18nKey: 'link-platform.x' },
+        ],
       },
       {
         name: '鱼块糯',
         relationKey: 'link-relation.sister',
         links: [
-          { url: 'https://x.com/xFurina_', icon: 'x', i18nKey: 'link-platform.x' },
+          { url: 'https://x.com/xFurina_', icon: 'simple-icons:x', i18nKey: 'link-platform.x' },
           {
             url: 'https://space.bilibili.com/1337924642',
-            icon: 'bilibili',
+            icon: 'simple-icons:bilibili',
             i18nKey: 'link-platform.bilibili',
           },
           {
             url: 'https://www.douyin.com/user/MS4wLjABAAAAaPrXKuuZpuC2kw1ZeAu6x9B8MC_VLNiSz3nJN99e2ED71FGVW-fJoJM800yLeJc1',
-            icon: 'tiktok',
+            icon: 'simple-icons:tiktok',
             i18nKey: 'link-platform.douyin',
           },
         ],

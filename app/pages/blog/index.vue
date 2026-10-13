@@ -15,7 +15,7 @@ useSeoMeta({ title: $t('blog.title') });
 <template>
   <AppPage>
     <NuxtLinkLocale to="/">
-      <KIconButton icon="arrow_back" />
+      <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
     <p v-if="$t('blog.desc')" class="text-(--color-text-2)">{{ $t('blog.desc') }}</p>
@@ -25,17 +25,17 @@ useSeoMeta({ title: $t('blog.title') });
       <br />
       <p class="justify-end flex gap-2 flex-wrap">
         <span class="flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm!"> schedule </span>
+          <KIcon name="material-symbols:schedule" class="text-sm" />
           <span class="text-sm">{{
             $t('blog.reading-time', [Math.ceil(post.readingTime.minutes), post.readingTime.words])
           }}</span>
         </span>
         <span class="inline-flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm!"> event </span>
+          <KIcon name="material-symbols:event" class="text-sm" />
           <span class="text-sm"> {{ formatDate(post.date) }}</span>
         </span>
         <span v-if="post.edit && post.edit != post.date" class="inline-flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm!"> edit </span>
+          <KIcon name="material-symbols:edit" class="text-sm" />
           <span class="text-sm"> {{ formatDate(post.date) }}</span>
         </span>
       </p>

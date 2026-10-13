@@ -4,17 +4,18 @@
 
 ## Stack
 
-| Layer           | Choice                                                |
-| --------------- | ----------------------------------------------------- |
-| Runtime         | **Bun** (not Node)                                    |
-| Package manager | **pnpm** (v11.4.0)                                    |
-| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                      |
-| UI components   | Custom `K*` components (Tailwind)                     |
-| Headless UI     | **Reka UI**（unstyled primitives，驱动 K\* 交互组件） |
-| Animation       | GSAP                                                  |
-| I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales)   |
-| Backend         | Cloudflare Workers + Hono + Drizzle + D1 (`backend/`) |
-| Formatter       | `oxfmt` (not Prettier)                                |
+| Layer           | Choice                                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| Runtime         | **Bun** (not Node)                                                                                       |
+| Package manager | **pnpm** (v11.4.0)                                                                                       |
+| Frontend        | Nuxt 4 + Vue 3 + Tailwind CSS v4                                                                         |
+| UI components   | Custom `K*` components (Tailwind)                                                                        |
+| Icons           | **Iconify**（`@iconify/vue` + 本地 `@iconify-json/material-symbols` / `simple-icons`，构建期按用量生成） |
+| Headless UI     | **Reka UI**（unstyled primitives，驱动 K\* 交互组件）                                                    |
+| Animation       | GSAP                                                                                                     |
+| I18n            | `@nuxtjs/i18n` (`prefix_except_default`, 4 locales)                                                      |
+| Backend         | Cloudflare Workers + Hono + Drizzle + D1 (`backend/`)                                                    |
+| Formatter       | `oxfmt` (not Prettier)                                                                                   |
 
 ## Commands
 
@@ -23,6 +24,7 @@
 pnpm dev             Nuxt dev server，portless → https://kuriyona.localhost
 pnpm dev:plain       Nuxt dev server，不映射域名（默认 3000）
 pnpm generate        Nuxt static generation
+pnpm gen:icons       扫描图标名 → 生成 app/utils/icons.gen.ts（pnpm dev / pnpm generate 已自动前置执行）
 pnpm index           PageFind search indexing (requires `generate` first)
 pnpm preview         Nuxt preview build output
 pnpm build           pnpm generate + pnpm index
@@ -137,6 +139,7 @@ Kuriyona.com/
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
 │   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
+│   │   ├── KIcon.vue          图标（Iconify；name 为 `prefix:name` 全名，尺寸用字号类）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
 │   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact
 │   │   └──
@@ -171,6 +174,7 @@ Kuriyona.com/
 │   │   ├── emoji.ts             国家码 → 国旗 emoji
 │   │   ├── console.ts           console 欢迎信息（greet.txt）
 │   │   ├── pagefind.ts          PageFind JS API 封装（new Function 绕过打包器）
+│   │   ├── icons.gen.ts         图标注册（由 scripts/gen-icons.ts 生成，勿手改）
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
 │   │   └── statusTypes.ts       /status 接口类型（Weather/GithubActivity/Steam）
@@ -184,6 +188,7 @@ Kuriyona.com/
 │   ├── generate-blog-og.ts      OG 图生成（yona-svg + sharp，输出到 temp/）
 │   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量）
 │   ├── check-contrast.ts        视觉令牌对比度校验（bun scripts/check-contrast.ts）
+│   ├── gen-icons.ts             扫描源码/数据里的图标名 → app/utils/icons.gen.ts（校验不存在/动态拼接的名字）
 │   └── sort-i18n.ts             i18n JSON 按键名排序（pnpm fmt 时自动执行）
 ├── backend/                     后端 API（独立子包，自带 lockfile，非 pnpm workspace 成员）
 │   ├── index.ts                 Worker 入口（Hono app，导出 default；不做 listen/migrate）
@@ -198,7 +203,7 @@ Kuriyona.com/
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301、`/about/as-mtf` → `/about/trans` 301 含 en/ja/zh-Hant 前缀版本）
 ├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
-├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包）、GIT_HASH/BUILD_TIME define）
+├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包，含 @iconify/vue）、GIT_HASH/BUILD_TIME define）
 ├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding DB，KV binding STATUS_KV，main=backend/index.ts）
 ├── .dev.vars.example            本地开发环境变量模板（复制为 .dev.vars，gitignored）
 ├── package.json                 依赖与脚本（无 lint/typecheck/test；含 api:* 与 deploy）
@@ -209,24 +214,25 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件          | 用途                                                                                                                                              |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                       |
-| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                  |
-| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                         |
-| `KIconButton` | 圆形图标按钮（icon 动态、size sm/base/md/lg/xl；图标 aria-hidden + select-none，按钮 translate="no" + data-pagefind-ignore）                      |
-| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，含 open_in_new 图标）                                                                                           |
-| `KPersonCard` | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simpleicons 图标 + 名称） |
-| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                   |
-| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                              |
-| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                            |
-| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                      |
-| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                                  |
-| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                        |
-| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                              |
-| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                   |
-| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                     |
-| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）              |
+| 组件          | 用途                                                                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                        |
+| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                   |
+| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                          |
+| `KIcon`       | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）                                          |
+| `KIconButton` | 圆形图标按钮（icon 为 `prefix:name` 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）                                            |
+| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，默认图标为 `material-symbols:open-in-new` / `arrow-forward`）                                                    |
+| `KPersonCard` | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simple-icons 图标 + 名称） |
+| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                    |
+| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                               |
+| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                             |
+| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                       |
+| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                                   |
+| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                         |
+| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                               |
+| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                    |
+| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                      |
+| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）               |
 
 ### 页面路由总览
 
@@ -260,7 +266,7 @@ Kuriyona.com/
 
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
-- `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)。Import from `server/utils.ts`.
+- `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
 - `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据与上游缓存）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
@@ -278,6 +284,7 @@ Kuriyona.com/
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。跨性别旗配色（`--color-trans-sky/pink/white`）与 `utilities.css` 的 `.trans-text`/`.trans-text-flow`/`.trans-ribbon`/`.trans-aura` 只用于旗帜装饰（渐变字 / 彩带 / 光晕），不承载正文、不参与表面与文本层级，也不纳入对比度校验；需要旗面配色时从这里取，不要另写 hex。
 - **动画（GSAP）**: 目前唯一使用处是 `pages/about/trans/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
+- **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）。

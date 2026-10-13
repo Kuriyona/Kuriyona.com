@@ -1,9 +1,10 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "PORTLESS_TLD=localhost portless run nuxt dev",
-    "dev:plain": "nuxt dev",
-    "generate": "nuxt generate",
+    "dev": "bun scripts/gen-icons.ts && PORTLESS_TLD=localhost portless run nuxt dev",
+    "dev:plain": "bun scripts/gen-icons.ts && nuxt dev",
+    "gen:icons": "bun scripts/gen-icons.ts",
+    "generate": "bun scripts/gen-icons.ts && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "index": "pagefind --site dist --output-path temp/pagefind && rm -rf dist/pagefind && cp -R temp/pagefind dist/pagefind",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.9",
+    "@iconify/vue": "^5.0.3",
     "@kuriyona/yona-svg": "^0.1.0",
     "@nuxtjs/i18n": "^10.6.0",
     "@nuxtjs/sitemap": "8.6.1",
@@ -47,6 +49,8 @@
     "vue-turnstile": "^1.0.11"
   },
   "devDependencies": {
+    "@iconify-json/material-symbols": "^1.2.95",
+    "@iconify-json/simple-icons": "^1.2.100",
     "@types/node": "^26.6.5",
     "oxfmt": "^0.72.0",
     "pagefind": "^1.5.2",

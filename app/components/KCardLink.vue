@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { h } from 'vue';
+import { KIcon } from '#components';
 
 const props = defineProps<{
   to?: string;
@@ -20,11 +21,10 @@ const LinkIcon = defineComponent({
   },
   setup(p, { attrs }) {
     return () =>
-      h(
-        'span',
-        { class: ['icon material-symbols-outlined', (attrs.class as string) ?? ''] },
-        p.icon ?? (p.new ? 'open_in_new' : 'arrow_forward'),
-      );
+      h(KIcon, {
+        name: p.icon ?? (p.new ? 'material-symbols:open-in-new' : 'material-symbols:arrow-forward'),
+        class: ['icon', (attrs.class as string) ?? ''],
+      });
   },
 });
 
@@ -66,7 +66,7 @@ const UrlPreview = defineComponent({
                 @error="imgError = true"
                 :src="img"
                 class="w-8 h-8 rounded-2xl" />
-              <span v-else class="material-symbols-outlined"> block </span>
+              <KIcon v-else name="material-symbols:block" />
             </template>
             <div class="max-w-full">
               <p>{{ props.text }}</p>

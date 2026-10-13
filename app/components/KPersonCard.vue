@@ -1,7 +1,7 @@
 <script setup lang="ts">
 export type PersonLink = {
   url: string;
-  /** simpleicons slug */
+  /** iconify 全名（simple-icons:<slug>） */
   icon: string;
   /** 平台名称 i18n key */
   i18nKey: string;
@@ -34,11 +34,7 @@ defineProps<{
           :aria-label="`${name} · ${$t(link.i18nKey)}`"
           :title="$t(link.i18nKey)"
           class="k-interactive flex items-center gap-1.5 rounded-full border border-(--color-control-border) bg-(--color-control-bg) px-3 py-1 text-sm text-(--color-text-2) hover:text-(--color-text-1)">
-          <img
-            class="w-4 h-4"
-            alt=""
-            aria-hidden="true"
-            :src="`https://cdn.simpleicons.org/${link.icon}/white`" />
+          <KIcon :name="link.icon" class="text-base" />
           <span>{{ $t(link.i18nKey) }}</span>
         </a>
       </div>

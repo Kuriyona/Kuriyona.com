@@ -39,7 +39,7 @@ watch(key, () => (valid.value = null));
             placeholder="与 Worker 的 AUTH_KEY 一致"
             @keydown.enter="save" />
           <KIconButton
-            :icon="showKey ? 'visibility_off' : 'visibility'"
+            :icon="showKey ? 'material-symbols:visibility-off' : 'material-symbols:visibility'"
             :label="showKey ? '隐藏密钥' : '显示密钥'"
             @click="showKey = !showKey" />
         </div>

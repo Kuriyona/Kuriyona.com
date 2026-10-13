@@ -159,7 +159,7 @@ const copy = async (text: string) => {
           @dragover.prevent="dragging = true"
           @dragleave.prevent="dragging = false"
           @drop.prevent="onDrop">
-          <span class="material-symbols-outlined text-3xl! leading-none">upload_file</span>
+          <KIcon name="material-symbols:upload-file" class="text-3xl" />
           <p>点击选择文件，也可以拖拽到这里或直接粘贴（Ctrl+V）</p>
           <input ref="fileInput" type="file" class="hidden" @change="onSelect" />
         </div>
@@ -190,7 +190,10 @@ const copy = async (text: string) => {
     <KCard v-if="resultUrl" title="上传结果">
       <div class="flex items-center gap-2">
         <p class="min-w-0 flex-1 text-xs break-all">{{ resultUrl }}</p>
-        <KIconButton icon="content_copy" label="复制链接" @click="copy(resultUrl)" />
+        <KIconButton
+          icon="material-symbols:content-copy"
+          label="复制链接"
+          @click="copy(resultUrl)" />
       </div>
     </KCard>
 
@@ -204,7 +207,7 @@ const copy = async (text: string) => {
             @keydown.enter="openPrefix(prefixDraft)" />
           <KButton class="px-3! py-1!" @click="openPrefix(prefixDraft)"> 查询 </KButton>
           <KIconButton
-            icon="refresh"
+            icon="material-symbols:refresh"
             label="刷新列表"
             class="disabled:opacity-50"
             :disabled="listStatus === 'pending'"
@@ -244,10 +247,9 @@ const copy = async (text: string) => {
             type="button"
             class="k-interactive flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1 text-left"
             @click="openPrefix(folder)">
-            <span
-              class="material-symbols-outlined shrink-0 text-base! leading-none text-(--color-text-3)">
-              folder
-            </span>
+            <KIcon
+              name="material-symbols:folder"
+              class="shrink-0 text-base text-(--color-text-3)" />
             <span class="truncate">{{ folderName(folder) }}</span>
           </button>
           <span class="shrink-0 text-xs text-(--color-text-3)">目录</span>
@@ -269,7 +271,10 @@ const copy = async (text: string) => {
           <span class="shrink-0 text-xs text-(--color-text-3)">
             {{ formatDate(item.lastModified) }}
           </span>
-          <KIconButton icon="content_copy" label="复制链接" @click="copy(publicUrl(item.key))" />
+          <KIconButton
+            icon="material-symbols:content-copy"
+            label="复制链接"
+            @click="copy(publicUrl(item.key))" />
         </div>
 
         <p

@@ -39,7 +39,7 @@ const emit = defineEmits<{
       class="k-interactive [--interactive-base:var(--color-surface-inset)] flex w-full items-center justify-between gap-2 rounded-md border border-(--color-line-strong) bg-(--color-surface-inset) px-3 py-2 text-sm outline-none focus:border-(--color-theme) focus:ring-2 focus:ring-(--color-theme) disabled:opacity-60">
       <SelectValue :placeholder="props.placeholder" />
       <SelectIcon class="text-(--color-text-3)">
-        <span class="material-symbols-outlined text-base leading-none"> expand_more </span>
+        <KIcon name="material-symbols:expand-more" class="text-base" />
       </SelectIcon>
     </SelectTrigger>
     <SelectPortal>
@@ -56,7 +56,7 @@ const emit = defineEmits<{
             class="relative flex cursor-pointer items-center rounded-md py-1.5 pr-8 pl-2 text-sm text-(--color-text-2) outline-none select-none transition-colors duration-200 data-[highlighted]:bg-(--color-hover) data-[highlighted]:text-(--color-text-1)">
             <SelectItemText>{{ opt.label }}</SelectItemText>
             <SelectItemIndicator class="absolute right-2 text-(--color-theme)">
-              <span class="material-symbols-outlined text-base leading-none"> check </span>
+              <KIcon name="material-symbols:check" class="text-base" />
             </SelectItemIndicator>
           </SelectItem>
         </SelectViewport>

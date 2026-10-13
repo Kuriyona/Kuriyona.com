@@ -212,13 +212,7 @@ onUnmounted(() => gsapCtx?.revert());
           to="/"
           class="k-interactive flex items-center gap-2 rounded-full border border-(--color-control-border) bg-(--color-control-bg) px-4 py-1.5 text-sm text-(--color-text-2) hover:text-(--color-text-1) hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
           <span>{{ $t('about.my-site-home') }}</span>
-          <span
-            class="icon material-symbols-outlined text-base!"
-            translate="no"
-            aria-hidden="true"
-            data-pagefind-ignore>
-            arrow_forward
-          </span>
+          <KIcon name="material-symbols:arrow-forward" class="icon text-base" />
         </NuxtLinkLocale>
       </div>
     </KSurface>

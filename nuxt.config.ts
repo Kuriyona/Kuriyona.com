@@ -76,6 +76,7 @@ export default defineNuxtConfig({
     },
     optimizeDeps: {
       include: [
+        '@iconify/vue',
         'dayjs',
         'dayjs/plugin/duration',
         'dayjs/plugin/relativeTime',

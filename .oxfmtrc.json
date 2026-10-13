@@ -2,5 +2,5 @@
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "bracketSameLine": true,
   "singleQuote": true,
-  "ignorePatterns": []
+  "ignorePatterns": ["app/utils/icons.gen.ts"]
 }

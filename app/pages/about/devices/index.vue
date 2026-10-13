@@ -7,7 +7,7 @@ useSeoMeta({ title: $t('about.devices.title') });
 <template>
   <AppPage data-pagefind-body>
     <NuxtLinkLocale to="/">
-      <KIconButton icon="arrow_back" />
+      <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl font-bold">{{ $t('about.devices.title') }}</h1>
     <p class="text-(--color-text-2)">{{ $t('about.devices.desc') }}</p>

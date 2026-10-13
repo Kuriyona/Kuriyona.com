@@ -163,7 +163,7 @@ const copy = async (q: AskQuestion) => {
         共 {{ stats.total }} 条 · 未回答 {{ stats.unanswered }} 条 · 公开 {{ stats.public }} 条
       </p>
       <KIconButton
-        icon="refresh"
+        icon="material-symbols:refresh"
         label="刷新"
         class="disabled:opacity-50"
         :disabled="status === 'pending'"

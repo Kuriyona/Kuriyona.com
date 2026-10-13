@@ -2,9 +2,9 @@
 const route = useRoute();
 
 const items = [
-  { to: '/admin', icon: 'key', label: '密钥' },
-  { to: '/admin/r2', icon: 'upload', label: '文件上传' },
-  { to: '/admin/ask-box', icon: 'forum', label: '提问箱审核' },
+  { to: '/admin', icon: 'material-symbols:key', label: '密钥' },
+  { to: '/admin/r2', icon: 'material-symbols:upload', label: '文件上传' },
+  { to: '/admin/ask-box', icon: 'material-symbols:forum', label: '提问箱审核' },
 ];
 </script>
 
@@ -18,7 +18,7 @@ const items = [
           :class="
             route.path.endsWith(item.to) ? 'text-(--color-theme)! border-(--color-theme)!' : ''
           ">
-          <span class="material-symbols-outlined text-base! leading-none">{{ item.icon }}</span>
+          <KIcon :name="item.icon" class="text-base" />
           {{ item.label }}
         </KButton>
       </NuxtLinkLocale>

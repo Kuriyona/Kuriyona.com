@@ -8,7 +8,7 @@ useSeoMeta({ title: $t('about.links.title') });
 <template>
   <AppPage data-pagefind-body>
     <NuxtLinkLocale to="/">
-      <KIconButton icon="arrow_back" />
+      <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl" data-pagefind-meta="title">{{ $t('about.links.title') }}</h1>
     <KCard :title="$t('about.links.best-friends')">

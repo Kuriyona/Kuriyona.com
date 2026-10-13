@@ -18,7 +18,7 @@ const { currentNodeName } = useCloudflareStatus();
         glass
         class="fixed w-80 max-[400px]:w-screen right-0 top-0 z-[110] h-dvh flex flex-col gap-4 p-4 overflow-y-auto">
         <div class="flex justify-end">
-          <KIconButton icon="close" @click="show = false" />
+          <KIconButton icon="material-symbols:close" @click="show = false" />
         </div>
         <KCardLink
           v-for="item in nav"

@@ -57,7 +57,7 @@ resetSurfaceLevel();
                 <slot name="title">{{ props.title }}</slot>
               </DialogTitle>
               <KIconButton
-                icon="close"
+                icon="material-symbols:close"
                 size="sm"
                 label="Close"
                 class="-mr-1 shrink-0"

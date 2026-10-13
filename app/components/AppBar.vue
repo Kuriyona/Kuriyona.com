@@ -41,9 +41,12 @@ onMounted(() => {
               {{ item.shortTitle || item.title }}
             </KButton>
           </NuxtLinkLocale>
-          <KIconButton icon="search" @click="search.toggle()" />
+          <KIconButton icon="material-symbols:search" @click="search.toggle()" />
           <AppLocale />
-          <KIconButton icon="menu" :label="$t('global.more')" @click="mobileMenu = true" />
+          <KIconButton
+            icon="material-symbols:menu"
+            :label="$t('global.more')"
+            @click="mobileMenu = true" />
         </div>
       </div>
     </div>

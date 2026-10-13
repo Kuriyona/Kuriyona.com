@@ -43,7 +43,7 @@ useSeoMeta({ title: $t('timeline.title') });
 <template>
   <AppPage>
     <NuxtLinkLocale to="/">
-      <KIconButton icon="arrow_back" />
+      <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
     <h1 class="text-2xl font-bold">{{ $t('timeline.title') }}</h1>
     <p class="text-(--color-text-2)">{{ $t('timeline.desc') }}</p>
@@ -72,7 +72,11 @@ useSeoMeta({ title: $t('timeline.title') });
               </div>
               <KIconButton
                 v-if="node.item!.link"
-                :icon="isExternal(node.item!.link) ? 'open_in_new' : 'arrow_forward'"
+                :icon="
+                  isExternal(node.item!.link)
+                    ? 'material-symbols:open-in-new'
+                    : 'material-symbols:arrow-forward'
+                "
                 size="lg"
                 class="self-stretch aspect-square"
                 @click="handleLinkClick(node.item!.link)" />

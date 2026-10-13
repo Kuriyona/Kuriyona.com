@@ -72,7 +72,7 @@
       "name": "Github",
       "value": "@Kuriyona",
       "link": "https://github.com/Kuriyona",
-      "icon": "github",
+      "icon": "simple-icons:github",
       "group": "social"
     },
     {
@@ -80,14 +80,14 @@
       "i18nKey": "contact.bilibili",
       "value": "Kuriyona(650631530)",
       "link": "https://space.bilibili.com/650631530",
-      "icon": "bilibili",
+      "icon": "simple-icons:bilibili",
       "group": "social"
     },
     {
       "name": "X",
       "value": "@Kuriyona",
       "link": "https://x.com/Kuriyona",
-      "icon": "x",
+      "icon": "simple-icons:x",
       "group": "social"
     },
     {
@@ -95,42 +95,42 @@
       "i18nKey": "contact.zhihu",
       "value": "Kuriyona",
       "link": "https://www.zhihu.com/people/Kuriyona",
-      "icon": "zhihu",
+      "icon": "simple-icons:zhihu",
       "group": "social"
     },
     {
       "name": "Steam",
       "value": "Kuriyona",
       "link": "https://steamcommunity.com/id/Kuriyona",
-      "icon": "steam",
+      "icon": "simple-icons:steam",
       "group": "social"
     },
     {
       "name": "Telegram",
       "value": "@Kuriyona",
       "link": "https://telegram.me/Kuriyona",
-      "icon": "telegram",
+      "icon": "simple-icons:telegram",
       "group": "contact"
     },
     {
       "name": "Discord",
       "value": "@Kuriyona",
       "link": "https://discord.com/users/1145274057785360454",
-      "icon": "discord",
+      "icon": "simple-icons:discord",
       "group": "contact"
     },
     {
       "name": "Wakatime",
       "value": "@Kuriyona",
       "link": "https://wakatime.com/@Kuriyona",
-      "icon": "wakatime",
+      "icon": "simple-icons:wakatime",
       "group": "social"
     },
     {
       "name": "Instagram",
       "value": "@Kuriyona_",
       "link": "https://www.instagram.com/Kuriyona_",
-      "icon": "instagram",
+      "icon": "simple-icons:instagram",
       "group": "social"
     },
     {
@@ -144,7 +144,7 @@
       "i18nKey": "contact.email",
       "value": "Kuriyona@outlook.com",
       "link": "mailto:Kuriyona@outlook.com",
-      "mdIcon": "mail",
+      "mdIcon": "material-symbols:mail",
       "group": "contact"
     },
     {
@@ -153,7 +153,7 @@
       "value": "@Kuriyona_chan",
       "link": "https://u.wechat.com/EMz6xUdrM3Vlw9uPe2OweLQ",
       "qrOnly": true,
-      "icon": "wechat",
+      "icon": "simple-icons:wechat",
       "group": "contact"
     },
     {
@@ -161,61 +161,61 @@
       "value": "Kuriyona(2946733291)",
       "link": "https://qm.qq.com/q/Vlg6pCdge4",
       "qr": "https://qm.qq.com/q/Vlg6pCdge4",
-      "icon": "qq",
+      "icon": "simple-icons:qq",
       "group": "contact"
     },
     {
       "name": "小红书",
       "value": "Kuriyona",
       "link": "https://www.xiaohongshu.com/user/profile/65fedf07000000000b00eb20",
-      "icon": "xiaohongshu",
+      "icon": "simple-icons:xiaohongshu",
       "group": "social"
     }
   ],
   "tech_stack": [
     {
       "name": "JavaScript",
-      "icon": "JavaScript"
+      "icon": "simple-icons:javascript"
     },
     {
       "name": "TypeScript",
-      "icon": "TypeScript"
+      "icon": "simple-icons:typescript"
     },
     {
       "name": "Vue",
-      "icon": "vuedotjs"
+      "icon": "simple-icons:vuedotjs"
     },
     {
       "name": "Node.js",
-      "icon": "nodedotjs"
+      "icon": "simple-icons:nodedotjs"
     },
     {
       "name": "Bun",
-      "icon": "Bun"
+      "icon": "simple-icons:bun"
     },
     {
       "name": "Nuxt",
-      "icon": "nuxt"
+      "icon": "simple-icons:nuxt"
     },
     {
       "name": "HTML5",
-      "icon": "HTML5"
+      "icon": "simple-icons:html5"
     },
     {
       "name": "CSS3",
-      "icon": "CSS"
+      "icon": "simple-icons:css"
     },
     {
       "name": "Python",
-      "icon": "Python"
+      "icon": "simple-icons:python"
     },
     {
       "name": "C#",
-      "icon": "dotnet"
+      "icon": "simple-icons:dotnet"
     },
     {
       "name": "Markdown",
-      "icon": "Markdown"
+      "icon": "simple-icons:markdown"
     }
   ],
   "languages": [

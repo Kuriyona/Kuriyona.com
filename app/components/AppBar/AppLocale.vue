@@ -31,7 +31,7 @@ const options = computed(() => locales.value.map((l) => ({ value: l.code, label:
   <PopoverRoot v-model:open="open" :modal="false">
     <PopoverTrigger as-child>
       <KButton round :aria-label="$t('global.language')">
-        <span class="material-symbols-outlined text-lg! leading-none"> translate </span>
+        <KIcon name="material-symbols:translate" class="text-lg" />
       </KButton>
     </PopoverTrigger>
     <PopoverPortal>

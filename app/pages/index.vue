@@ -13,11 +13,9 @@ const aboutNav = useAboutNav();
         <span data-pagefind-meta="title">Kuriyona's Space</span>
       </h1>
       <p class="font-bold">{{ $t('about.description') }}</p>
-      <span
-        class="absolute bottom-8 left-1/2 -translate-x-1/2 material-symbols-outlined text-3xl text-(--color-text-4) animate-bounce"
-        aria-hidden="true">
-        expand_more
-      </span>
+      <KIcon
+        name="material-symbols:expand-more"
+        class="absolute bottom-8 left-1/2 -translate-x-1/2 text-3xl text-(--color-text-4) animate-bounce" />
     </div>
     <div class="flex justify-center gap-4 max-[600px]:flex-col">
       <KCard :title="$t('about.about-me')" class="flex-1">
@@ -52,10 +50,7 @@ const aboutNav = useAboutNav();
           v-for="item in config.tech_stack"
           :key="item.name"
           class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm">
-          <img
-            :src="`https://cdn.simpleicons.org/${item.icon}`"
-            :alt="item.name"
-            class="w-5 h-5 p-0.5 bg-white rounded-sm" />
+          <KIcon :name="item.icon" class="text-xl text-(--color-text-1)" />
           <span>{{ item.name }}</span>
         </KSurface>
         <span

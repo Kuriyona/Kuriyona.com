@@ -68,7 +68,7 @@ defineExpose({
       type="button"
       class="absolute right-2 top-1/2 -translate-y-1/2 text-(--color-text-4) transition-color duration-300 hover:text-(--color-text-1)"
       @click="onClear">
-      <span class="material-symbols-outlined text-lg"> close </span>
+      <KIcon name="material-symbols:close" class="text-lg" />
     </button>
   </div>
 </template>
