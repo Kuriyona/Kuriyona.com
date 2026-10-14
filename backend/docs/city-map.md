@@ -21,7 +21,7 @@
 
 | 步骤     | 位置                                                                               | 说明                                                                                                                                                                 |
 | -------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1 出图   | 浏览器 `/admin/city`                                                               | 参数与离线脚本逐字一致（见下）；高德 key 由 Worker 注入，前端拿不到                                                                                                  |
+| 1 出图   | 浏览器 `/admin/city`                                                               | 版式参数与离线脚本一致、另加主题色高亮（见下）；高德 key 由 Worker 注入，前端拿不到                                                                                  |
 | 2 取边界 | `GET /api/city/amap`（`requireAuthKey`）                                           | 转发高德并注入 `AMAP_KEY`；KV 缓存 30 天，键 `amap:<排序后的查询串>`，只缓存 `status==="1"` 的响应；`?nocache=1` 只绕过读、不绕过写                                  |
 | 3 渲染   | 浏览器                                                                             | `JSON.parse` + 道格拉斯-普克抽稀 + SVG 拼接，CPU 全在管理员机器上                                                                                                    |
 | 4 上传   | `GET /api/city/map/upload-url?adcode=` → 浏览器 `PUT` 到 R2                        | `presignR2Put(key, 'image/svg+xml')`；**签名包含 Content-Type**，PUT 必须原样带同一个值                                                                              |
@@ -46,6 +46,7 @@
 ```
 up: 1 · down: 0 · ratio: 1 · outsideSameLevel: true
 title: false · contextLabels: false · targetLabels: false · center: 'target'
+colors: { targetFill: <站点主题色 --color-theme> }   // 仅线上
 ```
 
 即 CLI 的 `--up 1 --down 0 --ratio 1 --outside-same-level --no-title --no-context-labels --no-target-label --center target`：
@@ -54,6 +55,7 @@ title: false · contextLabels: false · targetLabels: false · center: 'target'
 - `--outside-same-level` 把视图内与目标同级（浙江其他地级市）和最外层（相邻省份）的轮廓一并画出；
 - `--no-title/--no-context-labels/--no-target-label` 去掉所有文字（标题与城市名由前端卡片负责）；
 - `--center target` 让杭州居中并占画幅长边的 0.5 —— 正是这一条保证裁切到 2:1 或 1:2 时目标仍在画面里。
+- `colors.targetFill`：目标区域的高亮填充用**站点主题色**（`app/assets/css/base.css` 的 `--color-theme`，现为 `#e6ccff`，透明度仍是库的 `0.22`）。SVG 是静态产物、吃不到 CSS 变量，所以 `/admin/city` 出图时用 `getComputedStyle(document.body)` 读一次烘进去；站点改主题色 → **必须重新出图**才会生效。CLI 没有配色开关，离线出图的高亮仍是库内置蓝 `#1f6feb`，因此离线产物与线上产物在这一处不再逐字节相同（其余版本对照结论不变）。
 
 **版本对照（0.4.0 vs 0.2.0）**：同一组参数下两版出图**逐字节相同**（`sed 's|<metadata>.*</metadata>||'` 后 sha256 一致，均为 316477 B / `viewBox 0 0 1048 1048`），唯一差别是 SVG 内嵌 `<metadata>` 里的 `generator` 版本号与这轮取数统计。也就是说 0.4.0 只改了取数路径（内置索引、bbox 预筛、分片）与 API 表面，渲染结果没动。
 
@@ -65,7 +67,7 @@ title: false · contextLabels: false · targetLabels: false · center: 'target'
 
 ### 离线（备选）：CLI
 
-同样参数下产物与线上一致，适合批量 / 换城市前先看效果：
+版式参数与线上一致，适合批量 / 换城市前先看效果。**唯一的差别是高亮色**：CLI 没有配色选项，产物仍是库内置蓝 `#1f6feb`；离线出的图要贴到线上时，先按线上路径重出一张，或手工把 SVG 里目标的 `fill="#1f6feb"` 换成当前 `--color-theme`。
 
 ```bash
 cd /home/kuriyona/Dev/@Kuriyona/Kuriyona.com

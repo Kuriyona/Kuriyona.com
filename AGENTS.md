@@ -257,7 +257,7 @@ Kuriyona.com/
 | `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                                                  |
 | `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                             |
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                         |
-| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）                                           |
+| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图） |
 
 ### API 概览
 

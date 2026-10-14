@@ -5,8 +5,9 @@ import type { Cities } from '~/scripts/cityTypes';
 
 definePageMeta({ layout: 'admin' });
 
-// 出图参数与离线脚本逐字一致（见 backend/docs/city-map.md）：`--up 1 --down 0 --ratio 1
+// 出图参数与离线脚本（backend/docs/city-map.md）一致：`--up 1 --down 0 --ratio 1
 // --outside-same-level --no-title --no-context-labels --no-target-label --center target`
+// 唯一差别是下面的 `colors`（CLI 没有对应开关，离线出图的高亮仍是库内置蓝）。
 const GENERATE_OPTIONS: SpanOptions = {
   up: 1,
   down: 0,
@@ -16,6 +17,14 @@ const GENERATE_OPTIONS: SpanOptions = {
   contextLabels: false,
   targetLabels: false,
   center: 'target',
+};
+
+// SVG 是静态产物，CSS 变量进不去：高亮（目标区域填充）在出图时从当前主题的
+// --color-theme 读一次并烘进 SVG，避免这里再写一份十六进制。
+const themeHighlight = () => {
+  const value = getComputedStyle(document.body).getPropertyValue('--color-theme').trim();
+  if (!value) throw new Error('未取到站点主题色（--color-theme）');
+  return value;
 };
 
 const FIELDS = [
@@ -153,11 +162,13 @@ const generate = async () => {
     });
 
     // 两地相同时只出一张图
+    const colors: SpanOptions['colors'] = { targetFill: themeHighlight() };
     const generated = new Map<string, GeneratedMap>();
     for (const keyword of new Set([wanted.resident, wanted.current])) {
       phase.value = `出图：${keyword}…`;
       const output: GenerateResult[] = await box.generate(keyword, {
         ...GENERATE_OPTIONS,
+        colors,
         refresh: ignoreCache.value,
       });
       if (output.length !== 1) {
@@ -213,7 +224,8 @@ const generate = async () => {
       <div class="flex flex-col gap-4">
         <p class="text-xs text-(--color-text-3)">
           填城市名或 adcode。出图在浏览器里完成（高德 key 由 Worker 注入，前端拿不到），冷缓存约 25
-          秒、热缓存不到 1 秒；参数与离线脚本一致。
+          秒、热缓存不到 1 秒；版式参数与离线脚本一致，目标区域高亮取当前主题色
+          <code>--color-theme</code>（CLI 没有配色开关，离线出图仍是内置蓝）。
         </p>
 
         <div class="flex flex-col gap-2">
