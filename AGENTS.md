@@ -132,7 +132,7 @@ Kuriyona.com/
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
-│   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；菜单：AppBar/AppMenu，底部含 GIT_HASH/构建时间/Cloudflare 节点）
+│   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（右侧为一个「语言 + 菜单」合并长条按钮，点击打开抽屉 AppBar/AppMenu；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片）/ 关于（GIT_HASH/构建时间/Cloudflare 节点，mt-auto 沉底））
 │   │   ├── AppFooter.vue       版权声明 + 萌 ICP 备
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
 │   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
@@ -232,7 +232,7 @@ Kuriyona.com/
 | `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                               |
 | `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                             |
 | `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                       |
-| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative）                                                                                   |
+| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative；`label` 传入时在左端渲染一行小字标签（仅 horizontal））                            |
 | `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                         |
 | `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                               |
 | `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                    |

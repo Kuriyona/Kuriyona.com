@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AppMenu from './AppBar/AppMenu.vue';
-import AppLocale from './AppBar/AppLocale.vue';
 import KButton from './KButton.vue';
 import { useSearch } from '~/composables/useSearch';
 const mobileMenu = ref(false);
@@ -42,11 +41,10 @@ onMounted(() => {
             </KButton>
           </NuxtLinkLocale>
           <KIconButton icon="material-symbols:search" @click="search.toggle()" />
-          <AppLocale />
-          <KIconButton
-            icon="material-symbols:menu"
-            :label="$t('global.more')"
-            @click="mobileMenu = true" />
+          <KButton round class="gap-2" :aria-label="$t('global.more')" @click="mobileMenu = true">
+            <KIcon name="material-symbols:translate" class="text-lg" />
+            <KIcon name="material-symbols:menu" class="text-lg" />
+          </KButton>
         </div>
       </div>
     </div>

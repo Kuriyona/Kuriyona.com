@@ -4,6 +4,16 @@ import dayjs from 'dayjs';
 const show = defineModel<boolean>();
 const nav = useNav();
 
+const { locale, locales, setLocale } = useI18n();
+const language = computed({
+  get: () => locale.value,
+  set: (code: string) => {
+    setLocale(code);
+    show.value = false;
+  },
+});
+const localeOptions = computed(() => locales.value.map((l) => ({ value: l.code, label: l.name })));
+
 const gitHash = GIT_HASH;
 const buildTime = BUILD_TIME;
 const { currentNodeName } = useCloudflareStatus();
@@ -20,31 +30,43 @@ const { currentNodeName } = useCloudflareStatus();
         <div class="flex justify-end">
           <KIconButton icon="material-symbols:close" @click="show = false" />
         </div>
-        <KCardLink
-          v-for="item in nav"
-          :key="item.to"
-          :to="item.to"
-          @click="show = false"
-          :text="item.shortTitle || item.title"
-          :desc="item.desc || undefined" />
-        <KDivider class="mt-auto" />
-        <div class="flex flex-col gap-1 text-xs text-(--color-text-2) font-monos">
-          <p>
-            {{ $t('global.opensource') }} (MIT) :
-            <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="link">
-              Kuriyona/Kuriyona.com
-            </a>
-            <a
-              :href="`https://github.com/Kuriyona/Kuriyona.com/commit/${gitHash}`"
-              target="_blank"
-              class="link ml-1">
-              {{ gitHash }}
-            </a>
-          </p>
-          <p>
-            {{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}
-          </p>
-          <p v-if="currentNodeName">{{ $t('app.using-cf') }} : {{ currentNodeName }}</p>
+        <div class="flex flex-col gap-2">
+          <KDivider :label="$t('global.language-settings')" />
+          <KSelect
+            v-model="language"
+            :options="localeOptions"
+            :placeholder="$t('global.language')" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <KDivider :label="$t('global.pages')" />
+          <KCardLink
+            v-for="item in nav"
+            :key="item.to"
+            :to="item.to"
+            @click="show = false"
+            :text="item.shortTitle || item.title"
+            :desc="item.desc || undefined" />
+        </div>
+        <div class="flex flex-col gap-2 mt-auto">
+          <KDivider :label="$t('global.about')" />
+          <div class="flex flex-col gap-1 text-sm text-(--color-text-2) font-monos">
+            <p>
+              {{ $t('global.opensource') }} (MIT) :
+              <a href="https://github.com/Kuriyona/Kuriyona.com" target="_blank" class="link">
+                Kuriyona/Kuriyona.com
+              </a>
+              <a
+                :href="`https://github.com/Kuriyona/Kuriyona.com/commit/${gitHash}`"
+                target="_blank"
+                class="link ml-1">
+                {{ gitHash }}
+              </a>
+            </p>
+            <p>
+              {{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}
+            </p>
+            <p v-if="currentNodeName">{{ $t('app.using-cf') }} : {{ currentNodeName }}</p>
+          </div>
         </div>
       </KSurface>
     </div>
