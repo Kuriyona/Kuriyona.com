@@ -35,7 +35,7 @@ pnpm exec wrangler kv namespace create kuriyona-kv
 生产环境变量用 `wrangler secret put` 写入（值取自 `backend/.env`，**不要**提交任何密钥）：
 
 ```bash
-for K in JWT_SECRET AUTH_KEY TURNSTILE_SECRET_KEY ENDPOINT ACCESS_KEY_ID SECRET_ACCESS_KEY BUCKET_NAME WEATHER_API_KEY AMAP_KEY; do
+for K in JWT_SECRET AUTH_KEY TURNSTILE_SECRET_KEY ENDPOINT ACCESS_KEY_ID SECRET_ACCESS_KEY BUCKET_NAME WEATHER_API_KEY AMAP_KEY CF_API_TOKEN; do
   printf '%s' "$(grep -m1 "^$K=" backend/.env | cut -d= -f2-)" | pnpm exec wrangler secret put "$K"
 done
 ```
@@ -43,6 +43,8 @@ done
 必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。**不要设置 `TURNSTILE_DEV_SECRET_KEY`**（那是本地测试用）。
 
 可选：`AMAP_KEY`（高德 Web 服务 key，两处用它：管理端 `/admin/city` 出图取边界走 `/api/city/amap` 代理，以及 `/api/city` 按常住城市查天气中心点）。**不设它不会让接口 500**：出图那条链路自己报 500，天气则回退默认城市（杭州）的固定中心点。
+
+可选：`CF_API_TOKEN`（管理端 `/admin/cache` 清 Cloudflare 边缘缓存走 `/api/cache/*`）。需要 **Zone:Read**（列域名 / 用域名换 zone id）与 **Cache Purge**（`POST /zones/{id}/purge_cache`）两个权限，Zone Resources 选全部域名才能清「名下其他域名」；权限与限流见 `docs/cache-purge.md`。不设它只有清缓存那条链路 500，其余接口不受影响。
 
 ## 4. 应用迁移
 

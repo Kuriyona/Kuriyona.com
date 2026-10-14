@@ -8,3 +8,15 @@ export const adminErrorText = (e: unknown): string => {
   }
   return '无法连接 API';
 };
+
+// 同上，但优先用响应体里的 `{ message }`（清缓存等接口会把上游原文放在里面）
+export const adminErrorMessage = async (e: unknown): Promise<string> => {
+  if (!(e instanceof HTTPError)) return '无法连接 API';
+  try {
+    const body = (await e.response.clone().json()) as { message?: string };
+    if (body?.message) return body.message;
+  } catch {
+    // 响应体不是 JSON：回落到通用文案
+  }
+  return adminErrorText(e);
+};

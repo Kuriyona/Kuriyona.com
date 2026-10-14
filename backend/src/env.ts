@@ -13,6 +13,7 @@ export interface Env {
   BUCKET_NAME: string;
   WEATHER_API_KEY?: string;
   AMAP_KEY?: string;
+  CF_API_TOKEN?: string;
 }
 
 export const REQUIRED_ENV = [

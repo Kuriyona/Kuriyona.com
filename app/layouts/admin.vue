@@ -6,6 +6,7 @@ const items = [
   { to: '/admin/r2', icon: 'material-symbols:upload', label: '文件上传' },
   { to: '/admin/ask-box', icon: 'material-symbols:forum', label: '提问箱审核' },
   { to: '/admin/city', icon: 'material-symbols:map', label: '城市地图' },
+  { to: '/admin/cache', icon: 'material-symbols:delete-sweep', label: '缓存清除' },
 ];
 </script>
 

@@ -41,6 +41,8 @@
 
 地址由 `backend/src/city-map.ts` 的 `cityMapUrl` 拼（`https://r2.kuriyona.com/img/site/map/${adcode}.svg`），改城市时要和对象键一起对齐。
 
+**换图后还是旧图？** R2 对象带 `cache-control: max-age=86400`，边缘缓存最长 24 小时才自然过期。要想立刻生效，用 `/admin/cache`（管理面板「缓存清除」）清 `https://r2.kuriyona.com/img/site/map/<adcode>.svg` —— 它和站点同属 zone `d9a70ef0a143cb0897a16d6779edd1ae`，见 `cache-purge.md`。验证：再请求一次该地址，`CF-Cache-Status` 不再是 `HIT`。
+
 ## 出图参数（两条路共用）
 
 ```

@@ -21,7 +21,7 @@ cp backend/.env .dev.vars
 # 删除 .dev.vars 里的 DATABASE_URL 与 PORT 行（Workers 不需要）
 ```
 
-必需键（缺任一项 API 请求返回 500）：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。可选：`TURNSTILE_DEV_SECRET_KEY`（本地覆盖 Turnstile 密钥，生产不要设置）、`WEATHER_API_KEY`、`AMAP_KEY`（出图边界 + 常住城市天气中心点）。
+必需键（缺任一项 API 请求返回 500）：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。可选：`TURNSTILE_DEV_SECRET_KEY`（本地覆盖 Turnstile 密钥，生产不要设置）、`WEATHER_API_KEY`、`AMAP_KEY`（出图边界 + 常住城市天气中心点）、`CF_API_TOKEN`（管理端清缓存 `/api/cache/*`，需要 `Zone:Read` + `Cache Purge` 权限，见 `docs/cache-purge.md`）。
 
 键名清单见根目录 `.dev.vars.example`。
 

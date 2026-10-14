@@ -69,6 +69,10 @@ watch(key, () => (valid.value = null));
           to="/admin/city"
           text="城市地图"
           desc="在浏览器里出图，直传 R2 并更新首页城市卡片" />
+        <KCardLink
+          to="/admin/cache"
+          text="缓存清除"
+          desc="按 URL / 主机名 / 标签 / 前缀清 Cloudflare 边缘缓存" />
       </div>
     </KCard>
   </div>

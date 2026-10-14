@@ -14,3 +14,6 @@ BUCKET_NAME=
 WEATHER_API_KEY=
 # 高德 Web 服务 key：只给 /api/city/amap 代理用（管理端出图时注入），浏览器拿不到
 AMAP_KEY=
+# Cloudflare API token：只给 /api/cache/* 用（管理端清缓存）。需要 Zone:Read + Cache Purge，
+# 见 backend/docs/cache-purge.md；不设它只有清缓存那条链路报 500
+CF_API_TOKEN=

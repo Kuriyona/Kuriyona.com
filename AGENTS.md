@@ -158,7 +158,7 @@ Kuriyona.com/
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── layouts/                 页面布局（Nuxt 自动发现；由 app.vue 的 <NuxtLayout> 应用）
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
-│   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
+│   │   └── admin.vue            管理面板共享导航壳（五个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
@@ -167,7 +167,7 @@ Kuriyona.com/
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
-│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/city 城市地图出图）
+│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/city 城市地图出图、/admin/cache 缓存清除）
 │   ├── stores/                  Pinia stores
 │   │   └── main.ts              JWT（Turnstile 验证后存储）
 │   ├── utils/                   @/ 别名工具函数
@@ -203,10 +203,10 @@ Kuriyona.com/
 │   │   ├── amap.ts              高德：行政区划接口常量 + 城市中心点（amap:center:<adcode>，供天气按坐标查）
 │   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table，UUID 主键）
 │   │   ├── plugin/auth.ts       鉴权中间件（AUTH_KEY query / JWT Bare 或 Bearer）
-│   │   ├── router/              路由：ask-box / r2 / city（高德代理 + 出图上传签名 + 写城市配置）
+│   │   ├── router/              路由：ask-box / r2 / city（高德代理 + 出图上传签名 + 写城市配置）/ cache（Cloudflare 清缓存转发）
 │   │   └── utils.ts             D1/R2 预签名/Turnstile 工具
 │   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
-│   └── docs/                    后端文档（development / deployment / city-map）
+│   └── docs/                    后端文档（development / deployment / city-map / cache-purge）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301、`/about/as-mtf` → `/about/trans` 301 含 en/ja/zh-Hant 前缀版本）
 ├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
@@ -243,36 +243,39 @@ Kuriyona.com/
 
 ### 页面路由总览
 
-| 路由                 | 文件                                | 说明                                                                                                                 |
-| -------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body） |
-| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body）                              |
-| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                    |
-| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                   |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 浮动目录 + 其它语言两行截断）                                                           |
-| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                           |
-| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                          |
-| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                           |
-| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                             |
-| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                                                  |
-| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                             |
-| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                         |
+| 路由                 | 文件                                | 说明                                                                                                                         |
+| -------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）         |
+| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body）                                      |
+| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                            |
+| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                           |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 浮动目录 + 其它语言两行截断）                                                                   |
+| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                                   |
+| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                  |
+| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                   |
+| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                                     |
+| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                                                          |
+| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                     |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                 |
 | `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图） |
+| `/admin/cache`       | `pages/admin/cache.vue`             | 缓存清除：选 zone（域名）+ URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存；最近清除存本机 localStorage             |
 
 ### API 概览
 
-| 端点                                                       | 来源     | 说明                                                                                                                                                                       |
-| ---------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/articles`                                        | server/  | 文章元信息列表（无 content）                                                                                                                                               |
-| `GET /api/articles/:slug`                                  | server/  | 指定文章（所有语言版本）                                                                                                                                                   |
-| `/api/city`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                                         |
-| `PUT /api/ask-box/admin/:id/answer`                        | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                                       |
-| `GET /api/r2/list?prefix=&delimiter=`                      | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）                               |
-| `GET /api/city/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                                     |
-| `GET /api/city/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                                            |
-| `PUT /api/city`                                            | backend/ | 写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 adcode 推导）：`GET /api/city` 的 `resident`/`current` 读它，缺失/坏值回退杭州                                        |
-| `GET /api/city` 的 `resident`/`current`                    | backend/ | `{ resident: { name, adcode, map, weather }, current: { name, adcode, map } }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/city-map.md`） |
-| `GET /api/city` 的 `resident.weather`                      | backend/ | 按 `city:maps` 的 `resident.adcode` 取高德中心点（KV `amap:center:<adcode>`）后以 `location=经度,纬度` 查 QWeather，缓存 `cache:weather:<adcode>` 30 分钟                  |
+| 端点                                                       | 来源     | 说明                                                                                                                                                                                                  |
+| ---------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/articles`                                        | server/  | 文章元信息列表（无 content）                                                                                                                                                                          |
+| `GET /api/articles/:slug`                                  | server/  | 指定文章（所有语言版本）                                                                                                                                                                              |
+| `/api/city`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                                                                    |
+| `PUT /api/ask-box/admin/:id/answer`                        | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                                                                  |
+| `GET /api/r2/list?prefix=&delimiter=`                      | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）                                                          |
+| `GET /api/city/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                                                                |
+| `GET /api/city/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                                                                       |
+| `PUT /api/city`                                            | backend/ | 写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 adcode 推导）：`GET /api/city` 的 `resident`/`current` 读它，缺失/坏值回退杭州                                                                   |
+| `GET /api/city` 的 `resident`/`current`                    | backend/ | `{ resident: { name, adcode, map, weather }, current: { name, adcode, map } }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/city-map.md`）                            |
+| `GET /api/cache/zones`                                     | backend/ | 列出 `CF_API_TOKEN` 可见的 zone（`{ zones: [{ id, name, status, plan }] }`，最多 5 页 × 50），管理端清缓存的域名下拉用                                                                                |
+| `POST /api/cache/purge`                                    | backend/ | body `{ zone, type, targets[] }` → `POST /zones/{id}/purge_cache`；`type` 为 `url`/`hostname`/`tag`/`prefix`，`zone` 接受 zone id 或域名；单次上限 100 条，成功返回 `{ success, zone, type, purged }` |
+| `GET /api/city` 的 `resident.weather`                      | backend/ | 按 `city:maps` 的 `resident.adcode` 取高德中心点（KV `amap:center:<adcode>`）后以 `location=经度,纬度` 查 QWeather，缓存 `cache:weather:<adcode>` 30 分钟                                             |
 
 ## Architecture
 
@@ -281,11 +284,12 @@ Kuriyona.com/
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
 - **城市地图与天气**：`GET /api/city` 的 `resident`/`current` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`（KV 只存 `{ name, adcode }`）。**出图跑在管理端浏览器里**（`/admin/city` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/city.ts`），CPU ≈ 0。首页「关于我」右侧的常驻城市卡片复用同一份 `resident`（`app/pages/index.vue` 里 `useCity()`），预渲染阶段拿不到数据、只有「关于我」单卡。`resident` 也带 **`weather`**：`backend/src/amap.ts` 的 `cityCenter(env, adcode)` 向高德行政区划接口取中心点（KV `amap:center:<adcode>`，30 天），再以 `location=<经度>,<纬度>` 调 QWeather（缓存 `cache:weather:<adcode>`，30 分钟）；`AMAP_KEY` 缺失时回退默认城市（杭州）中心点。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/city-map.md`。
+- **缓存清除（Cloudflare）**：管理端 `/admin/cache` → Worker 两个薄端点（`backend/src/router/cache.ts`，都要 `auth`）：`GET /api/cache/zones` 用 `CF_API_TOKEN` 列域名，`POST /api/cache/purge` 转发 `purge_cache`（`files`/`hosts`/`tags`/`prefixes`）。token 只存 Worker 侧（`CF_API_TOKEN`），需要 **Zone:Read + Cache Purge**、Zone Resources 覆盖目标域名；单次上限 100 条（Cloudflare 的 Max operations per request），返回 200 只代表请求被收下，是否真清掉要看 `CF-Cache-Status` 是否 MISS。起因：R2 对象带 `cache-control: max-age=86400`，换图后边缘缓存最长 24h 才过期。
 - `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `cache:weather:<adcode>` 天气缓存、`city:maps` 城市配置与 `amap:*` 缓存（边界响应原文 + `amap:center:<adcode>` 城市中心点））。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/city`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
+- `app/pages/admin/` — 5 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/city`, `/admin/cache`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`（`adminErrorMessage` 同源但优先用响应体里的 `message`，清缓存页用它显示 Cloudflare 原文）。
 
 ## Key Conventions
 
@@ -300,7 +304,7 @@ Kuriyona.com/
 - **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。天气图标同理：QWeather 的图标码经 `app/utils/weatherIcon.ts` 映射成 Material Symbols（**不再引入 `qweather-icons` 字体**，`CardCityMap` 用 `KIcon`）。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
-- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（城市地图出图取边界走 `/api/city/amap` 代理，以及 `/api/city` 按常住城市查天气中心点；缺失时前者端点 500、后者回退默认城市中心点，其余不受影响）。
+- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（城市地图出图取边界走 `/api/city/amap` 代理，以及 `/api/city` 按常住城市查天气中心点；缺失时前者端点 500、后者回退默认城市中心点，其余不受影响）、`CF_API_TOKEN`（管理端 `/admin/cache` 清 Cloudflare 缓存走 `/api/cache/*`，需要 **Zone:Read + Cache Purge** 权限、Zone Resources 覆盖目标域名；缺失时只有 `/cache/*` 报 500，权限清单见 `backend/docs/cache-purge.md`）。
 - **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
 - **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
