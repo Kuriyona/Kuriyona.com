@@ -7,9 +7,10 @@ const { data: cities } = useCity();
 </script>
 
 <template>
-  <AppPage data-pagefind-body>
+  <AppPage hero data-pagefind-body>
     <!-- Hero：半屏（不用负边距贴顶，AppPage 的边距保持不变） -->
-    <div class="relative flex min-h-[50svh] flex-col items-center justify-center gap-4 text-center">
+    <div
+      class="relative flex min-h-(--hero-height) flex-col items-center justify-center gap-4 text-center">
       <h1 class="font-monos text-2xl font-bold sm:text-3xl">
         <span>{{ $t('about.welcome-to') }}</span>
         <br />

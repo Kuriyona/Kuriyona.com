@@ -170,7 +170,7 @@ onMounted(() => {
     });
 
     // 关于我卡片内容上升（加载即播放；只动 y 不动透明度，避免 SSR 值首帧闪现）
-    gsap.from(gsap.utils.toArray<HTMLElement>('.mtf-hero-item'), {
+    gsap.from(gsap.utils.toArray<HTMLElement>('.mtf-intro-item'), {
       y: 18,
       duration: 0.7,
       stagger: 0.1,
@@ -186,8 +186,10 @@ onUnmounted(() => gsapCtx?.revert());
 </script>
 
 <template>
-  <AppPage data-pagefind-body>
-    <div class="py-4 flex flex-col items-center justify-center gap-4 text-center px-10 mb-10">
+  <AppPage hero data-pagefind-body>
+    <!-- Hero：半屏欢迎块（关于我已移出 hero，见下方独立卡片）；后间距统一交给列 gap-4，不要写 mb-* -->
+    <div
+      class="min-h-(--hero-height) py-4 flex flex-col items-center justify-center gap-4 text-center px-10">
       <h1 class="text-2xl font-bold font-monos">
         <span>{{ $t('about.welcome-to') }}</span>
         <br />
@@ -206,8 +208,8 @@ onUnmounted(() => gsapCtx?.revert());
       <div class="trans-ribbon absolute inset-x-0 bottom-0 h-1" aria-hidden="true"></div>
       <div class="trans-aura absolute inset-0" aria-hidden="true"></div>
       <div class="relative flex flex-col items-center gap-4">
-        <h2 class="mtf-hero-item text-lg font-bold">{{ $t('about.about-me') }}</h2>
-        <p class="mtf-hero-item trans-text">{{ $t('about.mtf.im-mtf') }}</p>
+        <h2 class="mtf-intro-item text-lg font-bold">{{ $t('about.about-me') }}</h2>
+        <p class="mtf-intro-item trans-text">{{ $t('about.mtf.im-mtf') }}</p>
         <NuxtLinkLocale
           to="/"
           class="k-interactive flex items-center gap-2 rounded-full border border-(--color-control-border) bg-(--color-control-bg) px-4 py-1.5 text-sm text-(--color-text-2) hover:text-(--color-text-1) hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">

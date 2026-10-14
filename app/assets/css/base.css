@@ -76,6 +76,12 @@ body {
    * （Tailwind 的 `reserve:` 变体，定义在 main.css）。改这两个值要同步算一遍断点。 */
   --content-width: 960px;
   --reserve-width: 240px;
+  /* 半屏 hero 高度：hero 页（AppPage 的 `hero` prop）用它当 min-height。 */
+  --hero-height: 50svh;
+  /* 右栏默认小组件的下移量：hero 高度 + hero 之后那段间距。
+     正文列是 flex 列，hero 与下一块之间只有列 `gap-4`（1rem），所以补上 1rem，
+     小组件才与 hero 下方的第一个内容块齐平（hero 页禁止再给 hero 加 mb-* / 给下一块加 mt-*）。 */
+  --reserve-hero-offset: calc(var(--hero-height) + 1rem);
   --color-theme: #e6ccff;
 }
 
