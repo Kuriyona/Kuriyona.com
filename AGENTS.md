@@ -134,7 +134,7 @@ Kuriyona.com/
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；菜单：AppBar/AppMenu，底部含 GIT_HASH/构建时间/Cloudflare 节点）
 │   │   ├── AppFooter.vue       版权声明 + 萌 ICP 备
-│   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 跟随光标的图标加亮）
+│   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -176,6 +176,7 @@ Kuriyona.com/
 │   │   ├── console.ts           console 欢迎信息（greet.txt）
 │   │   ├── pagefind.ts          PageFind JS API 封装（new Function 绕过打包器）
 │   │   ├── icons.gen.ts         图标注册（由 scripts/gen-icons.ts 生成，勿手改）
+│   │   ├── highlightMotion.ts   背景高亮点运动学纯函数（随机起点/对角方向、触边反弹、视口变化夹回）
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
 │   │   └── statusTypes.ts       /status 接口类型（Weather/GithubActivity/Steam）
