@@ -73,9 +73,11 @@ md.renderer.rules.link_open = (tokens, idx, _options, _env, slf) => {
   return slf.renderToken(tokens, idx, _options);
 };
 
-/** Material Symbols open_in_new（几何数据取自 @iconify-json/material-symbols） */
+/** Material Symbols open_in_new（几何数据取自 @iconify-json/material-symbols）
+ *  display:inline 必须显式写：Tailwind preflight 把所有 svg 设为 display:block，
+ *  否则图标会独占一行（正文里的外链图标会掉到链接文字下方）。 */
 const externalLinkIcon =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" style="vertical-align:middle;margin-left:2px;">' +
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" style="display:inline;vertical-align:middle;margin-left:2px;">' +
   '<path d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h14v-7h2v7q0 .825-.587 1.413T19 21zm4.7-5.3l-1.4-1.4L17.6 5H14V3h7v7h-2V6.4z"/></svg>';
 
 md.renderer.rules.link_close = (_tokens, _idx, _options, _env, _slf) => {
