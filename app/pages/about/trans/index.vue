@@ -114,9 +114,12 @@ const barStyle = (milestone: { id: string; percent: number | null }) => ({
   width: `${Math.min(100, anim[`p-${milestone.id}`] ?? milestone.percent ?? 0)}%`,
 });
 
-/** 「性别认同」条目的数据源与 /timeline 同一份 app.config.ts，按展示用的 tag 过滤 */
+/**
+ * 「性别认同」条目的数据源与 /timeline 同一份 app.config.ts，按展示用的 tag 过滤。
+ * 配置里是从早到晚，这里反过来（与 /timeline 一致：最新在最上）；filter 已返回新数组，可安全 reverse。
+ */
 const { timeline } = useAppConfig();
-const genderTimeline = timeline.filter((item) => item.tag === '性别认同');
+const genderTimeline = timeline.filter((item) => item.tag === '性别认同').reverse();
 
 const linkGroups = computed(() => [
   {
