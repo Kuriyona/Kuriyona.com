@@ -1,8 +1,7 @@
 {
   "info": {
     "birth": "2008-06-28",
-    "mbti": "INFP",
-    "height": "166"
+    "mbti": "INFP"
   },
   "links": {
     "main": [
@@ -120,13 +119,6 @@
       "group": "contact"
     },
     {
-      "name": "Wakatime",
-      "value": "@Kuriyona",
-      "link": "https://wakatime.com/@Kuriyona",
-      "icon": "simple-icons:wakatime",
-      "group": "social"
-    },
-    {
       "name": "Instagram",
       "value": "@Kuriyona_",
       "link": "https://www.instagram.com/Kuriyona_",
@@ -137,6 +129,7 @@
       "name": "XBOX",
       "value": "@Kuriyona",
       "link": "https://www.xbox.com/play/user/Kuriyona",
+      "icon": "simple-icons:xbox",
       "group": "social"
     },
     {

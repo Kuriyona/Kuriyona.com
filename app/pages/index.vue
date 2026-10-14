@@ -5,45 +5,54 @@ const aboutNav = useAboutNav();
 
 <template>
   <AppPage data-pagefind-body>
-    <div
-      class="relative -mt-[calc(var(--app-bar-height)+5rem+1rem)] min-h-[100svh] flex flex-col items-center justify-center gap-4 text-center px-10">
-      <h1 class="text-2xl font-bold font-monos">
-        <span>{{ $t('about.welcome-to') }}</span>
-        <br />
+    <!-- Hero：半屏（不用负边距贴顶，AppPage 的边距保持不变） -->
+    <div class="relative flex min-h-[50svh] flex-col items-center justify-center gap-4 text-center">
+      <img
+        src="https://r2.kuriyona.com/img/avatar/Avatar_OLI_256.png"
+        alt="Kuriyona"
+        width="96"
+        height="96"
+        class="h-20 w-20 rounded-full object-cover sm:h-24 sm:w-24" />
+      <h1 class="font-monos text-2xl font-bold sm:text-3xl">未晞 / Yona</h1>
+      <p class="text-sm text-(--color-text-2) sm:text-base">
+        {{ $t('about.welcome-to') }}
         <span data-pagefind-meta="title">Kuriyona's Space</span>
-      </h1>
-      <p class="font-bold">{{ $t('about.description') }}</p>
+      </p>
       <KIcon
         name="material-symbols:expand-more"
-        class="absolute bottom-8 left-1/2 -translate-x-1/2 text-3xl text-(--color-text-4) animate-bounce" />
+        class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-(--color-text-4)" />
     </div>
-    <div class="flex justify-center gap-4 max-[600px]:flex-col">
-      <KCard :title="$t('about.about-me')" class="flex-1">
-        <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
-        <p>{{ $t('about.also-weixi-yona') }}</p>
-        <p>
-          <NuxtLinkLocale to="/blog/about-name" class="link">{{
-            $t('about.about-my-name')
-          }}</NuxtLinkLocale>
-        </p>
-        <br />
-        <p class="font-bold">{{ $t('about.description') }}</p>
+
+    <KCard :title="$t('about.about-me')">
+      <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
+      <p>{{ $t('about.also-weixi-yona') }}</p>
+      <p>
+        <NuxtLinkLocale to="/blog/about-name" class="link">{{
+          $t('about.about-my-name')
+        }}</NuxtLinkLocale>
+      </p>
+    </KCard>
+
+    <!-- 生日 / MBTI：各自独立成块，两列（最窄屏也不换行，所以纵向排图标-标签-值） -->
+    <div class="grid grid-cols-2 gap-4">
+      <KCard class="text-center">
+        <div class="flex flex-col items-center gap-1">
+          <KIcon name="material-symbols:cake" class="text-2xl text-(--color-text-4)" />
+          <p class="text-xs text-(--color-text-3)">{{ $t('about.birth') }}</p>
+          <p class="font-monos text-base font-bold sm:text-lg">
+            <time :datetime="config.info.birth">{{ config.info.birth }}</time>
+          </p>
+        </div>
       </KCard>
-      <CardInfo class="min-w-[25%]" />
+      <KCard class="text-center">
+        <div class="flex flex-col items-center gap-1">
+          <KIcon name="material-symbols:psychology" class="text-2xl text-(--color-text-4)" />
+          <p class="text-xs text-(--color-text-3)">MBTI</p>
+          <p class="font-monos text-base font-bold sm:text-lg">{{ config.info.mbti }}</p>
+        </div>
+      </KCard>
     </div>
-    <div class="grid grid-cols-1 min-[900px]:grid-cols-2 gap-4">
-      <KNavCard
-        v-for="item in aboutNav"
-        :key="item.to"
-        :to="item.to"
-        :title="item.title"
-        :desc="item.desc"
-        :trans="item.to === '/about/trans'" />
-    </div>
-    <KNavCard
-      to="/friends-and-links"
-      :title="$t('about.links.title')"
-      :desc="$t('about.links.desc')" />
+
     <KCard :title="$t('about.skills')">
       <div class="flex gap-2 flex-wrap justify-center">
         <KSurface
@@ -67,6 +76,21 @@ const aboutNav = useAboutNav();
         </KSurface>
       </div>
     </KCard>
+
+    <div class="grid grid-cols-1 min-[900px]:grid-cols-2 gap-4">
+      <KNavCard
+        v-for="item in aboutNav"
+        :key="item.to"
+        :to="item.to"
+        :title="item.title"
+        :desc="item.desc"
+        :trans="item.to === '/about/trans'" />
+    </div>
+    <KNavCard
+      to="/friends-and-links"
+      :title="$t('about.links.title')"
+      :desc="$t('about.links.desc')" />
+
     <CardContact />
   </AppPage>
 </template>

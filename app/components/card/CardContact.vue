@@ -6,13 +6,16 @@ const config = useAppConfig();
 type Contact = {
   name: string;
   i18nKey?: string;
+  /** 账号等资料，仅作记录，不在首页展示 */
   value?: string;
   link?: string;
   /** iconify 全名（simple-icons:<slug>） */
   icon?: string;
   /** iconify 全名（material-symbols:<name>） */
   mdIcon?: string;
+  /** 二维码内容（缺省时用 link） */
   qr?: string;
+  /** link 无法直接访问（如微信），只能扫码：tile 退化为按钮 */
   qrOnly?: boolean;
   group?: string;
 };
@@ -36,52 +39,54 @@ const showQr = computed({
     if (!v) activeQr.value = null;
   },
 });
+
+/** 可跳转 → 外链 a；qrOnly（链接无效）→ button，点击直接开二维码 */
+const tileProps = (item: Contact) =>
+  item.link && !item.qrOnly
+    ? { as: 'a', href: item.link, target: '_blank', rel: 'noopener noreferrer' }
+    : { as: 'button', type: 'button', onClick: () => (activeQr.value = item) };
 </script>
 
 <template>
   <KCard v-for="group in groups" :key="group.key" :title="$t(`about.contact-group.${group.key}`)">
-    <div class="flex flex-wrap gap-3 justify-center">
-      <template v-for="link in group.items" :key="link.name">
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div v-for="item in group.items" :key="item.name" class="relative">
         <KSurface
-          as="a"
-          :href="link.link"
-          target="_blank"
-          class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm cursor-pointer min-w-0 sm:gap-3 sm:px-4 sm:py-3 sm:min-w-[160px]">
-          <KIcon v-if="link.mdIcon" :name="link.mdIcon" class="text-lg sm:text-2xl" />
-          <KIcon v-if="link.icon" :name="link.icon" class="text-base sm:text-2xl" />
-          <div class="flex flex-col items-center min-w-0 sm:items-start">
-            <span class="text-xs font-semibold sm:text-sm">
-              {{ link.i18nKey ? $t(link.i18nKey) : link.name }}
-            </span>
-            <span
-              v-if="link.value"
-              class="hidden text-xs text-(--color-text-3) truncate max-w-full sm:block"
-              >{{ link.value }}</span
-            >
-          </div>
-          <KIconButton
-            v-if="link.qr || link.qrOnly"
-            icon="material-symbols:qr-code"
-            size="base"
-            icon-class="sm:text-lg"
-            class="ml-auto shrink-0 sm:ml-1"
-            @click.prevent.stop="activeQr = link" />
+          v-bind="tileProps(item)"
+          class="k-interactive flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl px-2 py-4 text-center">
+          <KIcon
+            :name="item.mdIcon || item.icon || 'material-symbols:link'"
+            class="text-2xl text-(--color-text-1)" />
+          <span class="text-xs text-(--color-text-2) sm:text-sm">
+            {{ item.i18nKey ? $t(item.i18nKey) : item.name }}
+          </span>
         </KSurface>
-      </template>
+        <KIconButton
+          v-if="item.qr || item.qrOnly"
+          icon="material-symbols:qr-code"
+          size="sm"
+          class="absolute right-1 top-1"
+          :label="`${item.i18nKey ? $t(item.i18nKey) : item.name} · ${$t('about.contact-qr')}`"
+          @click="activeQr = item" />
+      </div>
     </div>
   </KCard>
 
-  <KDialog v-model="showQr" width="max-w-sm">
+  <KDialog v-model="showQr" width="max-w-xs">
     <template #title>
       <KIcon v-if="activeQr?.mdIcon" :name="activeQr.mdIcon" />
       <KIcon v-if="activeQr?.icon" :name="activeQr.icon" class="text-xl" />
       <span class="truncate">{{ activeQr?.i18nKey ? $t(activeQr.i18nKey) : activeQr?.name }}</span>
     </template>
     <div class="flex flex-col items-center gap-3">
-      <QRCode
-        :value="activeQr?.qr || activeQr?.link || ''"
-        class="w-40 h-40 bg-white p-2 rounded-lg" />
-      <p v-if="activeQr?.value" class="text-xs text-(--color-text-3)">{{ activeQr.value }}</p>
+      <div class="rounded-lg bg-white p-3">
+        <QRCode
+          :value="activeQr?.qr || activeQr?.link || ''"
+          render-as="svg"
+          :size="160"
+          :margin="2"
+          class="block" />
+      </div>
     </div>
   </KDialog>
 </template>

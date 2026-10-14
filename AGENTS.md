@@ -112,7 +112,7 @@ Available via the composable: `s.query`, `s.results`, `s.loading`, `s.error`, `s
 Only pages with `data-pagefind-body` are indexed. Currently applied to:
 
 - Blog article content (`app/pages/blog/[slug].vue`)
-- `/` (首页：全屏欢迎首屏 + 关于内容，`app/pages/index.vue`)
+- `/` (首页：半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式，`app/pages/index.vue`)
 - `/about/trans` (`app/pages/about/trans/index.vue`)
 - `/about/devices` (`app/pages/about/devices/index.vue`)
 - `/friends-and-links` (`app/pages/friends-and-links/index.vue`)
@@ -141,7 +141,7 @@ Kuriyona.com/
 │   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
 │   │   ├── KIcon.vue          图标（Iconify；name 为 `prefix:name` 全名，尺寸用字号类）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
-│   │   ├── card/               About/Status 页卡片：CardInfo/CardGithub/CardWeather/CardSteam/CardGames/CardContact/CardCityMap（城市地图，ClientOnly）
+│   │   ├── card/               About/Status 页卡片：CardGithub/CardWeather/CardSteam/CardGames/CardContact/CardCityMap（城市地图，ClientOnly）
 │   │   └──
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
@@ -157,7 +157,7 @@ Kuriyona.com/
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
 │   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
-│   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
+│   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
 │   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引）
@@ -240,7 +240,7 @@ Kuriyona.com/
 
 | 路由                 | 文件                                | 说明                                                                                    |
 | -------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
-| `/`                  | `pages/index.vue`                   | 全屏欢迎首屏 + 关于内容（含 data-pagefind-body）                                        |
+| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）  |
 | `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
 | `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                       |
 | `/blog`              | `pages/blog/index.vue`              | 文章列表                                                                                |
@@ -253,21 +253,21 @@ Kuriyona.com/
 | `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                     |
 | `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                |
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                            |
-| `/admin/status`      | `pages/admin/status.vue`            | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）                     |
+| `/admin/status`      | `pages/admin/status.vue`            | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）              |
 
 ### API 概览
 
-| 端点                                                         | 来源     | 说明                                                                                                                                         |
-| ------------------------------------------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/articles`                                          | server/  | 文章元信息列表（无 content）                                                                                                                 |
-| `GET /api/articles/:slug`                                    | server/  | 指定文章（所有语言版本）                                                                                                                     |
-| `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                           |
-| `PUT /api/ask-box/admin/:id/answer`                          | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                         |
-| `GET /api/r2/list?prefix=&delimiter=`                        | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键） |
-| `GET /api/status/amap?<参数>`                                  | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                    |
-| `GET /api/status/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                         |
-| `PUT /api/status/cities`                                     | backend/ | 写 KV `city:maps`：`GET /api/status` 的 `cities` 读它，缺失/坏值回退杭州                                                                |
-|`GET /api/status` 的 `cities`|backend/|`{ resident: { name, adcode, map }, current: {...} }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/status-map.md`）|
+| 端点                                                         | 来源     | 说明                                                                                                                                                |
+| ------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/articles`                                          | server/  | 文章元信息列表（无 content）                                                                                                                        |
+| `GET /api/articles/:slug`                                    | server/  | 指定文章（所有语言版本）                                                                                                                            |
+| `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                  |
+| `PUT /api/ask-box/admin/:id/answer`                          | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                |
+| `GET /api/r2/list?prefix=&delimiter=`                        | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）        |
+| `GET /api/status/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                              |
+| `GET /api/status/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                     |
+| `PUT /api/status/cities`                                     | backend/ | 写 KV `city:maps`：`GET /api/status` 的 `cities` 读它，缺失/坏值回退杭州                                                                            |
+| `GET /api/status` 的 `cities`                                | backend/ | `{ resident: { name, adcode, map }, current: {...} }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/status-map.md`） |
 
 ## Architecture
 
