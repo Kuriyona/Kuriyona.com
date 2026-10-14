@@ -10,17 +10,11 @@ const { data: status } = useStatus();
   <AppPage data-pagefind-body>
     <!-- Hero：半屏（不用负边距贴顶，AppPage 的边距保持不变） -->
     <div class="relative flex min-h-[50svh] flex-col items-center justify-center gap-4 text-center">
-      <img
-        src="https://r2.kuriyona.com/img/avatar/Avatar_OLI_256.png"
-        alt="Kuriyona"
-        width="96"
-        height="96"
-        class="h-20 w-20 rounded-full object-cover sm:h-24 sm:w-24" />
-      <h1 class="font-monos text-2xl font-bold sm:text-3xl">未晞 / Yona</h1>
-      <p class="text-sm text-(--color-text-2) sm:text-base">
-        {{ $t('about.welcome-to') }}
+      <h1 class="font-monos text-2xl font-bold sm:text-3xl">
+        <span>{{ $t('about.welcome-to') }}</span>
+        <br />
         <span data-pagefind-meta="title">Kuriyona's Space</span>
-      </p>
+      </h1>
       <KIcon
         name="material-symbols:expand-more"
         class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-(--color-text-4)" />
