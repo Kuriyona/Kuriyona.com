@@ -12,6 +12,7 @@ export interface Env {
   SECRET_ACCESS_KEY: string;
   BUCKET_NAME: string;
   WEATHER_API_KEY?: string;
+  AMAP_KEY?: string;
   GITHUB_API_TOKEN?: string;
   STEAM_API_KEY?: string;
 }

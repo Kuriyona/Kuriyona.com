@@ -5,6 +5,7 @@ const items = [
   { to: '/admin', icon: 'material-symbols:key', label: '密钥' },
   { to: '/admin/r2', icon: 'material-symbols:upload', label: '文件上传' },
   { to: '/admin/ask-box', icon: 'material-symbols:forum', label: '提问箱审核' },
+  { to: '/admin/status', icon: 'material-symbols:map', label: '城市地图' },
 ];
 </script>
 

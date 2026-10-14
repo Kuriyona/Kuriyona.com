@@ -13,6 +13,7 @@ import {
   setAskPublic,
 } from './src/router/ask-box';
 import { listR2, signedUrl } from './src/router/r2';
+import { amapProxy, cityMapUploadUrl, putCities } from './src/router/map';
 import { deleteStatus, getStatus, postStatus } from './src/router/status';
 import { verifyTurnstile } from './src/utils';
 
@@ -43,6 +44,9 @@ const api = new Hono<{ Bindings: Env }>()
   .put('/ask-box/admin/:id/public/:isPublic', requireAuthKey, setAskPublic)
   .put('/ask-box/admin/:id/answer', requireAuthKey, answerAsk)
   .get('/status', getStatus)
+  .get('/status/amap', requireAuthKey, amapProxy)
+  .get('/status/map/upload-url', requireAuthKey, cityMapUploadUrl)
+  .put('/status/cities', requireAuthKey, putCities)
   .post('/status', requireAuthKey, postStatus)
   .delete('/status', requireAuthKey, deleteStatus)
   .get('/r2/list', requireAuthKey, listR2)

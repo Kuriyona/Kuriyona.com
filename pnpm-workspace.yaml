@@ -33,3 +33,4 @@ minimumReleaseAgeExclude:
   - nuxt@4.4.6
   - '@nuxt/nitro-server@4.4.6'
   - '@kuriyona/yona-svg@0.1.0'
+  - '@kuriyona/amap-box@0.4.0'

@@ -14,6 +14,9 @@ importers:
       '@iconify/vue':
         specifier: ^5.0.3
         version: 5.0.3(vue@3.5.43(typescript@5.9.3))
+      '@kuriyona/amap-box':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@kuriyona/yona-svg':
         specifier: ^0.1.0
         version: 0.1.0(sharp@0.35.5(@types/node@26.6.5))
@@ -1032,6 +1035,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@kuriyona/amap-box@0.4.0':
+    resolution: {integrity: sha512-pMqg1sldnOzJRW6QgB9NNLgtHDXgo0QJun34NZHYTlSro3vilFqhkYz47lyCHFXY1y4eut7gh6+hOXSsSDkE8Q==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@kuriyona/yona-svg@0.1.0':
     resolution: {integrity: sha512-FTmxj5rS6fsfkmfkMS1WyREydiFu70ckDxGajQi0FNhsnPGTaiDZB9WOjlnb+uIjxoWe2L/LDTRwhmbluNbjWw==}
@@ -6293,6 +6301,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@kuriyona/amap-box@0.4.0': {}
 
   '@kuriyona/yona-svg@0.1.0(sharp@0.35.5(@types/node@26.6.5))':
     dependencies:

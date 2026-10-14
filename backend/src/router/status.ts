@@ -1,5 +1,6 @@
 import type { Handler } from 'hono';
 import type { Env } from '../env';
+import { readCityMaps } from '../city-map';
 
 type H = Handler<{ Bindings: Env }>;
 
@@ -12,12 +13,9 @@ const WEATHER_TTL = 1800;
 const GITHUB_TTL = 60;
 const STEAM_TTL = 60;
 
-// ── 城市地图（固定值）──
-// SVG 由离线脚本出图后上传到 R2，键 `img/site/map/<adcode>.svg`（见 backend/docs/status-map.md）。
-// 目前常住城市与当前所在城市都是杭州，Worker 侧不做任何生成。
-const CITY = { name: '杭州', adcode: '330100' };
-const CITY_MAP = { ...CITY, map: `https://r2.kuriyona.com/img/site/map/${CITY.adcode}.svg` };
-const CITY_MAPS = { resident: CITY_MAP, current: CITY_MAP };
+// ── 城市地图 ──
+// 只读：配置来自 KV（`city:maps`，管理端出图后写入），缺失时回退默认城市（杭州）。
+// 出图本身跑在管理端浏览器里，见 backend/src/city-map.ts 与 backend/docs/status-map.md。
 
 export interface SteamInfo {
   personaName: string;
@@ -191,19 +189,20 @@ const deleteDynamic = async (env: Env) => {
 // ── Routes ──
 export const getStatus: H = async (c) => {
   c.header('cache-control', 'public, max-age=1800');
-  const [weather, githubActivity, steam, dynamic] = await Promise.all([
+  const [weather, githubActivity, steam, dynamic, cities] = await Promise.all([
     updateWeather(c.env),
     updateGitHubActivity(c.env),
     updateSteam(c.env),
     readDynamic(c.env),
+    readCityMaps(c.env),
   ]);
   return c.json({
     weather,
     github_activity: githubActivity,
     steam,
-    // 固定值，排在动态数据之后：即使 KV 里被写进了同名键也以它为准
+    // cities 排在动态数据之后：即使 dynamic:* 里被写进了同名键也以它为准
     ...dynamic,
-    cities: CITY_MAPS,
+    cities,
   });
 };
 

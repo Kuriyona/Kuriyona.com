@@ -77,6 +77,7 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: [
         '@iconify/vue',
+        '@kuriyona/amap-box',
         'dayjs',
         'dayjs/plugin/duration',
         'dayjs/plugin/relativeTime',

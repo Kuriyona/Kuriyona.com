@@ -151,10 +151,11 @@ Kuriyona.com/
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
+│   │   ├── idbCache.ts         管理端出图用的 IndexedDB 边界缓存（配 @kuriyona/amap-box）
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── layouts/                 页面布局（Nuxt 自动发现；由 app.vue 的 <NuxtLayout> 应用）
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
-│   │   └── admin.vue            管理面板共享导航壳（三个 admin 页面 definePageMeta({ layout: 'admin' })）
+│   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（全屏欢迎首屏 + 关于内容、导航卡、技能、联系方式）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
@@ -164,7 +165,7 @@ Kuriyona.com/
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
 │   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动/常住城市与当前所在城市地图）
-│   │   └── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核）
+│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/status 城市地图出图）
 │   ├── stores/                  Pinia stores
 │   │   └── main.ts              JWT（Turnstile 验证后存储）
 │   ├── utils/                   @/ 别名工具函数
@@ -194,9 +195,10 @@ Kuriyona.com/
 │   ├── index.ts                 Worker 入口（Hono app，导出 default；不做 listen/migrate）
 │   ├── src/
 │   │   ├── env.ts               Env 接口 + REQUIRED_ENV
+│   │   ├── city-map.ts          城市地图：KV 键/默认城市/R2 公开地址/读配置
 │   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table，UUID 主键）
 │   │   ├── plugin/auth.ts       鉴权中间件（AUTH_KEY query / JWT Bare 或 Bearer）
-│   │   ├── router/              路由：ask-box / r2 / status
+│   │   ├── router/              路由：ask-box / r2 / status / map（高德代理 + 出图上传签名 + 写城市配置）
 │   │   └── utils.ts             D1/R2 预签名/Turnstile 工具
 │   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
 │   └── docs/                    后端文档（development / deployment / status-map）
@@ -251,6 +253,7 @@ Kuriyona.com/
 | `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                     |
 | `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                |
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                            |
+| `/admin/status`      | `pages/admin/status.vue`            | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）                     |
 
 ### API 概览
 
@@ -261,7 +264,10 @@ Kuriyona.com/
 | `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                           |
 | `PUT /api/ask-box/admin/:id/answer`                          | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                         |
 | `GET /api/r2/list?prefix=&delimiter=`                        | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键） |
-| `GET /api/status` 的 `cities`                                | backend/ | `{ resident: { name, adcode, map }, current: {...} }`，固定值（杭州），`map` 指向 R2 静态 SVG（见 `backend/docs/status-map.md`）             |
+| `GET /api/status/amap?<参数>`                                  | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                    |
+| `GET /api/status/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                         |
+| `PUT /api/status/cities`                                     | backend/ | 写 KV `city:maps`：`GET /api/status` 的 `cities` 读它，缺失/坏值回退杭州                                                                |
+|`GET /api/status` 的 `cities`|backend/|`{ resident: { name, adcode, map }, current: {...} }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/status-map.md`）|
 
 ## Architecture
 
@@ -269,12 +275,12 @@ Kuriyona.com/
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
-- **状态页城市地图**：`GET /api/status` 的 `cities` 是 `backend/src/router/status.ts` 里的**固定常量**（常住城市 / 当前所在城市 = 杭州 `330100`），指向 R2 上的静态 SVG `img/site/map/<adcode>.svg`。**Worker 侧不出图**（不依赖 `@kuriyona/amap-box`、不需要 `AMAP_KEY`）——出图是离线的，原因（`waitUntil` 30s vs 实测 54s、CPU 实测 ~3s vs Free 10ms/Paid 30s）与重新出图步骤见 `backend/docs/status-map.md`。
-- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据与上游缓存）。`pnpm deploy` 部署。
+- **状态页城市地图**：`GET /api/status` 的 `cities` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`。**出图跑在管理端浏览器里**（`/admin/status` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/map.ts`），CPU ≈ 0。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/status-map.md`。
+- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据、上游缓存、`city:maps` 城市配置与 `amap:*` 边界缓存）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 3 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
+- `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/status`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
 
 ## Key Conventions
 
@@ -289,7 +295,7 @@ Kuriyona.com/
 - **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
-- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）。
+- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（只给 `/api/status/amap` 代理用，缺失时该端点 500、其余不受影响）。
 - **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
 - **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).

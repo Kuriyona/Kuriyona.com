@@ -35,12 +35,14 @@ pnpm exec wrangler kv namespace create kuriyona-kv
 生产环境变量用 `wrangler secret put` 写入（值取自 `backend/.env`，**不要**提交任何密钥）：
 
 ```bash
-for K in JWT_SECRET AUTH_KEY TURNSTILE_SECRET_KEY ENDPOINT ACCESS_KEY_ID SECRET_ACCESS_KEY BUCKET_NAME WEATHER_API_KEY GITHUB_API_TOKEN STEAM_API_KEY; do
+for K in JWT_SECRET AUTH_KEY TURNSTILE_SECRET_KEY ENDPOINT ACCESS_KEY_ID SECRET_ACCESS_KEY BUCKET_NAME WEATHER_API_KEY AMAP_KEY GITHUB_API_TOKEN STEAM_API_KEY; do
   printf '%s' "$(grep -m1 "^$K=" backend/.env | cut -d= -f2-)" | pnpm exec wrangler secret put "$K"
 done
 ```
 
 必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。**不要设置 `TURNSTILE_DEV_SECRET_KEY`**（那是本地测试用）。
+
+可选：`AMAP_KEY`（高德 Web 服务 key，只给 `/api/status/amap` 代理用 —— 管理端 `/admin/status` 出图取边界）。**不设它不影响其余接口**，只有出图那条链路会 500。
 
 ## 4. 应用迁移
 
