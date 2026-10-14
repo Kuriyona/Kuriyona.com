@@ -7,6 +7,16 @@
 - **出图跑在管理端浏览器里**：`/admin/status`（`app/pages/admin/status.vue`）动态 `import('@kuriyona/amap-box')`，浏览器拉边界 + 渲染 SVG，然后直传 R2、写 KV 城市配置。Worker 侧只做三件薄事（`backend/src/router/map.ts`），CPU ≈ 0：**不**在请求路径上出图，也**不**搬运 SVG 字节。
 - 前端：`app/components/card/CardCityMap.vue`（`ClientOnly` + `<img>` + `object-cover`）。容器比例 ≥600px 是 `2:1`、窄屏 `1:1`；出图画幅是 1:1 且目标居中，所以裁到 **2:1 ~ 1:2** 之间目标都不会跑出画面。图拿不到就是 404，前端不做任何探测。
 
+## 天气跟着常住城市
+
+`GET /api/status` 的 `weather` 不写死 LocationID，而是按**常住城市**的坐标查：
+
+1. 读 KV `city:maps` 取 `resident.adcode`；
+2. 用 adcode 查高德 `config/district` 的 `center`（`backend/src/amap.ts` 的 `cityCenter`），KV 缓存 30 天，键 `amap:center:<adcode>`，值是 `经度,纬度`（两位小数）；
+3. 交给 QWeather `/v7/weather/now?location=<经度>,<纬度>`（它的 `location` 同时支持 LocationID 与 `lon,lat`），缓存 `cache:weather:<adcode>`，新鲜期 30 分钟。
+
+`AMAP_KEY` 缺失或取不到中心点时回退默认城市（杭州，`src/city-map.ts` 的 `DEFAULT_CITY`）的固定中心点 —— 这条链路不会因为缺 key 而 500。换城市后下一次取数即用新坐标（早先写死的 `101210107` 实测并非杭州市区，常住城市与天气曾对不上）。
+
 ## 线上链路
 
 | 步骤     | 位置                                                                                        | 说明                                                                                                                                |

@@ -42,7 +42,7 @@ done
 
 必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。**不要设置 `TURNSTILE_DEV_SECRET_KEY`**（那是本地测试用）。
 
-可选：`AMAP_KEY`（高德 Web 服务 key，只给 `/api/status/amap` 代理用 —— 管理端 `/admin/status` 出图取边界）。**不设它不影响其余接口**，只有出图那条链路会 500。
+可选：`AMAP_KEY`（高德 Web 服务 key，两处用它：管理端 `/admin/status` 出图取边界走 `/api/status/amap` 代理，以及 `/api/status` 按常住城市查天气中心点）。**不设它不会让接口 500**：出图那条链路自己报 500，天气则回退默认城市（杭州）的固定中心点。
 
 ## 4. 应用迁移
 

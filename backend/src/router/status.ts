@@ -1,6 +1,7 @@
 import type { Handler } from 'hono';
+import { cityCenter } from '../amap';
+import { readCityMaps, type CityRef } from '../city-map';
 import type { Env } from '../env';
-import { readCityMaps } from '../city-map';
 
 type H = Handler<{ Bindings: Env }>;
 
@@ -76,18 +77,24 @@ const writeCache = async (env: Env, name: string, data: unknown, ttl: number) =>
 // ── Weather ──
 const weatherHost = 'https://nb2mt9vk5n.re.qweatherapi.com';
 
-const updateWeather = async (env: Env): Promise<unknown> => {
-  const cached = await readCache<unknown>(env, 'weather', WEATHER_TTL);
+// 取不到常住城市中心点（缺 AMAP_KEY / 上游失败）时的回退：默认城市（杭州，见 city-map.ts
+// 的 DEFAULT_CITY）的中心点。QWeather 的 location 支持 LocationID 与 `经度,纬度` 两种写法。
+const FALLBACK_WEATHER_LOCATION = '120.21,30.25';
+
+/** 按**常住城市**的中心点查实时天气；缓存按 adcode 分键，换城市立即生效 */
+const updateWeather = async (env: Env, city: CityRef): Promise<unknown> => {
+  const cached = await readCache<unknown>(env, `weather:${city.adcode}`, WEATHER_TTL);
   if (cached?.fresh) return cached.data;
   if (!env.WEATHER_API_KEY) return cached?.data ?? {};
 
+  const location = (await cityCenter(env, city.adcode)) ?? FALLBACK_WEATHER_LOCATION;
   try {
-    const res = await fetch(`${weatherHost}/v7/weather/now?location=101210107`, {
+    const res = await fetch(`${weatherHost}/v7/weather/now?location=${location}`, {
       headers: { 'X-QW-Api-Key': env.WEATHER_API_KEY },
     });
     if (!res.ok) return cached?.data ?? {};
     const data: unknown = await res.json();
-    await writeCache(env, 'weather', data, WEATHER_TTL);
+    await writeCache(env, `weather:${city.adcode}`, data, WEATHER_TTL);
     return data;
   } catch {
     return cached?.data ?? {};
@@ -189,12 +196,13 @@ const deleteDynamic = async (env: Env) => {
 // ── Routes ──
 export const getStatus: H = async (c) => {
   c.header('cache-control', 'public, max-age=1800');
-  const [weather, githubActivity, steam, dynamic, cities] = await Promise.all([
-    updateWeather(c.env),
+  // 天气跟着常住城市走：先把城市配置读出来，再并行取其余上游
+  const cities = await readCityMaps(c.env);
+  const [weather, githubActivity, steam, dynamic] = await Promise.all([
+    updateWeather(c.env, cities.resident),
     updateGitHubActivity(c.env),
     updateSteam(c.env),
     readDynamic(c.env),
-    readCityMaps(c.env),
   ]);
   return c.json({
     weather,

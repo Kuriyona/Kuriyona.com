@@ -1,4 +1,5 @@
 import type { Handler } from 'hono';
+import { AMAP_DISTRICT_API } from '../amap';
 import type { Env } from '../env';
 import {
   CITY_MAPS_KEY,
@@ -12,8 +13,6 @@ import { presignR2Put } from '../utils';
 
 type H = Handler<{ Bindings: Env }>;
 
-// 上游：高德行政区划查询（Web 服务）。key 只存在 Worker 侧 —— 不下发到浏览器、不进前端 bundle。
-const AMAP_DISTRICT_API = 'https://restapi.amap.com/v3/config/district';
 const AMAP_JSON = 'application/json;charset=UTF-8';
 // 边界数据几乎不动，缓存 30 天；键是「参数字符串」，值就是上游响应原文
 const AMAP_CACHE_PREFIX = 'amap:';
