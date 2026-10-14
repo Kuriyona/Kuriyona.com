@@ -2,9 +2,7 @@
   "version": "7",
   "dialect": "sqlite",
   "id": "89e3e799-27b6-4a0d-9983-fc51004bdeff",
-  "prevIds": [
-    "7ac3a07d-aa99-464b-85e8-cc57e963397c"
-  ],
+  "prevIds": ["7ac3a07d-aa99-464b-85e8-cc57e963397c"],
   "ddl": [
     {
       "name": "ask_table",
@@ -121,9 +119,7 @@
       "table": "ask_table"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "ask_table_pk",
       "table": "ask_table",

@@ -3,7 +3,13 @@ import code from '@/assets/icons/code.svg';
 import lambda from '@/assets/icons/lambda.svg';
 import narutomaki from '@/assets/icons/narutomaki.svg';
 import terminal from '@/assets/icons/terminal.svg';
-import { clampMotion, motionAt, randomMotion, stepMotion, type Motion } from '@/utils/highlightMotion';
+import {
+  clampMotion,
+  motionAt,
+  randomMotion,
+  stepMotion,
+  type Motion,
+} from '@/utils/highlightMotion';
 
 // 两列错位平铺：列间距 / 行间距均为 GAP，tile = 2 × GAP
 const GAP = 100;
