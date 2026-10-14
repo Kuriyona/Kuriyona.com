@@ -170,6 +170,12 @@ export default defineAppConfig({
         desc: '趁世界还未重启之前 约一次爱恋',
         avatar: 'https://blog.rhen.cloud/avatar.webp',
       },
+      {
+        url: 'https://8526.nl',
+        title: '柠凉的小站',
+        desc: '柠凉的个人简介与记录生活',
+        avatar: 'https://8526.nl/avatar.png',
+      },
     ],
   },
 });
