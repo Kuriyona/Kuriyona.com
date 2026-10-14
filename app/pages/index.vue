@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const config = useAppConfig();
 const aboutNav = useAboutNav();
+
+// 常住城市卡片：城市配置由 KV 提供（见 /api/status），预渲染阶段拿不到，切到客户端后再取
+const { data: status } = useStatus();
 </script>
 
 <template>
@@ -23,15 +26,24 @@ const aboutNav = useAboutNav();
         class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-(--color-text-4)" />
     </div>
 
-    <KCard :title="$t('about.about-me')">
-      <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
-      <p>{{ $t('about.also-weixi-yona') }}</p>
-      <p>
-        <NuxtLinkLocale to="/blog/about-name" class="link">{{
-          $t('about.about-my-name')
-        }}</NuxtLinkLocale>
-      </p>
-    </KCard>
+    <!-- 关于我（左） + 常驻城市（右）：窄屏换成两行，城市数据缺失时关于我独占整行 -->
+    <div
+      class="grid grid-cols-1 gap-4"
+      :class="{ 'min-[900px]:grid-cols-[2fr_1fr]': status?.cities }">
+      <KCard :title="$t('about.about-me')">
+        <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
+        <p>{{ $t('about.also-weixi-yona') }}</p>
+        <p>
+          <NuxtLinkLocale to="/blog/about-name" class="link">{{
+            $t('about.about-my-name')
+          }}</NuxtLinkLocale>
+        </p>
+      </KCard>
+      <CardCityMap
+        v-if="status?.cities"
+        :title="$t('about.city-resident')"
+        :city="status.cities.resident" />
+    </div>
 
     <!-- 生日 / MBTI：各自独立成块，两列（最窄屏也不换行，所以纵向排图标-标签-值） -->
     <div class="grid grid-cols-2 gap-4">

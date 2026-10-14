@@ -112,7 +112,7 @@ Available via the composable: `s.query`, `s.results`, `s.loading`, `s.error`, `s
 Only pages with `data-pagefind-body` are indexed. Currently applied to:
 
 - Blog article content (`app/pages/blog/[slug].vue`)
-- `/` (首页：半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式，`app/pages/index.vue`)
+- `/` (首页：半屏 Hero + 关于内容与右侧常驻城市卡片、生日/MBTI、技能、导航卡、社交与联系方式，`app/pages/index.vue`)
 - `/about/trans` (`app/pages/about/trans/index.vue`)
 - `/about/devices` (`app/pages/about/devices/index.vue`)
 - `/friends-and-links` (`app/pages/friends-and-links/index.vue`)
@@ -149,6 +149,7 @@ Kuriyona.com/
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
 │   │   ├── useNav.ts           导航项（读取 app.config nav/aboutNav + i18n 标题）
+│   │   ├── useStatus.ts        `/api/status` 数据（useAsyncData key `status`，server: false；/status 页与首页常驻城市卡片共用）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
@@ -159,7 +160,7 @@ Kuriyona.com/
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
 │   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
-│   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式）
+│   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap，窄屏两行，城市数据来自 /api/status 的 cities.resident，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个 KBadge，标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
 │   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
@@ -241,22 +242,22 @@ Kuriyona.com/
 
 ### 页面路由总览
 
-| 路由                 | 文件                                | 说明                                                                                    |
-| -------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
-| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）  |
-| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
-| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                       |
-| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                      |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 浮动目录 + 其它语言两行截断）                              |
-| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                              |
-| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                             |
-| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                              |
-| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                |
-| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub/城市地图）                                                    |
-| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                     |
-| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                |
-| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                            |
-| `/admin/status`      | `pages/admin/status.vue`            | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）              |
+| 路由                 | 文件                                | 说明                                                                                                                 |
+| -------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body） |
+| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body）                              |
+| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                    |
+| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                   |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 浮动目录 + 其它语言两行截断）                                                           |
+| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                           |
+| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                          |
+| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                           |
+| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                             |
+| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub/城市地图）                                                                                 |
+| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                                                  |
+| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                             |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                         |
+| `/admin/status`      | `pages/admin/status.vue`            | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）                                           |
 
 ### API 概览
 
@@ -278,7 +279,7 @@ Kuriyona.com/
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
-- **状态页城市地图**：`GET /api/status` 的 `cities` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`。**出图跑在管理端浏览器里**（`/admin/status` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/map.ts`），CPU ≈ 0。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/status-map.md`。
+- **状态页城市地图**：`GET /api/status` 的 `cities` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`。**出图跑在管理端浏览器里**（`/admin/status` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/map.ts`），CPU ≈ 0。首页「关于我」右侧的常驻城市卡片复用同一份 `cities.resident`（`app/pages/index.vue` 里 `useStatus()`，与 `/status` 页共用同一 key 与缓存），预渲染阶段拿不到数据、只有「关于我」单卡。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/status-map.md`。
 - `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据、上游缓存、`city:maps` 城市配置与 `amap:*` 边界缓存）。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。

@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import type { Status } from '@/scripts/statusTypes';
-
-const { data: status } = useAsyncData(
-  'status',
-  () =>
-    fetchApi.get('/status').then(async (res) => {
-      return await res.json<Status>();
-    }),
-  {
-    server: false,
-  },
-);
+const { data: status } = useStatus();
 </script>
 
 <template>
