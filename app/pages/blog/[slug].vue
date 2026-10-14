@@ -158,8 +158,14 @@ onBeforeUnmount(() => {
             v-for="lang in otherLangs"
             :key="lang.lang"
             :locale="lang.lang"
-            :to="`/blog/${lang.slug}`"
-            :text="lang.title" />
+            :to="`/blog/${lang.slug}`">
+            <span class="block truncate text-base leading-tight">{{ lang.title }}</span>
+            <span
+              v-if="lang.desc"
+              class="block truncate text-xs leading-tight text-(--color-text-2)"
+              >{{ lang.desc }}</span
+            >
+          </KCardLink>
         </div>
       </KCard>
     </template>

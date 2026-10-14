@@ -162,7 +162,7 @@ Kuriyona.com/
 │   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个 KBadge，标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
-│   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
+│   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
@@ -247,7 +247,7 @@ Kuriyona.com/
 | `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
 | `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                       |
 | `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                      |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言；滚动后显示 BlogTopBar 浮动顶栏与浮动目录，目录按阅读进度高亮）        |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 浮动目录 + 其它语言两行截断）                              |
 | `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                              |
 | `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                             |
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                              |
