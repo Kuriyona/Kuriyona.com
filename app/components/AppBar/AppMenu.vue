@@ -4,6 +4,20 @@ import dayjs from 'dayjs';
 const show = defineModel<boolean>();
 const nav = useNav();
 
+// 抽屉打开时锁住页面滚动（见 usePageScrollLock；不能用 reka 的 useBodyScrollLock，
+// 它会把 body 的 pointer-events 设成 none，整页点不动）
+const scrollLocked = ref(false);
+usePageScrollLock(scrollLocked);
+watch(
+  show,
+  (value) => {
+    if (value) scrollLocked.value = true;
+  },
+  { immediate: true },
+);
+// 关闭动画期间先保持锁定，滑出结束再解锁，免得滚动条闪回、页面抖一下
+const unlock = () => (scrollLocked.value = false);
+
 const { locale, locales, setLocale } = useI18n();
 const language = computed({
   get: () => locale.value,
@@ -20,9 +34,12 @@ const { currentNodeName } = useCloudflareStatus();
 </script>
 
 <template>
-  <Transition name="menu">
+  <Transition name="menu" @after-leave="unlock">
     <div v-if="show">
-      <div class="k-scrim fixed left-0 top-0 z-[110] w-screen h-dvh" @click="show = false" />
+      <div
+        class="k-scrim fixed left-0 top-0 z-[110] w-screen h-dvh select-none"
+        @mousedown.prevent
+        @click="show = false" />
       <KSurface
         as="aside"
         glass

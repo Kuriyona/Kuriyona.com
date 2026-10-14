@@ -153,6 +153,7 @@ Kuriyona.com/
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
+│   │   ├── usePageScrollLock.ts 锁页面滚动（只改 body overflow/padding-right 补滚动条宽度；不用 reka 的 useBodyScrollLock —— 它会把 body 的 pointer-events 设成 none）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
 │   │   ├── idbCache.ts         管理端出图用的 IndexedDB 边界缓存（配 @kuriyona/amap-box）
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
