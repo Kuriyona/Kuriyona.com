@@ -49,7 +49,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="overflow-x-hidden">
+  <!-- overflow-x 用 clip 而非 hidden：hidden 会把 overflow-y 计算成 auto，
+       这层就变成「永不滚动的滚动容器」，其内所有 position: sticky 全部失效
+       （保留区栏位、管理端侧栏导航）。clip 只裁切、不建滚动容器。 -->
+  <div class="overflow-x-clip">
     <AppBackground />
     <NuxtLayout>
       <NuxtPage id="main" class="z-0" />

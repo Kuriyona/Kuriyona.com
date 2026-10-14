@@ -128,15 +128,15 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main 最重要的人（每人多平台链接）/ others / links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
-│   │   ├── css/                main.css（@import 汇总）· fonts.css（Google Fonts 文本字体 @import；**不含图标字体**）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
+│   │   ├── css/                main.css（@import 汇总）· fonts.css（Google Fonts 文本字体 @import；**不含图标字体**）· base.css（设计令牌/主题变量/版式宽度令牌（--content-width/--reserve-width）/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
-│   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
+│   │   ├── AppPage.vue         页面布局容器（居中、正文列宽 --content-width、底部 AppFooter；两侧各一个「保留区」aside：`reserve:` 断点（视口 ≥1500px）才出现、sticky 不随页面滚动、宽 --reserve-width，内容由 `reserve-left`/`reserve-right` 命名插槽填充，右侧空着也保留同宽以保证正文居中）
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（右侧为一个「语言 + 菜单」合并长条按钮，点击打开抽屉 AppBar/AppMenu；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片）/ 关于（GIT_HASH/构建时间/Cloudflare 节点，mt-auto 沉底））
 │   │   ├── AppFooter.vue       版权声明 + 萌 ICP 备
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
 │   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
-│   │   ├── BlogToc.vue         博客目录列表（正文顶部内联卡片 / 宽屏左侧悬浮 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）
+│   │   ├── BlogToc.vue         博客目录列表（窄屏正文顶部内联卡片 / 宽屏左侧保留区 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -164,7 +164,7 @@ Kuriyona.com/
 │   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个 KBadge，标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
-│   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
+│   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar、宽屏左侧保留区常驻目录、阅读进度高亮）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
@@ -250,7 +250,7 @@ Kuriyona.com/
 | `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body）                                      |
 | `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                            |
 | `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                           |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 浮动目录 + 其它语言两行截断）                                                                   |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 宽屏左侧保留区目录 + 其它语言两行截断）                                                         |
 | `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                                   |
 | `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                  |
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                   |
@@ -301,6 +301,8 @@ Kuriyona.com/
 - **Admin auth**: `useStorage('API_KEY', '')`. Passed as `?auth=` on every admin request.
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。跨性别旗配色（`--color-trans-sky/pink/white`）与 `utilities.css` 的 `.trans-text`/`.trans-text-flow`/`.trans-ribbon`/`.trans-aura` 只用于旗帜装饰（渐变字 / 彩带 / 光晕），不承载正文、不参与表面与文本层级，也不纳入对比度校验；需要旗面配色时从这里取，不要另写 hex。
+- **最外层容器只用 `overflow-x: clip`（`app.vue`）**: 不要写 `overflow-x: hidden` —— 单轴 `hidden` 会把另一轴的 `visible` 计算成 `auto`，这一层就变成「自己不滚动、却当了所有后代的滚动容器」，其内 `position: sticky`（保留区栏位、管理端侧栏导航）全部失效。`clip` 同样裁切、同样不把内部溢出传播到视口（横向滚动条问题），但不建滚动容器。
+- **版式宽度（正文 / 保留区）**: 正文列宽用 `--content-width`（960px）、两侧保留区宽用 `--reserve-width`（240px），两者定义在 `app/assets/css/base.css` 的 `body`。保留区由 `AppPage.vue` 渲染并只在视口容得下（960 + 240×2 = 1440，留余量后取 1500px）时出现，这个断点写成 Tailwind 自定义变体 `reserve:`（`@custom-variant`，定义在 `main.css`，取值来源见 base.css 注释）——改宽度令牌必须同步重算该断点。相关位置（AppPage 两侧 aside、博客内联目录卡片、BlogTopBar 的目录按钮）都用 `reserve:`，不要再写 `min-[...px]:` 字面量。`--app-bar-height` 同时用于正文的 `mt-` 与保留区的 sticky `top`。
 - **动画（GSAP）**: 目前唯一使用处是 `pages/about/trans/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
 - **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。天气图标同理：QWeather 的图标码经 `app/utils/weatherIcon.ts` 映射成 Material Symbols（**不再引入 `qweather-icons` 字体**，`CardCityMap` 用 `KIcon`）。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。

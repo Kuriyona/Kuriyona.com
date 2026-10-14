@@ -14,7 +14,7 @@ defineProps<{
       v-if="show"
       class="pointer-events-none fixed right-0 left-0 z-90 flex justify-center"
       :style="{ top: `${top}px` }">
-      <div class="w-200 max-w-full px-4">
+      <div class="w-(--content-width) max-w-full px-4">
         <div
           class="k-surface k-glass pointer-events-auto flex w-full items-center gap-3 rounded-xl px-3 py-2">
           <NuxtLinkLocale to="/blog" class="shrink-0">

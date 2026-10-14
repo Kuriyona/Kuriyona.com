@@ -71,6 +71,11 @@ body {
     color 0.25s,
     background-color 0.25s;
   --app-bar-height: 90px;
+  /* 版式宽度：正文列最大宽度 + 两侧保留区宽度（保留区放目录等附属内容，见 AppPage.vue）。
+   * 保留区只在视口容得下时出现：960 + 240×2 = 1440，再留滚动条与呼吸余量 → 断点 1500px
+   * （Tailwind 的 `reserve:` 变体，定义在 main.css）。改这两个值要同步算一遍断点。 */
+  --content-width: 960px;
+  --reserve-width: 240px;
   --color-theme: #e6ccff;
 }
 

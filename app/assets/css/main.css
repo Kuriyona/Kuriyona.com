@@ -4,3 +4,7 @@
 @import url('./utilities.css');
 @import url('./markdown.css');
 @import 'tailwindcss';
+
+/* 保留区断点：视口容得下「正文 960 + 两侧保留区 240×2」才让保留区出现
+ * （数值来源见 base.css 的 --content-width / --reserve-width，改宽度要重算这里） */
+@custom-variant reserve (@media (width >= 1500px));

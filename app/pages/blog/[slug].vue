@@ -109,6 +109,12 @@ onBeforeUnmount(() => {
 
 <template>
   <AppPage>
+    <!-- 宽屏：目录常驻左侧保留区（窄屏用正文顶部的内联目录卡片） -->
+    <template #reserve-left>
+      <KCard v-if="article?.toc?.length" :title="$t('blog.toc')">
+        <BlogToc :items="article.toc" :active="activeSlug" />
+      </KCard>
+    </template>
     <NuxtLinkLocale to="/blog">
       <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
@@ -141,7 +147,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <KDivider />
-      <div v-if="article.toc?.length" ref="tocEl">
+      <div v-if="article.toc?.length" ref="tocEl" class="reserve:hidden">
         <KCard :title="$t('blog.toc')">
           <BlogToc :items="article.toc" :active="activeSlug" />
         </KCard>
@@ -169,23 +175,6 @@ onBeforeUnmount(() => {
         </div>
       </KCard>
     </template>
-    <!-- 宽屏：目录滚出视口后在正文左侧悬浮 -->
-    <Transition name="toc-float">
-      <div
-        v-if="showFloatingToc && article?.toc?.length"
-        :style="{ top: `${floatingTop}px` }"
-        class="pointer-events-none fixed right-0 bottom-8 left-0 z-80 hidden justify-center xl:flex">
-        <div class="relative w-200 max-w-full">
-          <KSurface
-            as="aside"
-            level="3"
-            class="pointer-events-auto absolute top-0 right-full mr-4 max-h-full w-52 overflow-y-auto rounded-xl p-3">
-            <h2 class="mb-2 text-sm font-bold">{{ $t('blog.toc') }}</h2>
-            <BlogToc :items="article.toc" :active="activeSlug" />
-          </KSurface>
-        </div>
-      </div>
-    </Transition>
     <BlogTopBar
       :show="showTopBar"
       :title="article?.title || $t('global.not-found')"
@@ -196,7 +185,7 @@ onBeforeUnmount(() => {
         <div
           v-if="showFloatingToc && article?.toc?.length"
           ref="tocMenuEl"
-          class="relative shrink-0 xl:hidden">
+          class="relative shrink-0 reserve:hidden">
           <KIconButton
             icon="material-symbols:toc"
             :label="$t('blog.toc')"
