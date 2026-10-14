@@ -31,6 +31,24 @@ useSeoMeta({
   ogTitle: article.value?.title || $t('global.not-found'),
   ogDescription: article.value?.desc as string,
 });
+
+// 标题滚出顶栏可视区（含被固定菜单栏与浮动顶栏遮住的部分）时显示浮动顶栏
+// 浮动顶栏上边距：菜单栏底边（64px 内容 + 2px 描边）+ 6px 留白
+const topBarTop = 72;
+const titleEl = useTemplateRef<HTMLElement>('titleEl');
+const showTopBar = ref(false);
+let titleObserver: IntersectionObserver | undefined;
+
+onMounted(() => {
+  if (!titleEl.value) return;
+  titleObserver = new IntersectionObserver(
+    ([entry]) => (showTopBar.value = !entry.isIntersecting),
+    { rootMargin: `-${topBarTop}px 0px 0px 0px` },
+  );
+  titleObserver.observe(titleEl.value);
+});
+
+onBeforeUnmount(() => titleObserver?.disconnect());
 </script>
 
 <template>
@@ -38,7 +56,7 @@ useSeoMeta({
     <NuxtLinkLocale to="/blog">
       <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
-    <h1 class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
+    <h1 ref="titleEl" class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
     <p class="text-sm">{{ article?.desc || $t('blog.not-found') }}</p>
     <template v-if="!article">
       <KDivider />
@@ -95,6 +113,11 @@ useSeoMeta({
         </div>
       </KCard>
     </template>
+    <BlogTopBar
+      :show="showTopBar"
+      :title="article?.title || $t('global.not-found')"
+      :desc="article?.desc"
+      :top="topBarTop" />
   </AppPage>
 </template>
 
