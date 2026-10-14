@@ -25,17 +25,7 @@ const nodes = computed<TimelineNode[]>(() => {
   return result;
 });
 
-const isExternal = (link: string) => link.startsWith('http');
-
-const localePath = useLocalePath();
-
-function handleLinkClick(link: string) {
-  if (isExternal(link)) {
-    window.open(link, '_blank', 'noopener');
-  } else {
-    navigateTo(localePath(link));
-  }
-}
+const { isExternal, openLink, linkIcon } = useTimelineLink();
 
 useSeoMeta({ title: $t('timeline.title') });
 </script>
@@ -72,14 +62,10 @@ useSeoMeta({ title: $t('timeline.title') });
               </div>
               <KIconButton
                 v-if="node.item!.link"
-                :icon="
-                  isExternal(node.item!.link)
-                    ? 'material-symbols:open-in-new'
-                    : 'material-symbols:arrow-forward'
-                "
+                :icon="linkIcon(node.item!.link)"
                 size="lg"
                 class="self-stretch aspect-square"
-                @click="handleLinkClick(node.item!.link)" />
+                @click="openLink(node.item!.link)" />
             </div>
           </KCard>
         </div>

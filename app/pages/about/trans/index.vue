@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { round } from 'es-toolkit';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useAppConfig } from '#app';
 
 const { t } = useI18n();
 
@@ -112,6 +113,10 @@ const percentText = (milestone: {
 const barStyle = (milestone: { id: string; percent: number | null }) => ({
   width: `${Math.min(100, anim[`p-${milestone.id}`] ?? milestone.percent ?? 0)}%`,
 });
+
+/** 「性别认同」条目的数据源与 /timeline 同一份 app.config.ts，按展示用的 tag 过滤 */
+const { timeline } = useAppConfig();
+const genderTimeline = timeline.filter((item) => item.tag === '性别认同');
 
 const linkGroups = computed(() => [
   {
@@ -252,6 +257,16 @@ onUnmounted(() => gsapCtx?.revert());
           </KSurface>
         </li>
       </ol>
+    </KCard>
+
+    <KCard :title="$t('about.mtf.timeline.title')">
+      <div
+        class="-mx-4 max-h-80 overflow-y-auto overscroll-contain px-4"
+        tabindex="0"
+        role="region"
+        :aria-label="$t('about.mtf.timeline.title')">
+        <TimelineList :items="genderTimeline" />
+      </div>
     </KCard>
 
     <KCard :title="$t('about.mtf.about-trans')">

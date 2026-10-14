@@ -138,6 +138,7 @@ Kuriyona.com/
 │   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
 │   │   ├── BlogToc.vue         博客目录列表（窄屏正文顶部内联卡片 / 宽屏左侧保留区 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
+│   │   ├── TimelineList.vue    时间线紧凑行列表（日期 + 文本 + 跳转图标，无年份分隔；trans 页的「性别认同历程」用它，条目指向当前页时不出跳转按钮，见 useTimelineLink）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
 │   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
@@ -153,6 +154,7 @@ Kuriyona.com/
 │   │   ├── useCity.ts           `/api/city` 数据（useAsyncData key `city`，server: false；首页常驻城市卡片）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
+│   │   ├── useTimelineLink.ts  时间线条目跳转（外部新窗口 / 内部走 localePath；`isCurrent` 判定链接是否指向当前页，供 TimelineList 隐去自链接按钮；/timeline 页面与 TimelineList 共用）
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
 │   │   ├── usePageScrollLock.ts 锁页面滚动（只改 body overflow/padding-right 补滚动条宽度；不用 reka 的 useBodyScrollLock —— 它会把 body 的 pointer-events 设成 none）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位
@@ -163,7 +165,7 @@ Kuriyona.com/
 │   │   └── admin.vue            管理面板共享导航壳（五个 admin 页面 definePageMeta({ layout: 'admin' })；宽屏=内容左侧 sticky 竖导航（仍在 AppPage 容器内），窄屏（< lg）=顶部 KSelect 切换）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
-│   │   ├── about/trans/        MtF 相关页面（半屏 hero = 欢迎文字（MtF 短语用旗面渐变）+ 关于我卡片（trans 旗帜外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
+│   │   ├── about/trans/        MtF 相关页面（半屏 hero = 欢迎文字（MtF 短语用旗面渐变）+ 关于我卡片（trans 旗帜外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 性别认同历程（TimelineList，限高 max-h-80 滚动）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个 KBadge，标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
 │   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar、宽屏左侧保留区常驻目录、阅读进度高亮）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
@@ -245,22 +247,22 @@ Kuriyona.com/
 
 ### 页面路由总览
 
-| 路由                 | 文件                                | 说明                                                                                                                         |
-| -------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）         |
-| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏欢迎 hero + 关于我卡片 + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body）                       |
-| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                            |
-| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                           |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 宽屏左侧保留区目录 + 其它语言两行截断）                                                         |
-| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                                   |
-| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                  |
-| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                   |
-| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                                     |
-| `/admin`             | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                |
-| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                     |
-| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                 |
-| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图） |
-| `/admin/cache`       | `pages/admin/cache.vue`             | 缓存清除：选 zone（域名）+ URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存；最近清除存本机 localStorage             |
+| 路由                 | 文件                                | 说明                                                                                                                             |
+| -------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）             |
+| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏欢迎 hero + 关于我卡片 + 性别探索过程计数/占比条 + 性别认同历程（限高滚动）+ 资源链接，含 data-pagefind-body） |
+| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                |
+| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                               |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 宽屏左侧保留区目录 + 其它语言两行截断）                                                             |
+| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                                       |
+| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                      |
+| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                       |
+| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                                         |
+| `/admin`             | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                    |
+| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                         |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                     |
+| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图）     |
+| `/admin/cache`       | `pages/admin/cache.vue`             | 缓存清除：选 zone（域名）+ URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存；最近清除存本机 localStorage                 |
 
 ### API 概览
 
@@ -289,7 +291,7 @@ Kuriyona.com/
 - **缓存清除（Cloudflare）**：管理端 `/admin/cache` → Worker 两个薄端点（`backend/src/router/cache.ts`，都要 `auth`）：`GET /api/cache/zones` 用 `CF_API_TOKEN` 列域名，`POST /api/cache/purge` 转发 `purge_cache`（`files`/`hosts`/`tags`/`prefixes`）。token 只存 Worker 侧（`CF_API_TOKEN`），需要 **Zone:Read + Cache Purge**、Zone Resources 覆盖目标域名；单次上限 100 条（Cloudflare 的 Max operations per request），返回 200 只代表请求被收下，是否真清掉要看 `CF-Cache-Status` 是否 MISS。起因：R2 对象带 `cache-control: max-age=86400`，换图后边缘缓存最长 24h 才过期。
 - `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `cache:weather:<adcode>` 天气缓存、`city:maps` 城市配置与 `amap:*` 缓存（边界响应原文 + `amap:center:<adcode>` 城市中心点））。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
-- `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
+- `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮），`tag` 为展示用徽标——`/about/trans` 的「性别认同历程」按 `tag === '性别认同'` 过滤同一份数据（改这个 tag 文案会同时改变该区块内容，属有意耦合）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
 - `app/pages/admin/` — 5 protected pages: `/admin`（面板主页：密钥校验 + 管理入口）, `/admin/r2`, `/admin/ask-box`, `/admin/city`, `/admin/cache`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`；宽屏左侧竖导航、窄屏顶部菜单）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`（`adminErrorMessage` 同源但优先用响应体里的 `message`，清缓存页用它显示 Cloudflare 原文）。
 
