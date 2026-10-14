@@ -21,7 +21,7 @@ cp backend/.env .dev.vars
 # 删除 .dev.vars 里的 DATABASE_URL 与 PORT 行（Workers 不需要）
 ```
 
-必需键（缺任一项 API 请求返回 500）：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。可选：`TURNSTILE_DEV_SECRET_KEY`（本地覆盖 Turnstile 密钥，生产不要设置）、`WEATHER_API_KEY`、`AMAP_KEY`（出图边界 + 常住城市天气中心点）、`GITHUB_API_TOKEN`、`STEAM_API_KEY`。
+必需键（缺任一项 API 请求返回 500）：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。可选：`TURNSTILE_DEV_SECRET_KEY`（本地覆盖 Turnstile 密钥，生产不要设置）、`WEATHER_API_KEY`、`AMAP_KEY`（出图边界 + 常住城市天气中心点）。
 
 键名清单见根目录 `.dev.vars.example`。
 
@@ -35,7 +35,7 @@ pnpm api:d1:migrate:local       # wrangler d1 migrations apply kuriyona-db --loc
 
 本地数据库文件与状态在根目录 `.wrangler/state`，**两台设备各自独立**；schema 仍靠 git 里的迁移文件同步（取代原先 MySQL 的多设备建库章节）。
 
-**KV**（`/api/status` 的动态数据与上游缓存）**不需要建表**：命名空间与 id 已写在根 `wrangler.jsonc` 的 `kv_namespaces`（binding `STATUS_KV`，命名空间 `kuriyona-kv`）。`wrangler dev` 会自动按该绑定额模拟 KV，数据落在 `.wrangler/state/v3/kv`。
+**KV**（`/api/city` 的实时天气与上游缓存）**不需要建表**：命名空间与 id 已写在根 `wrangler.jsonc` 的 `kv_namespaces`（binding `STATUS_KV`，命名空间 `kuriyona-kv`）。`wrangler dev` 会自动按该绑定额模拟 KV，数据落在 `.wrangler/state/v3/kv`。
 
 只在**新建**命名空间时才需要：
 
@@ -51,7 +51,7 @@ pnpm api:dev                    # portless → https://kuriyona-api.localhost（
 pnpm api:run                    # 不经 portless → http://localhost:62802
 ```
 
-- API 全部挂在 `/api/*`，例如 `http://localhost:62802/api`、`http://localhost:62802/api/status`；经 portless 时同一路径在 `https://kuriyona-api.localhost/api`。
+- API 全部挂在 `/api/*`，例如 `http://localhost:62802/api`、`http://localhost:62802/api/city`；经 portless 时同一路径在 `https://kuriyona-api.localhost/api`。
 - 同 Worker 也会从 `./dist` 提供 Nuxt 静态产物。
 
 前端 dev（另开终端）：

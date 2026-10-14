@@ -66,9 +66,9 @@ watch(key, () => (valid.value = null));
         <KCardLink to="/admin/r2" text="文件上传" desc="拖拽 / 粘贴上传到 R2，复制公开链接" />
         <KCardLink to="/admin/ask-box" text="提问箱审核" desc="回答、公开或删除提问" />
         <KCardLink
-          to="/admin/status"
+          to="/admin/city"
           text="城市地图"
-          desc="在浏览器里出图，直传 R2 并更新 /status 的城市" />
+          desc="在浏览器里出图，直传 R2 并更新首页城市卡片" />
       </div>
     </KCard>
   </div>

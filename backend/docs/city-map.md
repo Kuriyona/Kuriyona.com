@@ -1,15 +1,15 @@
-# 状态页城市地图
+# 城市地图与天气
 
 ## 现状（结论先行）
 
-- 状态页 `/status` 有两张地图卡片：**常住城市**与**当前所在城市**，默认都是杭州（`330100`）。
-- 数据来自 `GET /api/status` 的 `cities` 字段：读 KV 键 `city:maps`（`backend/src/city-map.ts` 的 `readCityMaps`），缺失或坏值时回退默认杭州；结构 `{ resident: { name, adcode, map }, current: {...} }`。
-- **出图跑在管理端浏览器里**：`/admin/status`（`app/pages/admin/status.vue`）动态 `import('@kuriyona/amap-box')`，浏览器拉边界 + 渲染 SVG，然后直传 R2、写 KV 城市配置。Worker 侧只做三件薄事（`backend/src/router/map.ts`），CPU ≈ 0：**不**在请求路径上出图，也**不**搬运 SVG 字节。
+- 首页「关于我」右侧的**常住城市**卡片（`app/pages/index.vue`，窄屏与「关于我」各占一行），以及 `/status` 曾有的**当前所在城市**配置（数据仍保留、暂无展示位），默认都是杭州（`330100`）。
+- 数据来自 `GET /api/city`：`resident`（含实时 `weather`）与 `current`，读 KV 键 `city:maps`（`backend/src/city-map.ts` 的 `readCityMaps`），缺失或坏值时回退默认杭州；KV 只存 `{ name, adcode }`，`map` 由 adcode 推导。
+- **出图跑在管理端浏览器里**：`/admin/city`（`app/pages/admin/city.vue`）动态 `import('@kuriyona/amap-box')`，浏览器拉边界 + 渲染 SVG，然后直传 R2、写 KV 城市配置。Worker 侧只做三件薄事（`backend/src/router/city.ts`），CPU ≈ 0：**不**在请求路径上出图，也**不**搬运 SVG 字节。
 - 前端：`app/components/card/CardCityMap.vue`（`ClientOnly` + `<img>` + `object-cover`）。容器比例 ≥600px 是 `2:1`、窄屏 `1:1`；出图画幅是 1:1 且目标居中，所以裁到 **2:1 ~ 1:2** 之间目标都不会跑出画面。图拿不到就是 404，前端不做任何探测。
 
 ## 天气跟着常住城市
 
-`GET /api/status` 的 `weather` 不写死 LocationID，而是按**常住城市**的坐标查：
+`GET /api/city` 的 `resident.weather` 不写死 LocationID，而是按**常住城市**的坐标查：
 
 1. 读 KV `city:maps` 取 `resident.adcode`；
 2. 用 adcode 查高德 `config/district` 的 `center`（`backend/src/amap.ts` 的 `cityCenter`），KV 缓存 30 天，键 `amap:center:<adcode>`，值是 `经度,纬度`（两位小数）；
@@ -19,14 +19,14 @@
 
 ## 线上链路
 
-| 步骤     | 位置                                                                                        | 说明                                                                                                                                |
-| -------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 1 出图   | 浏览器 `/admin/status`                                                                      | 参数与离线脚本逐字一致（见下）；高德 key 由 Worker 注入，前端拿不到                                                                 |
-| 2 取边界 | `GET /api/status/amap`（`requireAuthKey`）                                                  | 转发高德并注入 `AMAP_KEY`；KV 缓存 30 天，键 `amap:<排序后的查询串>`，只缓存 `status==="1"` 的响应；`?nocache=1` 只绕过读、不绕过写 |
-| 3 渲染   | 浏览器                                                                                      | `JSON.parse` + 道格拉斯-普克抽稀 + SVG 拼接，CPU 全在管理员机器上                                                                   |
-| 4 上传   | `GET /api/status/map/upload-url?adcode=` → 浏览器 `PUT` 到 R2                               | `presignR2Put(key, 'image/svg+xml')`；**签名包含 Content-Type**，PUT 必须原样带同一个值                                             |
-| 5 写配置 | `PUT /api/status/cities`（`requireAuthKey`），体 `{ resident: { name, adcode }, current? }` | 省略 `current` 时跟随 `resident`；写 KV `city:maps`，`map` 由 Worker 按 adcode 拼                                                   |
-| 6 读取   | `GET /api/status`（公开）                                                                   | `cities` 读 KV `city:maps`、缺失时回退默认杭州；响应带 `cache-control: max-age=1800`，改城市后 CDN 最长 30 分钟才跟上               |
+| 步骤     | 位置                                                                               | 说明                                                                                                                                                                 |
+| -------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 出图   | 浏览器 `/admin/city`                                                               | 参数与离线脚本逐字一致（见下）；高德 key 由 Worker 注入，前端拿不到                                                                                                  |
+| 2 取边界 | `GET /api/city/amap`（`requireAuthKey`）                                           | 转发高德并注入 `AMAP_KEY`；KV 缓存 30 天，键 `amap:<排序后的查询串>`，只缓存 `status==="1"` 的响应；`?nocache=1` 只绕过读、不绕过写                                  |
+| 3 渲染   | 浏览器                                                                             | `JSON.parse` + 道格拉斯-普克抽稀 + SVG 拼接，CPU 全在管理员机器上                                                                                                    |
+| 4 上传   | `GET /api/city/map/upload-url?adcode=` → 浏览器 `PUT` 到 R2                        | `presignR2Put(key, 'image/svg+xml')`；**签名包含 Content-Type**，PUT 必须原样带同一个值                                                                              |
+| 5 写配置 | `PUT /api/city`（`requireAuthKey`），体 `{ resident: { name, adcode }, current? }` | 省略 `current` 时跟随 `resident`；写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 Worker 按 adcode 拼）                                                         |
+| 6 读取   | `GET /api/city`（公开）                                                            | `resident` 读 KV `city:maps` 并按 adcode 查出实时天气，`current` 只有配置；缺失时回退默认杭州；响应带 `cache-control: max-age=1800`，改城市后 CDN 最长 30 分钟才跟上 |
 
 浏览器侧缓存：边界按 adcode 存 IndexedDB（`app/utils/idbCache.ts`）。一组实测 41 个键 / 约 6 MB —— localStorage 的 5 MB 配额装不下，也不适合同步 IO，所以用它。页面上的「忽略缓存重新取数」会清掉这层并让代理绕过 KV。
 
@@ -59,7 +59,7 @@ title: false · contextLabels: false · targetLabels: false · center: 'target'
 
 ## 重新出图
 
-### 线上（推荐）：`/admin/status`
+### 线上（推荐）：`/admin/city`
 
 管理页填城市名或 adcode → 「出图」→ 核对预览 → 「上传并应用」。冷缓存（本机 IndexedDB 与 KV 都没有）约 25 秒、41 次取数；热缓存不到 1 秒、0 次取数。
 
@@ -93,7 +93,7 @@ console.log('uploaded');
 EOF
 ```
 
-换城市时：把 `杭州` 改成目标城市名（或 adcode），上传时改对象键的 `<adcode>`，并把 KV `city:maps` 一起改（管理端「上传并应用」会做这一步；离线跑就 `PUT /api/status/cities`）。**三处必须一致。**
+换城市时：把 `杭州` 改成目标城市名（或 adcode），上传时改对象键的 `<adcode>`，并把 KV `city:maps` 一起改（管理端「上传并应用」会做这一步；离线跑就 `PUT /api/city`）。**三处必须一致。**
 
 ## 为什么不把出图放进 Worker（决策记录）
 
@@ -140,21 +140,21 @@ DO 值得记下来的平台数字（[DO Limits](https://developers.cloudflare.co
 ## 前提与已实测事实（客户端方案）
 
 - **高德接口允许浏览器直连**：`restapi.amap.com/v3/config/district` 带 `Origin` 请求返回 `Access-Control-Allow-Origin: *`，预检 OPTIONS 亦通。所以理论上可以直连；这里仍走 Worker 代理，只是为了**不让 key 进浏览器**（并顺带把边界缓存在 KV）。
-- **库能在浏览器跑**：`dist` 核心 462 KB raw / **105 KB gzip**，无 `node:` 内置模块、无 `Buffer`/`process`，只用 `globalThis.crypto`（WebCrypto，https/localhost 下可用）。`pnpm optimizeDeps.include` 里加了它，且只在 `/admin/status` 的路由 chunk 里按需加载。
+- **库能在浏览器跑**：`dist` 核心 462 KB raw / **105 KB gzip**，无 `node:` 内置模块、无 `Buffer`/`process`，只用 `globalThis.crypto`（WebCrypto，https/localhost 下可用）。`pnpm optimizeDeps.include` 里加了它，且只在 `/admin/city` 的路由 chunk 里按需加载。
 - **presign 的 Content-Type 是签名的一部分**：上传时 PUT 必须带与签发时一致的 `image/svg+xml`，否则 R2 报签名不匹配（实测不带 → 403）。`image/svg+xml` 不是 CORS safelisted 类型，所以浏览器会先发预检 —— 桶的 CORS 策略已放行 `PUT` + `content-type` + `Origin: https://kuriyona.com`（实测预检 204 且带 `Access-Control-Allow-Origin`）。**副作用**：本地 origin（`http://127.0.0.1:62802`、`https://kuriyona.localhost`）不在放行名单里，本地直传会被预检拦下（`/admin/r2` 同理）；离线脚本走 S3 签名，不受 CORS 约束。
 
 ## 实测记录（2026-10-14，本地 wrangler dev + dist）
 
-- 页面（`/admin/status`，headless Chromium）：预填线上城市 → 出图 → 预览 `1048×1048` → `出图完成：新增取数 41 条 · 15.4s`（KV 已热的路径；冷缓存是 41 次回源 ≈ 23s，Bun 脚本实测 22.7s）。墙钟几乎全被库内每边界 `sleep(350)` 占掉：41 × 350ms ≈ 14.4s。
+- 页面（`/admin/city`，headless Chromium）：预填线上城市 → 出图 → 预览 `1048×1048` → `出图完成：新增取数 41 条 · 15.4s`（KV 已热的路径；冷缓存是 41 次回源 ≈ 23s，Bun 脚本实测 22.7s）。墙钟几乎全被库内每边界 `sleep(350)` 占掉：41 × 350ms ≈ 14.4s。
 - 生成结果与 CLI 出的 `杭州市-330100-u1d0.svg` **逐字节相同**。
-- 「上传并应用」：常住与当前同城 → 只发 **1** 次预签名 PUT（`img/site/map/330100.svg`，`content-type: image/svg+xml`，`X-Amz-SignedHeaders=content-type;host`），随后 `PUT /api/status/cities` 写入 KV 成功、页面提示 `完成：常住 杭州市 / 当前 杭州市`。验证时把 R2 PUT 打桩（返回 200 + CORS 头），未写任何生产对象。
+- 「上传并应用」：常住与当前同城 → 只发 **1** 次预签名 PUT（`img/site/map/330100.svg`，`content-type: image/svg+xml`，`X-Amz-SignedHeaders=content-type;host`），随后 `PUT /api/city` 写入 KV 成功、页面提示 `完成：常住 杭州市 / 当前 杭州市`。验证时把 R2 PUT 打桩（返回 200 + CORS 头），未写任何生产对象。
 - 代理端点：无 `auth` → 401、非法 adcode → 400、非法 body → 400；回源 212ms vs KV 命中 37ms；参数顺序打乱命中同一条缓存；`nocache=1` 回源。
 
 ## 其他已知坑
 
-- **`AMAP_KEY` 只在 Worker 侧**：`backend/src/env.ts` 里是可选项（`REQUIRED_ENV` 不含它，其他路由不受影响），缺失时只有 `/api/status/amap` 返回 500 `[config] 缺少必需的环境变量: AMAP_KEY`。本地放 `.dev.vars`，生产 `wrangler secret put AMAP_KEY`。
+- **`AMAP_KEY` 只在 Worker 侧**：`backend/src/env.ts` 里是可选项（`REQUIRED_ENV` 不含它，其他路由不受影响），缺失时只有 `/api/city/amap` 返回 500 `[config] 缺少必需的环境变量: AMAP_KEY`。本地放 `.dev.vars`，生产 `wrangler secret put AMAP_KEY`。
 - **ky 默认超时 10s**：代理取数是单次请求，不受影响；但任何「让一次请求挂几十秒」的方案都必须显式关掉。
 - **`r2.kuriyona.com` 与桶 `kuriyona-r2` 一一对应**：域名后的路径 = 对象键，所以对象键里带 `static/` 的（博客 OG 图等）在 URL 里也带 `static/`；地图这条故意放在 `static/` 之外。
-- **`/admin/status` 的 `results` 用 adcode 去重**：常住与当前相同时只出一张图、只上传一次。
+- **`/admin/city` 的 `results` 用 adcode 去重**：常住与当前相同时只出一张图、只上传一次。
 - 历史实现留在 commit `657bdb4`（含 KV 城市配置、`/admin/status`、`useCityMaps` 轮询、`amap:*` 缓存与互斥锁），需要参考时 `git show 657bdb4`。
-- 生产 `GET /api/status` 曾返回 **500**（2026-10-14 复现：`status=500`、body `Internal Server Error`，同期 `/api/ask-box` 200），与本功能无关，尚未追查。
+- 生产 `GET /api/city` 实测正常（2026-10-15 `curl https://kuriyona.com/api/status` 返回 200）。早期记录的 2026-10-14 500 已不复现。

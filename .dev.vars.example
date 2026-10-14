@@ -12,7 +12,5 @@ ACCESS_KEY_ID=
 SECRET_ACCESS_KEY=
 BUCKET_NAME=
 WEATHER_API_KEY=
-# 高德 Web 服务 key：只给 /api/status/amap 代理用（管理端出图时注入），浏览器拿不到
+# 高德 Web 服务 key：只给 /api/city/amap 代理用（管理端出图时注入），浏览器拿不到
 AMAP_KEY=
-GITHUB_API_TOKEN=
-STEAM_API_KEY=

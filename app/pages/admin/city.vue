@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { GenerateResult, SpanOptions } from '@kuriyona/amap-box';
 import ky, { HTTPError } from 'ky';
-import type { Cities } from '~/scripts/statusTypes';
+import type { Cities } from '~/scripts/cityTypes';
 
 definePageMeta({ layout: 'admin' });
 
-// 出图参数与离线脚本逐字一致（见 backend/docs/status-map.md）：`--up 1 --down 0 --ratio 1
+// 出图参数与离线脚本逐字一致（见 backend/docs/city-map.md）：`--up 1 --down 0 --ratio 1
 // --outside-same-level --no-title --no-context-labels --no-target-label --center target`
 const GENERATE_OPTIONS: SpanOptions = {
   up: 1,
@@ -56,7 +56,7 @@ const results = computed(() => {
 
 const { data: live } = useAsyncData(
   'admin-city-maps',
-  async () => (await fetchApi.get('/status').json<{ cities: Cities }>()).cities,
+  async () => await fetchApi.get('/city').json<Cities>(),
   { server: false, lazy: true },
 );
 
@@ -83,14 +83,14 @@ const applyMaps = async () => {
     phase.value = `上传到 R2（${results.value.length} 张）…`;
     for (const { map } of results.value) {
       const { url } = await fetchApi
-        .get('/status/map/upload-url', { searchParams: { adcode: map.adcode } })
+        .get('/city/map/upload-url', { searchParams: { adcode: map.adcode } })
         .json<{ url: string }>();
       // 签名把 Content-Type 一起签了：PUT 必须原样带上同一个值，否则 R2 报签名不匹配
       await ky.put(url, { body: map.svg, headers: { 'content-type': 'image/svg+xml' } });
     }
     phase.value = '写入城市配置…';
     const cities = await fetchApi
-      .put('/status/cities', {
+      .put('/city', {
         json: {
           resident: { name: resident.name, adcode: resident.adcode },
           current: { name: current.name, adcode: current.adcode },
@@ -141,7 +141,7 @@ const generate = async () => {
         fetches.value += 1;
         phase.value = `取数中（本轮新增 ${fetches.value} 条）…`;
         try {
-          return await fetchApi.get('/status/amap', { searchParams: params, signal }).json();
+          return await fetchApi.get('/city/amap', { searchParams: params, signal }).json();
         } catch (e) {
           if (e instanceof HTTPError && e.response.status === 401) {
             throw new Error('管理密钥无效或已失效，请到「密钥」页重新校验');
@@ -260,8 +260,8 @@ const generate = async () => {
 
         <p class="text-xs text-(--color-text-3)">
           确认预览没问题后再应用：图传到 R2
-          <code>img/site/map/&lt;adcode&gt;.svg</code>，城市配置写进 KV；<code>/api/status</code> 的
-          <code>cities</code> 随即生效（CDN 缓存最长 30 分钟）。
+          <code>img/site/map/&lt;adcode&gt;.svg</code>，城市配置写进 KV；<code>/api/city</code> 的
+          <code>resident</code> 随即生效（CDN 缓存最长 30 分钟）。
         </p>
         <div class="flex items-center gap-3">
           <KButton class="px-3! py-2! disabled:opacity-50" :disabled="busy" @click="applyMaps">

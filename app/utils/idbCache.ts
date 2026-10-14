@@ -1,4 +1,4 @@
-// `@kuriyona/amap-box` 的 cache 注入点（管理端出图用，见 backend/docs/status-map.md）。
+// `@kuriyona/amap-box` 的 cache 注入点（管理端出图用，见 backend/docs/city-map.md）。
 //
 // 为什么是 IndexedDB 而不是 localStorage：一组边界实测 41 个键 / 约 6 MB，既超过 localStorage 的 5 MB
 // 配额，也不适合同步 IO。键值与库的约定一致（`index` 与各 `<adcode>`，值一律是字符串）。

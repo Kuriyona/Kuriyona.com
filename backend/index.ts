@@ -12,9 +12,8 @@ import {
   listPublicAsks,
   setAskPublic,
 } from './src/router/ask-box';
+import { amapProxy, cityMapUploadUrl, getCity, putCity } from './src/router/city';
 import { listR2, signedUrl } from './src/router/r2';
-import { amapProxy, cityMapUploadUrl, putCities } from './src/router/map';
-import { deleteStatus, getStatus, postStatus } from './src/router/status';
 import { verifyTurnstile } from './src/utils';
 
 const api = new Hono<{ Bindings: Env }>()
@@ -43,12 +42,10 @@ const api = new Hono<{ Bindings: Env }>()
   .delete('/ask-box/admin/:id', requireAuthKey, deleteAsk)
   .put('/ask-box/admin/:id/public/:isPublic', requireAuthKey, setAskPublic)
   .put('/ask-box/admin/:id/answer', requireAuthKey, answerAsk)
-  .get('/status', getStatus)
-  .get('/status/amap', requireAuthKey, amapProxy)
-  .get('/status/map/upload-url', requireAuthKey, cityMapUploadUrl)
-  .put('/status/cities', requireAuthKey, putCities)
-  .post('/status', requireAuthKey, postStatus)
-  .delete('/status', requireAuthKey, deleteStatus)
+  .get('/city', getCity)
+  .get('/city/amap', requireAuthKey, amapProxy)
+  .get('/city/map/upload-url', requireAuthKey, cityMapUploadUrl)
+  .put('/city', requireAuthKey, putCity)
   .get('/r2/list', requireAuthKey, listR2)
   .get('/r2/upload-signed-url', requireAuthKey, signedUrl);
 

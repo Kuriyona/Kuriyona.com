@@ -1,20 +1,16 @@
-export interface Status {
-  weather: Weather;
-  github_activity: GithubActivity;
-  steam: Steam;
-  cities: Cities;
+export interface Cities {
+  /** 常住城市：地图 + 实时天气（天气按它的 adcode 查） */
+  resident: City;
+  /** 当前所在城市：只有地图 */
+  current: City;
 }
 
-/** 状态页地图：Worker 返回固定城市名与 R2 公开地址（见 backend/docs/status-map.md） */
-export interface CityMap {
+/** 首页城市卡片的数据形状：`map` 是 R2 公开地址（见 backend/docs/city-map.md） */
+export interface City {
   name: string;
   adcode: string;
   map: string;
-}
-
-export interface Cities {
-  resident: CityMap;
-  current: CityMap;
+  weather?: Weather;
 }
 
 export interface Weather {
@@ -46,16 +42,4 @@ interface Now {
 interface Refer {
   sources: string[];
   license: string[];
-}
-
-export interface GithubActivity {
-  [repo: string]: string;
-}
-
-export interface Steam {
-  personaName: string;
-  personaState: number;
-  realName: string;
-  gameExtraInfo: string;
-  gameId: string;
 }

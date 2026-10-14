@@ -143,13 +143,13 @@ Kuriyona.com/
 │   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
 │   │   ├── KIcon.vue          图标（Iconify；name 为 `prefix:name` 全名，尺寸用字号类）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
-│   │   ├── card/               About/Status 页卡片：CardGithub/CardWeather/CardSteam/CardGames/CardContact/CardCityMap（城市地图，ClientOnly；可选 `weather` prop 在地图右下角叠加天气图标 + 温度，首页常驻城市卡片用）
+│   │   ├── card/               About 页卡片：CardGames/CardContact/CardCityMap（城市地图，ClientOnly；`city` 为 `City`（含可选 `weather`，在地图右下角叠加天气图标 + 温度），首页常驻城市卡片用）
 │   │   └──
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
 │   │   ├── useNav.ts           导航项（读取 app.config nav/aboutNav + i18n 标题）
-│   │   ├── useStatus.ts        `/api/status` 数据（useAsyncData key `status`，server: false；/status 页与首页常驻城市卡片共用）
+│   │   ├── useCity.ts           `/api/city` 数据（useAsyncData key `city`，server: false；首页常驻城市卡片）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
@@ -160,15 +160,14 @@ Kuriyona.com/
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
 │   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
-│   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/status，见 app/pages/index.vue）
+│   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个 KBadge，标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
 │   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
-│   │   ├── status/index.vue     状态页（Steam/天气/GitHub 活动/常住城市与当前所在城市地图）
-│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/status 城市地图出图）
+│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/city 城市地图出图）
 │   ├── stores/                  Pinia stores
 │   │   └── main.ts              JWT（Turnstile 验证后存储）
 │   ├── utils/                   @/ 别名工具函数
@@ -183,7 +182,7 @@ Kuriyona.com/
 │   │   ├── highlightMotion.ts   背景高亮点运动学纯函数（随机起点/对角方向、触边反弹、视口变化夹回）
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
-│   │   └── statusTypes.ts       /status 接口类型（Weather/GithubActivity/Steam）
+│   │   └── cityTypes.ts         /api/city 接口类型（City/Weather）
 │   ├── content/blog/            博客 Markdown 源文件（按语言分目录：zh-Hans/zh-Hant/en/ja）
 │   └── data/devices.json        设备配置数据（/about/devices 页面读取）
 ├── server/                      Nitro API 路由
@@ -204,10 +203,10 @@ Kuriyona.com/
 │   │   ├── amap.ts              高德：行政区划接口常量 + 城市中心点（amap:center:<adcode>，供天气按坐标查）
 │   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table，UUID 主键）
 │   │   ├── plugin/auth.ts       鉴权中间件（AUTH_KEY query / JWT Bare 或 Bearer）
-│   │   ├── router/              路由：ask-box / r2 / status / map（高德代理 + 出图上传签名 + 写城市配置）
+│   │   ├── router/              路由：ask-box / r2 / city（高德代理 + 出图上传签名 + 写城市配置）
 │   │   └── utils.ts             D1/R2 预签名/Turnstile 工具
 │   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
-│   └── docs/                    后端文档（development / deployment / status-map）
+│   └── docs/                    后端文档（development / deployment / city-map）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301、`/about/as-mtf` → `/about/trans` 301 含 en/ja/zh-Hant 前缀版本）
 ├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
@@ -255,26 +254,25 @@ Kuriyona.com/
 | `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                          |
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                           |
 | `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                             |
-| `/status`            | `pages/status/index.vue`            | 状态页（Steam/天气/GitHub/城市地图）                                                                                 |
 | `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                                                  |
 | `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                             |
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                         |
-| `/admin/status`      | `pages/admin/status.vue`            | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）                                           |
+| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`）                                           |
 
 ### API 概览
 
-| 端点                                                         | 来源     | 说明                                                                                                                                                      |
-| ------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/articles`                                          | server/  | 文章元信息列表（无 content）                                                                                                                              |
-| `GET /api/articles/:slug`                                    | server/  | 指定文章（所有语言版本）                                                                                                                                  |
-| `/api/status`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                        |
-| `PUT /api/ask-box/admin/:id/answer`                          | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                      |
-| `GET /api/r2/list?prefix=&delimiter=`                        | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）              |
-| `GET /api/status/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                    |
-| `GET /api/status/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                           |
-| `PUT /api/status/cities`                                     | backend/ | 写 KV `city:maps`：`GET /api/status` 的 `cities` 读它，缺失/坏值回退杭州                                                                                  |
-| `GET /api/status` 的 `cities`                                | backend/ | `{ resident: { name, adcode, map }, current: {...} }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/status-map.md`）       |
-| `GET /api/status` 的 `weather`                               | backend/ | 按 `city:maps` 的 `resident.adcode` 取高德中心点（KV `amap:center:<adcode>`）后以 `location=经度,纬度` 查 QWeather，缓存 `cache:weather:<adcode>` 30 分钟 |
+| 端点                                                       | 来源     | 说明                                                                                                                                                                       |
+| ---------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/articles`                                        | server/  | 文章元信息列表（无 content）                                                                                                                                               |
+| `GET /api/articles/:slug`                                  | server/  | 指定文章（所有语言版本）                                                                                                                                                   |
+| `/api/city`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                                         |
+| `PUT /api/ask-box/admin/:id/answer`                        | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                                       |
+| `GET /api/r2/list?prefix=&delimiter=`                      | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）                               |
+| `GET /api/city/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                                     |
+| `GET /api/city/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                                            |
+| `PUT /api/city`                                            | backend/ | 写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 adcode 推导）：`GET /api/city` 的 `resident`/`current` 读它，缺失/坏值回退杭州                                        |
+| `GET /api/city` 的 `resident`/`current`                    | backend/ | `{ resident: { name, adcode, map, weather }, current: { name, adcode, map } }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/city-map.md`） |
+| `GET /api/city` 的 `resident.weather`                      | backend/ | 按 `city:maps` 的 `resident.adcode` 取高德中心点（KV `amap:center:<adcode>`）后以 `location=经度,纬度` 查 QWeather，缓存 `cache:weather:<adcode>` 30 分钟                  |
 
 ## Architecture
 
@@ -282,12 +280,12 @@ Kuriyona.com/
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
 - `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
-- **状态页城市地图**：`GET /api/status` 的 `cities` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`。**出图跑在管理端浏览器里**（`/admin/status` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/map.ts`），CPU ≈ 0。首页「关于我」右侧的常驻城市卡片复用同一份 `cities.resident`（`app/pages/index.vue` 里 `useStatus()`，与 `/status` 页共用同一 key 与缓存），预渲染阶段拿不到数据、只有「关于我」单卡。同一份常住城市配置也决定 **`GET /api/status` 的 `weather`**：`backend/src/amap.ts` 的 `cityCenter(env, adcode)` 向高德行政区划接口取中心点（KV `amap:center:<adcode>`，30 天），再以 `location=<经度>,<纬度>` 调 QWeather（缓存 `cache:weather:<adcode>`，30 分钟）；`AMAP_KEY` 缺失时回退默认城市（杭州）中心点。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/status-map.md`。
-- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `/api/status` 的动态数据、上游缓存（`cache:weather:<adcode>` 等）、`city:maps` 城市配置与 `amap:*` 缓存（边界响应原文 + `amap:center:<adcode>` 城市中心点））。`pnpm deploy` 部署。
+- **城市地图与天气**：`GET /api/city` 的 `resident`/`current` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`（KV 只存 `{ name, adcode }`）。**出图跑在管理端浏览器里**（`/admin/city` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/city.ts`），CPU ≈ 0。首页「关于我」右侧的常驻城市卡片复用同一份 `resident`（`app/pages/index.vue` 里 `useCity()`），预渲染阶段拿不到数据、只有「关于我」单卡。`resident` 也带 **`weather`**：`backend/src/amap.ts` 的 `cityCenter(env, adcode)` 向高德行政区划接口取中心点（KV `amap:center:<adcode>`，30 天），再以 `location=<经度>,<纬度>` 调 QWeather（缓存 `cache:weather:<adcode>`，30 分钟）；`AMAP_KEY` 缺失时回退默认城市（杭州）中心点。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/city-map.md`。
+- `wrangler.jsonc` — 根 Worker 配置：`main = backend/index.ts`、`assets.directory = ./dist`、`run_worker_first: ["/api", "/api/*"]`、D1 binding `DB`（`kuriyona-db`）、KV binding `STATUS_KV`（命名空间 `kuriyona-kv`，存 `cache:weather:<adcode>` 天气缓存、`city:maps` 城市配置与 `amap:*` 缓存（边界响应原文 + `amap:center:<adcode>` 城市中心点））。`pnpm deploy` 部署。
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/status`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
+- `app/pages/admin/` — 4 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/city`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`。
 
 ## Key Conventions
 
@@ -299,10 +297,10 @@ Kuriyona.com/
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。跨性别旗配色（`--color-trans-sky/pink/white`）与 `utilities.css` 的 `.trans-text`/`.trans-text-flow`/`.trans-ribbon`/`.trans-aura` 只用于旗帜装饰（渐变字 / 彩带 / 光晕），不承载正文、不参与表面与文本层级，也不纳入对比度校验；需要旗面配色时从这里取，不要另写 hex。
 - **动画（GSAP）**: 目前唯一使用处是 `pages/about/trans/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
-- **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。天气图标同理：QWeather 的图标码经 `app/utils/weatherIcon.ts` 映射成 Material Symbols（**不再引入 `qweather-icons` 字体**，`CardWeather` / `CardCityMap` 都用 `KIcon`）。
+- **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。天气图标同理：QWeather 的图标码经 `app/utils/weatherIcon.ts` 映射成 Material Symbols（**不再引入 `qweather-icons` 字体**，`CardCityMap` 用 `KIcon`）。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
-- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（城市地图出图取边界走 `/api/status/amap` 代理，以及 `/api/status` 按常住城市查天气中心点；缺失时前者端点 500、后者回退默认城市中心点，其余不受影响）。
+- **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（城市地图出图取边界走 `/api/city/amap` 代理，以及 `/api/city` 按常住城市查天气中心点；缺失时前者端点 500、后者回退默认城市中心点，其余不受影响）。
 - **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
 - **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).

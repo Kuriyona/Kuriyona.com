@@ -9,7 +9,6 @@ const nav = [
     onAbout: true,
   },
   { to: '/timeline', titleKey: 'timeline.title', descKey: 'timeline.desc', onAbout: true },
-  { to: '/status', titleKey: 'status.title', descKey: 'status.desc', enabled: false },
   {
     to: '/about/devices',
     titleKey: 'about.devices.title',

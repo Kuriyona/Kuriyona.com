@@ -13,8 +13,6 @@ export interface Env {
   BUCKET_NAME: string;
   WEATHER_API_KEY?: string;
   AMAP_KEY?: string;
-  GITHUB_API_TOKEN?: string;
-  STEAM_API_KEY?: string;
 }
 
 export const REQUIRED_ENV = [

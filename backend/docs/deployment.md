@@ -1,6 +1,6 @@
 # 生产部署（Cloudflare Workers + D1 + KV）
 
-单 Worker `kuriyona-web` 同时提供 Nuxt 静态站点（`assets.directory = ./dist`）与 API（`/api/*`，`run_worker_first`）。数据库为 D1（仅 `ask_table`），`/api/status` 的动态数据与上游缓存存 Workers KV，R2 通过 S3 API（aws4fetch）访问，不使用 R2 binding。
+单 Worker `kuriyona-web` 同时提供 Nuxt 静态站点（`assets.directory = ./dist`）与 API（`/api/*`，`run_worker_first`）。数据库为 D1（仅 `ask_table`），`/api/city` 的实时天气与上游缓存存 Workers KV，R2 通过 S3 API（aws4fetch）访问，不使用 R2 binding。
 
 ## 0. 前置
 
@@ -22,7 +22,7 @@ pnpm exec wrangler d1 create kuriyona-db
 
 ## 2. 创建 KV 命名空间
 
-`/api/status` 的动态数据与上游缓存存在 Workers KV：
+`/api/city` 的实时天气与上游缓存存在 Workers KV：
 
 ```bash
 pnpm exec wrangler kv namespace create kuriyona-kv
@@ -35,14 +35,14 @@ pnpm exec wrangler kv namespace create kuriyona-kv
 生产环境变量用 `wrangler secret put` 写入（值取自 `backend/.env`，**不要**提交任何密钥）：
 
 ```bash
-for K in JWT_SECRET AUTH_KEY TURNSTILE_SECRET_KEY ENDPOINT ACCESS_KEY_ID SECRET_ACCESS_KEY BUCKET_NAME WEATHER_API_KEY AMAP_KEY GITHUB_API_TOKEN STEAM_API_KEY; do
+for K in JWT_SECRET AUTH_KEY TURNSTILE_SECRET_KEY ENDPOINT ACCESS_KEY_ID SECRET_ACCESS_KEY BUCKET_NAME WEATHER_API_KEY AMAP_KEY; do
   printf '%s' "$(grep -m1 "^$K=" backend/.env | cut -d= -f2-)" | pnpm exec wrangler secret put "$K"
 done
 ```
 
 必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`。**不要设置 `TURNSTILE_DEV_SECRET_KEY`**（那是本地测试用）。
 
-可选：`AMAP_KEY`（高德 Web 服务 key，两处用它：管理端 `/admin/status` 出图取边界走 `/api/status/amap` 代理，以及 `/api/status` 按常住城市查天气中心点）。**不设它不会让接口 500**：出图那条链路自己报 500，天气则回退默认城市（杭州）的固定中心点。
+可选：`AMAP_KEY`（高德 Web 服务 key，两处用它：管理端 `/admin/city` 出图取边界走 `/api/city/amap` 代理，以及 `/api/city` 按常住城市查天气中心点）。**不设它不会让接口 500**：出图那条链路自己报 500，天气则回退默认城市（杭州）的固定中心点。
 
 ## 4. 应用迁移
 
@@ -50,7 +50,7 @@ done
 pnpm exec wrangler d1 migrations apply kuriyona-db --remote
 ```
 
-迁移里包含删除 `status_data`（Status 数据已迁到 Workers KV，该表不再使用）。注意顺序：**先部署新 Worker 再删表**，或在删表后立即部署 —— 旧代码仍会查该表，删表到部署之间的 `/api/status` 会 500。
+迁移里包含删除 `status_data`（Status 数据已迁到 Workers KV，该表不再使用）。注意顺序：**先部署新 Worker 再删表**，或在删表后立即部署 —— 旧代码仍会查该表，删表到部署之间的旧状态接口会 500。
 
 ## 5. 部署
 

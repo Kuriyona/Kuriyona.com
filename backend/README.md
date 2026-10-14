@@ -6,7 +6,7 @@ Kuriyona 个人站点的 API 服务。基于 [Cloudflare Workers](https://worker
 
 - **Ask Box** — 匿名提问箱，支持公开/隐藏、回答、管理端审核（id 为 UUID）
 - **R2 文件** — Cloudflare R2 对象存储的列表与预签名上传（aws4fetch，S3 API）
-- **Status 状态页** — 天气、GitHub 活动、Steam 在线状态；动态数据与上游缓存都存 Workers KV（binding `STATUS_KV`）
+- **City 城市地图与天气** — 常住/当前城市地图（出图在管理端浏览器，直传 R2）与常住城市的实时天气；城市配置与上游缓存都存 Workers KV（binding `STATUS_KV`）
 - **Turnstile** — Cloudflare Turnstile 人机验证，签发 JWT
 
 ## 技术栈
@@ -16,7 +16,7 @@ Kuriyona 个人站点的 API 服务。基于 [Cloudflare Workers](https://worker
 | 运行时   | Cloudflare Workers                                                 |
 | Web 框架 | Hono                                                               |
 | 数据库   | D1（`drizzle-orm/d1` + `drizzle-orm/sqlite-core`），仅 `ask_table` |
-| KV       | Workers KV（binding `STATUS_KV`，存 `/status` 动态数据与上游缓存） |
+| KV       | Workers KV（binding `STATUS_KV`，存城市配置与上游缓存）            |
 | 迁移     | Drizzle Kit 生成，`wrangler d1 migrations apply` 应用              |
 | R2       | aws4fetch（S3 API 预签名，无 binding）                             |
 
@@ -28,7 +28,7 @@ Kuriyona 个人站点的 API 服务。基于 [Cloudflare Workers](https://worker
 │   ├── env.ts              # Env 接口 + REQUIRED_ENV
 │   ├── db/schema.ts        # D1 表结构（sqlite-core）
 │   ├── plugin/auth.ts      # 鉴权中间件（AUTH_KEY query / JWT）
-│   ├── router/             # 路由：ask-box / r2 / status
+│   ├── router/             # 路由：ask-box / r2 / city
 │   └── utils.ts            # D1、R2 预签名、Turnstile 等工具
 ├── drizzle/                # 迁移文件（提交到 Git，wrangler 消费）
 └── docs/                   # 文档
