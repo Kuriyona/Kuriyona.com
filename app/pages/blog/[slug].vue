@@ -32,23 +32,79 @@ useSeoMeta({
   ogDescription: article.value?.desc as string,
 });
 
-// 标题滚出顶栏可视区（含被固定菜单栏与浮动顶栏遮住的部分）时显示浮动顶栏
-// 浮动顶栏上边距：菜单栏底边（64px 内容 + 2px 描边）+ 6px 留白
-const topBarTop = 72;
+// 标题 / 目录滚出顶栏可视区（含被固定菜单栏与浮动顶栏遮住的部分）后分别显示浮动顶栏与浮动目录
+// 浮动元素上边距：菜单栏底边（64px 内容 + 2px 描边）+ 6px 留白
+const floatingTop = 72;
 const titleEl = useTemplateRef<HTMLElement>('titleEl');
+const tocEl = useTemplateRef<HTMLElement>('tocEl');
+const tocMenuEl = useTemplateRef<HTMLElement>('tocMenuEl');
 const showTopBar = ref(false);
+const showFloatingToc = ref(false);
+const tocOpen = ref(false);
 let titleObserver: IntersectionObserver | undefined;
+let tocObserver: IntersectionObserver | undefined;
+
+function onPointerdown(e: PointerEvent) {
+  if (!tocMenuEl.value?.contains(e.target as Node)) tocOpen.value = false;
+}
+
+// 阅读位置高亮：以 html 的 scroll-padding-top 为阅读线（点击锚点后标题正好停在该线上），
+// 取最后一个顶边越过阅读线的标题
+const activeSlug = ref('');
+let headingEls: HTMLElement[] = [];
+let ticking = false;
+
+function updateActiveHeading() {
+  ticking = false;
+  const line = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  let current = '';
+  for (const el of headingEls) {
+    if (el.getBoundingClientRect().top > line) break;
+    current = el.id;
+  }
+  activeSlug.value = current;
+}
+
+function onScroll() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(updateActiveHeading);
+}
 
 onMounted(() => {
-  if (!titleEl.value) return;
+  const rootMargin = `-${floatingTop}px 0px 0px 0px`;
   titleObserver = new IntersectionObserver(
     ([entry]) => (showTopBar.value = !entry.isIntersecting),
-    { rootMargin: `-${topBarTop}px 0px 0px 0px` },
+    { rootMargin },
   );
-  titleObserver.observe(titleEl.value);
+  tocObserver = new IntersectionObserver(
+    ([entry]) => (showFloatingToc.value = !entry.isIntersecting),
+    { rootMargin },
+  );
+  if (titleEl.value) titleObserver.observe(titleEl.value);
+  if (tocEl.value) tocObserver.observe(tocEl.value);
+  document.addEventListener('pointerdown', onPointerdown);
+
+  headingEls = (article.value?.toc ?? [])
+    .map((item) => document.getElementById(item.slug))
+    .filter((el): el is HTMLElement => el !== null);
+  if (headingEls.length) {
+    document.addEventListener('scroll', onScroll, { passive: true });
+    updateActiveHeading();
+  }
 });
 
-onBeforeUnmount(() => titleObserver?.disconnect());
+// 浮动目录按钮只在目录滚出视口期间存在，滚回时收起展开的面板
+watch(showFloatingToc, (visible) => {
+  if (!visible) tocOpen.value = false;
+});
+
+onBeforeUnmount(() => {
+  titleObserver?.disconnect();
+  tocObserver?.disconnect();
+  document.removeEventListener('pointerdown', onPointerdown);
+  document.removeEventListener('scroll', onScroll);
+});
 </script>
 
 <template>
@@ -85,17 +141,11 @@ onBeforeUnmount(() => titleObserver?.disconnect());
         </div>
       </div>
       <KDivider />
-      <template v-if="article.toc?.length">
-        <ul class="toc">
-          <li
-            v-for="item in article.toc"
-            :key="item.slug"
-            :style="{ paddingLeft: (item.level - 2) * 16 + 'px' }">
-            <a :href="`#${item.slug}`">· {{ item.text }}</a>
-          </li>
-        </ul>
-        <KDivider />
-      </template>
+      <div v-if="article.toc?.length" ref="tocEl">
+        <KCard :title="$t('blog.toc')">
+          <BlogToc :items="article.toc" :active="activeSlug" />
+        </KCard>
+      </div>
       <div class="markdown-body bg-transparent!" data-pagefind-body>
         <div v-html="article.content"></div>
       </div>
@@ -113,11 +163,50 @@ onBeforeUnmount(() => titleObserver?.disconnect());
         </div>
       </KCard>
     </template>
+    <!-- 宽屏：目录滚出视口后在正文左侧悬浮 -->
+    <Transition name="toc-float">
+      <div
+        v-if="showFloatingToc && article?.toc?.length"
+        :style="{ top: `${floatingTop}px` }"
+        class="pointer-events-none fixed right-0 bottom-8 left-0 z-80 hidden justify-center xl:flex">
+        <div class="relative w-200 max-w-full">
+          <KSurface
+            as="aside"
+            level="3"
+            class="pointer-events-auto absolute top-0 right-full mr-4 max-h-full w-52 overflow-y-auto rounded-xl p-3">
+            <h2 class="mb-2 text-sm font-bold">{{ $t('blog.toc') }}</h2>
+            <BlogToc :items="article.toc" :active="activeSlug" />
+          </KSurface>
+        </div>
+      </div>
+    </Transition>
     <BlogTopBar
       :show="showTopBar"
       :title="article?.title || $t('global.not-found')"
       :desc="article?.desc"
-      :top="topBarTop" />
+      :top="floatingTop">
+      <!-- 窄屏：浮动顶栏右侧的目录按钮 + 展开的悬浮目录（右对齐按钮，下留边距） -->
+      <template #actions>
+        <div
+          v-if="showFloatingToc && article?.toc?.length"
+          ref="tocMenuEl"
+          class="relative shrink-0 xl:hidden">
+          <KIconButton
+            icon="material-symbols:toc"
+            :label="$t('blog.toc')"
+            @click="tocOpen = !tocOpen" />
+          <Transition name="toc-float">
+            <KSurface
+              v-if="tocOpen"
+              level="3"
+              class="absolute top-full right-0 z-10 mt-2 max-h-[60vh] w-64 overflow-y-auto rounded-xl p-3">
+              <h2 class="mb-2 text-sm font-bold">{{ $t('blog.toc') }}</h2>
+              <BlogToc :items="article.toc" :active="activeSlug" @navigate="tocOpen = false" />
+            </KSurface>
+          </Transition>
+        </div>
+      </template>
+    </BlogTopBar>
   </AppPage>
 </template>
 
@@ -126,5 +215,17 @@ p:has(img) {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+</style>
+
+<style scoped>
+.toc-float-enter-active,
+.toc-float-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.toc-float-enter-from,
+.toc-float-leave-to {
+  opacity: 0;
 }
 </style>

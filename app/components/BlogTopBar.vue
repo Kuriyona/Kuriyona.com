@@ -26,6 +26,7 @@ defineProps<{
               desc
             }}</span>
           </div>
+          <slot name="actions" />
         </div>
       </div>
     </div>

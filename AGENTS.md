@@ -135,7 +135,8 @@ Kuriyona.com/
 │   │   ├── AppBar.vue          顶部导航栏 + 搜索按钮 + Ctrl+K 全局监听（语言选择 Popover：AppBar/AppLocale；菜单：AppBar/AppMenu，底部含 GIT_HASH/构建时间/Cloudflare 节点）
 │   │   ├── AppFooter.vue       版权声明 + 萌 ICP 备
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
-│   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；上边距由页面的 `topBarTop` 常量传入，与触发阈值同源）
+│   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
+│   │   ├── BlogToc.vue         博客目录列表（正文顶部内联卡片 / 宽屏左侧悬浮 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -161,7 +162,7 @@ Kuriyona.com/
 │   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤）
-│   │   ├── blog/[slug].vue      博客详情（TOC、多语言切换、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar）
+│   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
@@ -246,7 +247,7 @@ Kuriyona.com/
 | `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（关于我 hero + 性别探索过程计数/占比条 + 资源链接，含 data-pagefind-body） |
 | `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                       |
 | `/blog`              | `pages/blog/index.vue`              | 文章列表                                                                                |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言；滚动后显示 BlogTopBar 浮动顶栏）                                      |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言；滚动后显示 BlogTopBar 浮动顶栏与浮动目录，目录按阅读进度高亮）        |
 | `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                              |
 | `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                             |
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                              |
