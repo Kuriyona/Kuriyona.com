@@ -128,7 +128,7 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：导航（nav + aboutNav）+ 友链（main 最重要的人（每人多平台链接）/ others / links），合并 app/config.json
 │   ├── config.json             个人信息配置（tech_stack/languages/info/contact/games…）
 │   ├── assets/
-│   │   ├── css/                main.css（@import 汇总）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
+│   │   ├── css/                main.css（@import 汇总）· fonts.css（Google Fonts 文本字体 @import；**不含图标字体**）· base.css（设计令牌/主题变量/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、max-w、底部 AppFooter）
@@ -143,7 +143,7 @@ Kuriyona.com/
 │   │   ├── KSurface.vue        表面原语（as/level/glass；层级由组件树嵌套自动推导、上限 3、可手动覆盖）
 │   │   ├── KIcon.vue          图标（Iconify；name 为 `prefix:name` 全名，尺寸用字号类）
 │   │   ├── K*.vue              自研 UI 组件（见下表）
-│   │   ├── card/               About/Status 页卡片：CardGithub/CardWeather/CardSteam/CardGames/CardContact/CardCityMap（城市地图，ClientOnly）
+│   │   ├── card/               About/Status 页卡片：CardGithub/CardWeather/CardSteam/CardGames/CardContact/CardCityMap（城市地图，ClientOnly；可选 `weather` prop 在地图右下角叠加天气图标 + 温度，首页常驻城市卡片用）
 │   │   └──
 │   ├── composables/            自动导入组合式函数
 │   │   ├── useSearch.ts        PageFind 搜索单例状态（查询/结果/键盘导航）
@@ -160,7 +160,7 @@ Kuriyona.com/
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
 │   │   └── admin.vue            管理面板共享导航壳（四个 admin 页面 definePageMeta({ layout: 'admin' })）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
-│   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap，窄屏两行，城市数据来自 /api/status 的 cities.resident，见 app/pages/index.vue）
+│   │   ├── index.vue            首页（半屏 Hero + 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/status，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个 KBadge，标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
 │   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar 与浮动目录、阅读进度高亮）
@@ -179,6 +179,7 @@ Kuriyona.com/
 │   │   ├── console.ts           console 欢迎信息（greet.txt）
 │   │   ├── pagefind.ts          PageFind JS API 封装（new Function 绕过打包器）
 │   │   ├── icons.gen.ts         图标注册（由 scripts/gen-icons.ts 生成，勿手改）
+│   │   ├── weatherIcon.ts       QWeather 天气图标码 → Material Symbols 图标名（weatherIcon()，未收录回退 help）
 │   │   ├── highlightMotion.ts   背景高亮点运动学纯函数（随机起点/对角方向、触边反弹、视口变化夹回）
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
@@ -296,7 +297,7 @@ Kuriyona.com/
 - **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`. No `tailwind.config.*`. `nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**：否则 SSR build 会把 CSS 里的裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 转而打开 `<root>/tailwindcss` 并报 `ENOENT`（`pnpm generate` 在 server bundle 阶段失败）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **视觉令牌（颜色/层级/毛玻璃）**: 颜色/层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `app/assets/css/surface.css` 的 4 个类（`.k-surface`/`.k-glass`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止再写 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 之类的一次性透明度/模糊类（`.k-glass`/`.k-scrim` 是唯一允许 `backdrop-filter` 的地方）。按钮等控件用 `--color-control-bg`/`--color-control-border`（半透明，叠在任何表面/玻璃上都成立）；该底色会抬升表面亮度，控件内文本只用 `--color-text-1`/`--color-text-2`，不要用 `text-3`/`text-4`。改任何颜色令牌后跑 `bun scripts/check-contrast.ts` 复核对比度。跨性别旗配色（`--color-trans-sky/pink/white`）与 `utilities.css` 的 `.trans-text`/`.trans-text-flow`/`.trans-ribbon`/`.trans-aura` 只用于旗帜装饰（渐变字 / 彩带 / 光晕），不承载正文、不参与表面与文本层级，也不纳入对比度校验；需要旗面配色时从这里取，不要另写 hex。
 - **动画（GSAP）**: 目前唯一使用处是 `pages/about/trans/index.vue`。约定：`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk，随路由一起到达，不额外等一个动态 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 都放在 `onMounted` 里；**`onUnmounted` 必须在 setup 同步阶段注册** —— 放进 `onMounted` 的 async 回调里会因为失去活动组件实例而直接失效（Vue 只会打一条 warn），GC 掉的就是整个 MatchMedia 上下文。补间的初值取「最终值」而非 0，这样 SSR / 无 JS 时渲染的就是真实数值（不需要 `ClientOnly`）；代价是 JS 接管前会先显示最终值，随后才从 0 滚上去。
-- **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。
+- **图标（Iconify）**: 全站图标只用 Iconify 的 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 的 Material Symbols 字体与 `cdn.simpleicons.org`）。用法：`<KIcon name="material-symbols:close" class="text-lg" />`，尺寸统一用字号类（svg 是 1em×1em，不要写 `w-5 h-5`）、单色跟随 `currentColor`；`KIconButton` 的 `icon` prop 同样要求完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case，下划线→短横线），数据层（`app/config.json`、`app/app.config.ts`）也直接存全名，禁止拼接。`scripts/gen-icons.ts` 扫描源码与数据 → 生成 `app/utils/icons.gen.ts`（只注册用到的图标），由 `pnpm dev` / `pnpm gen:icons` / `pnpm generate` 前置执行；名字拼错、集合里不存在、或写成动态拼接都会**让构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，所以即使漏注册也不会去请求 Iconify API。加图标 = 在调用点写出来即可，无需维护白名单。天气图标同理：QWeather 的图标码经 `app/utils/weatherIcon.ts` 映射成 Material Symbols（**不再引入 `qweather-icons` 字体**，`CardWeather` / `CardCityMap` 都用 `KIcon`）。
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（只给 `/api/status/amap` 代理用，缺失时该端点 500、其余不受影响）。

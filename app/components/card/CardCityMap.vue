@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import type { CityMap } from '~/scripts/statusTypes';
+import type { CityMap, Weather } from '~/scripts/statusTypes';
 
 defineProps<{
   title: string;
   city: CityMap;
+  /** 传入时在地图右下角叠加天气图标 + 温度（图标由 QWeather 图标码经 weatherIcon 映射到 Material Symbols） */
+  weather?: Weather;
 }>();
 </script>
 
@@ -17,6 +19,12 @@ defineProps<{
         <p
           class="absolute bottom-0 left-0 rounded-tr-md bg-(--color-surface-1) px-1 text-sm text-(--color-text-1)">
           {{ city.name }}
+        </p>
+        <p
+          v-if="weather?.now"
+          class="absolute bottom-0 right-0 rounded-tl-md bg-(--color-surface-1) px-1 text-sm text-(--color-text-1) flex items-center gap-1">
+          <KIcon :name="weatherIcon(weather.now.icon)" class="text-base" />
+          <span>{{ weather.now.temp }}℃</span>
         </p>
       </div>
     </ClientOnly>

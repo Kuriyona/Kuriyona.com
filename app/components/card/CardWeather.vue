@@ -14,8 +14,8 @@ const props = defineProps<{
           <tr>
             <th>{{ $t('weather.weather') }}</th>
             <td>
-              <span class="flex justify-end gap-1">
-                <i :class="`qi-${weather.now.icon}`"></i>
+              <span class="flex justify-end items-center gap-1">
+                <KIcon :name="weatherIcon(weather.now.icon)" class="text-base" />
                 <span>{{ weather.now.text }}</span>
               </span>
             </td>

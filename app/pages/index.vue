@@ -42,7 +42,8 @@ const { data: status } = useStatus();
       <CardCityMap
         v-if="status?.cities"
         :title="$t('about.city-resident')"
-        :city="status.cities.resident" />
+        :city="status.cities.resident"
+        :weather="status.weather" />
     </div>
 
     <!-- 生日 / MBTI：各自独立成块，两列（最窄屏也不换行，所以纵向排图标-标签-值） -->
