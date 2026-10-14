@@ -158,7 +158,7 @@ Kuriyona.com/
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── layouts/                 页面布局（Nuxt 自动发现；由 app.vue 的 <NuxtLayout> 应用）
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
-│   │   └── admin.vue            管理面板共享导航壳（五个 admin 页面 definePageMeta({ layout: 'admin' })）
+│   │   └── admin.vue            管理面板共享导航壳（五个 admin 页面 definePageMeta({ layout: 'admin' })；宽屏=内容左侧 sticky 竖导航（仍在 AppPage 容器内），窄屏（< lg）=顶部 KSelect 切换）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（欢迎文字（MtF 短语用旗面渐变）+ 关于我（trans 旗 hero 外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 跨性别资源链接）
@@ -254,7 +254,7 @@ Kuriyona.com/
 | `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                  |
 | `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                   |
 | `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                                     |
-| `/admin`             | `pages/admin/index.vue`             | 密钥校验 + 管理入口                                                                                                          |
+| `/admin`             | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                |
 | `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                     |
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                 |
 | `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图） |
@@ -289,7 +289,7 @@ Kuriyona.com/
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`。
 - `app/app.config.ts` — 导航项 `nav` 支持 `enabled`（顶栏过滤）与 `onAbout`（关于页矩形卡片过滤）两个独立开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 5 protected pages: `/admin`, `/admin/r2`, `/admin/ask-box`, `/admin/city`, `/admin/cache`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`（`adminErrorMessage` 同源但优先用响应体里的 `message`，清缓存页用它显示 Cloudflare 原文）。
+- `app/pages/admin/` — 5 protected pages: `/admin`（面板主页：密钥校验 + 管理入口）, `/admin/r2`, `/admin/ask-box`, `/admin/city`, `/admin/cache`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`；宽屏左侧竖导航、窄屏顶部菜单）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`（`adminErrorMessage` 同源但优先用响应体里的 `message`，清缓存页用它显示 Cloudflare 原文）。
 
 ## Key Conventions
 
