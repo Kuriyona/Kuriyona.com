@@ -43,7 +43,7 @@ useSeoMeta({ title: $t('blog.title') });
     <KCard
       v-for="post in articles"
       :key="post.slug"
-      class="k-interactive relative h-full flex flex-col justify-center">
+      class="k-interactive relative">
       <!-- 标题的伪元素铺满整张卡片，使卡片整体可点；语言标签是独立链接，需盖在其上 -->
       <h2 class="text-lg">
         <NuxtLinkLocale :to="`/blog/${post.slug}`" class="before:absolute before:inset-0">
