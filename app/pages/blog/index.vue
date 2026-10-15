@@ -53,15 +53,15 @@ useSeoMeta({ title: $t('blog.title') });
       <p class="text-sm">{{ post.desc }}</p>
       <br />
       <p class="flex flex-wrap justify-between items-center gap-x-2 gap-y-1">
-        <span class="flex max-w-full flex-none flex-wrap items-center gap-1">
+        <span class="flex max-w-full flex-none flex-wrap items-center gap-x-3 gap-y-1">
           <KIcon name="material-symbols:translate" class="shrink-0" />
           <NuxtLinkLocale
             v-for="variant in variantsOf(post.slug)"
             :key="variant.lang"
             :locale="variant.lang"
             :to="`/blog/${variant.slug}`"
-            class="relative z-1">
-            <KBadge>{{ variant.lang.toUpperCase() }}</KBadge>
+            class="relative z-1 text-sm text-(--color-theme) underline-offset-2 hover:underline">
+            {{ variant.lang.toUpperCase() }}
           </NuxtLinkLocale>
         </span>
         <span class="ml-auto flex max-w-full flex-none flex-wrap justify-end gap-2">
