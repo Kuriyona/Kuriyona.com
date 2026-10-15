@@ -1,15 +1,18 @@
 <script setup lang="ts">
 // `hero`：页面首个块是半屏 hero（高 --hero-height）时打开。
-// 右栏据此整体下移到 hero 底部之后一个列间距——不动 sticky，只改它在流里的起点：
-// hero 在屏时小组件跟在 hero 下方并与下一块内容齐平，滚过之后照常在顶栏下吸顶，无需滚动监听。
+// 两侧保留区据此整体下移到 hero 底部之后一个列间距——不动 sticky，只改它在流里的起点：
+// hero 在屏时栏内首卡跟在 hero 下方并与下一块内容齐平，滚过之后照常在顶栏下吸顶，无需滚动监听。
 defineProps<{ hero?: boolean }>();
 </script>
 
 <template>
   <div class="flex justify-center min-h-[calc(100vh)-var(--app-bar-height)] mt-(--app-bar-height)">
     <!-- 两侧保留区：视口够宽（reserve: 断点）才出现的独立栏位，内容由命名插槽填充。
-         右侧即使没内容也保留同等宽度，正文列才始终居中；左侧固定跟一个音乐播放器。 -->
-    <aside class="reserve hidden reserve:block pr-4">
+         右侧即使没内容也保留同等宽度，正文列才始终居中；左侧固定跟一个音乐播放器。
+         两栏的 hero 偏移写法必须一致（见上），否则一栏会压在 hero 上。 -->
+    <aside
+      class="reserve hidden reserve:block pr-4"
+      :class="hero ? 'mt-(--reserve-hero-offset)' : ''">
       <div class="flex flex-col gap-4">
         <slot name="reserve-left" />
         <MusicPlayer />
