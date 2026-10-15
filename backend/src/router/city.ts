@@ -107,11 +107,10 @@ export const amapProxy: H = async (c) => {
   if (!key) return c.json({ message: '[config] 缺少必需的环境变量: AMAP_KEY' }, 500);
 
   // 客户端给的查询参数原样转发，但本地参数一律剔除：`key` 是客户端不该带的（用 Worker 侧那把），
-  // `auth` 是本服务的鉴权参数（绝不能出现在上游请求与缓存键里 —— 它就是我们自己的 AUTH_KEY），
-  // `nocache` 是本地开关。
+  // `nocache` 是本地开关。（鉴权已改走 `X-Auth-Key` 请求头，不再有 `auth` 查询参数要剔除。）
   const params = new URLSearchParams(c.req.query());
   const noCache = params.has('nocache');
-  for (const local of ['key', 'auth', 'nocache']) params.delete(local);
+  for (const local of ['key', 'nocache']) params.delete(local);
   // 排序后再做缓存键：同一组查询只留一条缓存，不受参数顺序影响
   params.sort();
   const cacheKey = `${AMAP_CACHE_PREFIX}${params.toString()}`;

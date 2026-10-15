@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import { sign } from 'hono/jwt';
 import type { Handler } from 'hono';
 import { REQUIRED_ENV, type Env } from './src/env';
-import { requireAuthKey, requireJwt } from './src/plugin/auth';
+import { AUTH_KEY_HEADER, requireAuthKey, requireJwt } from './src/plugin/auth';
 import {
   answerAsk,
   createAsk,
@@ -19,7 +19,15 @@ import { listR2, signedUrl } from './src/router/r2';
 import { verifyTurnstile } from './src/utils';
 
 const api = new Hono<{ Bindings: Env }>()
-  .use('*', cors({ origin: '*', allowHeaders: ['Content-Type', 'Authorization'] }))
+  // 前端统一在请求头带 AUTH_KEY（跨域开发时自定义头会触发预检，故 allowHeaders 必须列全 + 缓存预检结果）
+  .use(
+    '*',
+    cors({
+      origin: '*',
+      allowHeaders: ['Content-Type', 'Authorization', AUTH_KEY_HEADER],
+      maxAge: 86400,
+    }),
+  )
   .use('*', async (c, next) => {
     for (const key of REQUIRED_ENV) {
       if (!(c.env as Record<string, unknown>)[key]) {

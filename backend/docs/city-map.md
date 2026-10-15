@@ -152,7 +152,7 @@ DO 值得记下来的平台数字（[DO Limits](https://developers.cloudflare.co
 - 页面（`/admin/city`，headless Chromium）：预填线上城市 → 出图 → 预览 `1048×1048` → `出图完成：新增取数 41 条 · 15.4s`（KV 已热的路径；冷缓存是 41 次回源 ≈ 23s，Bun 脚本实测 22.7s）。墙钟几乎全被库内每边界 `sleep(350)` 占掉：41 × 350ms ≈ 14.4s。
 - 生成结果与 CLI 出的 `杭州市-330100-u1d0.svg` **逐字节相同**。
 - 「上传并应用」：常住与当前同城 → 只发 **1** 次预签名 PUT（`img/site/map/330100.svg`，`content-type: image/svg+xml`，`X-Amz-SignedHeaders=content-type;host`），随后 `PUT /api/city` 写入 KV 成功、页面提示 `完成：常住 杭州市 / 当前 杭州市`。验证时把 R2 PUT 打桩（返回 200 + CORS 头），未写任何生产对象。
-- 代理端点：无 `auth` → 401、非法 adcode → 400、非法 body → 400；回源 212ms vs KV 命中 37ms；参数顺序打乱命中同一条缓存；`nocache=1` 回源。
+- 代理端点：无 `X-Auth-Key` 头 → 401、非法 adcode → 400、非法 body → 400；回源 212ms vs KV 命中 37ms；参数顺序打乱命中同一条缓存；`nocache=1` 回源。
 
 ## 其他已知坑
 

@@ -55,8 +55,8 @@ watch(key, () => (valid.value = null));
           <span v-else class="text-sm text-(--color-text-3)">未校验</span>
         </div>
         <p class="text-xs text-(--color-text-3)">
-          密钥仅保存在本机 localStorage，所有管理请求以 ?auth= 携带；校验方式为请求 GET
-          /api/ask-box/admin。
+          密钥仅保存在本机 localStorage，所有管理请求以
+          <code>X-Auth-Key</code> 请求头携带；校验方式为请求 GET /api/ask-box/admin。
         </p>
       </div>
     </KCard>
