@@ -154,7 +154,7 @@ Kuriyona.com/
 │   │   ├── useCity.ts           `/api/city` 数据（useAsyncData key `city`，server: false；首页常驻城市卡片）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
-│   │   ├── useTimelineLink.ts  时间线条目跳转（外部新窗口 / 内部走 localePath；`isCurrent` 判定链接是否指向当前页，供 TimelineList 隐去自链接按钮；/timeline 页面与 TimelineList 共用）
+│   │   ├── useTimelineLink.ts  时间线条目跳转（外部新窗口 / 内部走 localePath；`isCurrent` 判定链接是否指向当前页，供 TimelineList 隐去自链接按钮；`linkIcon` 对 x.com 链接返回 `simple-icons:x`，其余外部链接 `material-symbols:open-in-new`、内部 `arrow-forward`；/timeline 页面与 TimelineList 共用）
 │   │   ├── useSurfaceLevel.ts  表面层级推导（provide/inject，上限 3，供 KSurface/KCard 使用）
 │   │   ├── usePageScrollLock.ts 锁页面滚动（只改 body overflow/padding-right 补滚动条宽度；不用 reka 的 useBodyScrollLock —— 它会把 body 的 pointer-events 设成 none）
 │   │   ├── useCloudflareStatus.ts  CF 节点状态 + /cdn-cgi/trace 定位

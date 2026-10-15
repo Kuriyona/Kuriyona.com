@@ -16,8 +16,11 @@ export const useTimelineLink = () => {
     else navigateTo(localePath(link));
   }
 
-  const linkIcon = (link: string) =>
-    isExternal(link) ? 'material-symbols:open-in-new' : 'material-symbols:arrow-forward';
+  const linkIcon = (link: string) => {
+    // X（原 Twitter）链接用 X 图标代替通用外链图标
+    if (/^https?:\/\/(?:www\.)?x\.com\//i.test(link)) return 'simple-icons:x';
+    return isExternal(link) ? 'material-symbols:open-in-new' : 'material-symbols:arrow-forward';
+  };
 
   return { isExternal, isCurrent, openLink, linkIcon };
 };
