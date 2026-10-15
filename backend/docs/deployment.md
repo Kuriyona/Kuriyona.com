@@ -46,6 +46,27 @@ done
 
 可选：`CF_API_TOKEN`（管理端 `/admin/cache` 清 Cloudflare 边缘缓存走 `/api/cache/*`）。需要 **Zone:Read**（列域名 / 用域名换 zone id）与 **Cache Purge**（`POST /zones/{id}/purge_cache`）两个权限，Zone Resources 选全部域名才能清「名下其他域名」；权限与限流见 `docs/cache-purge.md`。不设它只有清缓存那条链路 500，其余接口不受影响。
 
+### R2 凭据从哪来
+
+`ENDPOINT` / `ACCESS_KEY_ID` / `SECRET_ACCESS_KEY` / `BUCKET_NAME` 对应 Dashboard → R2 → *Manage API tokens* 建一个 scoped 到桶 `kuriyona-r2`（Object Read & Write）的 token 时展示的那几行；过期/被删时整条链路（`/api/r2/*`、城市地图出图上传、`scripts/upload-blog-og.ts`）都会 `Unauthorized` 或 502。
+
+|Dashboard 展示|落点|
+|---|---|
+|`cfat_…`（API token，**只显示这一次**）|仓库里没用它；它等价于私钥，见下|
+|Access Key ID|`ACCESS_KEY_ID`，值 = 该 token 的 **token id**（`GET /accounts/{account_id}/tokens/verify` 返回的 `result.id`）|
+|Secret Access Key|`SECRET_ACCESS_KEY`，值 = **`sha256(cfat_…)` 的 64 位 hex**（2026-10 实测）|
+|S3 API 端点|`ENDPOINT`|
+
+所以 Secret 丢了不必重建 token，反推即可：
+
+```bash
+bun -e 'import {createHash} from "node:crypto"; const s=process.argv[1]; process.stdout.write(createHash("sha256").update(s).digest("hex")+"\n")' 'cfat_…'
+```
+
+⚠️ 反过来说 `cfat_…` 本身等同于私钥（能反推 Secret Access Key）：**不要写进任何会入库的文件**，跟 `SECRET_ACCESS_KEY` 一样只放 `.env` / `.dev.vars` / 密码管理器。
+
+注意 `CF_API_TOKEN` 是**另一个** token（清缓存专用，需 Zone:Read + Cache Purge），与 R2 这套 S3 凭据互不通用 —— 别用 R2 那个 token 去填 `CF_API_TOKEN`，反之亦然。
+
 ## 4. 应用迁移
 
 ```bash
