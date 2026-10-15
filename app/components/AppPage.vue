@@ -8,9 +8,12 @@ defineProps<{ hero?: boolean }>();
 <template>
   <div class="flex justify-center min-h-[calc(100vh)-var(--app-bar-height)] mt-(--app-bar-height)">
     <!-- 两侧保留区：视口够宽（reserve: 断点）才出现的独立栏位，内容由命名插槽填充。
-         右侧即使没内容也保留同等宽度，正文列才始终居中。 -->
+         右侧即使没内容也保留同等宽度，正文列才始终居中；左侧固定跟一个音乐播放器。 -->
     <aside class="reserve hidden reserve:block pr-4">
-      <slot name="reserve-left" />
+      <div class="flex flex-col gap-4">
+        <slot name="reserve-left" />
+        <MusicPlayer />
+      </div>
     </aside>
     <div class="w-(--content-width) max-w-full my-20 p-4 flex flex-col gap-4">
       <slot />

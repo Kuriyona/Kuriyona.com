@@ -1,2 +1,4 @@
 allowBuilds:
   esbuild: true
+patchedDependencies:
+  '@kuriyona/cecilia@1.0.0': patches/@kuriyona__cecilia@1.0.0.patch

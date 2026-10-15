@@ -4,10 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@kuriyona/cecilia@1.0.0': f8447743b0973301d29cb6dd6aeea53de468ab3e1c40d00e99c703f9647dd3f4
+
 importers:
 
   .:
     dependencies:
+      '@kuriyona/cecilia':
+        specifier: 1.0.0
+        version: 1.0.0(patch_hash=f8447743b0973301d29cb6dd6aeea53de468ab3e1c40d00e99c703f9647dd3f4)
       aws4fetch:
         specifier: ^1.0.20
         version: 1.0.20
@@ -198,6 +204,10 @@ packages:
   '@js-temporal/polyfill@0.5.1':
     resolution: {integrity: sha512-hloP58zRVCRSpgDxmqCWJNlizAlUgJFqG2ypq79DCvyv9tHjRYMDOcPFjzfl/A1/YxDvRCZz8wvZvmapQnKwFQ==}
     engines: {node: '>=12'}
+
+  '@kuriyona/cecilia@1.0.0':
+    resolution: {integrity: sha512-PNAPx66AEZvpTSpeAaMlaNC9P3FloOgvR5Fa009CnuvQp5AWFbTsxr9p8Ov9fV1iXEMNPBmIsW9OeTH5cW1+kQ==}
+    engines: {node: '>=18'}
 
   '@oxfmt/binding-android-arm-eabi@0.72.0':
     resolution: {integrity: sha512-u4U1uaDOVBuorGNC/07NLm48nECHOiJJka002YGML16Md2DRvf38RGBt01lH60EOGvNlFVmbLoksQedNBoZHKw==}
@@ -606,6 +616,8 @@ snapshots:
   '@js-temporal/polyfill@0.5.1':
     dependencies:
       jsbi: 4.3.2
+
+  '@kuriyona/cecilia@1.0.0(patch_hash=f8447743b0973301d29cb6dd6aeea53de468ab3e1c40d00e99c703f9647dd3f4)': {}
 
   '@oxfmt/binding-android-arm-eabi@0.72.0':
     optional: true

@@ -1,0 +1,44 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 750b22afddc13518d898992abe38d6793b9b5d61..b660ea60da3d6dbb99195a77b0db5cd9c902ddda 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -61,7 +61,7 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7cl
+ const eapiEncrypt = (uri, data) => {
+ 	const text = JSON.stringify(data);
+ 	const digest = (0, node_crypto.createHash)("md5").update(`nobody${uri}use${text}md5forencrypt`, "utf8").digest("hex");
+-	const cipher = (0, node_crypto.createCipheriv)("aes-128-ecb", EAPI_KEY, null);
++	const cipher = (0, node_crypto.createCipheriv)("aes-128-ecb", EAPI_KEY, Buffer.alloc(0));
+ 	const plain = `${uri}${EAPI_SEP}${text}${EAPI_SEP}${digest}`;
+ 	return Buffer.concat([cipher.update(plain, "utf8"), cipher.final()]).toString("hex");
+ };
+@@ -83,7 +83,7 @@ const rsaEncryptNoPadding = (text) => {
+ 	const message = Buffer.from(text, "utf8");
+ 	const padded = Buffer.concat([Buffer.alloc(Math.max(0, size - message.length)), message]);
+ 	return (0, node_crypto.publicEncrypt)({
+-		key,
++		key: WEAPI_PUBLIC_KEY,
+ 		padding: node_crypto.constants.RSA_NO_PADDING
+ 	}, padded).toString("hex");
+ };
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 2ae020ff0cafa40d822d5076598c922bb5afcceb..634035ddecbcf74f03303bc6c510cea594637e01 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -57,7 +57,7 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7cl
+ const eapiEncrypt = (uri, data) => {
+ 	const text = JSON.stringify(data);
+ 	const digest = createHash("md5").update(`nobody${uri}use${text}md5forencrypt`, "utf8").digest("hex");
+-	const cipher = createCipheriv("aes-128-ecb", EAPI_KEY, null);
++	const cipher = createCipheriv("aes-128-ecb", EAPI_KEY, Buffer.alloc(0));
+ 	const plain = `${uri}${EAPI_SEP}${text}${EAPI_SEP}${digest}`;
+ 	return Buffer.concat([cipher.update(plain, "utf8"), cipher.final()]).toString("hex");
+ };
+@@ -79,7 +79,7 @@ const rsaEncryptNoPadding = (text) => {
+ 	const message = Buffer.from(text, "utf8");
+ 	const padded = Buffer.concat([Buffer.alloc(Math.max(0, size - message.length)), message]);
+ 	return publicEncrypt({
+-		key,
++		key: WEAPI_PUBLIC_KEY,
+ 		padding: constants.RSA_NO_PADDING
+ 	}, padded).toString("hex");
+ };

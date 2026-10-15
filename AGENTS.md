@@ -123,10 +123,10 @@ Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in s
 
 两张：**站点默认图**（除博客详情页外的所有页面，`app/app.vue` 的 `ogImage`）与**博客详情页图**（`app/pages/blog/[slug].vue` 按 slug + 语言覆盖）。都指向 R2 上的静态对象（与城市地图同在 `img/site/` 命名空间；`r2.kuriyona.com` 域名后的路径就是对象键）：
 
-|图|对象键|
-|---|---|
-|站点默认|`img/site/og/default.png`（居中两行：`Kuriyona's Space` / `https://Kuriyona.com ->`）|
-|博客详情页|`img/site/og/<slug>/<lang>.png`|
+| 图         | 对象键                                                                                |
+| ---------- | ------------------------------------------------------------------------------------- |
+| 站点默认   | `img/site/og/default.png`（居中两行：`Kuriyona's Space` / `https://Kuriyona.com ->`） |
+| 博客详情页 | `img/site/og/<slug>/<lang>.png`                                                       |
 
 三支脚本（都是根目录的 `bun` 脚本）：
 
@@ -155,12 +155,13 @@ Kuriyona.com/
 │   │   ├── css/                main.css（@import 汇总）· fonts.css（Google Fonts 文本字体 @import；**不含图标字体**）· base.css（设计令牌/主题变量/版式宽度令牌（--content-width/--reserve-width/--hero-height/--reserve-hero-offset）/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
-│   │   ├── AppPage.vue         页面布局容器（居中、正文列宽 --content-width；两侧各一个「保留区」aside：`reserve:` 断点（视口 ≥1500px）才出现、sticky 不随页面滚动、宽 --reserve-width，内容由 `reserve-left`/`reserve-right` 命名插槽填充，右侧空着也保留同宽以保证正文居中；右侧固定渲染三个默认小组件（`ReserveClock`/`ReserveNav`/`ReserveArticles`），页面仍可用 `reserve-right` 在其后追加内容；`hero` prop：页面首块是半屏 hero 时打开，右栏整体下移 `--hero-height` 到 hero 底部才开始吸顶）
+│   │   ├── AppPage.vue         页面布局容器（居中、正文列宽 --content-width；两侧各一个「保留区」aside：`reserve:` 断点（视口 ≥1500px）才出现、sticky 不随页面滚动、宽 --reserve-width，内容由 `reserve-left`/`reserve-right` 命名插槽填充，左侧插槽下方固定跟一个 `MusicPlayer`，右侧空着也保留同宽以保证正文居中；右侧固定渲染三个默认小组件（`ReserveClock`/`ReserveNav`/`ReserveArticles`），页面仍可用 `reserve-right` 在其后追加内容；`hero` prop：页面首块是半屏 hero 时打开，右栏整体下移 `--hero-height` 到 hero 底部才开始吸顶）
 │   │   ├── AppBar.vue          顶栏 + 搜索按钮 + Ctrl+K 全局监听（**不渲染 nav 项**：左侧头像 + 站点标题，右侧搜索按钮 + 一个「语言 + 菜单」合并长条按钮，点击打开抽屉 AppBar/AppMenu；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片，读 useNav）/ 关于（GIT_HASH/构建时间/Cloudflare 节点/萌 ICP 备，mt-auto 沉底））
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
 │   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
 │   │   ├── BlogToc.vue         博客目录列表（窄屏正文顶部内联卡片 / 宽屏左侧保留区 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
+│   │   ├── MusicPlayer.vue     音乐播放器卡片（左保留区常驻；封面/歌名/进度条/上下首/曲目列表，状态在 `useMusic` 模块级单例里，跨路由切换不中断；歌单来自 `/api/music/playlist`，播放地址由 `useMusic` 直接拼网易 outer 链接）
 │   │   ├── TimelineList.vue    时间线紧凑行列表（日期 + 文本 + 跳转图标，无年份分隔；trans 页的「性别认同历程」用它，条目指向当前页时不出跳转按钮，见 useTimelineLink）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -175,6 +176,7 @@ Kuriyona.com/
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
 │   │   ├── useNav.ts           导航项（读取 app.config nav/aboutNav + i18n 标题）
 │   │   ├── useCity.ts           `/api/city` 数据（useAsyncData key `city`，server: false；首页常驻城市卡片）
+│   │   ├── useMusic.ts         音乐播放器单例（模块级 `audio`/歌单状态，跨路由不中断；`loadPlaylist`/`playAt`/`toggle`/`next`/`prev`/`seek`，播放地址由 `outerUrl()` 直接拼 `https://music.163.com/song/media/outer/url?id=<id>.mp3`（浏览器跟随 302 到 CDN，不经后端），失败经 `error` 通知组件 toast）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useTimelineLink.ts  时间线条目跳转（外部新窗口 / 内部走 localePath；`isCurrent` 判定链接是否指向当前页，供 TimelineList 隐去自链接按钮；`linkIcon` 对 x.com 链接返回 `simple-icons:x`，其余外部链接 `material-symbols:open-in-new`、内部 `arrow-forward`；/timeline 页面与 TimelineList 共用）
@@ -209,7 +211,8 @@ Kuriyona.com/
 │   │   ├── highlightMotion.ts   背景高亮点运动学纯函数（随机起点/对角方向、触边反弹、视口变化夹回）
 │   ├── scripts/                 客户端共享脚本/类型
 │   │   ├── i18n.ts              重导出 vue-i18n 的 useI18n
-│   │   └── cityTypes.ts         /api/city 接口类型（City/Weather）
+│   │   ├── cityTypes.ts         /api/city 接口类型（City/Weather）
+│   │   └── musicTypes.ts        /api/music 接口类型（MusicTrack/MusicPlaylist）
 │   ├── content/blog/            博客 Markdown 源文件（按语言分目录：zh-Hans/zh-Hant/en/ja）
 │   └── data/devices.json        设备配置数据（/about/devices 页面读取）
 ├── server/                      Nitro API 路由
@@ -231,7 +234,7 @@ Kuriyona.com/
 │   │   ├── amap.ts              高德：行政区划接口常量 + 城市中心点（amap:center:<adcode>，供天气按坐标查）
 │   │   ├── db/schema.ts         Drizzle sqlite-core 表结构（ask_table，UUID 主键）
 │   │   ├── plugin/auth.ts       鉴权中间件（AUTH_KEY query / JWT Bare 或 Bearer）
-│   │   ├── router/              路由：ask-box / r2 / city（高德代理 + 出图上传签名 + 写城市配置）/ cache（Cloudflare 清缓存转发）
+│   │   ├── router/              路由：ask-box / r2 / city（高德代理 + 出图上传签名 + 写城市配置）/ cache（Cloudflare 清缓存转发）/ music（cecilia 取歌单与播放直链）
 │   │   └── utils.ts             D1/R2 预签名/Turnstile 工具
 │   ├── drizzle/                 Drizzle SQLite 迁移（提交到 Git，wrangler 消费）
 │   └── docs/                    后端文档（development / deployment / city-map / cache-purge）
@@ -249,61 +252,63 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件          | 用途                                                                                                                                               |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                        |
-| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                   |
-| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                          |
-| `KIcon`       | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）                                          |
-| `KIconButton` | 圆形图标按钮（icon 为 `prefix:name` 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）                                            |
-| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，默认图标为 `material-symbols:open-in-new` / `arrow-forward`）                                                    |
-| `KPersonCard` | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simple-icons 图标 + 名称） |
-| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                    |
-| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                               |
-| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                             |
-| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                       |
-| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative；`label` 传入时在左端渲染一行小字标签（仅 horizontal））                            |
-| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                         |
-| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                               |
-| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                    |
-| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                      |
-| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）               |
+| 组件          | 用途                                                                                                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                                                           |
+| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                                                      |
+| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                                                             |
+| `KIcon`       | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）                                                                             |
+| `KIconButton` | 圆形图标按钮（icon 为 `prefix:name` 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）                                                                               |
+| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，默认图标为 `material-symbols:open-in-new` / `arrow-forward`）                                                                                       |
+| `KPersonCard` | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simple-icons 图标 + 名称）                                    |
+| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                                                       |
+| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                                                                  |
+| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                                                                |
+| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                                                          |
+| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative；`label` 传入时在左端渲染一行小字标签（仅 horizontal））                                                               |
+| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                                                            |
+| `MusicPlayer` | 左保留区常驻音乐播放器（封面/歌名/进度条/上下首/曲目列表；状态在 `useMusic` 模块级单例里，跨路由切换不中断；歌单来自 `/api/music/playlist`，播放地址直接用网易 outer 链接，不走后端） |
+| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                                                                  |
+| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                                                       |
+| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                                                         |
+| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）                                                  |
 
 ### 页面路由总览
 
-| 路由                 | 文件                                | 说明                                                                                                                             |
-| -------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）             |
+| 路由                 | 文件                                | 说明                                                                                                                                                             |
+| -------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）                                             |
 | `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏欢迎 hero + 关于我卡片 + 跨性别科普问答卡片（流式输出）+ 性别探索过程计数/占比条 + 性别认同历程（限高滚动）+ 资源链接，含 data-pagefind-body） |
-| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                |
-| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                               |
-| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 宽屏左侧保留区目录 + 其它语言两行截断）                                                             |
-| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                                       |
-| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                      |
-| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                       |
-| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                                         |
-| `/admin`             | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                    |
-| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                         |
-| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                     |
-| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图）     |
-| `/admin/cache`       | `pages/admin/cache.vue`             | 缓存清除：选 zone（域名）+ URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存；最近清除存本机 localStorage                 |
+| `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                                                |
+| `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                                                               |
+| `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 宽屏左侧保留区目录 + 其它语言两行截断）                                                                                             |
+| `/timeline`          | `pages/timeline/index.vue`          | 时间线（条目描述保持中文）                                                                                                                                       |
+| `/friends-and-links` | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                                                      |
+| `/ask-box`           | `pages/ask-box/index.vue`           | 提问箱列表                                                                                                                                                       |
+| `/ask-box/ask`       | `pages/ask-box/ask.vue`             | 提交提问                                                                                                                                                         |
+| `/admin`             | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                                                    |
+| `/admin/r2`          | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                                                         |
+| `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                                                     |
+| `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图）                                     |
+| `/admin/cache`       | `pages/admin/cache.vue`             | 缓存清除：选 zone（域名）+ URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存；最近清除存本机 localStorage                                                 |
 
 ### API 概览
 
-| 端点                                                       | 来源     | 说明                                                                                                                                                                                                  |
-| ---------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/articles`                                        | server/  | 文章元信息列表（无 content）                                                                                                                                                                          |
-| `GET /api/articles/:slug`                                  | server/  | 指定文章（所有语言版本）                                                                                                                                                                              |
-| `/api/city`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                                                                    |
-| `PUT /api/ask-box/admin/:id/answer`                        | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                                                                  |
-| `GET /api/r2/list?prefix=&delimiter=`                      | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）                                                          |
-| `GET /api/city/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                                                                |
-| `GET /api/city/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                                                                       |
-| `PUT /api/city`                                            | backend/ | 写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 adcode 推导）：`GET /api/city` 的 `resident`/`current` 读它，缺失/坏值回退杭州                                                                   |
-| `GET /api/city` 的 `resident`/`current`                    | backend/ | `{ resident: { name, adcode, map, weather }, current: { name, adcode, map } }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/city-map.md`）                            |
-| `GET /api/cache/zones`                                     | backend/ | 列出 `CF_API_TOKEN` 可见的 zone（`{ zones: [{ id, name, status, plan }] }`，最多 5 页 × 50），管理端清缓存的域名下拉用                                                                                |
-| `POST /api/cache/purge`                                    | backend/ | body `{ zone, type, targets[] }` → `POST /zones/{id}/purge_cache`；`type` 为 `url`/`hostname`/`tag`/`prefix`，`zone` 接受 zone id 或域名；单次上限 100 条，成功返回 `{ success, zone, type, purged }` |
-| `GET /api/city` 的 `resident.weather`                      | backend/ | 按 `city:maps` 的 `resident.adcode` 取高德中心点（KV `amap:center:<adcode>`）后以 `location=经度,纬度` 查 QWeather，缓存 `cache:weather:<adcode>` 30 分钟                                             |
+| 端点                                                       | 来源     | 说明                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/articles`                                        | server/  | 文章元信息列表（无 content）                                                                                                                                                                                                                                                                              |
+| `GET /api/articles/:slug`                                  | server/  | 指定文章（所有语言版本）                                                                                                                                                                                                                                                                                  |
+| `/api/city`、`/api/ask-box`、`/api/r2/*`、`/api/turnstile` | backend/ | Worker（Hono），通过 `fetchApi`（前缀 `/api`）调用                                                                                                                                                                                                                                                        |
+| `PUT /api/ask-box/admin/:id/answer`                        | backend/ | 接收 JSON body `{ answer }`（回答不再放在 URL path）                                                                                                                                                                                                                                                      |
+| `GET /api/r2/list?prefix=&delimiter=`                      | backend/ | 返回 `{ prefix, folders, files, truncated }`，浏览根固定 `static/`（`folders` 来自 `CommonPrefixes`，`files[].key` 为含 `static/` 的完整键）                                                                                                                                                              |
+| `GET /api/city/amap?<参数>`                                | backend/ | 高德代理（管理端出图用，需 `auth`）：转发查询并注入 `AMAP_KEY`，KV 缓存 30 天；`?nocache=1` 只绕过读取                                                                                                                                                                                                    |
+| `GET /api/city/map/upload-url?adcode=`                     | backend/ | 返回 R2 预签名 PUT 地址，键 `img/site/map/<adcode>.svg`（签名含 `Content-Type: image/svg+xml`）                                                                                                                                                                                                           |
+| `PUT /api/city`                                            | backend/ | 写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 adcode 推导）：`GET /api/city` 的 `resident`/`current` 读它，缺失/坏值回退杭州                                                                                                                                                                       |
+| `GET /api/music/playlist`                                  | backend/ | 固定歌单的曲目列表（`{ tracks: [{ id, name, artists[], coverUrl, duration }] }`）；上游结果缓存 KV `cache:music:playlist:18488781852` 6 小时，浏览器再缓存 1 小时；`coverUrl` 已升 https 并加 `?param=96y96`（**播放地址不经后端**：前端直接拼 `https://music.163.com/song/media/outer/url?id=<id>.mp3`） |
+| `GET /api/city` 的 `resident`/`current`                    | backend/ | `{ resident: { name, adcode, map, weather }, current: { name, adcode, map } }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/city-map.md`）                                                                                                                                |
+| `GET /api/cache/zones`                                     | backend/ | 列出 `CF_API_TOKEN` 可见的 zone（`{ zones: [{ id, name, status, plan }] }`，最多 5 页 × 50），管理端清缓存的域名下拉用                                                                                                                                                                                    |
+| `POST /api/cache/purge`                                    | backend/ | body `{ zone, type, targets[] }` → `POST /zones/{id}/purge_cache`；`type` 为 `url`/`hostname`/`tag`/`prefix`，`zone` 接受 zone id 或域名；单次上限 100 条，成功返回 `{ success, zone, type, purged }`                                                                                                     |
+| `GET /api/city` 的 `resident.weather`                      | backend/ | 按 `city:maps` 的 `resident.adcode` 取高德中心点（KV `amap:center:<adcode>`）后以 `location=经度,纬度` 查 QWeather，缓存 `cache:weather:<adcode>` 30 分钟                                                                                                                                                 |
 
 ## Architecture
 
