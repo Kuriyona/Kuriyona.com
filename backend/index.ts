@@ -14,7 +14,7 @@ import {
 } from './src/router/ask-box';
 import { listZones, purgeCache } from './src/router/cache';
 import { amapProxy, cityMapUploadUrl, getCity, putCity } from './src/router/city';
-import { getMusicLyric, getMusicPlaylist } from './src/router/music';
+import { getMusicLyric, getMusicPlaylist, purgeMusicCache } from './src/router/music';
 import { listR2, signedUrl } from './src/router/r2';
 import { verifyTurnstile } from './src/utils';
 
@@ -50,6 +50,7 @@ const api = new Hono<{ Bindings: Env }>()
   .put('/city', requireAuthKey, putCity)
   .get('/music/playlist', getMusicPlaylist)
   .get('/music/lyric', getMusicLyric)
+  .post('/music/cache/purge', requireAuthKey, purgeMusicCache)
   .get('/r2/list', requireAuthKey, listR2)
   .get('/r2/upload-signed-url', requireAuthKey, signedUrl)
   .get('/cache/zones', requireAuthKey, listZones)

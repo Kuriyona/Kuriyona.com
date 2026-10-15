@@ -9,6 +9,7 @@ const items = [
   { to: '/admin/ask-box', icon: 'material-symbols:forum', label: '提问箱审核' },
   { to: '/admin/city', icon: 'material-symbols:map', label: '城市地图' },
   { to: '/admin/cache', icon: 'material-symbols:delete-sweep', label: '缓存清除' },
+  { to: '/admin/music', icon: 'material-symbols:music-note', label: '音乐缓存' },
 ];
 
 // 带语言前缀的路径也匹配（`/en/admin/r2`.endsWith('/admin/r2')）

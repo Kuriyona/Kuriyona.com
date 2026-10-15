@@ -187,7 +187,7 @@ Kuriyona.com/
 │   │   └── cfn.ts              cloudflarestatus API 类型定义
 │   ├── layouts/                 页面布局（Nuxt 自动发现；由 app.vue 的 <NuxtLayout> 应用）
 │   │   ├── default.vue          透传 slot（无自定义布局页面走此布局）
-│   │   └── admin.vue            管理面板共享导航壳（五个 admin 页面 definePageMeta({ layout: 'admin' })；宽屏=内容左侧 sticky 竖导航（仍在 AppPage 容器内），窄屏（< lg）=顶部 KSelect 切换）
+│   │   └── admin.vue            管理面板共享导航壳（六个 admin 页面 definePageMeta({ layout: 'admin' })；宽屏=内容左侧 sticky 竖导航（仍在 AppPage 容器内），窄屏（< lg）=顶部 KSelect 切换）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
 │   │   ├── about/trans/        MtF 相关页面（半屏 hero = 欢迎文字（MtF 短语用旗面渐变）+ 关于我卡片（trans 旗帜外观 + 自我介绍）+ 跨性别科普卡片（「什么是跨性别？什么是跨性别女性？」，左侧 DeepSeek 头像 + 右侧对话气泡，进入视口后按字流式输出正文：速度 = 10s ÷ 字数，正文在 SSR 里就是完整的）+ 性别探索过程里程碑计数（GSAP）+ 性别认同历程（TimelineList，限高 max-h-80 滚动）+ 跨性别资源链接）
@@ -196,7 +196,7 @@ Kuriyona.com/
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
 │   │   ├── timeline/index.vue   时间线页（倒序展示，条目可选 link 跳转按钮）
 │   │   ├── ask-box/             提问箱（index 列表 / ask 提交表单，Turnstile 验证）
-│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/city 城市地图出图、/admin/cache 缓存清除）
+│   │   ├── admin/               管理页（/admin API key、/admin/r2 上传、/admin/ask-box 审核、/admin/city 城市地图出图、/admin/cache 缓存清除、/admin/music 音乐缓存刷新）
 │   ├── stores/                  Pinia stores
 │   │   └── main.ts              JWT（Turnstile 验证后存储）
 │   ├── utils/                   @/ 别名工具函数
@@ -291,6 +291,7 @@ Kuriyona.com/
 | `/admin/ask-box`     | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                                                     |
 | `/admin/city`        | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；目标区域高亮取 `--color-theme`，改主题色需重出图）                                     |
 | `/admin/cache`       | `pages/admin/cache.vue`             | 缓存清除：选 zone（域名）+ URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存；最近清除存本机 localStorage                                                 |
+| `/admin/music`       | `pages/admin/music.vue`             | 音乐缓存：立即刷新歌单缓存 / 全部歌曲歌词缓存（只清 Worker 侧 KV）                                                                                               |
 
 ### API 概览
 
@@ -306,6 +307,7 @@ Kuriyona.com/
 | `PUT /api/city`                                            | backend/ | 写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 adcode 推导）：`GET /api/city` 的 `resident`/`current` 读它，缺失/坏值回退杭州                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `GET /api/music/playlist`                                  | backend/ | 固定歌单的曲目列表（`{ tracks: [{ id, name, artists[], coverUrl, duration }] }`）；上游结果缓存 KV `cache:music:playlist:18488781852` 6 小时，浏览器再缓存 1 小时；`coverUrl` 已升 https 并加 `?param=96y96`（**播放地址不经后端**：前端直接拼 `https://music.163.com/song/media/outer/url?id=<id>.mp3`）                                                                                                                                                                                                                                                 |
 | `GET /api/music/lyric?id=`                                 | backend/ | 某首歌的歌词（`{ lines: [{ time, text, translation? }] }`，`time` 为毫秒、`translation` 是逐行翻译，无翻译则无该字段）；KV **永久**缓存 `cache:music:lyric:<id>`（put 不设 TTL，要换词只能手动删键），响应 `cache-control: public, max-age=31536000, immutable`；无歌词也缓存空数组，避免反复打上游；缺合法 `id` 返回 400；**已知上游解析 bug**（未修）：部分歌曲上游用 `[mm:ss:ff]` 时间戳、cecilia 的 `parseLrc` 不认，本仓歌单 4 首里有 2 首只剩署名两行，见 `backend/AGENTS.md` 与 [Kuriyona/Cecilia#2](https://github.com/Kuriyona/Cecilia/issues/2) |
+| `POST /api/music/cache/purge`                              | backend/ | body `{ target: 'playlist' \| 'lyric' }` → 删 KV `cache:music:playlist:18488781852` / 全部 `cache:music:lyric:*`（list 分页后逐个 delete），返回 `{ success, target, deleted }`；只清 Worker 侧 KV，浏览器/边缘上的旧响应另外走 `/cache/purge`，非法 target 返回 400；管理端 `/admin/music`                                                                                                                                                                                                                                                               |
 | `GET /api/city` 的 `resident`/`current`                    | backend/ | `{ resident: { name, adcode, map, weather }, current: { name, adcode, map } }`，读 KV `city:maps`、缺失时回退杭州，`map` 指向 R2 静态 SVG（见 `backend/docs/city-map.md`）                                                                                                                                                                                                                                                                                                                                                                                |
 | `GET /api/cache/zones`                                     | backend/ | 列出 `CF_API_TOKEN` 可见的 zone（`{ zones: [{ id, name, status, plan }] }`，最多 5 页 × 50），管理端清缓存的域名下拉用                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `POST /api/cache/purge`                                    | backend/ | body `{ zone, type, targets[] }` → `POST /zones/{id}/purge_cache`；`type` 为 `url`/`hostname`/`tag`/`prefix`，`zone` 接受 zone id 或域名；单次上限 100 条，成功返回 `{ success, zone, type, purged }`                                                                                                                                                                                                                                                                                                                                                     |
@@ -323,7 +325,7 @@ Kuriyona.com/
 - `app/config.json` — 个人信息配置（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 导入并合并进 `useAppConfig()`；`languages` 各项 `name` 是**硬编码标签**（`中文/普通话`/`English`/`日本語`，首页技能卡里不随语言切换），另配 `icon` 缩写徽标（卡片渲染时再前置一个 `material-symbols:translate` 图标），不走 i18n。
 - `app/app.config.ts` — `nav` 直接作为 `config.nav`（抽屉菜单 / 右栏 `ReserveNav` 的数据源；顶栏已不渲染 nav），单项支持 `onAbout`（关于页矩形卡片过滤）开关；`aboutNav` 为 `onAbout` 的过滤结果，供关于页 `useAboutNav()` 使用；**`nav` 数组顺序就是抽屉菜单 / 右栏 `ReserveNav` / 关于页卡片的顺序**，`shortTitleKey`（目前只有 `blog.short-title`）供抽屉菜单与右栏这类单行位置用的短标签，缺省回退 `titleKey`；`timeline` 条目支持可选 `link` 字段（内部路径或外部 URL，时间线页渲染跳转按钮），`tag` 为展示用徽标——`/about/trans` 的「性别认同历程」按 `tag === '性别认同'` 过滤同一份数据（改这个 tag 文案会同时改变该区块内容，属有意耦合）。
 - `i18n/locales/` — 4 files: `zh-Hans.json` (default), `zh-Hant.json`, `en.json`, `ja.json`.
-- `app/pages/admin/` — 5 protected pages: `/admin`（面板主页：密钥校验 + 管理入口）, `/admin/r2`, `/admin/ask-box`, `/admin/city`, `/admin/cache`；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`；宽屏左侧竖导航、窄屏顶部菜单）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`（`adminErrorMessage` 同源但优先用响应体里的 `message`，清缓存页用它显示 Cloudflare 原文）。
+- `app/pages/admin/` — 6 protected pages: `/admin`（面板主页：密钥校验 + 管理入口）, `/admin/r2`, `/admin/ask-box`, `/admin/city`, `/admin/cache`, `/admin/music`（立即刷新歌单 / 全部歌词的 Worker 侧 KV 缓存）；共用 `app/layouts/admin.vue`（导航壳，`definePageMeta({ layout: 'admin' })`；宽屏左侧竖导航、窄屏顶部菜单）。Auth via `API_KEY` in `localStorage`, passed as `?auth=` param（`fetchApi` 每请求现读，改密钥即时生效）；失败文案统一经 `app/utils/adminError.ts` 的 `adminErrorText`（`adminErrorMessage` 同源但优先用响应体里的 `message`，清缓存页用它显示 Cloudflare 原文）。
 
 ## Key Conventions
 

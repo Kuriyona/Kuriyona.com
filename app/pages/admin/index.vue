@@ -73,6 +73,10 @@ watch(key, () => (valid.value = null));
           to="/admin/cache"
           text="缓存清除"
           desc="按 URL / 主机名 / 标签 / 前缀清 Cloudflare 边缘缓存" />
+        <KCardLink
+          to="/admin/music"
+          text="音乐缓存"
+          desc="立即刷新歌单 / 全部歌词的 Worker 侧 KV 缓存" />
       </div>
     </KCard>
   </div>

@@ -113,3 +113,48 @@ export const getMusicLyric: H = async (c) => {
   await c.env.STATUS_KV.put(cacheKey, body);
   return c.body(body, 200, headers);
 };
+
+const PURGE_TARGETS = ['playlist', 'lyric'] as const;
+type PurgeTarget = (typeof PURGE_TARGETS)[number];
+
+const isPurgeTarget = (value: unknown): value is PurgeTarget =>
+  typeof value === 'string' && (PURGE_TARGETS as readonly string[]).includes(value);
+
+/** KV 不给批量删：list 分页（上限 1000/页）后逐个 delete */
+const deleteByPrefix = async (kv: KVNamespace, prefix: string) => {
+  let cursor: string | undefined;
+  let deleted = 0;
+  do {
+    const page = await kv.list({ prefix, cursor });
+    for (const key of page.keys) {
+      await kv.delete(key.name);
+      deleted += 1;
+    }
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+  return deleted;
+};
+
+/**
+ * 管理端立即刷新音乐缓存（body `{ target: 'playlist' | 'lyric' }`）：
+ * playlist = 删歌单 KV（下次 GET /music/playlist 重新问上游）；
+ * lyric = 删全部 `cache:music:lyric:*`（下次播放该曲目再取上游）。
+ * 只清 Worker 侧 KV；浏览器/边缘上的旧响应要另外走 /cache/purge（歌词响应带 immutable）。
+ */
+export const purgeMusicCache: H = async (c) => {
+  const body = await c.req.json<{ target?: unknown }>().catch(() => null);
+  const target = body?.target;
+  if (!isPurgeTarget(target)) {
+    return c.json({ message: `[request] target 必须是 ${PURGE_TARGETS.join(' / ')}` }, 400);
+  }
+
+  let deleted: number;
+  if (target === 'playlist') {
+    await c.env.STATUS_KV.delete(PLAYLIST_CACHE_KEY);
+    deleted = 1;
+  } else {
+    deleted = await deleteByPrefix(c.env.STATUS_KV, LYRIC_CACHE_PREFIX);
+  }
+
+  return c.json({ success: true, target, deleted });
+};
