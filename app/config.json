@@ -175,8 +175,12 @@
       "icon": "simple-icons:typescript"
     },
     {
-      "name": "Vue",
-      "icon": "simple-icons:vuedotjs"
+      "name": "Python",
+      "icon": "simple-icons:python"
+    },
+    {
+      "name": "C#",
+      "icon": "simple-icons:dotnet"
     },
     {
       "name": "Node.js",
@@ -185,6 +189,10 @@
     {
       "name": "Bun",
       "icon": "simple-icons:bun"
+    },
+    {
+      "name": "Vue",
+      "icon": "simple-icons:vuedotjs"
     },
     {
       "name": "Nuxt",
@@ -199,32 +207,21 @@
       "icon": "simple-icons:css"
     },
     {
-      "name": "Python",
-      "icon": "simple-icons:python"
-    },
-    {
-      "name": "C#",
-      "icon": "simple-icons:dotnet"
-    },
-    {
       "name": "Markdown",
       "icon": "simple-icons:markdown"
     }
   ],
   "languages": [
     {
-      "name": "about.language.my-chinese",
-      "text": "Chinese/Mandarin",
+      "name": "中文/普通话",
       "icon": "ZH"
     },
     {
-      "name": "about.language.my-english",
-      "text": "English",
+      "name": "English",
       "icon": "EN"
     },
     {
-      "name": "about.language.my-japanese",
-      "text": "Japanese(Learning)",
+      "name": "日本語",
       "icon": "JP"
     }
   ],

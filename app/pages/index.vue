@@ -24,13 +24,13 @@ const { data: cities } = useCity();
     <!-- 关于我（左） + 常驻城市（右）：窄屏换成两行，城市数据缺失时关于我独占整行 -->
     <div class="grid grid-cols-1 gap-4" :class="{ 'min-[900px]:grid-cols-[2fr_1fr]': cities }">
       <KCard :title="$t('about.about-me')">
-        <p>{{ $t('about.hello-i-am-kuriyona') }}</p>
-        <p>{{ $t('about.also-weixi-yona') }}</p>
-        <p>
+        <p class="whitespace-pre-line">
+          {{ $t('about.hello-i-am-kuriyona') }}
           <NuxtLinkLocale to="/blog/about-name" class="link">{{
             $t('about.about-my-name')
           }}</NuxtLinkLocale>
         </p>
+        <p class="mt-4 whitespace-pre-line">{{ $t('about.intro') }}</p>
       </KCard>
       <CardCityMap
         v-if="cities?.resident"
@@ -73,11 +73,12 @@ const { data: cities } = useCity();
           v-for="item in config.languages"
           :key="item.name"
           class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm">
+          <KIcon name="material-symbols:translate" class="text-xl text-(--color-text-1)" />
           <span
             class="px-1.5 py-0.5 bg-white rounded-sm text-[10px] font-bold text-black leading-none"
             >{{ item.icon }}</span
           >
-          <span>{{ $t(item.name) }}</span>
+          <span>{{ item.name }}</span>
         </KSurface>
       </div>
     </KCard>
