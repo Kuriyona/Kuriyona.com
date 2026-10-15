@@ -150,6 +150,57 @@ const linkGroups = computed(() => [
   },
 ]);
 
+/**
+ * 科普卡片：右侧气泡把正文「流式输出」出来。
+ * - 正文在 SSR 时就是完整的（PageFind 索引 / 无 JS 时都拿得到全文），
+ *   客户端等卡片进入视口后再清空重放，所以首屏不会看到「先满后空」的跳动（该卡片在 hero 之下）。
+ * - 速度由字数反推：`STREAM_DURATION / 字数` 即每字间隔，保证整段在 10s 内出完。
+ */
+const STREAM_DURATION = 10_000;
+
+const bodyText = computed(() => t('about.mtf.what-is-trans.body'));
+/** 按码位切分（避免将来正文里出现代理对时被切坏） */
+const bodyChars = computed(() => Array.from(bodyText.value));
+
+const chatRoot = ref<HTMLElement | null>(null);
+const typed = ref(bodyText.value);
+const streaming = ref(false);
+let raf = 0;
+let streamed = false;
+let chatVisible = false;
+
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const stopStream = () => {
+  if (raf) cancelAnimationFrame(raf);
+  raf = 0;
+  streaming.value = false;
+};
+
+const startStream = () => {
+  stopStream();
+  const chars = bodyChars.value;
+  if (!chars.length || prefersReducedMotion()) {
+    typed.value = bodyText.value;
+    return;
+  }
+
+  const perChar = STREAM_DURATION / chars.length;
+  const startedAt = performance.now();
+  typed.value = '';
+  streaming.value = true;
+
+  const tick = (now: number) => {
+    const shown = Math.min(chars.length, Math.floor((now - startedAt) / perChar));
+    typed.value = chars.slice(0, shown).join('');
+    if (shown < chars.length) raf = requestAnimationFrame(tick);
+    else stopStream();
+  };
+  raf = requestAnimationFrame(tick);
+};
+
+let chatObserver: IntersectionObserver | null = null;
+
 /** GSAP 上下文；onUnmounted 必须在 setup 同步阶段注册（放在异步回调里会失去组件实例而失效） */
 let gsapCtx: { revert: () => void } | null = null;
 
@@ -188,9 +239,41 @@ onMounted(() => {
 
     ScrollTrigger.refresh();
   });
+
+  // 科普卡片：第一次进入视口时清空正文并开始流式输出
+  const el = chatRoot.value;
+  if (el) {
+    chatObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[entries.length - 1];
+        if (!entry) return;
+        chatVisible = entry.isIntersecting;
+        if (chatVisible && !streamed) {
+          streamed = true;
+          startStream();
+        }
+      },
+      // threshold 取小值：卡片在高窄屏上可能接近一屏高，阈值太大可能永远不触发
+      { threshold: 0.1 },
+    );
+    chatObserver.observe(el);
+  }
 });
 
-onUnmounted(() => gsapCtx?.revert());
+/** 切语言后重放；卡片不在视口里时直接给全文，免得回头时正好撞上半截 */
+watch(bodyText, () => {
+  if (chatVisible) startStream();
+  else {
+    stopStream();
+    typed.value = bodyText.value;
+  }
+});
+
+onUnmounted(() => {
+  chatObserver?.disconnect();
+  stopStream();
+  gsapCtx?.revert();
+});
 </script>
 
 <template>
@@ -228,9 +311,17 @@ onUnmounted(() => gsapCtx?.revert());
     </KSurface>
 
     <KCard :title="$t('about.mtf.what-is-trans.title')">
-      <p class="whitespace-pre-line text-sm text-(--color-text-2)">
-        {{ $t('about.mtf.what-is-trans.body') }}
-      </p>
+      <div ref="chatRoot" class="flex items-start gap-3 sm:gap-4">
+        <div
+          class="flex size-10 shrink-0 items-center justify-center rounded-full border border-(--color-control-border) bg-(--color-control-bg) text-(--color-text-1) sm:size-12">
+          <KIcon name="simple-icons:deepseek" class="text-xl sm:text-2xl" />
+        </div>
+        <KSurface class="min-w-0 flex-1 rounded-2xl rounded-tl-xs px-4 py-3">
+          <p class="whitespace-pre-line text-sm text-(--color-text-2)">
+            {{ typed }}<span v-if="streaming" class="chat-caret" aria-hidden="true"></span>
+          </p>
+        </KSurface>
+      </div>
     </KCard>
 
     <KCard :title="$t('about.mtf.journey.title')">
@@ -299,3 +390,22 @@ onUnmounted(() => gsapCtx?.revert());
     </KCard>
   </AppPage>
 </template>
+
+<style scoped>
+/* 流式输出光标（只在 streaming 时渲染，`prefers-reduced-motion` 下不会开始流式，故无需单独降级） */
+.chat-caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.15em;
+  vertical-align: -0.15em;
+  background-color: var(--color-theme);
+  animation: chat-caret-blink 1s steps(1, end) infinite;
+}
+
+@keyframes chat-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+</style>
