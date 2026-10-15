@@ -131,9 +131,8 @@ Kuriyona.com/
 │   │   ├── css/                main.css（@import 汇总）· fonts.css（Google Fonts 文本字体 @import；**不含图标字体**）· base.css（设计令牌/主题变量/版式宽度令牌（--content-width/--reserve-width/--hero-height/--reserve-hero-offset）/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-interactive/.k-scrim 表面体系）· utilities.css（.link/.trans-text/.trans-ribbon/.trans-aura 等跨性别旗装饰）
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
-│   │   ├── AppPage.vue         页面布局容器（居中、正文列宽 --content-width、底部 AppFooter；两侧各一个「保留区」aside：`reserve:` 断点（视口 ≥1500px）才出现、sticky 不随页面滚动、宽 --reserve-width，内容由 `reserve-left`/`reserve-right` 命名插槽填充，右侧空着也保留同宽以保证正文居中；右侧固定渲染三个默认小组件（`ReserveClock`/`ReserveNav`/`ReserveArticles`），页面仍可用 `reserve-right` 在其后追加内容；`hero` prop：页面首块是半屏 hero 时打开，右栏整体下移 `--hero-height` 到 hero 底部才开始吸顶）
-│   │   ├── AppBar.vue          顶栏 + 搜索按钮 + Ctrl+K 全局监听（**不渲染 nav 项**：左侧头像 + 站点标题，右侧搜索按钮 + 一个「语言 + 菜单」合并长条按钮，点击打开抽屉 AppBar/AppMenu；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片，读 useNav）/ 关于（GIT_HASH/构建时间/Cloudflare 节点，mt-auto 沉底））
-│   │   ├── AppFooter.vue       版权声明 + 萌 ICP 备
+│   │   ├── AppPage.vue         页面布局容器（居中、正文列宽 --content-width；两侧各一个「保留区」aside：`reserve:` 断点（视口 ≥1500px）才出现、sticky 不随页面滚动、宽 --reserve-width，内容由 `reserve-left`/`reserve-right` 命名插槽填充，右侧空着也保留同宽以保证正文居中；右侧固定渲染三个默认小组件（`ReserveClock`/`ReserveNav`/`ReserveArticles`），页面仍可用 `reserve-right` 在其后追加内容；`hero` prop：页面首块是半屏 hero 时打开，右栏整体下移 `--hero-height` 到 hero 底部才开始吸顶）
+│   │   ├── AppBar.vue          顶栏 + 搜索按钮 + Ctrl+K 全局监听（**不渲染 nav 项**：左侧头像 + 站点标题，右侧搜索按钮 + 一个「语言 + 菜单」合并长条按钮，点击打开抽屉 AppBar/AppMenu；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片，读 useNav）/ 关于（GIT_HASH/构建时间/Cloudflare 节点/萌 ICP 备，mt-auto 沉底））
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
 │   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
 │   │   ├── BlogToc.vue         博客目录列表（窄屏正文顶部内联卡片 / 宽屏左侧保留区 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）

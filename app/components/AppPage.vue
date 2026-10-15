@@ -14,8 +14,6 @@ defineProps<{ hero?: boolean }>();
     </aside>
     <div class="w-(--content-width) max-w-full my-20 p-4 flex flex-col gap-4">
       <slot />
-      <div class="flex-1"></div>
-      <AppFooter />
     </div>
     <aside
       class="reserve hidden reserve:block pl-4"

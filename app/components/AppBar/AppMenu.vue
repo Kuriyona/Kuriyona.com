@@ -83,6 +83,11 @@ const { currentNodeName } = useCloudflareStatus();
               {{ $t('global.build-time') }} : {{ dayjs(buildTime).format('YYYY-MM-DD HH:mm:ss') }}
             </p>
             <p v-if="currentNodeName">{{ $t('app.using-cf') }} : {{ currentNodeName }}</p>
+            <p>
+              <a href="https://icp.gov.moe/?keyword=20266280" target="_blank" class="link">
+                萌 ICP 备 20266280 号
+              </a>
+            </p>
           </div>
         </div>
       </KSurface>
