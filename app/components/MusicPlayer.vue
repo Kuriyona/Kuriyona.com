@@ -11,6 +11,8 @@ const {
   position,
   error,
   current,
+  lyric,
+  lyricIndex,
   loadPlaylist,
   playAt,
   toggle,
@@ -18,6 +20,9 @@ const {
   prev,
   seek,
 } = useMusic();
+
+// 只显示当前这一句（没有歌词时 lyricIndex 为 -1，取不到）
+const currentLyric = computed(() => lyric.value[lyricIndex.value] ?? null);
 
 onMounted(() => void loadPlaylist());
 
@@ -85,6 +90,17 @@ onUnmounted(() => clearTimeout(seekTimer));
           {{ current?.artists.join(' / ') ?? '—' }}
         </p>
       </div>
+    </div>
+
+    <!-- 歌词：固定 2 行高（当前句 / 翻译），没有翻译时那行留空，切行不跳高度 -->
+    <div class="mt-3 flex h-8 flex-col justify-center text-center text-xs leading-4">
+      <template v-if="currentLyric">
+        <p class="truncate font-bold">{{ currentLyric.text }}</p>
+        <p class="truncate text-(--color-text-3)">{{ currentLyric.translation ?? '' }}</p>
+      </template>
+      <p v-else-if="!lyric.length" class="text-(--color-text-3)">
+        {{ current ? $t('music.no-lyric') : '—' }}
+      </p>
     </div>
 
     <!-- 进度：第一行进度条（点击改变进度），第二行左已播 / 右总时长 -->

@@ -1,4 +1,4 @@
-import type { MusicPlaylist, MusicTrack } from '@/scripts/musicTypes';
+import type { MusicLyric, MusicLyricLine, MusicPlaylist, MusicTrack } from '@/scripts/musicTypes';
 
 type MusicState = 'idle' | 'loading' | 'ready' | 'error';
 
@@ -13,6 +13,10 @@ const playing = ref(false);
 const position = ref(0);
 /** 播放失败通知：值是 i18n key，组件 watch 到新 id 就 toast 一次 */
 const error = ref<{ id: number; key: string } | null>(null);
+/** 当前曲目歌词（含逐行翻译），随 playAt 切换；无歌词为空数组 */
+const lyric = ref<MusicLyricLine[]>([]);
+/** 歌词按曲目 id 记忆（空结果也记），同一首重播不再请求；HTTP 层另有长期缓存 */
+const lyricCache = new Map<number, MusicLyricLine[]>();
 
 let audio: HTMLAudioElement | null = null;
 /** 当前已装进 audio 的曲目下标（-1 = 还没装）；用于「暂停后继续」不重新拉直链 */
@@ -49,10 +53,33 @@ async function loadPlaylist() {
   state.value = 'loading';
   try {
     const data = await (await fetchApi.get('/music/playlist')).json<MusicPlaylist>();
-    tracks.value = data.tracks;
+    // 每次加载都换个顺序（Fisher-Yates 原地洗牌），不落持久化
+    tracks.value = [...data.tracks];
+    for (let i = tracks.value.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [tracks.value[i], tracks.value[j]] = [tracks.value[j]!, tracks.value[i]!];
+    }
     state.value = 'ready';
   } catch {
     state.value = 'error';
+  }
+}
+
+/** 拉某首的歌词；失败只留空数组、不报错（歌词缺失不该影响播放），下次播放再试 */
+async function loadLyric(id: number) {
+  const cached = lyricCache.get(id);
+  if (cached) {
+    lyric.value = cached;
+    return;
+  }
+  lyric.value = [];
+  try {
+    const data = await (await fetchApi.get(`/music/lyric?id=${id}`)).json<MusicLyric>();
+    lyricCache.set(id, data.lines);
+    // 请求期间可能已切歌：落地前确认还是当前这首
+    if (tracks.value[index.value]?.id === id) lyric.value = data.lines;
+  } catch {
+    /* 忽略：无歌词 */
   }
 }
 
@@ -62,6 +89,7 @@ function playAt(target: number) {
   if (!track) return;
   index.value = target;
   position.value = 0;
+  void loadLyric(track.id);
   const el = ensureAudio();
   el.src = outerUrl(track.id);
   loadedIndex = target;
@@ -93,6 +121,23 @@ const seek = (ms: number) => {
 
 export function useMusic() {
   const current = computed(() => tracks.value[index.value] ?? null);
+  /** 当前行下标：最后一个开始时间 ≤ 播放位置的行；还没唱到第一行（前奏）时为 -1 */
+  const lyricIndex = computed(() => {
+    const lines = lyric.value;
+    let low = 0;
+    let high = lines.length - 1;
+    let found = -1;
+    while (low <= high) {
+      const mid = (low + high) >> 1;
+      if (lines[mid]!.time <= position.value) {
+        found = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    return found;
+  });
   return {
     tracks,
     state,
@@ -101,6 +146,8 @@ export function useMusic() {
     position,
     error,
     current,
+    lyric,
+    lyricIndex,
     loadPlaylist,
     playAt,
     toggle,

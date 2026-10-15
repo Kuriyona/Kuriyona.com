@@ -110,6 +110,7 @@
   "music.empty": "歌单暂无歌曲",
   "music.load-error": "歌单加载失败",
   "music.next": "下一首",
+  "music.no-lyric": "暂无歌词",
   "music.pause": "暂停",
   "music.play": "播放",
   "music.prev": "上一首",

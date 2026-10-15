@@ -10,3 +10,14 @@ export interface MusicTrack {
 export interface MusicPlaylist {
   tracks: MusicTrack[];
 }
+
+/** `GET /api/music/lyric?id=`：`time` 为毫秒（与 `MusicTrack.duration` 同单位，可直接和播放位置比较） */
+export interface MusicLyricLine {
+  time: number;
+  text: string;
+  translation?: string;
+}
+
+export interface MusicLyric {
+  lines: MusicLyricLine[];
+}

@@ -110,6 +110,7 @@
   "music.empty": "Playlist is empty",
   "music.load-error": "Failed to load the playlist",
   "music.next": "Next",
+  "music.no-lyric": "No lyrics",
   "music.pause": "Pause",
   "music.play": "Play",
   "music.prev": "Previous",
