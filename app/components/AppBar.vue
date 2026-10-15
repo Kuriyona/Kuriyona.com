@@ -5,7 +5,6 @@ import { useSearch } from '~/composables/useSearch';
 const mobileMenu = ref(false);
 
 const search = useSearch();
-const nav = useNav();
 
 onMounted(() => {
   function globalKeydown(e: KeyboardEvent) {
@@ -31,15 +30,6 @@ onMounted(() => {
           </NuxtLinkLocale>
         </div>
         <div id="actions" class="flex items-center gap-2">
-          <NuxtLinkLocale
-            v-for="item in nav"
-            :key="item.to"
-            :to="item.to"
-            class="hidden sm:inline-block">
-            <KButton round>
-              {{ item.shortTitle || item.title }}
-            </KButton>
-          </NuxtLinkLocale>
           <KIconButton icon="material-symbols:search" @click="search.toggle()" />
           <KButton round class="gap-2" :aria-label="$t('global.more')" @click="mobileMenu = true">
             <KIcon name="material-symbols:translate" class="text-lg" />

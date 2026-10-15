@@ -19,7 +19,6 @@ const nav = [
     to: '/about/devices',
     titleKey: 'about.devices.title',
     descKey: 'about.devices.desc',
-    enabled: false,
     onAbout: true,
   },
   { to: '/ask-box', titleKey: 'ask-box.title', descKey: 'ask-box.desc' },
@@ -92,7 +91,7 @@ const timeline = [
 
 export default defineAppConfig({
   ...Config,
-  nav: nav.filter((item) => item.enabled !== false),
+  nav,
   aboutNav: nav.filter((item) => item.onAbout),
   timeline,
   links: {
