@@ -38,26 +38,25 @@ useSeoMeta({ title: t('ask-box.title') });
       <KIconButton icon="material-symbols:refresh" @click="refresh" />
     </h3>
     <KInput :placeholder="$t('global.search')" v-model="search.text" />
-    <KCard
-      v-if="questions && questions.length > 0"
-      v-for="(question, index) in questions"
-      :key="index">
-      <div class="flex flex-col gap-2">
-        <p class="text-sm">
-          <span class="font-bold">@{{ question.name || $t('global.anonymous') }}</span>
+    <KCard v-for="(question, index) in questions" :key="index" class="flex flex-col gap-4">
+      <!-- 元信息与被它标注的内容成组：组内 gap-1，组间 gap-4 -->
+      <div class="flex flex-col gap-1">
+        <p class="text-sm text-(--color-text-3)">
+          <span class="font-bold text-(--color-text-1)">
+            @{{ question.name || $t('global.anonymous') }}
+          </span>
           {{ $t('ask-box.asked-at', [formatTime(question.askedAt)]) }}
         </p>
-        <p class="text-base">
-          <KMarkdown :content="question.question" />
-        </p>
-        <hr />
-        <p class="text-sm">
-          <span class="font-bold">@{{ $t('global.weixi') }}</span>
+        <!-- KMarkdown 根节点是 div，不能套在 <p> 里：块级元素会提前关闭 p，text-base 只会落到一个空 p 上 -->
+        <KMarkdown :content="question.question" />
+      </div>
+      <KDivider />
+      <div class="flex flex-col gap-1">
+        <p class="text-sm text-(--color-text-3)">
+          <span class="font-bold text-(--color-text-1)">@{{ $t('global.weixi') }}</span>
           {{ $t('ask-box.answered-at', [formatTime(question.answeredAt)]) }}
         </p>
-        <p class="text-base">
-          <KMarkdown :content="question.answer" />
-        </p>
+        <KMarkdown :content="question.answer" />
       </div>
     </KCard>
   </AppPage>
