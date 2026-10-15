@@ -85,6 +85,9 @@ body {
   --color-theme: #e6ccff;
 }
 
+/* 全站自定义光标。注意这两条规则**没有**包在 @layer 里：未分层的规则优先级高于
+   Tailwind 的 `@layer utilities`，所以任何 `cursor-*` 工具类在这里都不生效——
+   需要手型的元素只能加进下面的选择器（`role="slider"` 即进度条之类可拖动控件）。 */
 * {
   cursor: url('https://r2.kuriyona.com/static/cursor/windows_11_cursors_concept/arrow.cur'), auto;
 }
@@ -92,7 +95,9 @@ body {
 a,
 a *,
 button,
-button * {
+button *,
+[role='slider']:not([aria-disabled='true']),
+[role='slider']:not([aria-disabled='true']) * {
   cursor: url('https://r2.kuriyona.com/static/cursor/windows_11_cursors_concept/hand.cur'), pointer;
 }
 

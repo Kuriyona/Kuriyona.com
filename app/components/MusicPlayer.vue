@@ -89,7 +89,7 @@ onUnmounted(() => clearTimeout(seekTimer));
 
     <!-- 进度：第一行进度条（点击改变进度），第二行左已播 / 右总时长 -->
     <div
-      class="mt-3 flex h-4 cursor-pointer items-center"
+      class="mt-3 flex h-4 items-center"
       :class="{ 'opacity-50': !current }"
       role="slider"
       :tabindex="current ? 0 : -1"
@@ -102,7 +102,7 @@ onUnmounted(() => clearTimeout(seekTimer));
       @keydown="onBarKey">
       <div
         class="w-full overflow-hidden rounded-full bg-(--color-control-bg) transition-[height] duration-200 ease-out"
-        :class="seeking ? 'h-2' : 'h-1.5'">
+        :class="[{ 'hover:h-2.5': current }, seeking ? 'h-2.5' : 'h-1.5']">
         <div
           class="h-full rounded-full bg-(--color-theme) transition-[width] duration-200 ease-out"
           :style="{ width: `${percent}%` }" />
