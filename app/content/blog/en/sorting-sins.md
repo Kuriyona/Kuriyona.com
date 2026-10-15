@@ -193,7 +193,7 @@ We naturally suspected a version difference. It turned out the Grok VM was using
 
 My local version was `1.97.0 (c980f4866 2026-06-30)`, so we tentatively concluded it was a version issue. I initially didn't plan to dig deeper right away, and published the first version of this blog post.
 
-Shortly after publishing, one of my sisters [lfcypo](https://github.com/lfcypo) provided historical version details and a specific explanation of the changes.
+Shortly after publishing, another of my friends [lfcypo](https://github.com/lfcypo) provided historical version details and a specific explanation of the changes.
 
 With her help and subsequent research, the conclusion is that **two key PRs** shaped the current behavior:
 

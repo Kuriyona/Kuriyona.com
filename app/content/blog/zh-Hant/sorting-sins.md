@@ -193,7 +193,7 @@ user-provided comparison function does not correctly implement a total order
 
 而我本地測試用的版本是 `1.97.0 (c980f4866 2026-06-30)`，我們自然而然就基本肯定了是版本的問題，不過我本來短期內也沒打算先深入研究，發佈了這篇博客的第一個版本。
 
-而發佈出沒多久，我的一個妹妹 [lfcypo](https://github.com/lfcypo) 便在後續提供了歷史版本和具體變更的解釋。
+而發佈出沒多久，我的另一個朋友 [lfcypo](https://github.com/lfcypo) 便在後續提供了歷史版本和具體變更的解釋。
 
 經過她的幫助和後續研究，結論是兩個關鍵 PR 塑造了當前行爲：
 
