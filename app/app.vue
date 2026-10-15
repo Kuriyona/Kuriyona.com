@@ -4,6 +4,10 @@ import { greet } from './utils/console.js';
 import { useSearch } from './composables/useSearch';
 const { locale } = useI18n();
 const route = useRoute();
+// 站点自身的绝对地址与分享卡片用图：og:url 要求绝对 URL，og/twitter 共用同一张图
+const SITE_URL = 'https://kuriyona.com';
+const SITE_TITLE = "Kuriyona' Space";
+const SITE_OG_IMAGE = 'https://r2.kuriyona.com/img/site/og/default.png';
 setLocale(locale.value);
 const { reinit } = useSearch();
 watch(
@@ -38,11 +42,16 @@ useHead({
 });
 useSeoMeta({
   // 站点默认 OG 图（除博客详情页，那里按 slug/语言覆盖）；由 `bun scripts/generate-blog-og.ts` 出图
-  ogImage: 'https://r2.kuriyona.com/img/site/og/default.png',
-  ogUrl: route.path,
-  ogTitle: "Kuriyona' Space",
+  ogImage: SITE_OG_IMAGE,
+  // og:url 必须是绝对地址（OG 规范），不能只给 route.path
+  ogUrl: `${SITE_URL}${route.path}`,
+  ogTitle: SITE_TITLE,
   ogDescription: $t('about.description'),
   twitterCard: 'summary_large_image',
+  // X 缺 twitter:* 时会回退 og:*，但各家爬虫回退规则不完全一致，显式写出更稳
+  twitterImage: SITE_OG_IMAGE,
+  twitterTitle: SITE_TITLE,
+  twitterDescription: $t('about.description'),
 });
 onMounted(() => {
   greet();

@@ -22,14 +22,24 @@ const otherLangs = computed(() =>
   ),
 );
 
+const seoTitle = computed(() => article.value?.title || $t('global.not-found'));
+const seoDescription = computed(() => article.value?.desc as string);
+const seoOgImage = computed(
+  () => `https://r2.kuriyona.com/img/site/og/${slug}/${locale.value}.png`,
+);
+
 useSeoMeta({
-  title: `${article.value?.title || $t('global.not-found')}  - ${$t('blog.title')}`,
-  description: article.value?.desc as string,
+  title: computed(() => `${seoTitle.value}  - ${$t('blog.title')}`),
+  description: seoDescription,
 });
 useSeoMeta({
-  ogImage: `https://r2.kuriyona.com/img/site/og/${slug}/${locale.value}.png`,
-  ogTitle: article.value?.title || $t('global.not-found'),
-  ogDescription: article.value?.desc as string,
+  ogImage: seoOgImage,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  // X 缺 twitter:* 时会回退 og:*，这里显式对齐（og:url / twitter:card 沿用 app.vue 的站点级设置）
+  twitterImage: seoOgImage,
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
 });
 
 // 标题 / 目录滚出顶栏可视区（含被固定菜单栏与浮动顶栏遮住的部分）后分别显示浮动顶栏与浮动目录

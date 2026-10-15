@@ -140,6 +140,7 @@ bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run
 - **渲染**：版式由 `@kuriyona/yona-svg` 编译成 SVG，光栅化用 `@resvg/resvg-js`（不再用 sharp）。**不读系统字体**（`loadSystemFonts: false`），只加载 `.cache/fonts` 里显式列出的文件，出图结果与本机装了哪些字体无关。
 - **字体**：所有文本优先 `Maple Mono`（拉丁），非英文文章再挂 `Noto Sans SC/TC/JP` 其一（Maple Mono 不含中日韩字形，resvg 逐字回退）。Regular 与 Bold 都要：版式里文本是 `font-weight: bold`，缺 Bold 只会退到 Regular、字重变细。字体只放 `.cache/fonts`（gitignored，不入库）。
 - 默认图两行是居中的：yona-svg 不做文本测量，文本节点宽度算 0，靠 `alignItems: center` + `textAnchor: 'middle'` 才落在画布中轴上。
+- **分享卡片的 meta 约定**（`app/app.vue` 站点级 + `app/pages/blog/[slug].vue` 按文章覆盖）：`og:url` 必须是绝对地址（不能只写 `route.path`）；`twitter:*` 与 `og:*` 显式写成同一组值，不依赖爬虫的 `og` 回退（各家回退规则不一致，显式写才好排查）。站点描述文案在 `i18n` 的 `about.description`（四语都要填，空串会让 `og:description` 为空）。
 - 改版式或字体后要**重新出图并上传**；R2 上旧的 `static/og/blog/**` 与 `static/intro/intro-*.png` 是历史路径，站点已不再引用。
 
 ## Project Structure
