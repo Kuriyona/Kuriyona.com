@@ -26,7 +26,44 @@ watch(error, (value) => {
   if (value) toast.error(t(value.key));
 });
 
-const onSeek = (event: Event) => seek(Number((event.target as HTMLInputElement).value));
+const total = computed(() => current.value?.duration ?? 0);
+/** 已播百分比 = 进度条内色块宽度 */
+const percent = computed(() => (total.value > 0 ? (position.value / total.value) * 100 : 0));
+
+/** 改进度后给进度条一个短暂的「回弹」动画 */
+const seeking = ref(false);
+let seekTimer: ReturnType<typeof setTimeout> | undefined;
+
+const applySeek = (ms: number) => {
+  if (!total.value) return;
+  seek(Math.min(total.value, Math.max(0, ms)));
+  seeking.value = true;
+  clearTimeout(seekTimer);
+  seekTimer = setTimeout(() => (seeking.value = false), 200);
+};
+
+const onBarClick = (event: MouseEvent) => {
+  const { left, width } = (event.currentTarget as HTMLElement).getBoundingClientRect();
+  if (!width) return;
+  applySeek(((event.clientX - left) / width) * total.value);
+};
+
+// 原来用 <input type="range"> 自带键盘操作，换成 div 后手动补上
+const onBarKey = (event: KeyboardEvent) => {
+  const step = 5000;
+  const keys: Record<string, number | undefined> = {
+    ArrowRight: position.value + step,
+    ArrowLeft: position.value - step,
+    Home: 0,
+    End: total.value,
+  };
+  const target = keys[event.key];
+  if (target === undefined) return;
+  event.preventDefault();
+  applySeek(target);
+};
+
+onUnmounted(() => clearTimeout(seekTimer));
 </script>
 
 <template>
@@ -50,18 +87,31 @@ const onSeek = (event: Event) => seek(Number((event.target as HTMLInputElement).
       </div>
     </div>
 
-    <div class="mt-3 flex items-center gap-2 text-xs tabular-nums text-(--color-text-3)">
+    <!-- 进度：第一行进度条（点击改变进度），第二行左已播 / 右总时长 -->
+    <div
+      class="mt-3 flex h-4 cursor-pointer items-center"
+      :class="{ 'opacity-50': !current }"
+      role="slider"
+      :tabindex="current ? 0 : -1"
+      :aria-label="$t('music.progress')"
+      aria-valuemin="0"
+      :aria-valuemax="total"
+      :aria-valuenow="position"
+      :aria-disabled="!current"
+      @click="onBarClick"
+      @keydown="onBarKey">
+      <div
+        class="w-full overflow-hidden rounded-full bg-(--color-control-bg) transition-[height] duration-200 ease-out"
+        :class="seeking ? 'h-2' : 'h-1.5'">
+        <div
+          class="h-full rounded-full bg-(--color-theme) transition-[width] duration-200 ease-out"
+          :style="{ width: `${percent}%` }" />
+      </div>
+    </div>
+
+    <div class="mt-1 flex items-center justify-between text-xs tabular-nums text-(--color-text-3)">
       <span>{{ formatDuration(position) }}</span>
-      <input
-        type="range"
-        class="min-w-0 flex-1 cursor-pointer accent-(--color-theme) disabled:opacity-50"
-        min="0"
-        :max="current?.duration ?? 0"
-        :value="position"
-        :disabled="!current"
-        :aria-label="$t('music.progress')"
-        @input="onSeek" />
-      <span>{{ formatDuration(current?.duration ?? 0) }}</span>
+      <span>{{ formatDuration(total) }}</span>
     </div>
 
     <div class="mt-2 flex items-center justify-center gap-1">
