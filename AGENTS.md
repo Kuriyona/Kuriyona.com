@@ -156,12 +156,14 @@ Kuriyona.com/
 │   │   └── icons/              背景平铺图案用的图标 SVG（code/lambda/narutomaki/terminal，白色填充；勿再用 CSS filter 染色：iOS WebKit 下 <pattern> 内的 <image> 带滤镜会整层不渲染）
 │   ├── components/             自动导入组件
 │   │   ├── AppPage.vue         页面布局容器（居中、正文列宽 --content-width；两侧各一个「保留区」aside：`reserve:` 断点（视口 ≥1500px）才出现、sticky 不随页面滚动、宽 --reserve-width，内容由 `reserve-left`/`reserve-right` 命名插槽填充，左侧插槽下方固定跟一个 `MusicPlayer`，右侧空着也保留同宽以保证正文居中；右侧固定渲染三个默认小组件（`ReserveClock`/`ReserveNav`/`ReserveArticles`），页面仍可用 `reserve-right` 在其后追加内容；`hero` prop：页面首块是半屏 hero 时打开，**两侧保留区**一起下移 `--reserve-hero-offset`（= `--hero-height` + `1rem`）到 hero 底部才开始吸顶）
-│   │   ├── AppBar.vue          顶栏 + 搜索按钮 + Ctrl+K 全局监听（**不渲染 nav 项**：左侧头像 + 站点标题，右侧搜索按钮 + 一个「语言 + 菜单」合并长条按钮，点击打开抽屉 AppBar/AppMenu；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片，读 useNav）/ 关于（GIT_HASH/构建时间/Cloudflare 节点/萌 ICP 备，mt-auto 沉底））
+│   │   ├── AppBar.vue          顶栏 + 搜索按钮 + Ctrl+K 全局监听（**不渲染 nav 项**：左侧头像 + 站点标题；右侧依次是搜索按钮、**复合音乐按钮**（仅 `reserve:` 断点以下出现，替代窄视口看不到的左栏播放器：整块是一个胶囊，左端乐符 + 右端嵌一个更小的播放/暂停子按钮，点胶囊其他区域开悬浮面板 `MusicPanel`、点子按钮播放/暂停）、`AppMenu` 的「语言 + 菜单」合并长条按钮；抽屉用带小字标签的分隔线分三段：语言设置（KSelect）/ 页面（导航卡片，读 useNav）/ 关于（GIT_HASH/构建时间/Cloudflare 节点/萌 ICP 备，mt-auto 沉底））
 │   │   ├── AppBackground.vue   全屏背景（图标 SVG 错位平铺 + 加亮层；两种模式：鼠标模式跟随光标、触摸屏模式高亮点移动并触边反弹，模式按真实输入切换（指针移动 / 触摸按下 / 光标移出视口后从最后位置继续）且触摸状态保留；运动学纯函数在 app/utils/highlightMotion.ts）
 │   │   ├── BlogTopBar.vue      博客详情浮动顶栏（标题滚出顶栏可视区后被 IntersectionObserver 触发的 fixed 卡片：左侧返回按钮 + 右侧单行标题 / 单行描述，超出省略；`top` 由页面传入的 `floatingTop` 常量决定；`actions` 具名插槽用于在右侧追加控件，如窄屏的目录按钮）
 │   │   ├── BlogToc.vue         博客目录列表（窄屏正文顶部内联卡片 / 宽屏左侧保留区 / 窄屏顶栏展开共用；按 level 缩进、超长截断，`active` 为当前阅读位置 slug 时高亮 `bg-(--color-hover)` + 加粗）
 │   │   ├── SearchModal.vue     PageFind 搜索弹窗（Teleport 到 body）
-│   │   ├── MusicPlayer.vue     音乐播放器卡片（左保留区常驻；封面/歌名/当前歌词行（含翻译）/进度条/上下首/曲目列表，状态在 `useMusic` 模块级单例里，跨路由切换不中断；歌单来自 `/api/music/playlist`，歌词来自 `/api/music/lyric?id=`，播放地址由 `useMusic` 直接拼网易 outer 链接）
+│   │   ├── MusicPlayer.vue     音乐播放器卡片（左保留区常驻，只是 `KCard` 外壳 + `MusicControls`；宽视口才出现）
+│   │   ├── MusicControls.vue   播放器主体（封面/歌名/当前歌词行（含翻译）/进度条/上下首/曲目列表；被左保留区的 `MusicPlayer` 与窄视口的 `MusicPanel` 共用同一份，见 useMusic）
+│   │   ├── MusicPanel.vue      悬浮音乐面板（`KDialog` + `MusicControls`，由顶栏复合音乐按钮打开；窄视口下替代左保留区的播放器）
 │   │   ├── TimelineList.vue    时间线紧凑行列表（日期 + 文本 + 跳转图标，无年份分隔；trans 页的「性别认同历程」用它，条目指向当前页时不出跳转按钮，见 useTimelineLink）
 │   │   ├── ToastHost.vue       全局 toast 宿主（Teleport，配合 useToast）
 │   │   ├── KTurnstile.vue      Cloudflare Turnstile 人机验证（换取 JWT）
@@ -176,7 +178,7 @@ Kuriyona.com/
 │   │   ├── useToast.ts         轻量 toast（模块级单例，success/error）
 │   │   ├── useNav.ts           导航项（读取 app.config nav/aboutNav + i18n 标题）
 │   │   ├── useCity.ts           `/api/city` 数据（useAsyncData key `city`，server: false；首页常驻城市卡片）
-│   │   ├── useMusic.ts         音乐播放器单例（模块级 `audio`/歌单/歌词状态，跨路由不中断；`loadPlaylist`/`playAt`/`toggle`/`next`/`prev`/`seek`/`lyric`/`lyricIndex`，播放地址由 `outerUrl()` 直接拼 `https://music.163.com/song/media/outer/url?id=<id>.mp3`（浏览器跟随 302 到 CDN，不经后端），失败经 `error` 通知组件 toast；`playAt` 时按曲目 id 取 `/api/music/lyric?id=`（模块级 Map 记忆，含空结果；拿不到只留空数组不报错），`lyricIndex` 用二分找「最后一个 time ≤ position」的行，前奏/无歌词为 -1）
+│   │   ├── useMusic.ts         音乐播放器单例（模块级 `audio`/歌单/歌词状态，跨路由不中断；`loadPlaylist`/`playAt`/`toggle`/`next`/`prev`/`seek`/`lyric`/`lyricIndex`/`consumeError`（播放失败提示的去重：`MusicControls` 可能同时挂两份 —— 保留区卡片与窄视口面板），播放地址由 `outerUrl()` 直接拼 `https://music.163.com/song/media/outer/url?id=<id>.mp3`（浏览器跟随 302 到 CDN，不经后端），失败经 `error` 通知组件 toast；`playAt` 时按曲目 id 取 `/api/music/lyric?id=`（模块级 Map 记忆，含空结果；拿不到只留空数组不报错），`lyricIndex` 用二分找「最后一个 time ≤ position」的行，前奏/无歌词为 -1）
 │   │   ├── useCodeCopy.ts      博客代码块复制按钮 + toast 提示
 │   │   ├── useHeadingAnchor.ts 博客标题锚点跳转
 │   │   ├── useTimelineLink.ts  时间线条目跳转（外部新窗口 / 内部走 localePath；`isCurrent` 判定链接是否指向当前页，供 TimelineList 隐去自链接按钮；`linkIcon` 对 x.com 链接返回 `simple-icons:x`，其余外部链接 `material-symbols:open-in-new`、内部 `arrow-forward`；/timeline 页面与 TimelineList 共用）
@@ -252,26 +254,28 @@ Kuriyona.com/
 
 ### 自定义 UI 组件（K\*）
 
-| 组件          | 用途                                                                                                                                                                                                                                                        |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `KCard`       | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                                                                                                                                 |
-| `KSurface`    | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                                                                                                                            |
-| `KButton`     | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                                                                                                                                   |
-| `KIcon`       | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）                                                                                                                                                   |
-| `KIconButton` | 圆形图标按钮（icon 为 `prefix:name` 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）                                                                                                                                                     |
-| `KCardLink`   | 链接卡片（可选 img/desc/icon/new，默认图标为 `material-symbols:open-in-new` / `arrow-forward`）                                                                                                                                                             |
-| `KPersonCard` | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simple-icons 图标 + 名称）                                                                                                          |
-| `KNavCard`    | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                                                                                                                             |
-| `KInput`      | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                                                                                                                                        |
-| `KSelect`     | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                                                                                                                                      |
-| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                                                                                                                                |
-| `KDivider`    | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative；`label` 传入时在左端渲染一行小字标签（仅 horizontal））                                                                                                                                     |
-| `KBadge`      | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                                                                                                                                  |
-| `MusicPlayer` | 左保留区常驻音乐播放器（封面/歌名/歌词行（当前句 + 翻译，固定 2 行高）/进度条/上下首/曲目列表；状态在 `useMusic` 模块级单例里，跨路由切换不中断；歌单来自 `/api/music/playlist`，歌词来自 `/api/music/lyric?id=`，播放地址直接用网易 outer 链接，不走后端） |
-| `KMarkdown`   | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                                                                                                                                        |
-| `KTable`      | 表格布局（th 左对齐/td 右对齐）                                                                                                                                                                                                                             |
-| `KMenu`       | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                                                                                                                               |
-| `KDialog`     | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）                                                                                                                        |
+| 组件            | 用途                                                                                                                                                                                                                                                                  |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `KCard`         | 表面卡片容器（可选 title；`level`/`glass` 透传给 KSurface）                                                                                                                                                                                                           |
+| `KSurface`      | 表面原语（`as`/`level`/`glass`；层级由组件树嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）                                                                                                                                                      |
+| `KButton`       | 控件按钮（半透明底色 `--color-control-bg` + 描边，支持 round/text/block）                                                                                                                                                                                             |
+| `KIcon`         | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）                                                                                                                                                             |
+| `KIconButton`   | 圆形图标按钮（icon 为 `prefix:name` 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）                                                                                                                                                               |
+| `KCardLink`     | 链接卡片（可选 img/desc/icon/new，默认图标为 `material-symbols:open-in-new` / `arrow-forward`）                                                                                                                                                                       |
+| `KPersonCard`   | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为轻量控件胶囊：`--color-control-*` 底色/描边 + `.k-interactive`，simple-icons 图标 + 名称）                                                                                                                    |
+| `KNavCard`      | 导航/友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                                                                                                                                                                       |
+| `KInput`        | 输入框/textarea（支持 clearable/disabled/maxlength）                                                                                                                                                                                                                  |
+| `KSelect`       | 下拉选择（封装 Reka `Select`；modelValue/options/placeholder，触发器对齐 KInput、弹层对齐 KMenu 风格）                                                                                                                                                                |
+| `KSwitch`       | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                                                                                                                                                                          |
+| `KDivider`      | 分隔线（封装 Reka `Separator`，horizontal/vertical，decorative；`label` 传入时在左端渲染一行小字标签（仅 horizontal））                                                                                                                                               |
+| `KBadge`        | 主题色半透明小徽标（text-xs 胶囊，用于关系/标签/主要设备）                                                                                                                                                                                                            |
+| `MusicPlayer`   | 左保留区常驻音乐播放器（`KCard` 外壳 + `MusicControls`，宽视口才出现；状态在 `useMusic` 模块级单例里，跨路由切换不中断）                                                                                                                                              |
+| `MusicControls` | 播放器主体（封面/歌名/歌词行（当前句 + 翻译，固定 2 行高）/进度条/上下首/曲目列表）；`MusicPlayer`（保留区卡片）与 `MusicPanel`（窄视口悬浮面板）共用同一份，歌单来自 `/api/music/playlist`、歌词来自 `/api/music/lyric?id=`，播放地址直接用网易 outer 链接，不走后端 |
+| `MusicPanel`    | 悬浮音乐面板（`KDialog` + `MusicControls`）；由顶栏搜索按钮右侧的复合音乐按钮打开，仅 `reserve:` 断点以下出现（宽视口左栏已有播放器卡片）                                                                                                                             |
+| `KMarkdown`     | Markdown 渲染（markdown-exit + github-markdown-css）                                                                                                                                                                                                                  |
+| `KTable`        | 表格布局（th 左对齐/td 右对齐）                                                                                                                                                                                                                                       |
+| `KMenu`         | 下拉菜单（封装 Reka `DropdownMenu`；direction/align → side/align，v-model、trigger/default 槽；当前无使用处）                                                                                                                                                         |
+| `KDialog`       | 弹窗（封装 Reka `Dialog`；v-model 开关、title 槽/prop、width、closeOnBackdrop、teleport；遮罩/Esc/关闭按钮，KCard+KIconButton 组合）                                                                                                                                  |
 
 ### 页面路由总览
 

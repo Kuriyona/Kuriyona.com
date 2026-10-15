@@ -111,6 +111,7 @@
   "music.load-error": "プレイリストの読み込みに失敗しました",
   "music.next": "次の曲",
   "music.no-lyric": "歌詞がありません",
+  "music.open-panel": "音楽パネルを開く",
   "music.pause": "一時停止",
   "music.play": "再生",
   "music.prev": "前の曲",

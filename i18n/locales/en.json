@@ -111,6 +111,7 @@
   "music.load-error": "Failed to load the playlist",
   "music.next": "Next",
   "music.no-lyric": "No lyrics",
+  "music.open-panel": "Open music panel",
   "music.pause": "Pause",
   "music.play": "Play",
   "music.prev": "Previous",
