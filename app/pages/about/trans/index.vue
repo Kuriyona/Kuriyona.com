@@ -227,6 +227,12 @@ onUnmounted(() => gsapCtx?.revert());
       </div>
     </KSurface>
 
+    <KCard :title="$t('about.mtf.what-is-trans.title')">
+      <p class="whitespace-pre-line text-sm text-(--color-text-2)">
+        {{ $t('about.mtf.what-is-trans.body') }}
+      </p>
+    </KCard>
+
     <KCard :title="$t('about.mtf.journey.title')">
       <ol class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <li v-for="milestone in milestones" :key="milestone.id" class="mtf-tile">

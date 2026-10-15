@@ -164,7 +164,7 @@ Kuriyona.com/
 │   │   └── admin.vue            管理面板共享导航壳（五个 admin 页面 definePageMeta({ layout: 'admin' })；宽屏=内容左侧 sticky 竖导航（仍在 AppPage 容器内），窄屏（< lg）=顶部 KSelect 切换）
 │   ├── pages/                   路由页面（Nuxt 文件路由）
 │   │   ├── index.vue            首页（半屏 Hero：无头像，仅两行标题「你好，欢迎来到 / Kuriyona's Space」；+ 关于内容、生日/MBTI、技能、导航卡、社交与联系方式；「关于我」右侧为常驻城市卡片 CardCityMap（地图右下角叠加天气图标 + 温度），窄屏两行，城市与天气数据来自 /api/city，见 app/pages/index.vue）
-│   │   ├── about/trans/        MtF 相关页面（半屏 hero = 欢迎文字（MtF 短语用旗面渐变）+ 关于我卡片（trans 旗帜外观 + 自我介绍）+ 性别探索过程里程碑计数（GSAP）+ 性别认同历程（TimelineList，限高 max-h-80 滚动）+ 跨性别资源链接）
+│   │   ├── about/trans/        MtF 相关页面（半屏 hero = 欢迎文字（MtF 短语用旗面渐变）+ 关于我卡片（trans 旗帜外观 + 自我介绍）+ 跨性别科普卡片（「什么是跨性别？什么是跨性别女性？」，多段文本 whitespace-pre-line）+ 性别探索过程里程碑计数（GSAP）+ 性别认同历程（TimelineList，限高 max-h-80 滚动）+ 跨性别资源链接）
 │   │   ├── blog/index.vue       博客列表（按语言过滤；卡片用「标题链接 + before 铺满卡片」整体可点，左下角 translate 图标 + 每种语言一个主题色文本链接（`text-sm` 与同行信息同字号、间距 12px、hover 下划线，不用 KBadge），标签本身是切到该语言版本的链接；宽度不足时语言组与属性组自动分成两行，各自保持左 / 右对齐）
 │   │   ├── blog/[slug].vue      博客详情（TOC 卡片、多语言切换（其他语言版本每条为「大字标题 + 小字描述」两行、均截断）、代码复制、搜索索引、滚动后的浮动顶栏 BlogTopBar、宽屏左侧保留区常驻目录、阅读进度高亮）
 │   │   ├── friends-and-links/index.vue 友链页（最重要的人（KPersonCard 多平台链接）/ 朋友们 / 友链 / 申请交换）
@@ -249,7 +249,7 @@ Kuriyona.com/
 | 路由                 | 文件                                | 说明                                                                                                                             |
 | -------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `/`                  | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）             |
-| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏欢迎 hero + 关于我卡片 + 性别探索过程计数/占比条 + 性别认同历程（限高滚动）+ 资源链接，含 data-pagefind-body） |
+| `/about/trans`       | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏欢迎 hero + 关于我卡片 + 跨性别科普卡片 + 性别探索过程计数/占比条 + 性别认同历程（限高滚动）+ 资源链接，含 data-pagefind-body） |
 | `/about/devices`     | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                |
 | `/blog`              | `pages/blog/index.vue`              | 文章列表（卡片显示支持的语言编码）                                                                                               |
 | `/blog/:slug`        | `pages/blog/[slug].vue`             | 文章详情（多语言，浮动顶栏 + 宽屏左侧保留区目录 + 其它语言两行截断）                                                             |
