@@ -76,12 +76,12 @@ cd /home/kuriyona/Dev/@Kuriyona/Kuriyona.com
 
 # 0.4.0：全国索引随包内置，首次运行零索引请求；同级候选先按内置 bbox 预筛。
 # 冷缓存实测 41 次取数 / wall 21s / CPU 0.9s（0.2.0 同参数是 96 次 / 54s / 3.0s）；
-# 热缓存 0 取数 / wall 0.3s。缓存落在 temp/map-cache 可复用，中断也是安全的——已拉到的边界立刻落盘。
+# 热缓存 0 取数 / wall 0.3s。缓存落在 .cache/map-cache 可复用，中断也是安全的——已拉到的边界立刻落盘。
 AMAP_KEY=<key> pnpm dlx @kuriyona/amap-box@0.4.0 杭州 \
   --up 1 --down 0 --ratio 1 --outside-same-level \
   --no-title --no-context-labels --no-target-label --center target \
-  --out temp/map --cache temp/map-cache
-# 产物：temp/map/杭州市-330100-u1d0.svg
+  --out .cache/map --cache .cache/map-cache
+# 产物：.cache/map/杭州市-330100-u1d0.svg
 
 # 上传（Bun 自动读根目录 .env 里的 ENDPOINT / ACCESS_KEY_ID / SECRET_ACCESS_KEY / BUCKET_NAME）
 bun - <<'EOF'
@@ -92,7 +92,7 @@ const s3 = new S3Client({
   secretAccessKey: process.env.SECRET_ACCESS_KEY!,
   bucket: process.env.BUCKET_NAME!,
 });
-await s3.file('img/site/map/330100.svg').write(Bun.file('temp/map/杭州市-330100-u1d0.svg'));
+await s3.file('img/site/map/330100.svg').write(Bun.file('.cache/map/杭州市-330100-u1d0.svg'));
 console.log('uploaded');
 EOF
 ```

@@ -27,7 +27,7 @@ useSeoMeta({
   description: article.value?.desc as string,
 });
 useSeoMeta({
-  ogImage: `https://r2.kuriyona.com/static/og/blog/${slug}/${locale.value}.png`,
+  ogImage: `https://r2.kuriyona.com/img/site/og/${slug}/${locale.value}.png`,
   ogTitle: article.value?.title || $t('global.not-found'),
   ogDescription: article.value?.desc as string,
 });

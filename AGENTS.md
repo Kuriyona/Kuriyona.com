@@ -77,8 +77,8 @@ Full-text search powered by [PageFind](https://pagefind.app/) (custom Vue compon
 ### Workflow
 
 - **Dev mode**: `pnpm generate && pnpm index && pnpm dev`
-  `pnpm index` 把索引写到 `temp/pagefind`，再复制一份到 `dist/pagefind`（部署用）。索引**不能**只放 `dist/`：Nitro 的 `prepare()` 在每次 dev 启动时 `rm -rf nitro.output.publicDir`（本仓 = `dist`），`dist/pagefind` 会被删光，`/pagefind/*` 全 404。
-  The Vite dev server serves `/pagefind/*` from `temp/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
+  `pnpm index` 把索引写到 `.cache/pagefind`，再复制一份到 `dist/pagefind`（部署用）。索引**不能**只放 `dist/`：Nitro 的 `prepare()` 在每次 dev 启动时 `rm -rf nitro.output.publicDir`（本仓 = `dist`），`dist/pagefind` 会被删光，`/pagefind/*` 全 404。
+  The Vite dev server serves `/pagefind/*` from `.cache/pagefind/` via a custom plugin (`pagefind-dev` in `nuxt.config.ts`).
   Modify styles in `app/components/SearchModal.vue` (Tailwind classes / scoped CSS).
 - **Production**: `pnpm build` automatically runs `generate` + `index` in sequence.
 
@@ -118,6 +118,29 @@ Only pages with `data-pagefind-body` are indexed. Currently applied to:
 - `/friends-and-links` (`app/pages/friends-and-links/index.vue`)
 
 Add `data-pagefind-body` to `<AppPage>` or individual pages to include them in search results.
+
+## OG 图（站点与博客预览图）
+
+两张：**站点默认图**（除博客详情页外的所有页面，`app/app.vue` 的 `ogImage`）与**博客详情页图**（`app/pages/blog/[slug].vue` 按 slug + 语言覆盖）。都指向 R2 上的静态对象（与城市地图同在 `img/site/` 命名空间；`r2.kuriyona.com` 域名后的路径就是对象键）：
+
+|图|对象键|
+|---|---|
+|站点默认|`img/site/og/default.png`（居中两行：`Kuriyona's Space` / `https://Kuriyona.com ->`）|
+|博客详情页|`img/site/og/<slug>/<lang>.png`|
+
+三支脚本（都是根目录的 `bun` 脚本）：
+
+```bash
+bun scripts/download-fonts.ts           # 一次性：字体 → .cache/fonts（--force 重下）
+bun scripts/generate-blog-og.ts         # 出图 → .cache/og/default.{svg,png}（站点默认图）
+bun scripts/generate-blog-og.ts <slug>  # 出图 → .cache/og/<slug>/<lang>.{svg,png}
+bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run 只打印键）
+```
+
+- **渲染**：版式由 `@kuriyona/yona-svg` 编译成 SVG，光栅化用 `@resvg/resvg-js`（不再用 sharp）。**不读系统字体**（`loadSystemFonts: false`），只加载 `.cache/fonts` 里显式列出的文件，出图结果与本机装了哪些字体无关。
+- **字体**：所有文本优先 `Maple Mono`（拉丁），非英文文章再挂 `Noto Sans SC/TC/JP` 其一（Maple Mono 不含中日韩字形，resvg 逐字回退）。Regular 与 Bold 都要：版式里文本是 `font-weight: bold`，缺 Bold 只会退到 Regular、字重变细。字体只放 `.cache/fonts`（gitignored，不入库）。
+- 默认图两行是居中的：yona-svg 不做文本测量，文本节点宽度算 0，靠 `alignItems: center` + `textAnchor: 'middle'` 才落在画布中轴上。
+- 改版式或字体后要**重新出图并上传**；R2 上旧的 `static/og/blog/**` 与 `static/intro/intro-*.png` 是历史路径，站点已不再引用。
 
 ## Project Structure
 
@@ -193,8 +216,9 @@ Kuriyona.com/
 │   └── api/articles.ts          GET /api/articles（不含 content）
 │   └── api/articles/[slug].ts   GET /api/articles/:slug（按 slug 过滤，返回所有语言版本）
 ├── scripts/                     Bun 独立脚本（非打包进应用）
-│   ├── generate-blog-og.ts      OG 图生成（yona-svg + sharp，输出到 temp/）
-│   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量）
+│   ├── generate-blog-og.ts      OG 图生成（yona-svg 排版 + resvg 光栅化；无参数 = 站点默认图，带 slug = 文章图；输出到 .cache/og/）
+│   ├── upload-blog-og.ts        OG 图上传到 R2（Bun S3Client，需 ENDPOINT 等环境变量；对象键 img/site/og/default.png 与 img/site/og/<slug>/<lang>.png）
+│   ├── download-fonts.ts        下载 OG 图字体到 .cache/fonts（Maple Mono + Noto Sans SC/TC/JP，各 Regular+Bold）
 │   ├── check-contrast.ts        视觉令牌对比度校验（bun scripts/check-contrast.ts）
 │   ├── gen-icons.ts             扫描源码/数据里的图标名 → app/utils/icons.gen.ts（校验不存在/动态拼接的名字）
 │   └── sort-i18n.ts             i18n JSON 按键名排序（pnpm fmt 时自动执行）
@@ -212,7 +236,7 @@ Kuriyona.com/
 │   └── docs/                    后端文档（development / deployment / city-map / cache-purge）
 ├── i18n/locales/                4 个语言文件：zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
 ├── public/                      robots.txt + _headers（Workers 静态响应头，含 nosniff/Cache-Control）+ _redirects（`/links` → `/friends-and-links` 301、`/about/as-mtf` → `/about/trans` 301 含 en/ja/zh-Hant 前缀版本）
-├── temp/                        OG 图生成中间产物 + PageFind 索引（temp/pagefind，gitignored）
+├── .cache/                      gitignored 本地产物：og/default.{svg,png} 与 og/<slug>/<lang>.{svg,png}（OG 图）、pagefind（索引）、fonts（OG 字体）、map{,-cache}（离线出图，见 backend/docs/city-map.md）
 ├── nuxt.config.ts               Nuxt 配置（模块、i18n、nitro 输出到 dist、pagefind-dev 插件、build.transpile: ['reka-ui']、vite.optimizeDeps.include（客户端依赖预打包，含 @iconify/vue）、GIT_HASH/BUILD_TIME define）
 ├── wrangler.jsonc               根 Worker 配置（name=kuriyona-web，assets=./dist，D1 binding DB，KV binding STATUS_KV，main=backend/index.ts）
 ├── .dev.vars.example            本地开发环境变量模板（复制为 .dev.vars，gitignored）
@@ -284,7 +308,7 @@ Kuriyona.com/
 
 - `app/` — Nuxt app (pages, components, stores, utils, assets)
 - `server/` — Nitro API routes (`/api/articles`, `/api/articles/[slug]`). Reads markdown from `app/content/blog/` via `gray-matter` + custom `markdown-exit` renderer (not `@nuxt/content`).
-- `scripts/` — Standalone Bun scripts: OG image generation (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`.
+- `scripts/` — Standalone Bun scripts: OG 图生成 (`generate-blog-og.ts`)、上传 (`upload-blog-og.ts`)、OG 字体下载 (`download-fonts.ts`)、设计令牌对比度校验 (`check-contrast.ts`，改颜色令牌后运行 `bun scripts/check-contrast.ts`)、图标注册生成 (`gen-icons.ts`，扫源码与数据里的 `prefix:name` 图标名 → `app/utils/icons.gen.ts`)。Import from `server/utils.ts`。
 - `backend/` — 后端 API 独立子包（自带 `pnpm-lock.yaml`/`pnpm-workspace.yaml`，非根 workspace 成员）：Cloudflare Workers + Hono + Drizzle + D1，入口 `backend/index.ts` 导出 Hono app（挂在 `/api/*`），迁移由 `wrangler d1 migrations apply` 应用；部署由根 `wrangler.jsonc`（单 Worker `kuriyona-web`，同托管 `dist/` 静态站点）驱动。详见 `backend/AGENTS.md` 与 `backend/docs/`。
 - **城市地图与天气**：`GET /api/city` 的 `resident`/`current` 读 KV 键 `city:maps`（`backend/src/city-map.ts`），缺失/坏值回退默认杭州 `330100`，`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`（KV 只存 `{ name, adcode }`）。**出图跑在管理端浏览器里**（`/admin/city` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置（`backend/src/router/city.ts`），CPU ≈ 0。首页「关于我」右侧的常驻城市卡片复用同一份 `resident`（`app/pages/index.vue` 里 `useCity()`），预渲染阶段拿不到数据、只有「关于我」单卡。`resident` 也带 **`weather`**：`backend/src/amap.ts` 的 `cityCenter(env, adcode)` 向高德行政区划接口取中心点（KV `amap:center:<adcode>`，30 天），再以 `location=<经度>,<纬度>` 调 QWeather（缓存 `cache:weather:<adcode>`，30 分钟）；`AMAP_KEY` 缺失时回退默认城市（杭州）中心点。原因（Worker 里一次出图 CPU 实测 ~0.9s / wall 21s，Free 上限 10ms 差两个数量级）× 重新出图步骤 × 各备选方案取舍，见 `backend/docs/city-map.md`。
 - **缓存清除（Cloudflare）**：管理端 `/admin/cache` → Worker 两个薄端点（`backend/src/router/cache.ts`，都要 `auth`）：`GET /api/cache/zones` 用 `CF_API_TOKEN` 列域名，`POST /api/cache/purge` 转发 `purge_cache`（`files`/`hosts`/`tags`/`prefixes`）。token 只存 Worker 侧（`CF_API_TOKEN`），需要 **Zone:Read + Cache Purge**、Zone Resources 覆盖目标域名；单次上限 100 条（Cloudflare 的 Max operations per request），返回 200 只代表请求被收下，是否真清掉要看 `CF-Cache-Status` 是否 MISS。起因：R2 对象带 `cache-control: max-age=86400`，换图后边缘缓存最长 24h 才过期。
@@ -311,7 +335,7 @@ Kuriyona.com/
 - **UI components**: Custom `K*` components in `app/components/` styled with Tailwind. 交互组件（KDialog/KSwitch/KDivider/KMenu）基于 **Reka UI** unstyled primitives 实现，保留原 `K*` 公共 API。Toast feedback via `useToast` composable + `ToastHost` (replaces Varlet `Snackbar`). `KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`（`height:100%`），若 `<a>` 退回 `display:inline`，在「普通卡片内部」（非 flex/grid 子项）会触发 block-in-inline 拆分 —— 百分比高度形成循环依赖，Chrome 用子元素内容高度算父卡片高度、却按百分比画子元素，导致内层卡溢出父卡底边并压住边框。
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，其模块级 `currentRenderingInstance` 不一致，async/Suspense 页面渲染 `renderSlot` 时会抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: 后端 Worker 从 `c.env` 读取，每个请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored）；生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB` 由 D1 binding、`STATUS_KV` 由 KV binding 提供）；可选 `AMAP_KEY`（城市地图出图取边界走 `/api/city/amap` 代理，以及 `/api/city` 按常住城市查天气中心点；缺失时前者端点 500、后者回退默认城市中心点，其余不受影响）、`CF_API_TOKEN`（管理端 `/admin/cache` 清 Cloudflare 缓存走 `/api/cache/*`，需要 **Zone:Read + Cache Purge** 权限、Zone Resources 覆盖目标域名；缺失时只有 `/cache/*` 报 500，权限清单见 `backend/docs/cache-purge.md`）。
-- **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `temp/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
+- **`dist/` 会被 dev 启动清空**: `nuxt.config.ts` 的 `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory`，也是 SSG 输出）；Nitro 的 `prepare()` 每次 dev 启动执行 `rm -rf` 该目录（`nitropack/dist/core/index.mjs` 的 `prepareDir`）。所以**不要**把需要跨 dev 重启保留的产物放 `dist/`：PageFind 索引因此落在 `.cache/pagefind`（见 Search 一节），`pnpm index` 另外复制一份到 `dist/pagefind` 供部署。
 - **`package.json` 的 `"type": "module"`**: 用于消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告——Nuxt dev 会把该 stderr 警告计入 `✕ 1 error`。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
 - **Compile-time globals**: `GIT_HASH` and `BUILD_TIME` `define`'d in `nuxt.config.ts` (declared in `vite-env.d.ts`).
 - **Dayjs locale sync**: `app/utils/time.ts` exports `setLocale(locale)` — must be called when i18n locale changes (done in `app.vue` watcher). Provides `formatRelativeTime(time)` for relative timestamps.

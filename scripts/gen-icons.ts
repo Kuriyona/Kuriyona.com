@@ -18,7 +18,7 @@ const ROOT = resolve(import.meta.dir, '..');
 const OUT_FILE = join(ROOT, 'app/utils/icons.gen.ts');
 const SCAN_DIRS = ['app', 'server'];
 const SCAN_EXT = new Set(['.vue', '.ts', '.js', '.json']);
-const SKIP_DIRS = new Set(['node_modules', 'dist', '.nuxt', '.output', 'temp']);
+const SKIP_DIRS = new Set(['node_modules', 'dist', '.nuxt', '.output', '.cache']);
 const PREFIXES = ['material-symbols', 'simple-icons'];
 const NAME_RE = /(material-symbols|simple-icons):([A-Za-z0-9-]*)/g;
 

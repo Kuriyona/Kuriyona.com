@@ -37,7 +37,8 @@ useHead({
   ],
 });
 useSeoMeta({
-  ogImage: `https://r2.kuriyona.com/static/intro/intro-${locale.value.slice(0, 2) || 'en'}.png`,
+  // 站点默认 OG 图（除博客详情页，那里按 slug/语言覆盖）；由 `bun scripts/generate-blog-og.ts` 出图
+  ogImage: 'https://r2.kuriyona.com/img/site/og/default.png',
   ogUrl: route.path,
   ogTitle: "Kuriyona' Space",
   ogDescription: $t('about.description'),
