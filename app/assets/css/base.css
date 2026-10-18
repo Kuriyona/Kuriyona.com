@@ -57,11 +57,15 @@
   --shadow-card-3: 0 6px 24px rgb(0 0 0 / 45%);
   --shadow-floating: 0 8px 32px rgb(0 0 0 / 50%);
   --card-glow: 0 0 24px rgb(255 255 255 / 18%);
+
+  /* 顶栏高度：正文上边距、保留区 sticky top 与锚点滚动留白共用 */
+  --app-bar-height: 90px;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 100px;
+  /* 锚点目标停在顶栏下方，并留 4rem 呼吸空间 */
+  scroll-padding-top: calc(var(--app-bar-height) + 4rem);
 }
 
 body {
@@ -70,7 +74,6 @@ body {
   transition:
     color 0.25s,
     background-color 0.25s;
-  --app-bar-height: 90px;
   /* 版式宽度：正文列最大宽度 + 两侧保留区宽度（保留区放目录等附属内容，见 AppPage.vue）。
    * 保留区只在视口容得下时出现：960 + 240×2 = 1440，再留滚动条与呼吸余量 → 断点 1500px
    * （Tailwind 的 `reserve:` 变体，定义在 main.css）。改这两个值要同步算一遍断点。 */
