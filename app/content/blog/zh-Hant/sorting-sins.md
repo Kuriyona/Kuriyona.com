@@ -125,7 +125,7 @@ Array.Sort(arr, (a, b) => rng.Next(2) == 0 ? -1 : 1);
 Unhandled exception. System.ArgumentException: Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: 'System.Comparison`1[System.Int32]'.
 ```
 
-C# 在陣列長度達到一定規模後，才能檢測出比較器的不一致問題。
+C# 在數組長度達到一定規模後，才能檢測出比較器的不一致問題。
 
 ### Java（JDK 26.0.1）
 
@@ -145,7 +145,7 @@ arr.sort((a, b) -> rng.nextInt(3) - 1);
 Exception in thread "main" java.lang.IllegalArgumentException: Comparison method violates its general contract!
 ```
 
-Java 在陣列長度達到一定規模後，同樣能檢測出比較器的問題。
+Java 在數組長度達到一定規模後，同樣能檢測出比較器的問題。
 
 此檢查自 Java 7 起引入。在 Java 7 之前，即便比較器有缺陷，Java 也不會報錯，只會直接給出一個亂序的結果。
 
@@ -221,6 +221,6 @@ user-provided comparison function does not correctly implement a total order
 | **Rust(latest)**                      | **panic**                              |
 | **Rust(v1.80.0)**                     | （疑似）隨機排列                       |
 
-5 種語言在隨機比較器面前都選擇了「當作啥都沒發生」，而只有 Rust 的 v1.81.0 及以後版本選擇了 panic，Java 和 C# 在陣列長度達到一定規模後可能拋出錯誤。
+5 種語言在隨機比較器面前都選擇了「當作啥都沒發生」，而只有 Rust 的 v1.81.0 及以後版本選擇了 panic，Java 和 C# 在數組長度達到一定規模後可能拋出錯誤。
 
 後續我將對各種語言的實際執行次數以及排序結果是否存在規律性進行分析，總之就先這樣吧，有空再折騰。

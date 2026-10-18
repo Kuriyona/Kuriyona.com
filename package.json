@@ -4,6 +4,7 @@
     "dev": "bun scripts/gen-icons.ts && PORTLESS_TLD=localhost portless run nuxt dev",
     "dev:plain": "bun scripts/gen-icons.ts && nuxt dev",
     "gen:icons": "bun scripts/gen-icons.ts",
+    "gen:zh-hant": "bun scripts/generate-zh-hant.ts",
     "generate": "bun scripts/gen-icons.ts && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -54,6 +55,7 @@
     "@iconify-json/simple-icons": "^1.2.100",
     "@types/node": "^26.6.5",
     "fflate": "^0.8.3",
+    "opencc-js": "^1.4.2",
     "oxfmt": "^0.72.0",
     "pagefind": "^1.5.2",
     "wrangler": "^4.149.0"

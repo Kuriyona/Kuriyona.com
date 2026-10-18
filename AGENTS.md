@@ -23,6 +23,7 @@ pnpm dev             Nuxt dev server，portless → https://kuriyona.localhost
 pnpm dev:plain       Nuxt dev server，不映射域名（默认 3000）
 pnpm generate        Nuxt static generation
 pnpm gen:icons       扫描图标名 → 生成 app/utils/icons.gen.ts（dev / generate 已自动前置执行）
+pnpm gen:zh-hant     由 zh-Hans 文章转换生成 zh-Hant（OpenCC；可传 slug，输出需提交）
 pnpm index           PageFind 搜索索引（需先 `generate`）
 pnpm preview         Nuxt preview build output
 pnpm build           pnpm generate + pnpm index
@@ -116,7 +117,7 @@ Kuriyona.com/
 │   ├── content/blog/<lang>/    博客 Markdown 源（zh-Hans/zh-Hant/en/ja）
 │   └── data/devices.json       设备配置数据（/about/devices）
 ├── server/                     Nitro API：utils.ts（markdown-exit + Shiki 高亮 + TOC + 外链图标；读 app/content/blog/，非 @nuxt/content）· api/articles.ts · api/articles/[slug].ts
-├── scripts/                    Bun 独立脚本：generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · check-contrast.ts（改颜色令牌后跑）· gen-icons.ts · sort-i18n.ts
+├── scripts/                    Bun 独立脚本：generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · check-contrast.ts（改颜色令牌后跑）· gen-icons.ts · generate-zh-hant.ts · sort-i18n.ts
 ├── backend/                    后端子包（自带 lockfile，非 workspace 成员）：Cloudflare Workers + Hono + D1
 │   ├── index.ts                Worker 入口（导出 Hono app，挂 /api/*；不做 listen/migrate）
 │   ├── src/                    env.ts · city-map.ts · amap.ts · db/schema.ts（ask_table）· plugin/auth.ts · router/{ask-box,r2,city,cache,music} · utils.ts
@@ -217,6 +218,7 @@ Kuriyona.com/
 - **Dayjs locale sync**: `app/utils/time.ts` 的 `setLocale(locale)` 需在 i18n locale 变化时调用（`app.vue` watcher 已做）；另提供 `formatRelativeTime(time)`。
 - **I18n key 约定**: 全部 kebab-case（如 `blog.not-found`），全局通用文本归 `global.*`；4 个语言文件 key 集合必须一致，改动后 `pnpm fmt` 触发 `sort-i18n.ts` 排序。
 - **博客 AI 标注（frontmatter）**: `aiGenerated: true` 表示含 AI 生成内容；`aiReview` 仅在含 AI 内容时填写，取值 `粗略核对` / `基本核对` / `充分核对`。字段经 `server/utils.ts` 白名单校验后透传，缺省为 `false` / 空；博客列表与详情页在 `aiGenerated` 为真时显示对应徽标。
+- **zh-Hant 文章由 zh-Hans 生成**: `zh-Hant/` 由 `pnpm gen:zh-hant [slug...]` 从 `zh-Hans/` 用 OpenCC（`cn` → `t`）转换生成，生成结果直接提交；不要手改 `zh-Hant/`（会被覆盖）。行内代码原样保留；frontmatter 的 `date` / `edit` / `aiGenerated` / `aiReview` 保持原值（`aiReview` 是枚举标识，不能转成繁體）。
 - **`app/config.json`**: 个人信息（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 合并进 `useAppConfig()`；`languages[].name` 是硬编码标签（首页技能卡不随语言切换，另配 `icon` 缩写徽标）。
 - **`app/app.config.ts`**: `nav`（抽屉/右栏 ReserveNav/关于页数据源）+ `aboutNav`（`onAbout` 过滤结果）。**`nav` 顺序即各处展示顺序**；`shortTitleKey`（如 `blog.short-title`）供单行位置，缺省回退 `titleKey`；`timeline` 条目可带 `link`（跳转）与 `tag`（展示徽标）—— `/about/trans` 的「性别认同历程」按 `tag === '性别认同'` 过滤同一份数据（改文案会同时改该区块，属有意耦合）。
 - **城市地图与天气**: `GET /api/city` 的 `resident`/`current` 读 KV `city:maps`，缺失/坏值回退杭州 `330100`；`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`（KV 只存 `{ name, adcode }`）。**出图跑在管理端浏览器**（`/admin/city` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置，CPU ≈ 0（Worker 内出图 CPU ~0.9s，超 Free 10ms 上限两个数量级）。首页「关于我」右侧常驻城市卡片复用同一份 `resident`（`useCity()`），预渲染阶段拿不到数据。`resident.weather`：`cityCenter()` 取高德中心点（KV `amap:center:<adcode>`，30 天）→ 以 `location=经度,纬度` 查 QWeather（`cache:weather:<adcode>`，30 分钟）。详见 `backend/docs/city-map.md`。
