@@ -3,34 +3,58 @@ import 'github-markdown-css/github-markdown-dark.css';
 import type { ArticleMeta } from '~~/server/utils';
 
 const route = useRoute();
+const router = useRouter();
 
 const slug = route.params.slug;
-const { locale } = useI18n();
+const { locale, locales } = useI18n();
+const localePath = useLocalePath();
 
-useCodeCopy();
-useHeadingAnchor();
+const codeCopy = useCodeCopy();
+const headingAnchor = useHeadingAnchor();
 
 const { data: articlesData } = await useFetch(`/api/articles/${slug}`);
-const article = computed(() =>
-  (articlesData.value as ArticleMeta[]).find(
-    (post) => post.lang.toLowerCase() == locale.value.toLowerCase(),
-  ),
+const variants = computed(() => (articlesData.value as ArticleMeta[]) ?? []);
+const findVariant = (lang: string) =>
+  lang ? variants.value.find((post) => post.lang.toLowerCase() === lang.toLowerCase()) : undefined;
+// ?lang 决定正文语言，站点 UI 语言（locale）保持不变
+const activeLang = computed(() => {
+  const queryLang = typeof route.query.lang === 'string' ? route.query.lang : '';
+  return (findVariant(queryLang) ?? findVariant(locale.value) ?? variants.value[0])?.lang ?? '';
+});
+const article = computed(() => findVariant(activeLang.value));
+const languageOptions = computed(() =>
+  locales.value.flatMap((item) => {
+    const variant = findVariant(item.code);
+    return variant ? [{ value: variant.lang, label: item.name ?? item.code }] : [];
+  }),
 );
-const otherLangs = computed(() =>
-  (articlesData.value as ArticleMeta[]).filter(
-    (post) => post.lang.toLowerCase() != locale.value.toLowerCase(),
-  ),
+const canonicalUrl = computed(() =>
+  activeLang.value
+    ? `https://kuriyona.com${localePath(`/blog/${slug}`, activeLang.value)}`
+    : undefined,
 );
+
+function selectLang(lang: string) {
+  if (lang === activeLang.value) return;
+  const query = { ...route.query };
+  // 回到站点当前语言时不保留多余的 ?lang
+  if (lang.toLowerCase() === locale.value.toLowerCase()) delete query.lang;
+  else query.lang = lang;
+  router.push({ query });
+}
 
 const seoTitle = computed(() => article.value?.title || $t('global.not-found'));
 const seoDescription = computed(() => article.value?.desc as string);
-const seoOgImage = computed(
-  () => `https://r2.kuriyona.com/img/site/og/${slug}/${locale.value}.png`,
+const seoOgImage = computed(() =>
+  activeLang.value
+    ? `https://r2.kuriyona.com/img/site/og/${slug}/${activeLang.value}.png`
+    : undefined,
 );
 
 useSeoMeta({
   title: computed(() => `${seoTitle.value}  - ${$t('blog.title')}`),
   description: seoDescription,
+  ogUrl: canonicalUrl,
 });
 useSeoMeta({
   ogImage: seoOgImage,
@@ -40,6 +64,12 @@ useSeoMeta({
   twitterImage: seoOgImage,
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
+});
+// ?lang 只改变正文语言，canonical 始终指向该文章语言版本的正式路由
+useHead({
+  link: computed(() =>
+    canonicalUrl.value ? [{ rel: 'canonical', href: canonicalUrl.value }] : [],
+  ),
 });
 
 // 标题 / 目录滚出顶栏可视区（含被固定菜单栏与浮动顶栏遮住的部分）后分别显示浮动顶栏与浮动目录
@@ -81,6 +111,27 @@ function onScroll() {
   requestAnimationFrame(updateActiveHeading);
 }
 
+function observeLayout() {
+  titleObserver?.disconnect();
+  tocObserver?.disconnect();
+  if (titleEl.value) titleObserver?.observe(titleEl.value);
+  if (tocEl.value) tocObserver?.observe(tocEl.value);
+  else showFloatingToc.value = false;
+}
+
+function setupHeadingTracking() {
+  document.removeEventListener('scroll', onScroll);
+  headingEls = (article.value?.toc ?? [])
+    .map((item) => document.getElementById(item.slug))
+    .filter((el): el is HTMLElement => el !== null);
+  if (headingEls.length) {
+    document.addEventListener('scroll', onScroll, { passive: true });
+    updateActiveHeading();
+  } else {
+    activeSlug.value = '';
+  }
+}
+
 onMounted(() => {
   const rootMargin = `-${floatingTop}px 0px 0px 0px`;
   titleObserver = new IntersectionObserver(
@@ -91,17 +142,20 @@ onMounted(() => {
     ([entry]) => (showFloatingToc.value = !entry.isIntersecting),
     { rootMargin },
   );
-  if (titleEl.value) titleObserver.observe(titleEl.value);
-  if (tocEl.value) tocObserver.observe(tocEl.value);
+  observeLayout();
   document.addEventListener('pointerdown', onPointerdown);
+  setupHeadingTracking();
+});
 
-  headingEls = (article.value?.toc ?? [])
-    .map((item) => document.getElementById(item.slug))
-    .filter((el): el is HTMLElement => el !== null);
-  if (headingEls.length) {
-    document.addEventListener('scroll', onScroll, { passive: true });
-    updateActiveHeading();
-  }
+// 切文章语言后正文、目录、代码块全部换新，重新绑定这些一次性副作用
+watch(activeLang, async () => {
+  if (!import.meta.client) return;
+  await nextTick();
+  window.scrollTo(0, 0);
+  codeCopy.init();
+  headingAnchor.init();
+  observeLayout();
+  setupHeadingTracking();
 });
 
 // 浮动目录按钮只在目录滚出视口期间存在，滚回时收起展开的面板
@@ -156,6 +210,29 @@ onBeforeUnmount(() => {
           </span>
         </div>
       </div>
+      <div v-if="languageOptions.length > 1" class="flex flex-wrap items-center gap-2">
+        <KIcon name="material-symbols:translate" class="shrink-0 text-sm" />
+        <div
+          class="flex flex-wrap items-center gap-1 rounded-md border border-(--color-control-border) bg-(--color-control-bg) p-1"
+          role="group"
+          :aria-label="$t('blog.article-language')">
+          <button
+            v-for="option in languageOptions"
+            :key="option.value"
+            type="button"
+            class="k-interactive rounded px-2 py-1 text-xs transition-colors"
+            :class="
+              option.value === activeLang
+                ? 'bg-[var(--color-theme)]/20 text-(--color-theme)'
+                : 'text-(--color-text-2) hover:text-(--color-text-1)'
+            "
+            :aria-pressed="option.value === activeLang"
+            @click="selectLang(option.value)">
+            {{ option.label }}
+          </button>
+        </div>
+        <span class="text-xs text-(--color-text-2)">{{ $t('blog.article-language-only') }}</span>
+      </div>
       <div
         v-if="article.aiGenerated || article.aiTranslated"
         class="flex flex-wrap items-center gap-2">
@@ -174,25 +251,6 @@ onBeforeUnmount(() => {
       <div class="markdown-body bg-transparent!" data-pagefind-body>
         <div v-html="article.content"></div>
       </div>
-    </template>
-    <template v-if="otherLangs?.length">
-      <KDivider />
-      <KCard :title="$t('blog.other-lang')">
-        <div class="flex flex-col gap-2">
-          <KCardLink
-            v-for="lang in otherLangs"
-            :key="lang.lang"
-            :locale="lang.lang"
-            :to="`/blog/${lang.slug}`">
-            <span class="block truncate text-base leading-tight">{{ lang.title }}</span>
-            <span
-              v-if="lang.desc"
-              class="block truncate text-xs leading-tight text-(--color-text-2)"
-              >{{ lang.desc }}</span
-            >
-          </KCardLink>
-        </div>
-      </KCard>
     </template>
     <BlogTopBar
       :show="showTopBar"

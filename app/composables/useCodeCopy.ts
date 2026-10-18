@@ -14,7 +14,14 @@ export const useCodeCopy = () => {
   let buttons: HTMLButtonElement[] = [];
   const { t } = useI18n();
 
-  onMounted(() => {
+  const cleanup = () => {
+    buttons.forEach((btn) => btn.remove());
+    buttons = [];
+  };
+
+  // 文章正文切换语言后需要重新扫描，旧的按钮已随旧 DOM 丢弃
+  const init = () => {
+    cleanup();
     const pres = document.querySelectorAll<HTMLPreElement>('.markdown-body pre');
     if (!pres.length) return;
 
@@ -44,10 +51,10 @@ export const useCodeCopy = () => {
       pre.appendChild(btn);
       buttons.push(btn);
     });
-  });
+  };
 
-  onUnmounted(() => {
-    buttons.forEach((btn) => btn.remove());
-    buttons = [];
-  });
+  onMounted(init);
+  onUnmounted(cleanup);
+
+  return { init };
 };

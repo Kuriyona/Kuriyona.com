@@ -2,6 +2,13 @@
 import type { ArticleMeta } from '~~/server/utils';
 
 const { locale } = useI18n();
+const localePath = useLocalePath();
+
+// 文章语言只走 ?lang，链接路径固定为当前站点语言，避免点语言标签时整站切换
+function articleLangLink(slug: string, lang: string) {
+  const query = lang.toLowerCase() === locale.value.toLowerCase() ? {} : { lang };
+  return { path: localePath(`/blog/${slug}`, locale.value), query };
+}
 
 const { data: articlesData } = await useFetch(`/api/articles`);
 const articles = computed(() =>
@@ -40,10 +47,7 @@ useSeoMeta({ title: $t('blog.title') });
     </NuxtLinkLocale>
     <h1 class="text-2xl">{{ $t('blog.title') }}</h1>
     <p v-if="$t('blog.desc')" class="text-(--color-text-2)">{{ $t('blog.desc') }}</p>
-    <KCard
-      v-for="post in articles"
-      :key="post.slug"
-      class="k-interactive relative">
+    <KCard v-for="post in articles" :key="post.slug" class="k-interactive relative">
       <!-- 标题的伪元素铺满整张卡片，使卡片整体可点；语言标签是独立链接，需盖在其上 -->
       <h2 class="text-lg">
         <NuxtLinkLocale :to="`/blog/${post.slug}`" class="before:absolute before:inset-0">
@@ -51,7 +55,9 @@ useSeoMeta({ title: $t('blog.title') });
         </NuxtLinkLocale>
       </h2>
       <p class="text-sm">{{ post.desc }}</p>
-      <div v-if="post.aiGenerated || post.aiTranslated" class="mt-2 flex flex-wrap items-center gap-2">
+      <div
+        v-if="post.aiGenerated || post.aiTranslated"
+        class="mt-2 flex flex-wrap items-center gap-2">
         <KBadge v-if="post.aiGenerated">{{ $t('blog.ai-generated') }}</KBadge>
         <KBadge v-if="post.aiReview">{{
           $t('blog.ai-reviewed', [$t(AI_REVIEW_KEYS[post.aiReview])])
@@ -62,14 +68,13 @@ useSeoMeta({ title: $t('blog.title') });
       <p class="flex flex-wrap justify-between items-center gap-x-2 gap-y-1">
         <span class="flex max-w-full flex-none flex-wrap items-center gap-x-3 gap-y-1">
           <KIcon name="material-symbols:translate" class="shrink-0" />
-          <NuxtLinkLocale
+          <NuxtLink
             v-for="variant in variantsOf(post.slug)"
             :key="variant.lang"
-            :locale="variant.lang"
-            :to="`/blog/${variant.slug}`"
+            :to="articleLangLink(post.slug, variant.lang)"
             class="relative z-1 text-sm text-(--color-theme) underline-offset-2 hover:underline">
             {{ variant.lang.toUpperCase() }}
-          </NuxtLinkLocale>
+          </NuxtLink>
         </span>
         <span class="ml-auto flex max-w-full flex-none flex-wrap justify-end gap-2">
           <span class="flex items-center gap-1">
