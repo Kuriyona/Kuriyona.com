@@ -5,6 +5,7 @@ date: 2026-07-15
 edit: 2026-07-15
 aiGenerated: true
 aiReview: 充分核对
+aiTranslated: true
 ---
 
 ## 突発的な思いつき

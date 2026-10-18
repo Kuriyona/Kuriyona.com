@@ -51,11 +51,12 @@ useSeoMeta({ title: $t('blog.title') });
         </NuxtLinkLocale>
       </h2>
       <p class="text-sm">{{ post.desc }}</p>
-      <div v-if="post.aiGenerated" class="mt-2 flex flex-wrap items-center gap-2">
-        <KBadge>{{ $t('blog.ai-generated') }}</KBadge>
+      <div v-if="post.aiGenerated || post.aiTranslated" class="mt-2 flex flex-wrap items-center gap-2">
+        <KBadge v-if="post.aiGenerated">{{ $t('blog.ai-generated') }}</KBadge>
         <KBadge v-if="post.aiReview">{{
           $t('blog.ai-reviewed', [$t(AI_REVIEW_KEYS[post.aiReview])])
         }}</KBadge>
+        <KBadge v-if="post.aiTranslated">{{ $t('blog.ai-translated') }}</KBadge>
       </div>
       <br />
       <p class="flex flex-wrap justify-between items-center gap-x-2 gap-y-1">

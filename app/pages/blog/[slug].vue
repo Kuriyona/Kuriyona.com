@@ -156,11 +156,14 @@ onBeforeUnmount(() => {
           </span>
         </div>
       </div>
-      <div v-if="article.aiGenerated" class="flex flex-wrap items-center gap-2">
-        <KBadge>{{ $t('blog.ai-generated') }}</KBadge>
+      <div
+        v-if="article.aiGenerated || article.aiTranslated"
+        class="flex flex-wrap items-center gap-2">
+        <KBadge v-if="article.aiGenerated">{{ $t('blog.ai-generated') }}</KBadge>
         <KBadge v-if="article.aiReview">{{
           $t('blog.ai-reviewed', [$t(AI_REVIEW_KEYS[article.aiReview])])
         }}</KBadge>
+        <KBadge v-if="article.aiTranslated">{{ $t('blog.ai-translated') }}</KBadge>
       </div>
       <KDivider />
       <div v-if="article.toc?.length" ref="tocEl" class="reserve:hidden">

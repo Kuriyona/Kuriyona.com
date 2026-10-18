@@ -20,6 +20,7 @@ export type ArticleMeta = {
   date: string;
   aiGenerated: boolean;
   aiReview: AiReview | '';
+  aiTranslated: boolean;
   readingTime: any;
   toc: TocItem[];
   [key: string]: any;
@@ -150,6 +151,7 @@ async function getAllArticles() {
       edit: frontmatter.edit || '',
       aiGenerated: frontmatter.aiGenerated === true,
       aiReview: AI_REVIEW_LEVELS.includes(frontmatter.aiReview) ? frontmatter.aiReview : '',
+      aiTranslated: frontmatter.aiTranslated === true,
       readingTime: result.readingTime,
       toc: result.toc,
       content,

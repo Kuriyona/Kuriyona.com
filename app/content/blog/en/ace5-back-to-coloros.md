@@ -5,6 +5,7 @@ date: 2026-10-19
 edit: 2026-10-19
 aiGenerated: true
 aiReview: 基本核对
+aiTranslated: true
 ---
 
 ## Background

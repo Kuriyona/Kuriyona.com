@@ -217,7 +217,7 @@ Kuriyona.com/
 - **Compile-time globals**: `GIT_HASH` / `BUILD_TIME` 在 `nuxt.config.ts` `define`（声明于 `vite-env.d.ts`）。
 - **Dayjs locale sync**: `app/utils/time.ts` 的 `setLocale(locale)` 需在 i18n locale 变化时调用（`app.vue` watcher 已做）；另提供 `formatRelativeTime(time)`。
 - **I18n key 约定**: 全部 kebab-case（如 `blog.not-found`），全局通用文本归 `global.*`；4 个语言文件 key 集合必须一致，改动后 `pnpm fmt` 触发 `sort-i18n.ts` 排序。
-- **博客 AI 标注（frontmatter）**: `aiGenerated: true` 表示含 AI 生成内容；`aiReview` 仅在含 AI 内容时填写，取值 `粗略核对` / `基本核对` / `充分核对`。字段经 `server/utils.ts` 白名单校验后透传，缺省为 `false` / 空；博客列表与详情页在 `aiGenerated` 为真时显示对应徽标。
+- **博客 AI 标注（frontmatter）**: `aiGenerated: true` 表示含 AI 生成内容；`aiReview` 仅在含 AI 内容时填写，取值 `粗略核对` / `基本核对` / `充分核对`；`aiTranslated: true` 表示该语言版本为 AI 翻译。字段经 `server/utils.ts` 白名单校验后透传，缺省为 `false` / 空；博客列表与详情页按需显示对应徽标。
 - **zh-Hant 文章由 zh-Hans 生成**: `zh-Hant/` 由 `pnpm gen:zh-hant [slug...]` 从 `zh-Hans/` 用 OpenCC（`cn` → `t`）转换生成，生成结果直接提交；不要手改 `zh-Hant/`（会被覆盖）。行内代码原样保留；frontmatter 的 `date` / `edit` / `aiGenerated` / `aiReview` 保持原值（`aiReview` 是枚举标识，不能转成繁體）。
 - **`app/config.json`**: 个人信息（tech_stack/languages/info/contact/games/device），由 `app/app.config.ts` 合并进 `useAppConfig()`；`languages[].name` 是硬编码标签（首页技能卡不随语言切换，另配 `icon` 缩写徽标）。
 - **`app/app.config.ts`**: `nav`（抽屉/右栏 ReserveNav/关于页数据源）+ `aboutNav`（`onAbout` 过滤结果）。**`nav` 顺序即各处展示顺序**；`shortTitleKey`（如 `blog.short-title`）供单行位置，缺省回退 `titleKey`；`timeline` 条目可带 `link`（跳转）与 `tag`（展示徽标）—— `/about/trans` 的「性别认同历程」按 `tag === '性别认同'` 过滤同一份数据（改文案会同时改该区块，属有意耦合）。
