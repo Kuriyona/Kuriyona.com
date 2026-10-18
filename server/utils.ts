@@ -8,12 +8,18 @@ import readingTime from 'reading-time';
 
 export type TocItem = { level: number; text: string; slug: string };
 
+export type AiReview = '粗略核对' | '基本核对' | '充分核对';
+
+const AI_REVIEW_LEVELS: AiReview[] = ['粗略核对', '基本核对', '充分核对'];
+
 export type ArticleMeta = {
   slug: string;
   lang: string;
   title: string;
   desc: string;
   date: string;
+  aiGenerated: boolean;
+  aiReview: AiReview | '';
   readingTime: any;
   toc: TocItem[];
   [key: string]: any;
@@ -142,6 +148,8 @@ async function getAllArticles() {
       date: frontmatter.date || '',
       tags: frontmatter.tags || [],
       edit: frontmatter.edit || '',
+      aiGenerated: frontmatter.aiGenerated === true,
+      aiReview: AI_REVIEW_LEVELS.includes(frontmatter.aiReview) ? frontmatter.aiReview : '',
       readingTime: result.readingTime,
       toc: result.toc,
       content,

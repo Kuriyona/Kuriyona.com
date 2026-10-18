@@ -3,6 +3,8 @@ title: 把一加 Ace 5 从非官方系统刷回 ColorOS 16，顺手把相机救�
 desc: 从非官方系统回刷 ColorOS 16 的完整踩坑记录：三次翻车、一次相机闪退，以及 root 和 OTA 之间那点绕不开的事。
 date: 2026-10-19
 edit: 2026-10-19
+aiGenerated: true
+aiReview: 基本核对
 ---
 
 ## 起因
