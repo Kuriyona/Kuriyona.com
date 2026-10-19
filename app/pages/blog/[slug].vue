@@ -248,7 +248,7 @@ onBeforeUnmount(() => {
           <BlogToc :items="article.toc" :active="activeSlug" />
         </KCard>
       </div>
-      <div class="markdown-body bg-transparent!" data-pagefind-body>
+      <div class="markdown-body bg-transparent!" :lang="article.lang" data-pagefind-body>
         <div v-html="article.content"></div>
       </div>
     </template>
