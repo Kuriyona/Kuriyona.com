@@ -163,26 +163,26 @@ modem           314667008 → 0x15E00000
 
 ### OTA のあと root は消える
 
-OTA は `boot` を上書きするので、KernelSU のパッチも当然消える。これはリスクではなく、再度パッチを当てればよい。
+OTA は `init_boot` を上書きするので、KernelSU のパッチも当然消える。これはリスクではなく、再度パッチを当てればよい。
 
 ### 再 root：猶予の窓
 
 ColorOS に戻したあと、ほどなく最新の公式 OTA アップデートが届いた。インストール後に「今すぐ再起動」を押す前に待て —— この時点で新しいイメージはすでに別スロットに書き込まれており、旧システムの root はまだ残っている。そのまま読み出せばよい：
 
 ```powershell
-adb shell su -c "dd if=/dev/block/by-name/boot_b of=/data/local/tmp/boot_b.img"
-adb pull /data/local/tmp/boot_b.img
+adb shell su -c "dd if=/dev/block/by-name/init_boot_b of=/data/local/tmp/init_boot_b.img"
+adb pull /data/local/tmp/init_boot_b.img
 ```
 
 利点はフルパッケージを待たなくてよく、イメージが 100% 一致すること。欠点は**再起動した瞬間に窓が閉じる**ことだ。
 
-Ace 5 は Android 13+ の GKI 端末で、KernelSU がパッチするのは `boot` なので、`init_boot` に焼かないように。
+Ace 5 は Android 13+ の GKI 端末で、KernelSU（LKM モード）がパッチするのは `init_boot` なので、`boot` に焼かないように。
 
 ### もっと楽な方法：未使用スロットにインストール
 
 KernelSU Manager には「未使用のスロットにインストール（OTA 後）」があり、パッチ済みイメージをそのまま別スロットに書き込める。再起動すれば root 付きの新システムになる。手動 dd よりずっと楽だ。
 
-代償は、パソコンに純正イメージのバックアップが残らないこと。いざというときロールバックしたくても、dump した `boot` が手元にない。だから今回は先に手動で dd しておいた。少なくとも安心のためだ。
+代償は、パソコンに純正イメージのバックアップが残らないこと。いざというときロールバックしたくても、dump した `init_boot` が手元にない。だから今回は先に手動で dd しておいた。少なくとも安心のためだ。
 
 もう 1 つ小さな話：KernelSU では `ls /system/bin/su` で見つからないのが**正常**だ。execve フックで動いており、実際に su ファイルを置いているわけではない。これで root が消えたかどうかを判断しないように。
 

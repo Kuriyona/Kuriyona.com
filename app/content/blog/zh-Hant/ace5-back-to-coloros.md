@@ -162,26 +162,26 @@ modem           314667008 → 0x15E00000
 
 ### OTA 之後 root 會沒
 
-OTA 會覆蓋 `boot`，KernelSU 的 patch 自然也就沒了。這不是風險，重新 patch 就行。
+OTA 會覆蓋 `init_boot`，KernelSU 的 patch 自然也就沒了。這不是風險，重新 patch 就行。
 
 ### 重新 root：窗口期
 
 刷回 ColorOS 之後，很快就收到了最新的官方 OTA 更新。裝完之後先別點「立即重啓」—— 這時候新鏡像已經寫進另一個槽位，舊系統的 root 還在，直接讀出來就是：
 
 ```powershell
-adb shell su -c "dd if=/dev/block/by-name/boot_b of=/data/local/tmp/boot_b.img"
-adb pull /data/local/tmp/boot_b.img
+adb shell su -c "dd if=/dev/block/by-name/init_boot_b of=/data/local/tmp/init_boot_b.img"
+adb pull /data/local/tmp/init_boot_b.img
 ```
 
 優點是不用等全量包，鏡像 100% 對版。缺點是**一重啓窗口就關了**。
 
-Ace 5 是 Android 13+ 的 GKI 機型，KernelSU patch 的是 `boot`，別刷到 `init_boot` 上。
+Ace 5 是 Android 13+ 的 GKI 機型，KernelSU（LKM 模式）patch 的是 `init_boot`，別刷到 `boot` 上。
 
 ### 更省事的做法：安裝到未使用的插槽
 
 KernelSU Manager 裏有個「安裝到未使用的插槽（OTA 後）」，直接把 patch 好的鏡像寫進另一個槽位，重啓之後就是帶 root 的新系統。比手動 dd 省事得多。
 
-代價是它不會在電腦上留下原廠鏡像的備份。真出問題想回滾，手上就沒有那份 dump 出來的 `boot`。所以我這次還是先手動 dd 了一份，至少心裏踏實。
+代價是它不會在電腦上留下原廠鏡像的備份。真出問題想回滾，手上就沒有那份 dump 出來的 `init_boot`。所以我這次還是先手動 dd 了一份，至少心裏踏實。
 
 還有個小細節：KernelSU 下 `ls /system/bin/su` 找不到是**正常現象**，它靠 execve hook，不是真的放了個 su 文件。別拿這個判斷 root 丟沒丟。
 

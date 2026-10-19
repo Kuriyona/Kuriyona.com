@@ -163,26 +163,26 @@ Let me also lay out the relationship between root and OTA here, so I don't forge
 
 ### Root disappears after an OTA
 
-An OTA overwrites `boot`, so KernelSU's patch disappears too. That's not a risk; just patch again.
+An OTA overwrites `init_boot`, so KernelSU's patch disappears too. That's not a risk; just patch again.
 
 ### Re-rooting: the window of opportunity
 
 After flashing back to ColorOS, the latest official OTA update arrived quickly. After installing it, don't tap "restart now" yet — at this point the new image has already been written to the other slot, while root remains on the old system. Just dump it:
 
 ```powershell
-adb shell su -c "dd if=/dev/block/by-name/boot_b of=/data/local/tmp/boot_b.img"
-adb pull /data/local/tmp/boot_b.img
+adb shell su -c "dd if=/dev/block/by-name/init_boot_b of=/data/local/tmp/init_boot_b.img"
+adb pull /data/local/tmp/init_boot_b.img
 ```
 
 The advantage is that you don't have to wait for a full package, and the image is guaranteed to match. The disadvantage is that **the window closes as soon as you reboot**.
 
-The Ace 5 is an Android 13+ GKI device; KernelSU patches `boot`, so don't flash it to `init_boot`.
+The Ace 5 is an Android 13+ GKI device; KernelSU in LKM mode patches `init_boot`, so don't flash it to `boot`.
 
 ### The easier approach: install to the unused slot
 
 KernelSU Manager has an "install to unused slot (after OTA)" option that writes the patched image directly into the other slot; after rebooting you're on the new system with root. Much easier than manual dd.
 
-The cost is that it won't leave a backup of the stock image on your computer. If something goes wrong and you want to roll back, you won't have that dumped `boot`. So this time I still manually dd'd a copy first, at least for peace of mind.
+The cost is that it won't leave a backup of the stock image on your computer. If something goes wrong and you want to roll back, you won't have that dumped `init_boot`. So this time I still manually dd'd a copy first, at least for peace of mind.
 
 One more small detail: under KernelSU, not finding `ls /system/bin/su` is **normal**. It relies on an execve hook and doesn't actually place a su file. Don't use that to judge whether root is gone.
 
