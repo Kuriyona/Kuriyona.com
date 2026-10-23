@@ -48,7 +48,7 @@ useHead({
     {
       rel: 'icon',
       type: 'image/png',
-      href: 'https://r2.kuriyona.com/img/avatar/Avatar_OLI_256.png',
+      href: 'https://r2.kuriyona.com/img/avatar/Avatar_256.png',
     },
   ],
 });
