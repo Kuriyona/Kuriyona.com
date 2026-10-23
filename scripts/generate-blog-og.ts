@@ -6,9 +6,8 @@
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { Resvg } from '@resvg/resvg-js';
-import { compileLayout, renderSVG } from '@kuriyona/yona-svg';
-import type { LayoutDefinition } from '@kuriyona/yona-svg';
+import { compileLayout, renderPNG, renderSVG } from '@kuriyona/svg-toolkit';
+import type { FontConfig, LayoutDefinition } from '@kuriyona/svg-toolkit';
 import { Article, getArticles } from '../server/utils';
 import dayjs from 'dayjs';
 
@@ -36,6 +35,18 @@ const fontStack = (lang: string) => {
   const variant = CJK_VARIANT[lang];
   return variant ? `${MAPLE_MONO}, Noto Sans ${variant}` : MAPLE_MONO;
 };
+
+// 根字体配置随 layout 下传：文本节点的 font 逐键覆盖，字体文件与光栅器选项只在这里给一次
+const rootFont = (fontFiles: string[], defaultFontFamily = MAPLE_MONO): FontConfig => ({
+  loadSystemFonts: false,
+  fontFiles,
+  defaultFontFamily,
+  serifFamily: MAPLE_MONO,
+  sansSerifFamily: MAPLE_MONO,
+  cursiveFamily: MAPLE_MONO,
+  fantasyFamily: MAPLE_MONO,
+  monospaceFamily: MAPLE_MONO,
+});
 
 function isWide(c: string): boolean {
   const code = c.charCodeAt(0);
@@ -91,7 +102,7 @@ function splitText(text: string, maxWidth: number, fontSize: number): string[] {
   return lines;
 }
 
-function buildLayout(article: Article): LayoutDefinition {
+function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
   const cfg = L10N[article.lang] ?? L10N.en;
   const font = fontStack(article.lang);
   const titleLines = splitText(article.title, CONTENT_W, 64);
@@ -105,6 +116,7 @@ function buildLayout(article: Article): LayoutDefinition {
     width: WIDTH,
     height: HEIGHT,
     backgroundColor: BG,
+    font: rootFont(fontFiles),
     flexDirection: 'column',
     padding: { top: 40, bottom: 40, left: 60, right: 60 },
     children: [
@@ -117,7 +129,6 @@ function buildLayout(article: Article): LayoutDefinition {
             content: `Kuriyona\'s Space / Blog`,
             fontSize: 32,
             height: 40,
-            fontFamily: MAPLE_MONO,
             color: 'black',
           },
           {
@@ -129,7 +140,7 @@ function buildLayout(article: Article): LayoutDefinition {
             content: line,
             fontSize: 64,
             height: 68,
-            fontFamily: font,
+            font: { defaultFontFamily: font },
             color: 'black',
           })),
           {
@@ -141,7 +152,7 @@ function buildLayout(article: Article): LayoutDefinition {
             content: line,
             fontSize: 48,
             height: 52,
-            fontFamily: font,
+            font: { defaultFontFamily: font },
             color: 'black',
           })),
         ],
@@ -160,7 +171,7 @@ function buildLayout(article: Article): LayoutDefinition {
             content: info,
             fontSize: 32,
             height: 40,
-            fontFamily: font,
+            font: { defaultFontFamily: font },
             color: 'black',
           },
           {
@@ -168,7 +179,6 @@ function buildLayout(article: Article): LayoutDefinition {
             content: `-> https://Kuriyona.com/blog/${article.slug}`,
             fontSize: 32,
             height: 40,
-            fontFamily: MAPLE_MONO,
             color: 'black',
           },
         ],
@@ -178,11 +188,12 @@ function buildLayout(article: Article): LayoutDefinition {
 }
 
 // 站点默认 OG 图（除博客详情页外的所有页面）：居中两行
-function buildDefaultLayout(): LayoutDefinition {
+function buildDefaultLayout(fontFiles: string[]): LayoutDefinition {
   return {
     width: WIDTH,
     height: HEIGHT,
     backgroundColor: BG,
+    font: rootFont(fontFiles),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -195,7 +206,6 @@ function buildDefaultLayout(): LayoutDefinition {
         content: "Kuriyona's Space",
         fontSize: 104,
         height: 120,
-        fontFamily: MAPLE_MONO,
         color: 'black',
         textAnchor: 'middle',
       },
@@ -204,7 +214,6 @@ function buildDefaultLayout(): LayoutDefinition {
         content: 'https://Kuriyona.com ->',
         fontSize: 48,
         height: 56,
-        fontFamily: MAPLE_MONO,
         color: 'black',
         textAnchor: 'middle',
       },
@@ -212,7 +221,7 @@ function buildDefaultLayout(): LayoutDefinition {
   };
 }
 
-// 版式（yona-svg 生成的 SVG）里文本一律 `font-weight: bold`，Regular/Bold 都要给：
+// 版式（svg-toolkit 生成的 SVG）里文本一律 `font-weight: bold`，Regular/Bold 都要给：
 // 缺 Bold 时 resvg 会退到 Regular（它不做合成加粗），整张图字重会变细
 const WEIGHTS = ['Regular', 'Bold'];
 
@@ -233,30 +242,17 @@ async function resolveFontFiles(lang: string): Promise<string[]> {
 }
 
 /** 出图到 `<basePath>.svg` 与 `<basePath>.png` */
-async function renderTo(basePath: string, fontFiles: string[], layout: LayoutDefinition) {
-  const svgString = renderSVG(compileLayout(layout));
+async function renderTo(basePath: string, layout: LayoutDefinition) {
+  const doc = compileLayout(layout);
+  const svgString = renderSVG(doc);
   await fs.mkdir(path.dirname(basePath), { recursive: true });
 
   const svgPath = `${basePath}.svg`;
   await fs.writeFile(svgPath, svgString, 'utf-8');
   console.log(`✓ ${svgPath}`);
 
-  const resvg = new Resvg(svgString, {
-    font: {
-      // 不读系统字体：出图结果只取决于 .cache/fonts 里那几份文件
-      loadSystemFonts: false,
-      fontFiles,
-      defaultFontFamily: MAPLE_MONO,
-      serifFamily: MAPLE_MONO,
-      sansSerifFamily: MAPLE_MONO,
-      cursiveFamily: MAPLE_MONO,
-      fantasyFamily: MAPLE_MONO,
-      monospaceFamily: MAPLE_MONO,
-    },
-  });
-
   const pngPath = `${basePath}.png`;
-  await fs.writeFile(pngPath, resvg.render().asPng());
+  await fs.writeFile(pngPath, await renderPNG(svgString, doc.font));
   console.log(`✓ ${pngPath}`);
 }
 
@@ -264,7 +260,10 @@ const slug = process.argv[2];
 
 if (!slug) {
   // 默认 OG 图只有拉丁字符，给 Maple Mono 即可
-  await renderTo(path.join(OG_DIR, 'default'), await resolveFontFiles('en'), buildDefaultLayout());
+  await renderTo(
+    path.join(OG_DIR, 'default'),
+    buildDefaultLayout(await resolveFontFiles('en')),
+  );
 } else {
   const articles = await getArticles();
   const filtered = articles.filter((a) => a.slug === slug);
@@ -276,6 +275,6 @@ if (!slug) {
 
   for (const article of filtered) {
     const fontFiles = await resolveFontFiles(article.lang);
-    await renderTo(path.join(OG_DIR, slug, article.lang), fontFiles, buildLayout(article));
+    await renderTo(path.join(OG_DIR, slug, article.lang), buildLayout(article, fontFiles));
   }
 }

@@ -91,9 +91,9 @@ bun scripts/generate-blog-og.ts <slug>  # 文章图 → .cache/og/<slug>/<lang>.
 bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run 只打印键）
 ```
 
-- **渲染**：`@kuriyona/yona-svg` 排版成 SVG，`@resvg/resvg-js` 光栅化（不再用 sharp）；`loadSystemFonts: false`，只加载 `.cache/fonts` 里显式列出的字体，出图结果与本机装了哪些字体无关。
+- **渲染**：`@kuriyona/svg-toolkit` 排版成 SVG，`@resvg/resvg-js` 光栅化（不再用 sharp）；`loadSystemFonts: false`，只加载 `.cache/fonts` 里显式列出的字体，出图结果与本机装了哪些字体无关。
 - **字体**：文本优先 `Maple Mono`（拉丁），非英文再挂 `Noto Sans SC/TC/JP` 其一（resvg 逐字回退）；Regular 与 Bold 都要（版式用 `font-weight: bold`，缺 Bold 会变细）。字体只放 `.cache/fonts`（gitignored）。
-- 默认图两行居中：yona-svg 不做文本测量（文本节点宽度算 0），靠 `alignItems: center` + `textAnchor: 'middle'` 落在中轴。
+- 默认图两行居中：svg-toolkit 不做文本测量（文本节点宽度算 0），靠 `alignItems: center` + `textAnchor: 'middle'` 落在中轴。
 - **meta 约定**（`app/app.vue` 站点级 + `app/pages/blog/[slug].vue` 覆盖）：`og:url` 必须绝对地址；`twitter:*` 与 `og:*` 显式写同一组值（不依赖爬虫的 og 回退）；站点描述取自 i18n `about.description`（四语都要填，空串会让 `og:description` 为空）。
 - 改版式或字体后要**重新出图并上传**；R2 上旧的 `static/og/blog/**`、`static/intro/intro-*.png` 是历史路径，站点已不再引用。
 

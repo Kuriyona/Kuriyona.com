@@ -24,7 +24,7 @@
     "@chenglou/pretext": "^0.0.9",
     "@iconify/vue": "^5.0.3",
     "@kuriyona/amap-box": "^0.4.0",
-    "@kuriyona/yona-svg": "^0.1.0",
+    "@kuriyona/svg-toolkit": "1.0.0-rc.1",
     "@nuxtjs/i18n": "^10.6.0",
     "@nuxtjs/sitemap": "8.6.1",
     "@pagefind/component-ui": "^1.5.2",

@@ -17,9 +17,9 @@ importers:
       '@kuriyona/amap-box':
         specifier: ^0.4.0
         version: 0.4.0
-      '@kuriyona/yona-svg':
-        specifier: ^0.1.0
-        version: 0.1.0(sharp@0.35.5(@types/node@26.6.5))
+      '@kuriyona/svg-toolkit':
+        specifier: 1.0.0-rc.1
+        version: 1.0.0-rc.1(@resvg/resvg-js@2.6.2)
       '@nuxtjs/i18n':
         specifier: ^10.6.0
         version: 10.6.0(@nuxt/schema@4.6.1)(@vue/compiler-dom@3.5.43)(db0@0.3.4)(dotenv@17.4.2)(esbuild@0.28.2)(eslint@10.2.1(jiti@2.7.0))(giget@3.3.0)(ioredis@5.11.1)(jiti@2.7.0)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.13)(rollup@4.62.2)(typescript@5.9.3)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.43(typescript@5.9.3))
@@ -1047,13 +1047,13 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@kuriyona/yona-svg@0.1.0':
-    resolution: {integrity: sha512-FTmxj5rS6fsfkmfkMS1WyREydiFu70ckDxGajQi0FNhsnPGTaiDZB9WOjlnb+uIjxoWe2L/LDTRwhmbluNbjWw==}
+  '@kuriyona/svg-toolkit@1.0.0-rc.1':
+    resolution: {integrity: sha512-kAM7PCAoLDheaiOjyOXWjijkGGoQANdJW/j6yUX57E+uJ/6pynK9muiBp1oEmZiklvr7mYRXLpXN0wLwTOvvRA==}
     engines: {node: '>=22'}
     peerDependencies:
-      sharp: ^0.35.2
+      '@resvg/resvg-js': ^2.6.2
     peerDependenciesMeta:
-      sharp:
+      '@resvg/resvg-js':
         optional: true
 
   '@kwsites/file-exists@1.1.1':
@@ -6396,12 +6396,12 @@ snapshots:
 
   '@kuriyona/amap-box@0.4.0': {}
 
-  '@kuriyona/yona-svg@0.1.0(sharp@0.35.5(@types/node@26.6.5))':
+  '@kuriyona/svg-toolkit@1.0.0-rc.1(@resvg/resvg-js@2.6.2)':
     dependencies:
       xmlbuilder2: 4.0.3
       yoga-layout: 3.2.1
     optionalDependencies:
-      sharp: 0.35.5(@types/node@26.6.5)
+      '@resvg/resvg-js': 2.6.2
 
   '@kwsites/file-exists@1.1.1':
     dependencies:

@@ -6,7 +6,7 @@
  *
  * - `MapleMono-*`：拉丁字形（含西里尔 / 希腊 / 常见符号），也是默认字体
  * - `NotoSansSC/TC/JP-*`：中日韩字形（Maple Mono 不含 CJK），按文章语言各取一份
- * - Regular 与 Bold 都要：版式（yona-svg 生成的 SVG）里文本是 `font-weight: bold`，
+ * - Regular 与 Bold 都要：版式（svg-toolkit 生成的 SVG）里文本是 `font-weight: bold`，
  *   缺 Bold 时 resvg 只会退到 Regular（它不做合成加粗），字重会整体变细
  *
  * 用法：`bun scripts/download-fonts.ts [--force]`（默认跳过已存在的文件）
