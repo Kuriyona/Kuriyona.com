@@ -161,7 +161,7 @@ Kuriyona.com/
 
 | 路由                        | 文件                                | 说明                                                                                                                               |
 | --------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `/`                         | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI、技能、导航卡、社交与联系方式（含 data-pagefind-body）               |
+| `/`                         | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI/最爱的颜色、技能、导航卡、社交与联系方式（含 data-pagefind-body）               |
 | `/about/trans`              | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏 hero + 关于我卡片 + 跨性别科普问答（流式输出）+ 性别探索计数 + 性别认同历程 + 资源链接，含 data-pagefind-body） |
 | `/about/devices`            | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                  |
 | `/blog`                     | `pages/blog/index.vue`              | 文章列表（按语言过滤；卡片整体可点，各语言链接带 `?lang` 但不切换站点语言）                                                          |

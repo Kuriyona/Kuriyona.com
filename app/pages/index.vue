@@ -38,8 +38,9 @@ const { data: cities } = useCity();
         :city="cities.resident" />
     </div>
 
-    <!-- 生日 / MBTI：各自独立成块，两列（最窄屏也不换行，所以纵向排图标-标签-值） -->
-    <div class="grid grid-cols-2 gap-4">
+    <!-- 生日 / MBTI / 最爱的颜色：各自独立成块（纵向排图标-标签-值）。
+         窄屏两列，第三块占满一行；够宽后三列并排。 -->
+    <div class="grid grid-cols-2 gap-4 min-[480px]:grid-cols-3">
       <KCard class="text-center">
         <div class="flex flex-col items-center gap-1">
           <KIcon name="material-symbols:cake" class="text-2xl text-(--color-text-4)" />
@@ -54,6 +55,18 @@ const { data: cities } = useCity();
           <KIcon name="material-symbols:psychology" class="text-2xl text-(--color-text-4)" />
           <p class="text-xs text-(--color-text-3)">MBTI</p>
           <p class="font-monos text-base font-bold sm:text-lg">{{ config.info.mbti }}</p>
+        </div>
+      </KCard>
+      <KCard class="col-span-2 text-center min-[480px]:col-span-1">
+        <div class="flex flex-col items-center gap-1">
+          <KIcon name="material-symbols:palette" class="text-2xl text-(--color-text-4)" />
+          <p class="text-xs text-(--color-text-3)">{{ $t('about.favorite-color') }}</p>
+          <p class="flex items-center gap-2 font-monos text-base font-bold sm:text-lg">
+            <span
+              class="inline-block size-3 rounded-full"
+              :style="{ backgroundColor: config.info.favoriteColor }" />
+            <span>{{ config.info.favoriteColor }}</span>
+          </p>
         </div>
       </KCard>
     </div>
