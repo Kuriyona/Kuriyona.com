@@ -142,15 +142,6 @@
       "group": "contact"
     },
     {
-      "name": "WeChat",
-      "i18nKey": "contact.wechat",
-      "value": "@Kuriyona_chan",
-      "link": "https://u.wechat.com/EMz6xUdrM3Vlw9uPe2OweLQ",
-      "qrOnly": true,
-      "icon": "simple-icons:wechat",
-      "group": "contact"
-    },
-    {
       "name": "QQ",
       "value": "Kuriyona(2946733291)",
       "link": "https://qm.qq.com/q/Vlg6pCdge4",
