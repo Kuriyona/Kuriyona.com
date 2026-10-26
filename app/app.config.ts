@@ -104,7 +104,7 @@ export default defineAppConfig({
         ],
       },
       {
-        name: '鱼块糯',
+        name: '冷鱼',
         relationKey: 'link-relation.sister',
         links: [
           { url: 'https://x.com/xFurina_', icon: 'simple-icons:x', i18nKey: 'link-platform.x' },
