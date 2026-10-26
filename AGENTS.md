@@ -77,7 +77,19 @@ Conventional Commits（CC 规范），描述用中文：`<type>: <中文描述>`
 
 - **开发**：先 `pnpm generate && pnpm index` 再 `pnpm dev`。`pnpm index` 出索引到 `.cache/pagefind` 并复制一份到 `dist/pagefind`（部署用）。**索引不能只放 `dist/`**：Nitro `prepare()` 每次 dev 启动 `rm -rf nitro.output.publicDir`（= `dist`），`dist/pagefind` 会被删光、`/pagefind/*` 全 404；dev server 靠 `nuxt.config.ts` 的 `pagefind-dev` 插件从 `.cache/pagefind/` 提供。
 - **生产**：`pnpm build` = `generate` + `index`。
-- **索引范围**：只有带 `data-pagefind-body` 的页面入索引 —— 博客正文 + `/`、`/about/trans`、`/about/devices`、`/friends-and-links`。新页面加该属性即可（加在 `<AppPage>` 或页面根元素）。
+- **索引范围**（Pagefind 只读 SSG 产物，不看 CSS：`hidden` 的元素照样会被索引）：
+  - 整列入索引：`/`、`/about/trans`、`/about/devices`、`/friends-and-links`、`/timeline` —— `<AppPage data-pagefind-body>`，属性透传到根节点，覆盖正文列。
+  - 只索引正文：`/blog/:slug` —— 仅 `div.markdown-body` 带 `data-pagefind-body`；标题不在 body 内，但 Pagefind 自动取页面第一个 `<h1>` 作为 `title` metadata，metadata 参与检索且有加权（默认 5x），所以标题可搜；语言切换器、阅读时长、AI 徽标、目录都不进索引。
+  - 不索引：`/blog`（同语言全部文章标题/摘要的聚合页，收进来会让几乎所有文章查询都命中它）、`/ask-box`（`useAsyncData(..., { server: false })`，SSG 产物里没有问答内容，无可索引正文）、`/admin/*`、`404.html`/`200.html`。
+  - `AppPage` 两侧 `aside.reserve` 固定 `data-pagefind-ignore="all"`：时钟、导航、最近文章、播放器与所有 `reserve-*` 插槽内容都不入索引（曾因这些内容随每页重复收录，搜文章标题会命中全站）。
+- **新页面怎么接索引**：
+  1. 内容型页面：在根 `<AppPage>` 上加 `data-pagefind-body`，索引整个正文列。
+  2. 页面内重复/装饰性内容（导航卡、聚合列表、浮动 UI、控件）包一层 `data-pagefind-ignore="all"`。**别用默认的 `="index"`**：它仍会处理内部 metadata 并允许被当作页面标题，只有 `all` 是彻底跳过。
+  3. 需要被搜到的正文**不要**放进 `reserve-*` 插槽（那是已忽略区）；保留区内新增组件不必再逐个标注。
+  4. 客户端取数的页面（`server: false`，或 `onMounted` 后才渲染的内容）无法被索引；要么保持不索引，要么改成构建期可取的数据。
+  5. 需要自定义搜索结果标题时，给标题元素加 `data-pagefind-meta="title"`；文章详情沿用「只有正文是 body」的模式，不要为了搜 `desc` 把整列改成 body。
+- **构建**：`pnpm index` 先 `rm -rf .cache/pagefind` 再出索引 —— Pagefind 不清理输出目录，重跑会在 content-hash 文件名下累积旧 fragment / `pf_meta`（曾在 34 页的站上堆到 216 个 fragment）。索引落 `.cache/pagefind` 并复制到 `dist/pagefind`；dev 由 `pagefind-dev` 插件服务 `.cache/pagefind`。切语言时 `app.vue` 会 `await nextTick()` 等 `<html lang>` 更新后再 `pagefindReinit()`（Pagefind 按该属性选语言索引）。
+- **验证索引内容**：`pagefind-entry.json` 的 `languages.*.page_count` 应为该语言实际索引页数；`fragment/*.pf_fragment` 是 gzip + `pagefind_dcd` JSON，可直接解包检查正文有没有混入保留区/导航文本（如 `Navigation.`、`Recent posts`、`--:--:--`）。
 - 改样式只动 `app/components/SearchModal.vue`。状态经 `useSearch()` 取：`s.query`/`s.results`/`s.loading`/`s.error`/`s.activeIndex`/`s.open()`/`s.close()`/`s.toggle()`/`s.clear()`。
 
 ## OG 图（站点与博客预览图）
@@ -166,7 +178,7 @@ Kuriyona.com/
 | `/about/devices`            | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                  |
 | `/blog`                     | `pages/blog/index.vue`              | 文章列表（按语言过滤；卡片整体可点，各语言链接带 `?lang` 但不切换站点语言）                                                          |
 | `/blog/:slug`               | `pages/blog/[slug].vue`             | 文章详情（多语言 + 浮动顶栏 + 宽屏左侧保留区目录 + 阅读进度高亮；`?lang=` 只切换文章版本，站点 UI 语言不变）                          |
-| `/timeline`                 | `pages/timeline/index.vue`          | 时间线（倒序，条目描述保持中文，可选 link 跳转）                                                                                   |
+| `/timeline`                 | `pages/timeline/index.vue`          | 时间线（倒序，条目描述保持中文，可选 link 跳转，含 data-pagefind-body）                                                              |
 | `/friends-and-links`        | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                        |
 | `/ask-box` · `/ask-box/ask` | `pages/ask-box/*`                   | 提问箱列表 · 提交提问（Turnstile 验证）                                                                                            |
 | `/admin`                    | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                      |
@@ -214,7 +226,7 @@ Kuriyona.com/
 - **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，async/Suspense 页面渲染 `renderSlot` 时抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
 - **Env vars**: Worker 从 `c.env` 读，每请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored），生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB`/`STATUS_KV` 由 binding 提供）。可选：`AMAP_KEY`（城市地图出图取边界 + 查天气中心点；缺失时相关端点 500 / 回退默认城市中心点）、`CF_API_TOKEN`（`/admin/cache`，需 **Zone:Read + Cache Purge**；缺失时 `/cache/*` 报 500）。
 - **`dist/` 会被 dev 启动清空**: `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory` 与 SSG 输出），Nitro `prepare()` 每次 dev 启动 `rm -rf` 它。所以**别把需跨 dev 重启保留的产物放 `dist/`**（PageFind 索引因此落 `.cache/pagefind`）。
-- **`package.json` 的 `"type": "module"`**: 消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告（Nuxt dev 会把它计入 `✕ 1 error`）。`scripts/index-pagefind.cjs` 显式 `.cjs`，不受影响。
+- **`package.json` 的 `"type": "module"`**: 消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告（Nuxt dev 会把它计入 `✕ 1 error`）。
 - **Compile-time globals**: `GIT_HASH` / `BUILD_TIME` 在 `nuxt.config.ts` `define`（声明于 `vite-env.d.ts`）。
 - **Dayjs locale sync**: `app/utils/time.ts` 的 `setLocale(locale)` 需在 i18n locale 变化时调用（`app.vue` watcher 已做）；另提供 `formatRelativeTime(time)`。
 - **I18n key 约定**: 全部 kebab-case（如 `blog.not-found`），全局通用文本归 `global.*`；4 个语言文件 key 集合必须一致，改动后 `pnpm fmt` 触发 `sort-i18n.ts` 排序。

@@ -10,9 +10,12 @@ defineProps<{ hero?: boolean }>();
     <!-- 两侧保留区：视口够宽（reserve: 断点）才出现的独立栏位，内容由命名插槽填充。
          右侧即使没内容也保留同等宽度，正文列才始终居中；左侧固定跟一个音乐播放器。
          两栏的 hero 偏移写法必须一致（见上），否则一栏会压在 hero 上。 -->
+    <!-- Pagefind 不渲染 CSS：aside 只是视觉隐藏，SSR 里始终在 data-pagefind-body 内。
+         保留区（播放器 / 时钟 / 导航 / 最近文章 / reserve-* 插槽）全部不参与索引。 -->
     <aside
       class="reserve hidden reserve:block pr-4"
-      :class="hero ? 'mt-(--reserve-hero-offset)' : ''">
+      :class="hero ? 'mt-(--reserve-hero-offset)' : ''"
+      data-pagefind-ignore="all">
       <div class="flex flex-col gap-4">
         <slot name="reserve-left" />
         <MusicPlayer />
@@ -23,7 +26,8 @@ defineProps<{ hero?: boolean }>();
     </div>
     <aside
       class="reserve hidden reserve:block pl-4"
-      :class="hero ? 'mt-(--reserve-hero-offset)' : ''">
+      :class="hero ? 'mt-(--reserve-hero-offset)' : ''"
+      data-pagefind-ignore="all">
       <div class="flex flex-col gap-4">
         <!-- 默认小组件（时钟 / 站点导航 / 当前语言最近文章），页面可用 reserve-right 追加内容 -->
         <ReserveClock />

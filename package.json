@@ -8,7 +8,7 @@
     "generate": "bun scripts/gen-icons.ts && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "index": "pagefind --site dist --output-path .cache/pagefind && rm -rf dist/pagefind && cp -R .cache/pagefind dist/pagefind",
+    "index": "rm -rf .cache/pagefind && pagefind --site dist --output-path .cache/pagefind && rm -rf dist/pagefind && cp -R .cache/pagefind dist/pagefind",
     "build": "pnpm run generate && pnpm run index",
     "sort-i18n": "bun scripts/sort-i18n.ts",
     "fmt": "pnpm run sort-i18n && oxfmt",

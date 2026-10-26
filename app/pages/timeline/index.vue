@@ -31,7 +31,7 @@ useSeoMeta({ title: $t('timeline.title') });
 </script>
 
 <template>
-  <AppPage>
+  <AppPage data-pagefind-body>
     <NuxtLinkLocale to="/">
       <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>

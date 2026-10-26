@@ -96,7 +96,11 @@ const { data: cities } = useCity();
       </div>
     </KCard>
 
-    <div class="grid grid-cols-1 min-[900px]:grid-cols-2 gap-4">
+    <!-- 导航卡只是各页面标题/描述的聚合：正文页各自可被搜到，这里重复收录会让
+         任意页面名都命中首页。与保留区导航同理排除出索引。 -->
+    <div
+      class="grid grid-cols-1 min-[900px]:grid-cols-2 gap-4"
+      data-pagefind-ignore="all">
       <KNavCard
         v-for="item in aboutNav"
         :key="item.to"
@@ -108,7 +112,8 @@ const { data: cities } = useCity();
     <KNavCard
       to="/friends-and-links"
       :title="$t('about.links.title')"
-      :desc="$t('about.links.desc')" />
+      :desc="$t('about.links.desc')"
+      data-pagefind-ignore="all" />
 
     <CardContact />
   </AppPage>

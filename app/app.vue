@@ -32,6 +32,9 @@ watch(
     });
     setLocale(newLocale);
     if (import.meta.client) {
+      // Pagefind 初始化时读 <html lang> 选语言索引；useHead 的 DOM 更新在 nextTick 之后，
+      // 直接 reinit 可能仍加载旧语言的索引。
+      await nextTick();
       await reinit();
     }
   },
