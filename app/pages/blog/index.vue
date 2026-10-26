@@ -2,12 +2,15 @@
 import type { ArticleMeta } from '~~/server/utils';
 
 const { locale } = useI18n();
+const router = useRouter();
 const localePath = useLocalePath();
 
-// 文章语言只走 ?lang，链接路径固定为当前站点语言，避免点语言标签时整站切换
-function articleLangLink(slug: string, lang: string) {
+// 文章语言只走 ?lang，路径固定为当前站点语言，点语言标签不切换整站语言。
+// 用 button 而不是 <a>：?lang 是同一篇文章的副本，不能作为可爬链接出现在静态 HTML 里
+// （详情页的语言切换同样用 button），否则搜索引擎会把 4 个 query 版本一并抓取。
+function openVariant(slug: string, lang: string) {
   const query = lang.toLowerCase() === locale.value.toLowerCase() ? {} : { lang };
-  return { path: localePath(`/blog/${slug}`, locale.value), query };
+  router.push({ path: localePath(`/blog/${slug}`, locale.value), query });
 }
 
 const { data: articlesData } = await useFetch(`/api/articles`);
@@ -68,13 +71,14 @@ useSeoMeta({ title: $t('blog.title') });
       <p class="flex flex-wrap justify-between items-center gap-x-2 gap-y-1">
         <span class="flex max-w-full flex-none flex-wrap items-center gap-x-3 gap-y-1">
           <KIcon name="material-symbols:translate" class="shrink-0" />
-          <NuxtLink
+          <button
             v-for="variant in variantsOf(post.slug)"
             :key="variant.lang"
-            :to="articleLangLink(post.slug, variant.lang)"
-            class="relative z-1 text-sm text-(--color-theme) underline-offset-2 hover:underline">
+            type="button"
+            class="relative z-1 text-sm text-(--color-theme) underline-offset-2 hover:underline"
+            @click="openVariant(post.slug, variant.lang)">
             {{ variant.lang.toUpperCase() }}
-          </NuxtLink>
+          </button>
         </span>
         <span class="ml-auto flex max-w-full flex-none flex-wrap justify-end gap-2">
           <span class="flex items-center gap-1">
