@@ -1,48 +1,23 @@
 {
   "devices": [
     {
-      "name": "Apple iPhone 16 Pro",
-      "subtitle": "黑色钛金属 · 512 GiB",
-      "subtitleKey": "about.devices.subtitle.black-titanium",
+      "name": "OPPO Find X8s",
+      "subtitle": "月光白",
+      "subtitleKey": "about.devices.subtitle.moonlight-white",
       "primary": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Apple A18 Pro" },
-        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "6.3″ 120Hz OLED" }
-      ]
-    },
-    {
-      "name": "OnePlus Ace 5",
-      "subtitle": "引力钛 · 12+256",
-      "subtitleKey": "about.devices.subtitle.gravity-titanium",
-      "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
-        { "labelKey": "about.devices.specs.memory", "value": "12 GiB" },
+        { "labelKey": "about.devices.specs.processor", "value": "MediaTek Dimensity 9400+" },
+        { "labelKey": "about.devices.specs.memory", "value": "16 GiB" },
         { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "6.78″ 120Hz 1.5K" }
+        { "labelKey": "about.devices.specs.display", "value": "6.32″ 120Hz OLED" }
       ]
     },
     {
-      "name": "Apple Watch Series 9",
-      "subtitle": "41mm GPS",
+      "name": "OPPO Watch S2",
+      "subtitle": "薄雾粉",
+      "subtitleKey": "about.devices.subtitle.misty-pink",
       "primary": true,
-      "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Apple S9" },
-        { "labelKey": "about.devices.specs.storage", "value": "64 GiB" },
-        { "labelKey": "about.devices.specs.size", "value": "41mm" }
-      ]
-    },
-    {
-      "name": "Apple MacBook Pro",
-      "subtitle": "M1 8+512",
-      "primary": true,
-      "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Apple M1" },
-        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "13.3″ Retina" }
-      ]
+      "specs": [{ "labelKey": "about.devices.specs.size", "value": "45mm" }]
     },
     {
       "name": "台式 PC",
@@ -63,6 +38,51 @@
         { "labelKey": "about.devices.specs.gpu", "value": "Intel HD Graphics 520" },
         { "labelKey": "about.devices.specs.memory", "value": "16 GiB" },
         { "labelKey": "about.devices.specs.display", "value": "12″ 1920×1080 60Hz" }
+      ]
+    },
+    {
+      "name": "Apple iPhone 16 Pro",
+      "subtitle": "黑色钛金属 · 512 GiB",
+      "subtitleKey": "about.devices.subtitle.black-titanium",
+      "retired": true,
+      "specs": [
+        { "labelKey": "about.devices.specs.processor", "value": "Apple A18 Pro" },
+        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "6.3″ 120Hz OLED" }
+      ]
+    },
+    {
+      "name": "OnePlus Ace 5",
+      "subtitle": "引力钛 · 12+256",
+      "subtitleKey": "about.devices.subtitle.gravity-titanium",
+      "retired": true,
+      "specs": [
+        { "labelKey": "about.devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
+        { "labelKey": "about.devices.specs.memory", "value": "12 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "6.78″ 120Hz 1.5K" }
+      ]
+    },
+    {
+      "name": "Apple Watch Series 9",
+      "subtitle": "41mm GPS",
+      "retired": true,
+      "specs": [
+        { "labelKey": "about.devices.specs.processor", "value": "Apple S9" },
+        { "labelKey": "about.devices.specs.storage", "value": "64 GiB" },
+        { "labelKey": "about.devices.specs.size", "value": "41mm" }
+      ]
+    },
+    {
+      "name": "Apple MacBook Pro",
+      "subtitle": "M1 8+512",
+      "retired": true,
+      "specs": [
+        { "labelKey": "about.devices.specs.processor", "value": "Apple M1" },
+        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "13.3″ Retina" }
       ]
     }
   ]

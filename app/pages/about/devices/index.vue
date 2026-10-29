@@ -16,6 +16,7 @@ useSeoMeta({ title: $t('about.devices.title') });
         v-for="device in devicesData.devices"
         :key="device.name"
         class="flex flex-col gap-2"
+        :class="{ 'opacity-60': device.retired }"
         :style="device.primary ? { boxShadow: 'var(--card-glow)' } : {}">
         <div>
           <h2 class="text-lg font-bold text-(--color-text-1)">
@@ -25,6 +26,9 @@ useSeoMeta({ title: $t('about.devices.title') });
             <span>{{ device.subtitleKey ? $t(device.subtitleKey) : device.subtitle }}</span>
             <KBadge v-if="device.primary" class="shrink-0">
               {{ $t('about.devices.primary') }}
+            </KBadge>
+            <KBadge v-else-if="device.retired" variant="muted" class="shrink-0">
+              {{ $t('about.devices.retired') }}
             </KBadge>
           </p>
         </div>

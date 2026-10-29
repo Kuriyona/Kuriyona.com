@@ -127,7 +127,7 @@ Kuriyona.com/
 │   ├── utils/                  api.ts（ky 的 fetchApi，`beforeRequest` 每请求注入 X-Auth-Key）· time.ts（dayjs 封装 + setLocale）· i18n.ts · emoji.ts · console.ts · pagefind.ts · icons.gen.ts（生成，勿手改）· weatherIcon.ts · highlightMotion.ts
 │   ├── scripts/                客户端共享类型：i18n.ts（重导出 useI18n）· cityTypes.ts · musicTypes.ts
 │   ├── content/blog/<lang>/    博客 Markdown 源（zh-Hans/zh-Hant/en/ja）
-│   └── data/devices.json       设备配置数据（/about/devices）
+│   └── data/devices.json       设备配置数据（/about/devices；`primary` 主设备光晕 + 「主要设备」徽标，`retired` 卡片降不透明度 + 「不再使用」徽标）
 ├── server/                     Nitro API：utils.ts（markdown-exit + Shiki 高亮 + TOC + 外链图标；读 app/content/blog/，非 @nuxt/content）· api/articles.ts · api/articles/[slug].ts
 ├── scripts/                    Bun 独立脚本：generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · check-contrast.ts（改颜色令牌后跑）· gen-icons.ts · generate-zh-hant.ts · sort-i18n.ts
 ├── backend/                    后端子包（自带 lockfile，非 workspace 成员）：Cloudflare Workers + Hono + D1
@@ -160,7 +160,7 @@ Kuriyona.com/
 | `KSelect`       | 下拉选择（封装 Reka `Select`；触发器对齐 KInput、弹层对齐 KMenu）                                                     |
 | `KSwitch`       | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                          |
 | `KDivider`      | 分隔线（封装 Reka `Separator`，horizontal/vertical；`label` 在左端渲染小字标签，仅 horizontal）                       |
-| `KBadge`        | 主题色半透明小徽标（text-xs 胶囊；关系 / 标签 / 主要设备）                                                            |
+| `KBadge`        | 半透明小徽标（text-xs 胶囊；`variant="muted"` 灰色）；关系 / 标签 / 主要设备 / 不再使用                               |
 | `MusicPlayer`   | 左保留区常驻播放器（`KCard` + `MusicControls`，宽视口才出现）                                                         |
 | `MusicControls` | 播放器主体（封面/歌名/当前歌词行含翻译/进度条/上下首/曲目列表）；`MusicPlayer`（保留区）与 `MusicPanel`（窄视口）共用 |
 | `MusicPanel`    | 悬浮音乐面板（`KDialog` + `MusicControls`，顶栏复合音乐按钮打开，仅 `reserve:` 断点以下）                             |
@@ -175,7 +175,7 @@ Kuriyona.com/
 | --------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `/`                         | `pages/index.vue`                   | 半屏 Hero + 关于内容（右侧常驻城市卡片，窄屏两行）+ 生日/MBTI/最爱的颜色、技能、导航卡、社交与联系方式（含 data-pagefind-body）               |
 | `/about/trans`              | `pages/about/trans/index.vue`       | 作为一个 MtF（半屏 hero + 关于我卡片 + 跨性别科普问答（流式输出）+ 性别探索计数 + 性别认同历程 + 资源链接，含 data-pagefind-body） |
-| `/about/devices`            | `pages/about/devices/index.vue`     | 设备配置（含 data-pagefind-body）                                                                                                  |
+| `/about/devices`            | `pages/about/devices/index.vue`     | 设备配置（在役设备在前，`retired` 的旧设备灰度置后；含 data-pagefind-body）                                                         |
 | `/blog`                     | `pages/blog/index.vue`              | 文章列表（按语言过滤；卡片整体可点，各语言标签是 button，只切换文章正文语言、不切换站点语言，也不产生可爬的 `?lang` 链接）          |
 | `/blog/:slug`               | `pages/blog/[slug].vue`             | 文章详情（多语言 + 浮动顶栏 + 宽屏左侧保留区目录 + 阅读进度高亮；`?lang=` 只切换文章版本，站点 UI 语言不变）                          |
 | `/timeline`                 | `pages/timeline/index.vue`          | 时间线（倒序，条目描述保持中文，可选 link 跳转，含 data-pagefind-body）                                                              |
