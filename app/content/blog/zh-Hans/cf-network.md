@@ -7,7 +7,7 @@ edit: 2026-05-24
 
 今天凌晨给我的个人网站加了一个小功能，就是在网站显示当前使用的 Cloudflare 网络。
 
-![](https://r2.kuriyona.com/static/2026/05/24/cf-network-preview.png)
+![](https://r2.kuriyona.com/static/2026/05/24/cf-network-preview.webp)
 
 > 翻到本网站的最底下，您应该就能看见实际显示的样式。
 
@@ -42,7 +42,7 @@ Cloudflare Status 提供了一个文件，列出了当前所有的 Cloudflare �
 
 > `https://www.cloudflarestatus.com/api/v2/summary.json`
 
-![](https://r2.kuriyona.com/static/2026/05/24/cf-network-status-api.png)
+![](https://r2.kuriyona.com/static/2026/05/24/cf-network-status-api.webp)
 
 文件的内容很杂，我们需要通过一个简单的脚本来获得我们需要的格式化信息。
 

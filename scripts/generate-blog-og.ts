@@ -241,7 +241,7 @@ async function resolveFontFiles(lang: string): Promise<string[]> {
   return files;
 }
 
-/** 出图到 `<basePath>.svg` 与 `<basePath>.png` */
+/** 出图到 `<basePath>.svg` 与 `<basePath>.jpg`（JPEG 质量 80） */
 async function renderTo(basePath: string, layout: LayoutDefinition) {
   const doc = compileLayout(layout);
   const svgString = renderSVG(doc);
@@ -251,19 +251,20 @@ async function renderTo(basePath: string, layout: LayoutDefinition) {
   await fs.writeFile(svgPath, svgString, 'utf-8');
   console.log(`✓ ${svgPath}`);
 
-  const pngPath = `${basePath}.png`;
-  await fs.writeFile(pngPath, await renderPNG(svgString, doc.font));
-  console.log(`✓ ${pngPath}`);
+  // resvg 只能出 PNG，再交给 Bun.Image 编码 JPEG（质量 80）；PNG 不落盘。
+  // OG 图用 JPEG 而不是 WebP：部分社交平台爬虫不渲染 WebP 预览卡片
+  const png = await renderPNG(svgString, doc.font);
+  const bytes = await new Bun.Image(png).jpeg({ quality: 80 }).bytes();
+  const jpgPath = `${basePath}.jpg`;
+  await fs.writeFile(jpgPath, bytes);
+  console.log(`✓ ${jpgPath} (${(bytes.byteLength / 1024).toFixed(1)} KiB)`);
 }
 
 const slug = process.argv[2];
 
 if (!slug) {
   // 默认 OG 图只有拉丁字符，给 Maple Mono 即可
-  await renderTo(
-    path.join(OG_DIR, 'default'),
-    buildDefaultLayout(await resolveFontFiles('en')),
-  );
+  await renderTo(path.join(OG_DIR, 'default'), buildDefaultLayout(await resolveFontFiles('en')));
 } else {
   const articles = await getArticles();
   const filtered = articles.filter((a) => a.slug === slug);

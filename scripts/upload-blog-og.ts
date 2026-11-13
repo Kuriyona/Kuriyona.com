@@ -2,8 +2,8 @@
  * 把 `generate-blog-og.ts` 生成的 OG 图上传到 R2。
  *
  * 本地目录与对象键一一对应（前缀与城市地图同一个 `img/site/` 命名空间）：
- * `.cache/og/default.png` → `img/site/og/default.png`（站点默认图）
- * `.cache/og/<slug>/<lang>.png` → `img/site/og/<slug>/<lang>.png`（博客详情页）
+ * `.cache/og/default.jpg` → `img/site/og/default.jpg`（站点默认图）
+ * `.cache/og/<slug>/<lang>.jpg` → `img/site/og/<slug>/<lang>.jpg`（博客详情页）
  *
  * 用法：`bun scripts/upload-blog-og.ts [--dry-run]`
  * 需要根目录 `.env`（Bun 自动加载）里的 ENDPOINT / ACCESS_KEY_ID / SECRET_ACCESS_KEY / BUCKET_NAME。
@@ -14,7 +14,7 @@ import { S3Client } from 'bun';
 
 const OG_DIR = path.resolve(import.meta.dirname, '../.cache/og');
 const KEY_PREFIX = 'img/site/og';
-const DEFAULT_FILE = 'default.png';
+const DEFAULT_FILE = 'default.jpg';
 const LANGS = ['en', 'ja', 'zh-Hans', 'zh-Hant'];
 const dryRun = process.argv.includes('--dry-run');
 
@@ -40,7 +40,8 @@ async function upload(key: string, filePath: string) {
     return;
   }
 
-  await s3.file(key).write(await fs.readFile(filePath));
+  // 显式写 Content-Type：R2 不按扩展名猜，缺省会变成 application/octet-stream
+  await s3.file(key, { type: 'image/jpeg' }).write(await fs.readFile(filePath));
   console.log(`✓ ${key}`);
 }
 
@@ -51,10 +52,10 @@ for (const entry of await fs.readdir(OG_DIR, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue;
 
   for (const lang of LANGS) {
-    const filePath = path.join(OG_DIR, entry.name, `${lang}.png`);
+    const filePath = path.join(OG_DIR, entry.name, `${lang}.jpg`);
     if (!(await fs.exists(filePath))) continue;
 
-    await upload(`${KEY_PREFIX}/${entry.name}/${lang}.png`, filePath);
+    await upload(`${KEY_PREFIX}/${entry.name}/${lang}.jpg`, filePath);
   }
 }
 

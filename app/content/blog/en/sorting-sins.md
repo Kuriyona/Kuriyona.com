@@ -184,15 +184,15 @@ But it does detect at runtime whether your comparator implements a total order, 
 
 When I finished testing Rust and shared the results with a friend [LaunchPad](https://launchpadx.top/), they tried to reproduce it in Grok and found that it did **not** panic.
 
-![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.jpg)
+![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.webp)
 
 This puzzled me, because on my local machine it definitely panicked.
 
 We naturally suspected a version difference. It turned out the Grok VM was using Rust `1.75.0 (82e1608df 2023-12-21)`.
 
-![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.jpg)
+![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.webp)
 
-![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.jpg)
+![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.webp)
 
 My local version was `1.97.0 (c980f4866 2026-06-30)`, so we tentatively concluded it was a version issue. I initially didn't plan to dig deeper right away, and published the first version of this blog post.
 

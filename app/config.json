@@ -220,32 +220,32 @@
   "games": [
     {
       "i18nKey": "about.games.genshin",
-      "img": "https://r2.kuriyona.com/static/image/games/genshin.png",
+      "img": "https://r2.kuriyona.com/static/image/games/genshin.webp",
       "link": "https://ys.mihoyo.com/"
     },
     {
       "i18nKey": "about.games.starrail",
-      "img": "https://r2.kuriyona.com/static/image/games/starrail.png",
+      "img": "https://r2.kuriyona.com/static/image/games/starrail.webp",
       "link": "https://sr.mihoyo.com/"
     },
     {
       "name": "Minecraft",
-      "img": "https://r2.kuriyona.com/static/image/games/minecraft.png",
+      "img": "https://r2.kuriyona.com/static/image/games/minecraft.webp",
       "link": "https://minecraft.net/"
     },
     {
       "name": "Cities: Skylines",
-      "img": "https://r2.kuriyona.com/static/image/games/steam/header/949230.png",
+      "img": "https://r2.kuriyona.com/static/image/games/steam/header/949230.webp",
       "link": "https://www.steampowered.com/app/949230/"
     },
     {
       "name": "Transport Fever",
-      "img": "https://r2.kuriyona.com/static/image/games/steam/header/1066780.png",
+      "img": "https://r2.kuriyona.com/static/image/games/steam/header/1066780.webp",
       "link": "https://www.steampowered.com/app/1066780/"
     },
     {
       "name": "Ballex",
-      "img": "https://r2.kuriyona.com/static/image/games/steam/header/1383570.png",
+      "img": "https://r2.kuriyona.com/static/image/games/steam/header/1383570.webp",
       "link": "https://www.steampowered.com/app/1383570/"
     }
   ],

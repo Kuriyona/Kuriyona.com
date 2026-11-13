@@ -47,7 +47,7 @@ const seoTitle = computed(() => article.value?.title || $t('global.not-found'));
 const seoDescription = computed(() => article.value?.desc as string);
 const seoOgImage = computed(() =>
   activeLang.value
-    ? `https://r2.kuriyona.com/img/site/og/${slug}/${activeLang.value}.png`
+    ? `https://r2.kuriyona.com/img/site/og/${slug}/${activeLang.value}.jpg`
     : undefined,
 );
 

@@ -184,15 +184,15 @@ user-provided comparison function does not correctly implement a total order
 
 Rust をテストし終えた後、友人の [LaunchPad](https://launchpadx.top/) と共有したところ、彼が Grok で再現を試みた際には panic が発生しなかった。
 
-![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.jpg)
+![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.webp)
 
 これは不思議に思えた。なぜなら、私のローカル環境では確かに panic するからだ。
 
 そこで当然のようにバージョンの問題を疑い、Grok VM で使われている Rust のバージョンが `1.75.0 (82e1608df 2023-12-21)` であることを確認した。
 
-![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.jpg)
+![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.webp)
 
-![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.jpg)
+![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.webp)
 
 私のローカル環境のバージョンは `1.97.0 (c980f4866 2026-06-30)` だったので、ほぼ間違いなくバージョンが原因だと結論づけ、このブログ記事の初版を公開した。
 

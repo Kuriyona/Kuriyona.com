@@ -183,15 +183,15 @@ user-provided comparison function does not correctly implement a total order
 
 當我測試完 Rust 之後，與一個朋友 [LaunchPad](https://launchpadx.top/) 分享的時候。對方嘗試在 Grok 中復現時，發現並沒有 panic。
 
-![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.jpg)
+![sorting-sins-grok-1](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-1.webp)
 
 這讓我很奇怪，因爲我在本地運行時，確實會 panic。
 
 於是我們自然而然地懷疑到了版本的問題，是否是因爲 Rust 版本的問題導致的？然後發現 Gork VM 中使用的 Rust 版本是 `1.75.0 (82e1608df 2023-12-21)`。
 
-![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.jpg)
+![sorting-sins-grok-2](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-2.webp)
 
-![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.jpg)
+![sorting-sins-grok-3](https://r2.kuriyona.com/static/2026/07/15/sorting-sins-grok-3.webp)
 
 而我本地測試用的版本是 `1.97.0 (c980f4866 2026-06-30)`，我們自然而然就基本肯定了是版本的問題，不過我本來短期內也沒打算先深入研究，發佈了這篇博客的第一個版本。
 

@@ -8,7 +8,7 @@ aiTranslated: true
 
 Early this morning, I added a small feature to my personal website: displaying the current Cloudflare network in use.
 
-![](https://r2.kuriyona.com/static/2026/05/24/cf-network-preview.png)
+![](https://r2.kuriyona.com/static/2026/05/24/cf-network-preview.webp)
 
 > Scroll to the bottom of this website, and you should see the actual display style.
 
@@ -43,7 +43,7 @@ Cloudflare Status provides a file that lists the current status information of a
 
 > `https://www.cloudflarestatus.com/api/v2/summary.json`
 
-![](https://r2.kuriyona.com/static/2026/05/24/cf-network-status-api.png)
+![](https://r2.kuriyona.com/static/2026/05/24/cf-network-status-api.webp)
 
 The file content is quite messy, so we need a simple script to extract the formatted information we need.
 

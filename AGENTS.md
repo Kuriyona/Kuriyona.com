@@ -94,16 +94,16 @@ Conventional Commits（CC 规范），描述用中文：`<type>: <中文描述>`
 
 ## OG 图（站点与博客预览图）
 
-两张，都指向 R2 静态对象（`r2.kuriyona.com` 后的路径即对象键）：**站点默认图** `img/site/og/default.png`（`app/app.vue` 的 `ogImage`，除博客详情页外全站）与**博客详情页图** `img/site/og/<slug>/<lang>.png`（`app/pages/blog/[slug].vue` 按 slug + 语言覆盖）。
+两张，都指向 R2 静态对象（`r2.kuriyona.com` 后的路径即对象键）：**站点默认图** `img/site/og/default.jpg`（`app/app.vue` 的 `ogImage`，除博客详情页外全站）与**博客详情页图** `img/site/og/<slug>/<lang>.jpg`（`app/pages/blog/[slug].vue` 按 slug + 语言覆盖）。均为 1200×630、JPEG 质量 80（**不用 WebP**：部分社交平台爬虫不渲染 WebP 预览卡片）。
 
 ```bash
 bun scripts/download-fonts.ts           # 一次性：字体 → .cache/fonts（--force 重下）
-bun scripts/generate-blog-og.ts         # 站点默认图 → .cache/og/default.{svg,png}
-bun scripts/generate-blog-og.ts <slug>  # 文章图 → .cache/og/<slug>/<lang>.{svg,png}
+bun scripts/generate-blog-og.ts         # 站点默认图 → .cache/og/default.{svg,jpg}
+bun scripts/generate-blog-og.ts <slug>  # 文章图 → .cache/og/<slug>/<lang>.{svg,jpg}
 bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run 只打印键）
 ```
 
-- **渲染**：`@kuriyona/svg-toolkit` 排版成 SVG，`@resvg/resvg-js` 光栅化（不再用 sharp）；`loadSystemFonts: false`，只加载 `.cache/fonts` 里显式列出的字体，出图结果与本机装了哪些字体无关。
+- **渲染**：`@kuriyona/svg-toolkit` 排版成 SVG，`@resvg/resvg-js` 光栅化成 PNG，再交给 `Bun.Image`（Bun 1.3+ 内置）编码 JPEG（质量 80），PNG 不落盘；`loadSystemFonts: false`，只加载 `.cache/fonts` 里显式列出的字体，出图结果与本机装了哪些字体无关。上传时显式写 `Content-Type: image/jpeg`（R2 不按扩展名猜）。
 - **字体**：文本优先 `Maple Mono`（拉丁），非英文再挂 `Noto Sans SC/TC/JP` 其一（resvg 逐字回退）；Regular 与 Bold 都要（版式用 `font-weight: bold`，缺 Bold 会变细）。字体只放 `.cache/fonts`（gitignored）。
 - 默认图两行居中：svg-toolkit 不做文本测量（文本节点宽度算 0），靠 `alignItems: center` + `textAnchor: 'middle'` 落在中轴。
 - **meta 约定**（`app/app.vue` 站点级 + `app/pages/blog/[slug].vue` 覆盖）：`og:url` 必须绝对地址；`twitter:*` 与 `og:*` 显式写同一组值（不依赖爬虫的 og 回退）；站点描述取自 i18n `about.description`（四语都要填，空串会让 `og:description` 为空）。

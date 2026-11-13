@@ -8,7 +8,7 @@ aiTranslated: true
 
 今日の未明、個人サイトに小さな機能を追加した。サイト上に現在使用中の Cloudflare ネットワークを表示するものだ。
 
-![](https://r2.kuriyona.com/static/2026/05/24/cf-network-preview.png)
+![](https://r2.kuriyona.com/static/2026/05/24/cf-network-preview.webp)
 
 > このサイトの一番下までスクロールすると、実際の表示を確認できるはずだ。
 
@@ -43,7 +43,7 @@ Cloudflare Status は、すべての Cloudflare ネットワークの現在の�
 
 > `https://www.cloudflarestatus.com/api/v2/summary.json`
 
-![](https://r2.kuriyona.com/static/2026/05/24/cf-network-status-api.png)
+![](https://r2.kuriyona.com/static/2026/05/24/cf-network-status-api.webp)
 
 ファイルの中身はかなり雑然としているので、必要な整形済み情報を抽出する簡単なスクリプトが要る。
 

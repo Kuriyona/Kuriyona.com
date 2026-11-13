@@ -7,7 +7,7 @@ const route = useRoute();
 // 站点自身的绝对地址与分享卡片用图：og:url 要求绝对 URL，og/twitter 共用同一张图
 const SITE_URL = 'https://kuriyona.com';
 const SITE_TITLE = "Kuriyona' Space";
-const SITE_OG_IMAGE = 'https://r2.kuriyona.com/img/site/og/default.png';
+const SITE_OG_IMAGE = 'https://r2.kuriyona.com/img/site/og/default.jpg';
 // 字体按语言按需加载：Inter 管拉丁，Source Han Sans 管正文 CJK，
 // Resource Han Rounded 只作为 Maple Mono 的 CJK 回退
 const FONT_CDN = 'https://fonts-cdn.sharpdotnut.com';
