@@ -182,7 +182,7 @@ Kuriyona.com/
 | `/friends-and-links`        | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                        |
 | `/ask-box` · `/ask-box/ask` | `pages/ask-box/*`                   | 提问箱列表 · 提交提问（Turnstile 验证）                                                                                            |
 | `/admin`                    | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                      |
-| `/admin/r2`                 | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴）+ 前缀/虚拟目录浏览                                                                                           |
+| `/admin/r2`                 | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴，图片可选 Compressor.js 压缩：质量/格式可调，压缩后可切原图或压缩图）+ 前缀/虚拟目录浏览                        |
 | `/admin/ask-box`            | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                       |
 | `/admin/city`               | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；高亮取 `--color-theme`，改主题色需重出图）               |
 | `/admin/cache`              | `pages/admin/cache.vue`             | 缓存清除：选 zone + URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存                                                       |

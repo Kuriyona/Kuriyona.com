@@ -34,6 +34,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vueuse/core": "^15.0.0",
     "@vueuse/nuxt": "15.0.0",
+    "compressorjs": "^1.4.0",
     "dayjs": "^1.11.23",
     "es-toolkit": "^1.52.0",
     "github-markdown-css": "^5.9.0",
