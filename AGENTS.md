@@ -39,7 +39,7 @@ pnpm api:d1:migrate:remote  应用迁移到远程 D1
 pnpm deploy          构建前端 + wrangler deploy（= pnpm build && wrangler deploy）
 ```
 
-`postinstall` 自动 `nuxt prepare`。**无 lint / typecheck / test 命令**：`pnpm build`（含 prerender 全部路由）与 `pnpm deploy`（wrangler）即构建验证手段。
+`postinstall` 自动 `nuxt prepare`。**应用侧无 lint / typecheck / test 命令**：`pnpm build`（含 prerender 全部路由）与 `pnpm deploy`（wrangler）即构建验证手段。`scripts/` 下的 Bun 脚本可单独类型检查：`node_modules/.bin/tsc -p scripts/tsconfig.json --noEmit`（该 tsconfig 按 Bun 语义配 `ESNext` + `types: ['bun','node']`，不影响 Nuxt 生成的三份 tsconfig，它们都是 `types: []`）。
 
 ## Git Commit Convention
 
@@ -129,7 +129,7 @@ Kuriyona.com/
 │   ├── content/blog/<lang>/    博客 Markdown 源（zh-Hans/zh-Hant/en/ja）
 │   └── data/devices.json       设备配置数据（/about/devices；`primary` 主设备光晕 + 「主要设备」徽标，`retired` 卡片降不透明度 + 「不再使用」徽标）
 ├── server/                     Nitro API：utils.ts（markdown-exit + Shiki 高亮 + TOC + 外链图标；读 app/content/blog/，非 @nuxt/content）· api/articles.ts · api/articles/[slug].ts
-├── scripts/                    Bun 独立脚本：generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · check-contrast.ts（改颜色令牌后跑）· gen-icons.ts · generate-zh-hant.ts · sort-i18n.ts
+├── scripts/                    Bun 独立脚本：generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · check-contrast.ts（改颜色令牌后跑）· gen-icons.ts · generate-zh-hant.ts · sort-i18n.ts · tsconfig.json（脚本专用类型检查配置）
 ├── backend/                    后端子包（自带 lockfile，非 workspace 成员）：Cloudflare Workers + Hono + D1
 │   ├── index.ts                Worker 入口（导出 Hono app，挂 /api/*；不做 listen/migrate）
 │   ├── src/                    env.ts · city-map.ts · amap.ts · db/schema.ts（ask_table）· plugin/auth.ts · router/{ask-box,r2,city,cache,music} · utils.ts

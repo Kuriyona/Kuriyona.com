@@ -8,7 +8,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { compileLayout, renderPNG, renderSVG } from '@kuriyona/svg-toolkit';
 import type { FontConfig, LayoutDefinition } from '@kuriyona/svg-toolkit';
-import { Article, getArticles } from '../server/utils';
+import { getArticles } from '../server/utils';
+import type { Article } from '../server/utils';
 import dayjs from 'dayjs';
 
 const WIDTH = 1200;

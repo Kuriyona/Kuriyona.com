@@ -54,6 +54,7 @@
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.95",
     "@iconify-json/simple-icons": "^1.2.100",
+    "@types/bun": "^1.4.4",
     "@types/node": "^26.6.5",
     "fflate": "^0.8.3",
     "opencc-js": "^1.4.2",

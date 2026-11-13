@@ -1,5 +1,18 @@
 {
+  // scripts/ 下的独立 Bun 脚本（不走 Nuxt 构建），按 Bun 的运行时语义做类型检查：
+  //   node_modules/.bin/tsc -p scripts/tsconfig.json --noEmit
   "compilerOptions": {
-    "types": ["node"]
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "types": ["bun", "node"],
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true
   }
 }
