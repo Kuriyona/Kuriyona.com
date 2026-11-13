@@ -1,0 +1,147 @@
+{
+  "info": {
+    "birth": "2008-06-28",
+    "favoriteColor": "#b366ff",
+    "mbti": "INFP"
+  },
+  "contact": [
+    {
+      "name": "Github",
+      "value": "@Kuriyona",
+      "link": "https://github.com/Kuriyona",
+      "icon": "simple-icons:github",
+      "group": "social"
+    },
+    {
+      "name": "Bilibili",
+      "i18nKey": "contact.bilibili",
+      "value": "Kuriyona(650631530)",
+      "link": "https://space.bilibili.com/650631530",
+      "icon": "simple-icons:bilibili",
+      "group": "social"
+    },
+    {
+      "name": "X",
+      "value": "@Kuriyona",
+      "link": "https://x.com/Kuriyona",
+      "icon": "simple-icons:x",
+      "group": "social"
+    },
+    {
+      "name": "Zhihu",
+      "i18nKey": "contact.zhihu",
+      "value": "Kuriyona",
+      "link": "https://www.zhihu.com/people/Kuriyona",
+      "icon": "simple-icons:zhihu",
+      "group": "social"
+    },
+    {
+      "name": "Steam",
+      "value": "Kuriyona",
+      "link": "https://steamcommunity.com/id/Kuriyona",
+      "icon": "simple-icons:steam",
+      "group": "social"
+    },
+    {
+      "name": "Telegram",
+      "value": "@Kuriyona",
+      "link": "https://telegram.me/Kuriyona",
+      "icon": "simple-icons:telegram",
+      "group": "contact"
+    },
+    {
+      "name": "Discord",
+      "value": "@Kuriyona",
+      "link": "https://discord.com/users/1145274057785360454",
+      "icon": "simple-icons:discord",
+      "group": "contact"
+    },
+    {
+      "name": "Instagram",
+      "value": "@Kuriyona_",
+      "link": "https://www.instagram.com/Kuriyona_",
+      "icon": "simple-icons:instagram",
+      "group": "social"
+    },
+    {
+      "name": "XBOX",
+      "value": "@Kuriyona",
+      "link": "https://www.xbox.com/play/user/Kuriyona",
+      "icon": "simple-icons:xbox",
+      "group": "social"
+    },
+    {
+      "name": "e-Mail",
+      "i18nKey": "contact.email",
+      "value": "Kuriyona@outlook.com",
+      "link": "mailto:Kuriyona@outlook.com",
+      "mdIcon": "material-symbols:mail",
+      "group": "contact"
+    },
+    {
+      "name": "QQ",
+      "value": "Kuriyona(2946733291)",
+      "link": "https://qm.qq.com/q/Vlg6pCdge4",
+      "qr": "https://qm.qq.com/q/Vlg6pCdge4",
+      "icon": "simple-icons:qq",
+      "group": "contact"
+    },
+    {
+      "name": "小红书",
+      "value": "Kuriyona",
+      "link": "https://www.xiaohongshu.com/user/profile/65fedf07000000000b00eb20",
+      "icon": "simple-icons:xiaohongshu",
+      "group": "social"
+    }
+  ],
+  "tech_stack": [
+    { "name": "JavaScript", "icon": "simple-icons:javascript" },
+    { "name": "TypeScript", "icon": "simple-icons:typescript" },
+    { "name": "Python", "icon": "simple-icons:python" },
+    { "name": "C#", "icon": "simple-icons:dotnet" },
+    { "name": "Node.js", "icon": "simple-icons:nodedotjs" },
+    { "name": "Bun", "icon": "simple-icons:bun" },
+    { "name": "Vue", "icon": "simple-icons:vuedotjs" },
+    { "name": "Nuxt", "icon": "simple-icons:nuxt" },
+    { "name": "HTML5", "icon": "simple-icons:html5" },
+    { "name": "CSS3", "icon": "simple-icons:css" },
+    { "name": "Markdown", "icon": "simple-icons:markdown" }
+  ],
+  "languages": [
+    { "name": "中文/普通话", "icon": "ZH" },
+    { "name": "English", "icon": "EN" },
+    { "name": "日本語", "icon": "JP" }
+  ],
+  "games": [
+    {
+      "i18nKey": "about.games.genshin",
+      "img": "https://r2.kuriyona.com/static/image/games/genshin.webp",
+      "link": "https://ys.mihoyo.com/"
+    },
+    {
+      "i18nKey": "about.games.starrail",
+      "img": "https://r2.kuriyona.com/static/image/games/starrail.webp",
+      "link": "https://sr.mihoyo.com/"
+    },
+    {
+      "name": "Minecraft",
+      "img": "https://r2.kuriyona.com/static/image/games/minecraft.webp",
+      "link": "https://minecraft.net/"
+    },
+    {
+      "name": "Cities: Skylines",
+      "img": "https://r2.kuriyona.com/static/image/games/steam/header/949230.webp",
+      "link": "https://www.steampowered.com/app/949230/"
+    },
+    {
+      "name": "Transport Fever",
+      "img": "https://r2.kuriyona.com/static/image/games/steam/header/1066780.webp",
+      "link": "https://www.steampowered.com/app/1066780/"
+    },
+    {
+      "name": "Ballex",
+      "img": "https://r2.kuriyona.com/static/image/games/steam/header/1383570.webp",
+      "link": "https://www.steampowered.com/app/1383570/"
+    }
+  ]
+}

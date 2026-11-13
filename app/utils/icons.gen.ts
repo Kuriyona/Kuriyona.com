@@ -1,5 +1,5 @@
 // 本文件由 scripts/gen-icons.ts 生成，请勿手动编辑（pnpm dev / pnpm generate 会自动重跑）。
-// 图标名写在调用点（<KIcon name="material-symbols:close" />）与 app/config.json 里，
+// 图标名写在调用点（<KIcon name="material-symbols:close" />）与 app/data/ 下的数据文件里，
 // 脚本扫描后只把用到的图标注册进 @iconify/vue。
 import { _api, addCollection, type IconifyJSON } from '@iconify/vue';
 
@@ -78,6 +78,12 @@ addCollection({
     },
     "home": {
       "body": "<path fill=\"currentColor\" d=\"M4 21V9l8-6l8 6v12h-6v-7h-4v7z\"/>"
+    },
+    "hourglass": {
+      "body": "<path fill=\"currentColor\" d=\"M4 22v-2h2v-3q0-1.525.713-2.863T8.7 12q-1.275-.8-1.987-2.137T6 7V4H4V2h16v2h-2v3q0 1.525-.712 2.863T15.3 12q1.275.8 1.988 2.138T18 17v3h2v2z\"/>"
+    },
+    "image-arrow-up": {
+      "body": "<path fill=\"currentColor\" d=\"M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h8.8q-.4.675-.6 1.438T13 6q0 2.5 1.75 4.25T19 12q.525 0 1.025-.088T21 11.65V19q0 .825-.587 1.413T19 21zm1-4h12l-3.75-5l-3 4L9 13zm12-7V5.825L16.4 7.4L15 6l4-4l4 4l-1.4 1.4L20 5.825V10z\"/>"
     },
     "link": {
       "body": "<path fill=\"currentColor\" d=\"M11 17H7q-2.075 0-3.537-1.463T2 12t1.463-3.537T7 7h4v2H7q-1.25 0-2.125.875T4 12t.875 2.125T7 15h4zm-3-4v-2h8v2zm5 4v-2h4q1.25 0 2.125-.875T20 12t-.875-2.125T17 9h-4V7h4q2.075 0 3.538 1.463T22 12t-1.463 3.538T17 17z\"/>"

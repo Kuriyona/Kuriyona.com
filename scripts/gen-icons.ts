@@ -135,7 +135,7 @@ if (problems.length) {
 }
 
 const output = `// 本文件由 scripts/gen-icons.ts 生成，请勿手动编辑（pnpm dev / pnpm generate 会自动重跑）。
-// 图标名写在调用点（<KIcon name="material-symbols:close" />）与 app/config.json 里，
+// 图标名写在调用点（<KIcon name="material-symbols:close" />）与 app/data/ 下的数据文件里，
 // 脚本扫描后只把用到的图标注册进 @iconify/vue。
 import { _api, addCollection, type IconifyJSON } from '@iconify/vue';
 
