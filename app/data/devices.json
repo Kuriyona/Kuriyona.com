@@ -9,15 +9,20 @@
         { "labelKey": "about.devices.specs.processor", "value": "MediaTek Dimensity 9400+" },
         { "labelKey": "about.devices.specs.memory", "value": "16 GiB" },
         { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "6.32″ 120Hz OLED" }
+        { "labelKey": "about.devices.specs.display", "value": "6.32″ 2460×1216 120Hz" }
       ]
     },
     {
-      "name": "OPPO Watch S2",
-      "subtitle": "薄雾粉",
-      "subtitleKey": "about.devices.subtitle.misty-pink",
+      "name": "OnePlus Pad Pro",
+      "subtitle": "卡其绿",
+      "subtitleKey": "about.devices.subtitle.khaki-green",
       "primary": true,
-      "specs": [{ "labelKey": "about.devices.specs.size", "value": "45mm" }]
+      "specs": [
+        { "labelKey": "about.devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
+        { "labelKey": "about.devices.specs.memory", "value": "12 GiB" },
+        { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
+        { "labelKey": "about.devices.specs.display", "value": "12.1″ 3000×2120 144Hz" }
+      ]
     },
     {
       "name": "台式 PC",
@@ -28,8 +33,15 @@
         { "labelKey": "about.devices.specs.processor", "value": "Intel Core i5-12400F" },
         { "labelKey": "about.devices.specs.gpu", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
         { "labelKey": "about.devices.specs.memory", "value": "32 GiB" },
-        { "labelKey": "about.devices.specs.monitor", "value": "27″ 2K 200Hz" }
+        { "labelKey": "about.devices.specs.monitor", "value": "27″ 2560×1440 200Hz" }
       ]
+    },
+    {
+      "name": "OPPO Watch S2",
+      "subtitle": "薄雾粉",
+      "subtitleKey": "about.devices.subtitle.misty-pink",
+      "primary": true,
+      "specs": [{ "labelKey": "about.devices.specs.size", "value": "45mm" }]
     },
     {
       "name": "Lenovo ThinkPad X270",
