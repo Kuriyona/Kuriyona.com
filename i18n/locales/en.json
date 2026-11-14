@@ -82,6 +82,7 @@
   "blog.ai-translated": "AI translation",
   "blog.article-language": "Article language",
   "blog.article-language-only": "Changes article language only",
+  "blog.crumb": "Article",
   "blog.desc": "Notes on daily life, thoughts, and growth",
   "blog.not-found": "The current article does not exist or the article in the current language does not exist.",
   "blog.reading-time": "{0} minutes, {1} words",

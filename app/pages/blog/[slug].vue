@@ -72,21 +72,9 @@ useHead({
   ),
 });
 
-// 标题 / 目录滚出顶栏可视区（含被固定菜单栏与浮动顶栏遮住的部分）后分别显示浮动顶栏与浮动目录
-// 浮动元素上边距：菜单栏底边（64px 内容 + 2px 描边）+ 6px 留白
-const floatingTop = 72;
-const titleEl = useTemplateRef<HTMLElement>('titleEl');
-const tocEl = useTemplateRef<HTMLElement>('tocEl');
-const tocMenuEl = useTemplateRef<HTMLElement>('tocMenuEl');
-const showTopBar = ref(false);
-const showFloatingToc = ref(false);
-const tocOpen = ref(false);
-let titleObserver: IntersectionObserver | undefined;
-let tocObserver: IntersectionObserver | undefined;
-
-function onPointerdown(e: PointerEvent) {
-  if (!tocMenuEl.value?.contains(e.target as Node)) tocOpen.value = false;
-}
+// 文章标题与目录交给固定顶栏（见 AppBar.vue 的文章版式）；
+// 文章不存在时保持顶栏原样，页面自身的 h1 会给出 not-found
+const appBar = useAppBar();
 
 // 阅读位置高亮：以 html 的 scroll-padding-top 为阅读线（点击锚点后标题正好停在该线上），
 // 取最后一个顶边越过阅读线的标题
@@ -111,14 +99,6 @@ function onScroll() {
   requestAnimationFrame(updateActiveHeading);
 }
 
-function observeLayout() {
-  titleObserver?.disconnect();
-  tocObserver?.disconnect();
-  if (titleEl.value) titleObserver?.observe(titleEl.value);
-  if (tocEl.value) tocObserver?.observe(tocEl.value);
-  else showFloatingToc.value = false;
-}
-
 function setupHeadingTracking() {
   document.removeEventListener('scroll', onScroll);
   headingEls = (article.value?.toc ?? [])
@@ -133,17 +113,6 @@ function setupHeadingTracking() {
 }
 
 onMounted(() => {
-  const rootMargin = `-${floatingTop}px 0px 0px 0px`;
-  titleObserver = new IntersectionObserver(
-    ([entry]) => (showTopBar.value = !entry.isIntersecting),
-    { rootMargin },
-  );
-  tocObserver = new IntersectionObserver(
-    ([entry]) => (showFloatingToc.value = !entry.isIntersecting),
-    { rootMargin },
-  );
-  observeLayout();
-  document.addEventListener('pointerdown', onPointerdown);
   setupHeadingTracking();
 });
 
@@ -154,19 +123,17 @@ watch(activeLang, async () => {
   window.scrollTo(0, 0);
   codeCopy.init();
   headingAnchor.init();
-  observeLayout();
   setupHeadingTracking();
 });
 
-// 浮动目录按钮只在目录滚出视口期间存在，滚回时收起展开的面板
-watch(showFloatingToc, (visible) => {
-  if (!visible) tocOpen.value = false;
+// 顶栏的目录按钮与阅读位置高亮共用这份状态（页面是异步组件，SSR 时顶栏先渲染，故顶栏侧做了水合后填充）
+watchEffect(() => {
+  appBar.article.value = article.value
+    ? { title: article.value.title, toc: article.value.toc ?? [], active: activeSlug.value }
+    : null;
 });
 
 onBeforeUnmount(() => {
-  titleObserver?.disconnect();
-  tocObserver?.disconnect();
-  document.removeEventListener('pointerdown', onPointerdown);
   document.removeEventListener('scroll', onScroll);
 });
 </script>
@@ -179,10 +146,7 @@ onBeforeUnmount(() => {
         <BlogToc :items="article.toc" :active="activeSlug" />
       </KCard>
     </template>
-    <NuxtLinkLocale to="/blog">
-      <KIconButton icon="material-symbols:arrow-back" />
-    </NuxtLinkLocale>
-    <h1 ref="titleEl" class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
+    <h1 class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
     <p class="text-sm">{{ article?.desc || $t('blog.not-found') }}</p>
     <template v-if="!article">
       <KDivider />
@@ -243,7 +207,7 @@ onBeforeUnmount(() => {
         <KBadge v-if="article.aiTranslated">{{ $t('blog.ai-translated') }}</KBadge>
       </div>
       <KDivider />
-      <div v-if="article.toc?.length" ref="tocEl" class="reserve:hidden">
+      <div v-if="article.toc?.length" class="reserve:hidden">
         <KCard :title="$t('blog.toc')">
           <BlogToc :items="article.toc" :active="activeSlug" />
         </KCard>
@@ -252,33 +216,6 @@ onBeforeUnmount(() => {
         <div v-html="article.content"></div>
       </div>
     </template>
-    <BlogTopBar
-      :show="showTopBar"
-      :title="article?.title || $t('global.not-found')"
-      :desc="article?.desc"
-      :top="floatingTop">
-      <!-- 窄屏：浮动顶栏右侧的目录按钮 + 展开的悬浮目录（右对齐按钮，下留边距） -->
-      <template #actions>
-        <div
-          v-if="showFloatingToc && article?.toc?.length"
-          ref="tocMenuEl"
-          class="relative shrink-0 reserve:hidden">
-          <KIconButton
-            icon="material-symbols:toc"
-            :label="$t('blog.toc')"
-            @click="tocOpen = !tocOpen" />
-          <Transition name="toc-float">
-            <KSurface
-              v-if="tocOpen"
-              level="3"
-              class="absolute top-full right-0 z-10 mt-2 max-h-[60vh] w-64 overflow-y-auto rounded-xl p-3">
-              <h2 class="mb-2 text-sm font-bold">{{ $t('blog.toc') }}</h2>
-              <BlogToc :items="article.toc" :active="activeSlug" @navigate="tocOpen = false" />
-            </KSurface>
-          </Transition>
-        </div>
-      </template>
-    </BlogTopBar>
   </AppPage>
 </template>
 
@@ -287,17 +224,5 @@ p:has(img) {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-</style>
-
-<style scoped>
-.toc-float-enter-active,
-.toc-float-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.toc-float-enter-from,
-.toc-float-leave-to {
-  opacity: 0;
 }
 </style>

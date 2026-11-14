@@ -82,6 +82,7 @@
   "blog.ai-translated": "AI 翻訳",
   "blog.article-language": "記事の言語",
   "blog.article-language-only": "記事の言語のみ切り替え",
+  "blog.crumb": "記事",
   "blog.desc": "日常、考え、成長の記録",
   "blog.not-found": "現在の記事が存在しないか、現在の言語の記事が存在しません。",
   "blog.reading-time": "{0} 分、{1} 語",
