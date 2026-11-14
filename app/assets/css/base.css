@@ -51,7 +51,8 @@
    * 再透（alpha < 50%）白底会变亮、text-1 跌破 7:1。 */
   --color-glass-bg-bar: rgb(19 19 29 / 50%);
   --glass-filter-bar: var(--glass-filter);
-  --color-scrim: rgb(6 6 9 / 68%); /* 遮罩底色 */
+  --color-scrim: rgb(6 6 9 / 68%); /* 遮罩底色（弹窗 / 抽屉） */
+  --color-scrim-soft: rgb(6 6 9 / 38%); /* 浅遮罩：搜索浮层用，底下页面仍可辨认 */
 
   /* 卡片层级：data-level 绑定这些变量（见 surface.css）；比对应 --color-surface-N 再暗一档 */
   --color-card-1-bg: #121219;

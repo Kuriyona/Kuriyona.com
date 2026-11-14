@@ -90,7 +90,7 @@ Conventional Commits（CC 规范），描述用中文：`<type>: <中文描述>`
   5. 需要自定义搜索结果标题时，给标题元素加 `data-pagefind-meta="title"`；文章详情沿用「只有正文是 body」的模式，不要为了搜 `desc` 把整列改成 body。
 - **构建**：`pnpm index` 先 `rm -rf .cache/pagefind` 再出索引 —— Pagefind 不清理输出目录，重跑会在 content-hash 文件名下累积旧 fragment / `pf_meta`（曾在 34 页的站上堆到 216 个 fragment）。索引落 `.cache/pagefind` 并复制到 `dist/pagefind`；dev 由 `pagefind-dev` 插件服务 `.cache/pagefind`。切语言时 `app.vue` 会 `await nextTick()` 等 `<html lang>` 更新后再 `pagefindReinit()`（Pagefind 按该属性选语言索引）。
 - **验证索引内容**：`pagefind-entry.json` 的 `languages.*.page_count` 应为该语言实际索引页数；`fragment/*.pf_fragment` 是 gzip + `pagefind_dcd` JSON，可直接解包检查正文有没有混入保留区/导航文本（如 `Navigation.`、`Recent posts`、`--:--:--`）。
-- 改样式只动 `app/components/SearchModal.vue`。状态经 `useSearch()` 取：`s.query`/`s.results`/`s.loading`/`s.error`/`s.activeIndex`/`s.open()`/`s.close()`/`s.toggle()`/`s.clear()`。
+- 改样式只动 `app/components/SearchModal.vue`（遮罩底色用 `base.css` 的 `--color-scrim-soft`，比弹窗/抽屉的 `--color-scrim` 浅）。布局：输入框独立浮在遮罩上（不套卡片），加载/出错/空态/结果统一装进一张 `KCard`，单条结果是卡内的 `a` 行。状态经 `useSearch()` 取：`s.query`/`s.results`/`s.loading`/`s.error`/`s.activeIndex`/`s.open()`/`s.close()`/`s.toggle()`/`s.clear()`。
 
 ## OG 图（站点与博客预览图）
 
