@@ -3,7 +3,7 @@ import AppMenu from './AppBar/AppMenu.vue';
 import KButton from './KButton.vue';
 import { useSearch } from '~/composables/useSearch';
 const mobileMenu = ref(false);
-/** 窄视口的悬浮音乐面板（宽视口用左保留区的播放器，见模板里的 reserve:hidden） */
+/** 顶栏复合音乐按钮打开的悬浮面板（≥768 的唯一音乐入口；<768 用 AppMenu 抽屉里的播放器） */
 const musicPanel = ref(false);
 
 // 文章详情页：固定顶栏换成「返回 + 面包屑 + 标题」。
@@ -105,14 +105,13 @@ onMounted(() => {
             @click="search.toggle()" />
           <!-- 复合音乐按钮：整体是一个胶囊，右端嵌一个更小的播放/暂停子按钮。
                点胶囊其他区域（含左端乐符）= 打开悬浮音乐面板；点子按钮 = 播放/暂停。
-               只在 768px～reserve 断点之间出现：更宽时左保留区有完整播放器卡片（reserve:hidden），
-               <md 时并入 AppMenu 抽屉（max-md:hidden），不占顶栏。
+               ≥768 一直显示（保留区不再放播放器，这里是唯一入口）；<768 并入 AppMenu 抽屉（max-md:hidden）。
                h-9（36px，border-box）= 两侧 KButton 的高度（p-2 + text-lg 图标 18px + 边框），
                不写死的话内容高度（size-6 子按钮 24px）撑出来只有 30px，会比左右两个按钮矮一截。
                pr-1.25（5px）= 内高 34 − 子按钮 24 = 上下各 5px，加边框后四周到子按钮都是 6px
                （左侧还有 gap-1.5 = 6px），子按钮才是正中的，不然右边只有 3px 会显偏。 -->
           <div
-            class="k-interactive relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-(--color-control-border) bg-(--color-control-bg) pr-1.25 pl-2.5 text-(--color-text-1) max-md:hidden reserve:hidden">
+            class="k-interactive relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-(--color-control-border) bg-(--color-control-bg) pr-1.25 pl-2.5 text-(--color-text-1) max-md:hidden">
             <!-- 铺满整块的点击层（同时也是键盘入口）；子按钮叠在它上面，点到子按钮不会穿透到这里 -->
             <button
               type="button"

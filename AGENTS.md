@@ -81,7 +81,7 @@ Conventional Commits（CC 规范），描述用中文：`<type>: <中文描述>`
   - 整列入索引：`/`、`/about/trans`、`/about/devices`、`/friends-and-links`、`/timeline` —— `<AppPage data-pagefind-body>`，属性透传到根节点，覆盖正文列。
   - 只索引正文：`/blog/:slug` —— 仅 `div.markdown-body` 带 `data-pagefind-body`；标题不在 body 内，但 Pagefind 自动取页面第一个 `<h1>` 作为 `title` metadata，metadata 参与检索且有加权（默认 5x），所以标题可搜；语言切换器、阅读时长、AI 徽标、目录都不进索引。
   - 不索引：`/blog`（同语言全部文章标题/摘要的聚合页，收进来会让几乎所有文章查询都命中它）、`/ask-box`（`useAsyncData(..., { server: false })`，SSG 产物里没有问答内容，无可索引正文）、`/admin/*`、`404.html`/`200.html`。
-  - `AppPage` 两侧 `aside.reserve` 固定 `data-pagefind-ignore="all"`：时钟、导航、最近文章、播放器与所有 `reserve-*` 插槽内容都不入索引（曾因这些内容随每页重复收录，搜文章标题会命中全站）。
+  - `AppPage` 两侧 `aside.reserve` 固定 `data-pagefind-ignore="all"`：时钟、导航、最近文章与所有 `reserve-*` 插槽内容都不入索引（曾因这些内容随每页重复收录，搜文章标题会命中全站）。
 - **新页面怎么接索引**：
   1. 内容型页面：在根 `<AppPage>` 上加 `data-pagefind-body`，索引整个正文列。
   2. 页面内重复/装饰性内容（导航卡、聚合列表、浮动 UI、控件）包一层 `data-pagefind-ignore="all"`。**别用默认的 `="index"`**：它仍会处理内部 metadata 并允许被当作页面标题，只有 `all` 是彻底跳过。
@@ -118,7 +118,7 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：把 app/data/ 的 profile / links / nav / timeline 合成一份 AppConfig
 │   ├── assets/css/             main.css（@import 汇总）· fonts.css（字体变量：Inter + Source Han Sans CN/TW/JP + Maple Mono + Resource Han Rounded CN/TW/JP，不含图标字体）· base.css（设计令牌/主题/版式宽度令牌/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-glass-bar/.k-interactive/.k-scrim）· utilities.css（.link/.trans-*）
 │   ├── assets/icons/           背景平铺图案 SVG（白色填充；勿再给 <pattern> 内 <image> 加 CSS filter，iOS WebKit 下整层不渲染）
-│   ├── components/             自动导入：AppPage（页面容器 + 两侧保留区）· AppBar（顶栏：≥768px 显示搜索 + 复合音乐按钮，<768px 两者并入 AppMenu 抽屉，菜单按钮只画 menu 图标，页面级按钮如文章目录不合并）· AppBackground（图标平铺 + 高亮点）· BlogToc（目录列表：正文内联卡片 / 宽屏保留区 / 顶栏窄屏面板共用）· MusicPlayer / MusicControls / MusicPanel · SearchModal · TimelineList · ToastHost · KTurnstile · KSurface · KIcon · card/（About 卡片，含 CardCityMap）· reserve/（ReserveClock/ReserveNav/ReserveArticles）· K* 组件（见下表）
+│   ├── components/             自动导入：AppPage（页面容器 + 两侧保留区）· AppBar（顶栏：≥768px 显示搜索 + 复合音乐按钮，<768px 两者并入 AppMenu 抽屉，菜单按钮只画 menu 图标，页面级按钮如文章目录不合并）· AppBackground（图标平铺 + 高亮点）· BlogToc（目录列表：正文内联卡片 / 宽屏保留区 / 顶栏窄屏面板共用）· MusicControls / MusicPanel · SearchModal · TimelineList · ToastHost · KTurnstile · KSurface · KIcon · card/（About 卡片，含 CardCityMap）· reserve/（ReserveClock/ReserveNav/ReserveArticles）· K* 组件（见下表）
 │   ├── composables/            自动导入：useSearch · useToast · useNav · useCity · useMusic（播放器单例，跨路由不中断；播放地址直连网易 outer，不走后端）· useCodeCopy · useHeadingAnchor · useTimelineLink · useSurfaceLevel · usePageScrollLock · useCloudflareStatus · useAppBar（文章页把标题与目录注入固定顶栏）· idbCache · cfn
 │   ├── layouts/                default.vue（透传）/ admin.vue（管理页共用壳：宽屏左侧 sticky 竖导航，窄屏顶部 KSelect）
 │   ├── pages/                  路由页面（见下表）：index · about/trans · about/devices · blog/{index,[slug]} · timeline · friends-and-links · ask-box/{index,ask} · admin/*
@@ -160,9 +160,8 @@ Kuriyona.com/
 | `KSwitch`       | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                          |
 | `KDivider`      | 分隔线（封装 Reka `Separator`，horizontal/vertical；`label` 在左端渲染小字标签，仅 horizontal）                       |
 | `KBadge`        | 半透明小徽标（text-xs 胶囊；`variant="muted"` 灰色）；关系 / 标签 / 主要设备 / 不再使用                               |
-| `MusicPlayer`   | 左保留区常驻播放器（`KCard` + `MusicControls`，宽视口才出现）                                                         |
-| `MusicControls` | 播放器主体（封面/歌名/当前歌词行含翻译/进度条/上下首/曲目列表）；`MusicPlayer`（保留区）与 `MusicPanel`（窄视口）共用 |
-| `MusicPanel`    | 悬浮音乐面板（`KDialog` + `MusicControls`，顶栏复合音乐按钮打开，仅 `reserve:` 断点以下）                             |
+| `MusicControls` | 播放器主体（封面/歌名/当前歌词行含翻译/进度条/上下首/曲目列表）；`MusicPanel`（≥768 顶栏胶囊）与 `AppMenu`（<768 抽屉）共用 |
+| `MusicPanel`    | 悬浮音乐面板（`KDialog` + `MusicControls`，顶栏复合音乐按钮打开，≥768 可用）                                          |
 | `KMarkdown`     | Markdown 渲染（markdown-exit + github-markdown-css）                                                                  |
 | `KTable`        | 表格布局（th 左对齐 / td 右对齐）                                                                                     |
 | `KMenu`         | 下拉菜单（封装 Reka `DropdownMenu`；当前无使用处）                                                                    |
@@ -218,6 +217,17 @@ Kuriyona.com/
 - **视觉令牌（颜色 / 层级 / 毛玻璃）**: 颜色 / 层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `surface.css` 的 5 个类（`.k-surface`/`.k-glass`/`.k-glass-bar`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 等一次性透明度 / 模糊类（`.k-glass`/`.k-glass-bar`/`.k-scrim` 是允许 `backdrop-filter` 处）。顶栏用 `.k-glass-bar`：底色 `--color-glass-bg-bar` 按 `(1 − (1 − alpha) × brightness) / alpha × --color-bg` 反算（alpha 0.5、brightness 0.3 时即 `1.7 × --color-bg`），空背景下与页面同色、白底图片滚过时约 `#303035`；改 `--glass-filter-bar` 的 brightness 或该 alpha 必须重算补色与对比度。控件用 `--color-control-bg`/`--color-control-border`（半透明，叠任何表面都成立；会抬亮表面，控件内文本只用 `--color-text-1`/`-2`，不用 `text-3`/`-4`）。改颜色令牌后跑 `bun scripts/check-contrast.ts`。**别在组件里写 `cursor-*`**：全站光标在 `base.css` 用**未分层**规则给（`*` 箭头、`a`/`button`/`[role=slider]` 手型），优先级高于 Tailwind 的 `@layer utilities`，写了也是死代码 —— 要手型就把选择器加进那条规则。跨性别旗配色（`--color-trans-*`）与 `utilities.css` 的 `.trans-*` 只做旗面装饰，不承载正文、不参与层级、不纳入对比度校验。
 - **最外层容器只用 `overflow-x: clip`（`app.vue`）**: 不要写 `overflow-x: hidden` —— 单轴 `hidden` 会把另一轴的 `visible` 算成 `auto`，这层就变成「自己不滚动却当了所有后代的滚动容器」，其内 `position: sticky`（保留区栏位、管理端侧栏导航）全部失效。`clip` 同样裁切、同样不传播溢出，但不建滚动容器。
 - **版式宽度（正文 / 保留区）**: 正文列 `--content-width`（960px）、两侧保留区 `--reserve-width`（240px），定义在 `base.css` 的 `body`。保留区由 `AppPage.vue` 渲染，仅在视口容得下（960 + 240×2 = 1440，留余量取 1500px）时出现，断点写成 Tailwind 自定义变体 `reserve:`（`@custom-variant`，定义在 `main.css`）—— 改宽度令牌必须同步重算该断点。相关处（AppPage 两侧 aside、博客内联目录卡片、博客浮动目录按钮）都用 `reserve:`，别写 `min-[...px]:` 字面量。`--app-bar-height` 定义在 `base.css` 的 `:root`，同时用于正文 `mt-`、保留区 sticky `top` 与 `html` 的 `scroll-padding-top`（锚点目标停在顶栏下方并留 4rem）。
+- **响应式三档（狭窄 / 中等 / 完整）**: 结构上只有三档，**别新增第四档**。分界只有两个：`md`（768px）与 `reserve:`（1500px）；640（`sm`）与 1024（`lg`）只用于正文内部细节（头像 `sm:inline-block` 显隐、`sm:/md:/lg:grid-cols-*` 栅格），不是结构层。三档的差别集中体现在顶栏入口组合：
+
+  |档|视口|顶栏|音乐入口|搜索入口|两侧保留区|
+  |---|---|---|---|---|---|
+  |狭窄|<768px|标题 + 「更多」（文章页另有目录按钮）|`AppMenu` 抽屉里的 `MusicControls`|抽屉里的搜索行|无|
+  |中等|768–1499px|标题 + 搜索图标 + 音乐胶囊 + 「更多」|顶栏胶囊 → `MusicPanel` 浮层|顶栏图标 / `Ctrl+K`|无（正文单列居中）|
+  |完整|≥1500px|标题 + 搜索图标 + 音乐胶囊 + 「更多」|顶栏胶囊 → `MusicPanel` 浮层|顶栏图标 / `Ctrl+K`|两侧 240px sticky（左栏仅页面自有内容，如文章目录）|
+
+  - 合并规则：搜索与音乐**只在 <768 收进抽屉**（`AppBar.vue` 里 `max-md:hidden`）；`AppMenu.vue` 这两块用 `v-if="narrow"`（`matchMedia('(width < 48rem)')`）而不是 CSS 隐藏 —— 否则宽屏开抽屉会多挂一份 `MusicControls` 并重复加载歌单。页面级按钮（如文章目录）不参与合并，窄屏照旧单独显示。
+  - 「更多」按钮只画 `menu` 图标，语言切换只走抽屉里的 `KSelect`；不要把 `translate` 图标加回按钮。
+  - 例外：管理端 `layouts/admin.vue` 在 `lg`（1024px）切「左侧 sticky 竖导航 ↔ 顶部 `KSelect`」，独立于这三档（管理页不受 `--content-width` 约束）。
 - **半屏 hero（`--hero-height` / `--reserve-hero-offset`）**: 页面首块为半屏 hero 时用 `min-h-(--hero-height)`（令牌在 `base.css`，当前 50svh）并给 `<AppPage hero>`。**两侧保留区**随之 `mt-(--reserve-hero-offset)`（= `--hero-height` + `1rem`），使栏内首卡跟在 hero 下方、滚过后再吸顶；**两栏 `:class` 写法必须一致**（只加一侧会让另一侧压在 hero 上）。那 `1rem` 是正文列的 `gap-4`：hero 与下一块之间**只允许这一个列间距**，所以 **hero 块别写 `mb-*`、紧随其后那块别写 `mt-*`**（写了偏移失准）。实现是给 sticky 元素加 `margin-top`，**不要**用滚动监听改 `top`，也**不要**把偏移加到 aside 内部 div（会把卡片推进栏内固定高、`overflow-y: auto` 的滚动区）。`.reserve` 的 `padding-top: 6rem` = 正文列 `my-20`(5rem) + `p-4`(1rem)，保证两栏首卡齐平。前提：hero 是内容首块且高度就是该令牌（`min-h` 是下限）。
 - **动画（GSAP）**: 唯一使用处 `pages/about/trans/index.vue`。`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 放 `onMounted`；**`onUnmounted` 必须在 setup 同步阶段注册**（放进 `onMounted` 的 async 回调会因失去活动组件实例而失效，GC 掉整个 MatchMedia 上下文）。补间初值取「最终值」而非 0，SSR / 无 JS 时渲染真实数值（无需 `ClientOnly`）；代价是 JS 接管前先显示最终值再滚上去。
 - **图标（Iconify）**: 只用 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 图标字体与 `cdn.simpleicons.org`）。用 `<KIcon name="material-symbols:close" class="text-lg" />`，尺寸一律用字号类（svg 为 1em×1em，别写 `w-5 h-5`）、单色随 `currentColor`；`KIconButton` 的 `icon` 也是完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case），数据层（`app/data/*.json`）也存全名，禁止拼接。`scripts/gen-icons.ts` 扫源码与数据 → `app/utils/icons.gen.ts`（只注册用到的图标），由 `dev`/`gen:icons`/`generate` 前置执行；名字拼错 / 不存在 / 动态拼接都会**构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，漏注册也不会打 Iconify API。加图标 = 在调用点写出即可。天气图标同理经 `app/utils/weatherIcon.ts` 映射（不再引入 `qweather-icons` 字体）。
