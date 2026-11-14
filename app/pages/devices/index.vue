@@ -6,9 +6,6 @@ useSeoMeta({ title: $t('about.devices.title') });
 
 <template>
   <AppPage data-pagefind-body>
-    <NuxtLinkLocale to="/">
-      <KIconButton icon="material-symbols:arrow-back" />
-    </NuxtLinkLocale>
     <!-- 标题已在固定顶栏：保留一份不可见 h1 供 Pagefind 取页面标题与 SEO -->
     <h1 class="hidden">{{ $t('about.devices.title') }}</h1>
     <p class="text-(--color-text-2)">{{ $t('about.devices.desc') }}</p>

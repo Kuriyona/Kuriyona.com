@@ -15,14 +15,14 @@ export const nav: NavEntry[] = [
     onAbout: true,
   },
   {
-    to: '/about/trans',
+    to: '/trans',
     titleKey: 'about.mtf.as-mtf',
     descKey: 'about.mtf.desc',
     onAbout: true,
   },
   { to: '/timeline', titleKey: 'timeline.title', descKey: 'timeline.desc', onAbout: true },
   {
-    to: '/about/devices',
+    to: '/devices',
     titleKey: 'about.devices.title',
     descKey: 'about.devices.desc',
     onAbout: true,

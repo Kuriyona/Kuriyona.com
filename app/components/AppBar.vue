@@ -7,7 +7,7 @@ const mobileMenu = ref(false);
 /** 顶栏复合音乐按钮打开的悬浮面板（≥768 的唯一音乐入口；<768 用 AppMenu 抽屉里的播放器） */
 const musicPanel = ref(false);
 
-// 文章详情页：固定顶栏换成「返回 + 面包屑 + 标题」。
+// 文章详情页：固定顶栏换成「返回 + 面包屑 + 标题」（返回按钮对所有非首页页面统一提供，见下方 back）。
 // 版式按路由名同步判定，SSR 就直接渲染正确结构；标题由页面写进 useAppBar，
 // 而页面是异步组件（await 文章数据），SSR 时顶栏先渲染拿不到标题 ——
 // 所以标题等水合后再填，否则服务端（无标题）与客户端（有标题）结构不一致会报水合错误。
@@ -19,12 +19,37 @@ const baseName = computed(() => routeBaseName(route) ?? '');
 const { article } = useAppBar();
 const isArticleRoute = computed(() => String(route.name ?? '').startsWith('blog-slug'));
 
+// 返回按钮统一放在顶栏，页面内不再出现（见 AGENTS.md）。层级按路径段数判定（去掉语言前缀）：
+// 一级非首页（/blog、/timeline…）→ home 图标回首页；二级及更深（/blog/:slug、/ask-box/ask…）
+// → 返回箭头回上一级（去掉最后一段）。
+// 管理端自有一套导航（layouts/admin.vue），不参与。
+const localePath = useLocalePath();
+/** 去掉语言前缀后的路径段（`prefix_except_default`：默认语言无前缀，其余是 `/en/...`） */
+const segments = computed(() => {
+  const home = localePath('/');
+  const rest =
+    home !== '/' && route.path.startsWith(home) ? route.path.slice(home.length) : route.path;
+  return rest.split('/').filter(Boolean);
+});
+const back = computed(() => {
+  const segs = segments.value;
+  if (segs.length === 0 || baseName.value.startsWith('admin')) return null;
+  const parent = segs.slice(0, -1);
+  const home = parent.length === 0;
+  return {
+    // 存语言无关路径，由 NuxtLinkLocale 补语言前缀
+    to: home ? '/' : `/${parent.join('/')}`,
+    icon: home ? 'material-symbols:home' : 'material-symbols:arrow-back',
+    label: t(home ? 'global.home' : 'global.back'),
+  };
+});
+
 // 非文章页的顶栏大字：路由基名 → i18n key。
 // 首页（`index`）不在此表，仍只显示站名；文章详情走上面那条分支（标题来自异步数据）。
 const PAGE_TITLE_KEYS: Record<string, string> = {
   blog: 'blog.title',
-  'about-trans': 'about.mtf.as-mtf',
-  'about-devices': 'about.devices.title',
+  trans: 'about.mtf.as-mtf',
+  devices: 'about.devices.title',
   timeline: 'timeline.title',
   'friends-and-links': 'about.links.title',
   'ask-box': 'ask-box.title',
@@ -78,12 +103,13 @@ onMounted(() => {
   <div class="k-surface k-glass-bar fixed w-screen top-0 z-100 flex justify-center">
     <div class="w-(--content-width) max-w-screen px-4 *:px-2 *:font-monos">
       <div class="relative min-h-12 py-2 px-3 flex justify-between items-center gap-3 rounded-xl">
-        <!-- 文章详情页：不显示头像与站名，最左侧返回按钮，右侧两级 (面包屑 / 标题) -->
-        <template v-if="isArticleRoute">
-          <NuxtLinkLocale to="/blog" class="shrink-0">
-            <KIconButton icon="material-symbols:arrow-back" :label="$t('global.back')" />
+        <!-- 左侧：返回按钮（非首页统一在顶栏给，页面内不放）+ 两级标题 -->
+        <div class="flex min-w-0 flex-1 items-center gap-2">
+          <NuxtLinkLocale v-if="back" :to="back.to" class="shrink-0">
+            <KIconButton :icon="back.icon" :label="back.label" />
           </NuxtLinkLocale>
-          <div class="flex min-w-0 flex-1 flex-col justify-center">
+          <!-- 文章详情页：不显示头像与站名，右侧两级 (面包屑 / 标题) -->
+          <div v-if="isArticleRoute" class="flex min-w-0 flex-1 flex-col justify-center">
             <span class="truncate text-xs leading-tight text-(--color-text-2)">
               Kuriyona's Space / {{ $t('blog.crumb') }}
             </span>
@@ -91,14 +117,14 @@ onMounted(() => {
               hydrated && article?.title ? article.title : '\u00A0'
             }}</span>
           </div>
-        </template>
-        <!-- 其余页面（首页除外）：同样两级，上层站名、下层页面名；全站不再显示头像 -->
-        <div v-else-if="pageTitle" class="flex min-w-0 flex-1 flex-col justify-center">
-          <span class="truncate text-xs leading-tight text-(--color-text-2)">Kuriyona's Space</span>
-          <span class="truncate text-lg leading-tight font-bold">{{ pageTitle }}</span>
-        </div>
-        <div v-else class="h-full flex items-center gap-4">
-          <NuxtLinkLocale to="/">
+          <!-- 其余页面（首页除外）：同样两级，上层站名、下层页面名；全站不再显示头像 -->
+          <div v-else-if="pageTitle" class="flex min-w-0 flex-1 flex-col justify-center">
+            <span class="truncate text-xs leading-tight text-(--color-text-2)"
+              >Kuriyona's Space</span
+            >
+            <span class="truncate text-lg leading-tight font-bold">{{ pageTitle }}</span>
+          </div>
+          <NuxtLinkLocale v-else to="/">
             <span class="hover:underline">Kuriyona's Space</span>
           </NuxtLinkLocale>
         </div>

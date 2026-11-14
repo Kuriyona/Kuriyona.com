@@ -3,7 +3,7 @@ export interface TimelineEntry {
   /** `YYYY/MM/DD` */
   date: string;
   text: string;
-  /** 展示为徽标，同时是 /about/trans「性别认同历程」的过滤条件 */
+  /** 展示为徽标，同时是 /trans「性别认同历程」的过滤条件 */
   tag?: string;
   /** 外部链接或站内路径 */
   link?: string;
@@ -16,7 +16,7 @@ export const timeline: TimelineEntry[] = [
     date: '2025/11/22',
     text: '性别认同的初步确定',
     tag: '性别认同',
-    link: '/about/trans',
+    link: '/trans',
   },
   { date: '2025/11/27', text: '取名「未晞」', tag: '性别认同', link: '/blog/about-name' },
   { date: '2025/12/17', text: '第一段感情开始', tag: '情感' },

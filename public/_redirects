@@ -1,5 +1,13 @@
 /links /friends-and-links 301
-/about/as-mtf /about/trans 301
-/en/about/as-mtf /en/about/trans 301
-/ja/about/as-mtf /ja/about/trans 301
-/zh-Hant/about/as-mtf /zh-Hant/about/trans 301
+/about/as-mtf /trans 301
+/en/about/as-mtf /en/trans 301
+/ja/about/as-mtf /ja/trans 301
+/zh-Hant/about/as-mtf /zh-Hant/trans 301
+/about/trans /trans 301
+/en/about/trans /en/trans 301
+/ja/about/trans /ja/trans 301
+/zh-Hant/about/trans /zh-Hant/trans 301
+/about/devices /devices 301
+/en/about/devices /en/devices 301
+/ja/about/devices /ja/devices 301
+/zh-Hant/about/devices /zh-Hant/devices 301

@@ -45,9 +45,6 @@ useSeoMeta({ title: $t('blog.title') });
 
 <template>
   <AppPage>
-    <NuxtLinkLocale to="/">
-      <KIconButton icon="material-symbols:arrow-back" />
-    </NuxtLinkLocale>
     <p v-if="$t('blog.desc')" class="text-(--color-text-2)">{{ $t('blog.desc') }}</p>
     <KCard v-for="post in articles" :key="post.slug" class="k-interactive relative">
       <!-- 标题的伪元素铺满整张卡片，使卡片整体可点；语言标签是独立链接，需盖在其上 -->

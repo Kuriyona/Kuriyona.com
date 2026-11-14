@@ -8,7 +8,7 @@ export const useTimelineLink = () => {
 
   const isExternal = (link: string) => link.startsWith('http');
 
-  /** 内部链接且指向当前页面（如 /about/trans 上的条目指向自身）→ 不渲染跳转按钮 */
+  /** 内部链接且指向当前页面（如 /trans 上的条目指向自身）→ 不渲染跳转按钮 */
   const isCurrent = (link: string) => !isExternal(link) && localePath(link) === route.path;
 
   function openLink(link: string) {
