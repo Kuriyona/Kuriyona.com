@@ -97,16 +97,22 @@ onMounted(() => {
             </div>
             <KDivider vertical class="reserve:hidden" />
           </template>
-          <KIconButton icon="material-symbols:search" @click="search.toggle()" />
+          <!-- 搜索 / 音乐在 <md 收进 AppMenu（同一个「更多」按钮），见 AppMenu.vue 的 narrow 区块。
+               插槽/页面级按钮（文章目录）不合并，窄屏照旧单独显示。 -->
+          <KIconButton
+            icon="material-symbols:search"
+            class="max-md:hidden"
+            @click="search.toggle()" />
           <!-- 复合音乐按钮：整体是一个胶囊，右端嵌一个更小的播放/暂停子按钮。
                点胶囊其他区域（含左端乐符）= 打开悬浮音乐面板；点子按钮 = 播放/暂停。
-               只在窄视口出现（reserve: 断点以下）：宽视口左保留区已经有完整的播放器卡片。
+               只在 768px～reserve 断点之间出现：更宽时左保留区有完整播放器卡片（reserve:hidden），
+               <md 时并入 AppMenu 抽屉（max-md:hidden），不占顶栏。
                h-9（36px，border-box）= 两侧 KButton 的高度（p-2 + text-lg 图标 18px + 边框），
                不写死的话内容高度（size-6 子按钮 24px）撑出来只有 30px，会比左右两个按钮矮一截。
                pr-1.25（5px）= 内高 34 − 子按钮 24 = 上下各 5px，加边框后四周到子按钮都是 6px
                （左侧还有 gap-1.5 = 6px），子按钮才是正中的，不然右边只有 3px 会显偏。 -->
           <div
-            class="k-interactive relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-(--color-control-border) bg-(--color-control-bg) pr-1.25 pl-2.5 text-(--color-text-1) reserve:hidden">
+            class="k-interactive relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-(--color-control-border) bg-(--color-control-bg) pr-1.25 pl-2.5 text-(--color-text-1) max-md:hidden reserve:hidden">
             <!-- 铺满整块的点击层（同时也是键盘入口）；子按钮叠在它上面，点到子按钮不会穿透到这里 -->
             <button
               type="button"
@@ -125,8 +131,8 @@ onMounted(() => {
                 class="text-base" />
             </button>
           </div>
-          <KButton round class="gap-2" :aria-label="$t('global.more')" @click="mobileMenu = true">
-            <KIcon name="material-symbols:translate" class="text-lg" />
+          <!-- 「更多」按钮只画菜单图标：语言切换在抽屉里（进抽屉后再选），不在按钮上预告 -->
+          <KButton round :aria-label="$t('global.more')" @click="mobileMenu = true">
             <KIcon name="material-symbols:menu" class="text-lg" />
           </KButton>
         </div>
