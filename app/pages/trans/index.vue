@@ -7,7 +7,7 @@ import { useAppConfig } from '#app';
 
 const { t } = useI18n();
 
-useSeoMeta({ title: $t('about.mtf.as-mtf') });
+useSeoMeta({ title: $t('trans.title') });
 
 const BIRTH = dayjs('2008/06/28');
 
@@ -33,7 +33,7 @@ const milestones = computed(() => {
       id: 'birth',
       at: BIRTH,
       dateKey: null,
-      labelKey: 'about.mtf.count.birth-for',
+      labelKey: 'trans.count.birth-for',
       unitKey: 'global.unit.year',
       value: now.diff(BIRTH, 'year'),
       percentDecimals: null,
@@ -41,8 +41,8 @@ const milestones = computed(() => {
     {
       id: 'want',
       at: dayjs('2020'),
-      dateKey: 'about.mtf.count.want-date',
-      labelKey: 'about.mtf.count.want-for',
+      dateKey: 'trans.count.want-date',
+      labelKey: 'trans.count.want-for',
       unitKey: 'global.unit.year',
       value: now.diff(dayjs('2020'), 'year'),
       percentDecimals: 0,
@@ -51,7 +51,7 @@ const milestones = computed(() => {
       id: 'identify',
       at: dayjs('2025/11/22'),
       dateKey: null,
-      labelKey: 'about.mtf.count.identify-for',
+      labelKey: 'trans.count.identify-for',
       unitKey: 'global.unit.month',
       value: now.diff(dayjs('2025/11/22'), 'month'),
       percentDecimals: 2,
@@ -60,7 +60,7 @@ const milestones = computed(() => {
       id: 'hrt',
       at: dayjs('2026/01/14'),
       dateKey: null,
-      labelKey: 'about.mtf.count.hrt-for',
+      labelKey: 'trans.count.hrt-for',
       unitKey: 'global.unit.day',
       value: now.diff(dayjs('2026/01/14'), 'day') + 1,
       percentDecimals: 2,
@@ -123,7 +123,7 @@ const genderTimeline = timeline.filter((item) => item.tag === '性别认同').re
 
 const linkGroups = computed(() => [
   {
-    title: t('about.mtf.links.learn'),
+    title: t('trans.links.learn'),
     items: [
       {
         title: '跨性别 - 百度百科',
@@ -141,9 +141,9 @@ const linkGroups = computed(() => [
     ],
   },
   {
-    title: t('about.mtf.links.resources'),
+    title: t('trans.links.resources'),
     items: [
-      { title: t('about.mtf.sites.title.gd-fyi'), href: t('urls.gd-fyi') },
+      { title: t('trans.sites.title.gd-fyi'), href: t('urls.gd-fyi') },
       { title: 'MtF.Wiki', href: t('urls.mtf-wiki') },
       { title: '2345.lgbt', href: t('urls.2345-lgbt') },
     ],
@@ -158,7 +158,7 @@ const linkGroups = computed(() => [
  */
 const STREAM_DURATION = 10_000;
 
-const bodyText = computed(() => t('about.mtf.what-is-trans.body'));
+const bodyText = computed(() => t('trans.what-is-trans.body'));
 /** 按码位切分（避免将来正文里出现代理对时被切坏） */
 const bodyChars = computed(() => Array.from(bodyText.value));
 
@@ -287,7 +287,7 @@ onUnmounted(() => {
         <span>Kuriyona's Space</span>
         <span>&nbsp;/&nbsp;</span>
         <span class="trans-text trans-text-flow" data-pagefind-meta="title">{{
-          $t('about.mtf.as-mtf')
+          $t('trans.title')
         }}</span>
       </h1>
     </div>
@@ -300,7 +300,7 @@ onUnmounted(() => {
       <div class="trans-aura absolute inset-0" aria-hidden="true"></div>
       <div class="relative flex flex-col items-center gap-4">
         <h2 class="mtf-intro-item text-lg font-bold">{{ $t('about.about-me') }}</h2>
-        <p class="mtf-intro-item trans-text">{{ $t('about.mtf.im-mtf') }}</p>
+        <p class="mtf-intro-item trans-text">{{ $t('trans.im-mtf') }}</p>
         <NuxtLinkLocale
           to="/"
           class="k-interactive flex items-center gap-2 rounded-full border border-(--color-control-border) bg-(--color-control-bg) px-4 py-1.5 text-sm text-(--color-text-2) hover:text-(--color-text-1) hover:[&_.icon]:scale-100 [&_.icon]:scale-90 [&_.icon]:transition-transform [&_.icon]:duration-300">
@@ -310,7 +310,7 @@ onUnmounted(() => {
       </div>
     </KSurface>
 
-    <KCard :title="$t('about.mtf.what-is-trans.title')">
+    <KCard :title="$t('trans.what-is-trans.title')">
       <div ref="chatRoot" class="flex items-start gap-3 sm:gap-4">
         <div
           class="flex size-10 shrink-0 items-center justify-center rounded-full border border-(--color-control-border) bg-(--color-control-bg) text-(--color-text-1) sm:size-12">
@@ -324,7 +324,7 @@ onUnmounted(() => {
       </div>
     </KCard>
 
-    <KCard :title="$t('about.mtf.journey.title')">
+    <KCard :title="$t('trans.journey.title')">
       <ol class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <li v-for="milestone in milestones" :key="milestone.id" class="mtf-tile">
           <KSurface class="flex h-full flex-col gap-3 rounded-xl p-4">
@@ -351,7 +351,7 @@ onUnmounted(() => {
               </div>
               <div v-else class="h-1" aria-hidden="true"></div>
               <p class="text-xs text-(--color-text-3)">
-                {{ milestone.note ?? $t('about.mtf.percent-life', [percentText(milestone)]) }}
+                {{ milestone.note ?? $t('trans.percent-life', [percentText(milestone)]) }}
               </p>
             </div>
           </KSurface>
@@ -359,19 +359,19 @@ onUnmounted(() => {
       </ol>
     </KCard>
 
-    <KCard :title="$t('about.mtf.timeline.title')">
+    <KCard :title="$t('trans.timeline.title')">
       <div
         class="-mx-4 max-h-80 overflow-y-auto overscroll-contain px-4"
         tabindex="0"
         role="region"
-        :aria-label="$t('about.mtf.timeline.title')">
+        :aria-label="$t('trans.timeline.title')">
         <TimelineList :items="genderTimeline" />
       </div>
     </KCard>
 
-    <KCard :title="$t('about.mtf.about-trans')">
+    <KCard :title="$t('trans.about-trans')">
       <div class="flex flex-col gap-4">
-        <p class="text-sm text-(--color-text-2)">{{ $t('about.mtf.slogan') }}</p>
+        <p class="text-sm text-(--color-text-2)">{{ $t('trans.slogan') }}</p>
         <template v-for="(group, index) in linkGroups" :key="group.title">
           <KDivider v-if="index > 0" />
           <div>

@@ -148,11 +148,7 @@ onBeforeUnmount(() => {
     </template>
     <h1 class="text-2xl">{{ article?.title || $t('global.not-found') }}</h1>
     <p class="text-sm">{{ article?.desc || $t('blog.not-found') }}</p>
-    <template v-if="!article">
-      <KDivider />
-      <KCardLink to="/blog" :text="$t('blog.title')" icon="material-symbols:arrow-back" />
-    </template>
-    <template v-else>
+    <template v-if="article">
       <div class="flex justify-between items-center gap-2 flex-wrap">
         <span class="flex items-center gap-1">
           <KIcon name="material-symbols:schedule" class="text-sm" />

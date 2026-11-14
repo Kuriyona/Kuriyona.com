@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import devicesData from '~/data/devices.json';
 
-useSeoMeta({ title: $t('about.devices.title') });
+useSeoMeta({ title: $t('devices.title') });
 </script>
 
 <template>
   <AppPage data-pagefind-body>
     <!-- 标题已在固定顶栏：保留一份不可见 h1 供 Pagefind 取页面标题与 SEO -->
-    <h1 class="hidden">{{ $t('about.devices.title') }}</h1>
-    <p class="text-(--color-text-2)">{{ $t('about.devices.desc') }}</p>
+    <h1 class="hidden">{{ $t('devices.title') }}</h1>
+    <p class="text-(--color-text-2)">{{ $t('devices.desc') }}</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <KCard
         v-for="device in devicesData.devices"
@@ -23,10 +23,10 @@ useSeoMeta({ title: $t('about.devices.title') });
           <p class="text-(--color-text-2) text-sm leading-6 min-h-6 flex items-center gap-2">
             <span>{{ device.subtitleKey ? $t(device.subtitleKey) : device.subtitle }}</span>
             <KBadge v-if="device.primary" class="shrink-0">
-              {{ $t('about.devices.primary') }}
+              {{ $t('devices.primary') }}
             </KBadge>
             <KBadge v-else-if="device.retired" variant="muted" class="shrink-0">
-              {{ $t('about.devices.retired') }}
+              {{ $t('devices.retired') }}
             </KBadge>
           </p>
         </div>

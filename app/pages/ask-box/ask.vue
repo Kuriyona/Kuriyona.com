@@ -26,7 +26,7 @@ const submit = async () => {
   }
 };
 
-useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask-me')}` });
+useSeoMeta({ title: `${t('ask-box.title')} - ${t('ask-box.ask.title')}` });
 </script>
 
 <template>

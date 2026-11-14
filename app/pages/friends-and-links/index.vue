@@ -2,19 +2,19 @@
 const config = useAppConfig();
 const ISSUE =
   'https://github.com/Kuriyona/Kuriyona.com/issues/new?template=申请友链---apply-for-a-link-exchange.md';
-useSeoMeta({ title: $t('about.links.title') });
+useSeoMeta({ title: $t('friends-and-links.title') });
 </script>
 
 <template>
   <AppPage data-pagefind-body>
     <!-- 标题已在固定顶栏：保留一份不可见 h1 供 Pagefind 取页面标题与 SEO -->
-    <h1 class="hidden" data-pagefind-meta="title">{{ $t('about.links.title') }}</h1>
-    <KCard :title="$t('about.links.best-friends')">
+    <h1 class="hidden" data-pagefind-meta="title">{{ $t('friends-and-links.title') }}</h1>
+    <KCard :title="$t('friends-and-links.best-friends')">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <KPersonCard v-for="person in config.links.main" :key="person.name" v-bind="person" />
       </div>
     </KCard>
-    <KCard :title="$t('about.links.other-friends')">
+    <KCard :title="$t('friends-and-links.other-friends')">
       <div class="grid grid-cols-1 md:grid-cols-2 content-stretch gap-2">
         <KCardLink
           v-for="link in config.links.others"
@@ -25,7 +25,7 @@ useSeoMeta({ title: $t('about.links.title') });
           :new="true" />
       </div>
     </KCard>
-    <KCard :title="$t('about.links.friends')">
+    <KCard :title="$t('friends-and-links.friends')">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
         <KCardLink
           v-for="link in config.links.links"
@@ -36,7 +36,7 @@ useSeoMeta({ title: $t('about.links.title') });
           :new="true" />
       </div>
     </KCard>
-    <KCard :title="$t('about.links.exchange')">
+    <KCard :title="$t('friends-and-links.exchange')">
       <div class="font-monos text-wrap break-all">
         <p>url : https://kuriyona.com</p>
         <p>title : Kuriyona's Space</p>
@@ -45,7 +45,7 @@ useSeoMeta({ title: $t('about.links.title') });
       </div>
       <br />
       <div>
-        <KCardLink :to="ISSUE" :new="true" :text="$t('about.links.request-exchange')" />
+        <KCardLink :to="ISSUE" :new="true" :text="$t('friends-and-links.request-exchange')" />
       </div>
     </KCard>
   </AppPage>

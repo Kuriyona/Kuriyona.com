@@ -7,23 +7,16 @@ const mobileMenu = ref(false);
 /** 顶栏复合音乐按钮打开的悬浮面板（≥768 的唯一音乐入口；<768 用 AppMenu 抽屉里的播放器） */
 const musicPanel = ref(false);
 
-// 文章详情页：固定顶栏换成「返回 + 面包屑 + 标题」（返回按钮对所有非首页页面统一提供，见下方 back）。
-// 版式按路由名同步判定，SSR 就直接渲染正确结构；标题由页面写进 useAppBar，
-// 而页面是异步组件（await 文章数据），SSR 时顶栏先渲染拿不到标题 ——
-// 所以标题等水合后再填，否则服务端（无标题）与客户端（有标题）结构不一致会报水合错误。
+// 顶栏左侧只渲染面包屑：站名 / 一级 / 二级…（页面正文里不放返回按钮，见 AGENTS.md）。
+// 层级来自路径段（去掉语言前缀），每级文案按 `<各段以 . 连接>.title` 查 i18n：
+// `/blog` → `blog.title`、`/ask-box/ask` → `ask-box.ask.title`。
+// 文章详情页末级用文章标题（页面异步写进 useAppBar）；查不到的路径（404）只显示站名。
 const route = useRoute();
-const { t } = useI18n();
-// i18n 给每个语言的同名路由加了 `___<locale>` 后缀（`timeline___en`），取基名才能查表
-const routeBaseName = useRouteBaseName();
-const baseName = computed(() => routeBaseName(route) ?? '');
+const { t, te } = useI18n();
+const localePath = useLocalePath();
 const { article } = useAppBar();
 const isArticleRoute = computed(() => String(route.name ?? '').startsWith('blog-slug'));
 
-// 返回按钮统一放在顶栏，页面内不再出现（见 AGENTS.md）。层级按路径段数判定（去掉语言前缀）：
-// 一级非首页（/blog、/timeline…）→ home 图标回首页；二级及更深（/blog/:slug、/ask-box/ask…）
-// → 返回箭头回上一级（去掉最后一段）。
-// 管理端自有一套导航（layouts/admin.vue），不参与。
-const localePath = useLocalePath();
 /** 去掉语言前缀后的路径段（`prefix_except_default`：默认语言无前缀，其余是 `/en/...`） */
 const segments = computed(() => {
   const home = localePath('/');
@@ -31,39 +24,29 @@ const segments = computed(() => {
     home !== '/' && route.path.startsWith(home) ? route.path.slice(home.length) : route.path;
   return rest.split('/').filter(Boolean);
 });
-const back = computed(() => {
-  const segs = segments.value;
-  if (segs.length === 0 || baseName.value.startsWith('admin')) return null;
-  const parent = segs.slice(0, -1);
-  const home = parent.length === 0;
-  return {
-    // 存语言无关路径，由 NuxtLinkLocale 补语言前缀
-    to: home ? '/' : `/${parent.join('/')}`,
-    icon: home ? 'material-symbols:home' : 'material-symbols:arrow-back',
-    label: t(home ? 'global.home' : 'global.back'),
-  };
-});
 
-// 非文章页的顶栏大字：路由基名 → i18n key。
-// 首页（`index`）不在此表，仍只显示站名；文章详情走上面那条分支（标题来自异步数据）。
-const PAGE_TITLE_KEYS: Record<string, string> = {
-  blog: 'blog.title',
-  trans: 'about.mtf.as-mtf',
-  devices: 'about.devices.title',
-  timeline: 'timeline.title',
-  'friends-and-links': 'about.links.title',
-  'ask-box': 'ask-box.title',
-  'ask-box-ask': 'ask-box.ask-me',
-};
+interface Crumb {
+  to: string;
+  label: string;
+}
 
-/** 顶栏两级标题的大字；空串表示退回「只显示站名」（首页 / 未知路由） */
-const pageTitle = computed(() => {
-  if (isArticleRoute.value) return '';
-  const key = PAGE_TITLE_KEYS[baseName.value];
-  if (key) return t(key);
-  // 管理端共用 admin 布局，标题取与侧栏导航同一份条目（路径带语言前缀也能匹配）
-  return adminNav.find((item) => route.path.endsWith(item.to))?.label ?? '';
-});
+const crumbs = computed<Crumb[]>(() =>
+  segments.value.flatMap((_, index) => {
+    const segs = segments.value.slice(0, index + 1);
+    const path = `/${segs.join('/')}`;
+    const isLast = index === segments.value.length - 1;
+    const key = `${segs.join('.')}.title`;
+    // 文章标题来自异步数据（SSR 拿不到），先用不换行空格占位避免布局跳动；其余页面按路径约定查 i18n
+    const label =
+      isLast && isArticleRoute.value ? (article.value?.title || '\u00A0') : te(key) ? t(key) : '';
+    // 管理端没有 i18n key，文案与侧栏共用 adminNav；仍查不到就整级跳过
+    const text = label || adminNav.find((item) => item.to === path)?.label || '';
+    return text ? [{ to: path, label: text }] : [];
+  }),
+);
+/** 面包屑行只放祖先级，末级（当前页）单独作为大字标题 */
+const ancestors = computed(() => crumbs.value.slice(0, -1));
+const currentCrumb = computed(() => crumbs.value.at(-1));
 const hydrated = ref(false);
 // 顶栏目录按钮（窄屏；宽屏的目录在左侧保留区）与展开的面板
 const tocOpen = ref(false);
@@ -103,31 +86,28 @@ onMounted(() => {
   <div class="k-surface k-glass-bar fixed w-screen top-0 z-100 flex justify-center">
     <div class="w-(--content-width) max-w-screen px-4 *:px-2 *:font-monos">
       <div class="relative min-h-12 py-2 px-3 flex justify-between items-center gap-3 rounded-xl">
-        <!-- 左侧：返回按钮（非首页统一在顶栏给，页面内不放）+ 两级标题 -->
-        <div class="flex min-w-0 flex-1 items-center gap-2">
-          <NuxtLinkLocale v-if="back" :to="back.to" class="shrink-0">
-            <KIconButton :icon="back.icon" :label="back.label" />
-          </NuxtLinkLocale>
-          <!-- 文章详情页：不显示头像与站名，右侧两级 (面包屑 / 标题) -->
-          <div v-if="isArticleRoute" class="flex min-w-0 flex-1 flex-col justify-center">
-            <span class="truncate text-xs leading-tight text-(--color-text-2)">
-              Kuriyona's Space / {{ $t('blog.crumb') }}
-            </span>
-            <span class="truncate text-lg leading-tight font-bold">{{
-              hydrated && article?.title ? article.title : '\u00A0'
-            }}</span>
-          </div>
-          <!-- 其余页面（首页除外）：同样两级，上层站名、下层页面名；全站不再显示头像 -->
-          <div v-else-if="pageTitle" class="flex min-w-0 flex-1 flex-col justify-center">
-            <span class="truncate text-xs leading-tight text-(--color-text-2)"
-              >Kuriyona's Space</span
-            >
-            <span class="truncate text-lg leading-tight font-bold">{{ pageTitle }}</span>
-          </div>
-          <NuxtLinkLocale v-else to="/">
-            <span class="hover:underline">Kuriyona's Space</span>
-          </NuxtLinkLocale>
+        <!-- 左侧：非首页「面包屑（祖先级） + 大字标题」两行；首页只显示站名 -->
+        <div v-if="currentCrumb" class="flex min-w-0 flex-1 flex-col justify-center">
+          <nav
+            class="flex min-w-0 items-center gap-1.5 text-xs leading-tight text-(--color-text-2)"
+            :aria-label="$t('global.breadcrumb')">
+            <NuxtLinkLocale to="/" class="shrink-0 hover:text-(--color-text-1) hover:underline">
+              Kuriyona's Space
+            </NuxtLinkLocale>
+            <template v-for="crumb in ancestors" :key="crumb.to">
+              <span class="shrink-0 text-(--color-text-3)" aria-hidden="true">/</span>
+              <NuxtLinkLocale
+                :to="crumb.to"
+                class="shrink-0 hover:text-(--color-text-1) hover:underline">
+                {{ crumb.label }}
+              </NuxtLinkLocale>
+            </template>
+          </nav>
+          <span class="truncate text-lg leading-tight font-bold">{{ currentCrumb.label }}</span>
         </div>
+        <NuxtLinkLocale v-else to="/">
+          <span class="hover:underline">Kuriyona's Space</span>
+        </NuxtLinkLocale>
         <div id="actions" class="flex items-center gap-2">
           <!-- 文章页：目录按钮（窄屏才出现，宽屏目录在左侧保留区），与右侧操作组用竖线分隔 -->
           <template v-if="hydrated && isArticleRoute && article?.toc?.length">

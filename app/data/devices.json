@@ -3,77 +3,77 @@
     {
       "name": "OPPO Find X8s",
       "subtitle": "月光白",
-      "subtitleKey": "about.devices.subtitle.moonlight-white",
+      "subtitleKey": "devices.subtitle.moonlight-white",
       "primary": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "MediaTek Dimensity 9400+" },
-        { "labelKey": "about.devices.specs.memory", "value": "16 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "6.32″ 2460×1216 120Hz" }
+        { "labelKey": "devices.specs.processor", "value": "MediaTek Dimensity 9400+" },
+        { "labelKey": "devices.specs.memory", "value": "16 GiB" },
+        { "labelKey": "devices.specs.storage", "value": "256 GiB" },
+        { "labelKey": "devices.specs.display", "value": "6.32″ 2460×1216 120Hz" }
       ]
     },
     {
       "name": "OnePlus Pad Pro",
       "subtitle": "卡其绿",
-      "subtitleKey": "about.devices.subtitle.khaki-green",
+      "subtitleKey": "devices.subtitle.khaki-green",
       "primary": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
-        { "labelKey": "about.devices.specs.memory", "value": "12 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "12.1″ 3000×2120 144Hz" }
+        { "labelKey": "devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
+        { "labelKey": "devices.specs.memory", "value": "12 GiB" },
+        { "labelKey": "devices.specs.storage", "value": "256 GiB" },
+        { "labelKey": "devices.specs.display", "value": "12.1″ 3000×2120 144Hz" }
       ]
     },
     {
       "name": "台式 PC",
-      "nameKey": "about.devices.name.desktop",
+      "nameKey": "devices.name.desktop",
       "subtitle": "ITX",
       "primary": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Intel Core i5-12400F" },
-        { "labelKey": "about.devices.specs.gpu", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
-        { "labelKey": "about.devices.specs.memory", "value": "32 GiB" },
-        { "labelKey": "about.devices.specs.monitor", "value": "27″ 2560×1440 200Hz" }
+        { "labelKey": "devices.specs.processor", "value": "Intel Core i5-12400F" },
+        { "labelKey": "devices.specs.gpu", "value": "NVIDIA GeForce RTX 4060 8 GiB" },
+        { "labelKey": "devices.specs.memory", "value": "32 GiB" },
+        { "labelKey": "devices.specs.monitor", "value": "27″ 2560×1440 200Hz" }
       ]
     },
     {
       "name": "OPPO Watch S2",
       "subtitle": "薄雾粉",
-      "subtitleKey": "about.devices.subtitle.misty-pink",
+      "subtitleKey": "devices.subtitle.misty-pink",
       "primary": true,
-      "specs": [{ "labelKey": "about.devices.specs.size", "value": "45mm" }]
+      "specs": [{ "labelKey": "devices.specs.size", "value": "45mm" }]
     },
     {
       "name": "Lenovo ThinkPad X270",
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Intel Core i5-6300U" },
-        { "labelKey": "about.devices.specs.gpu", "value": "Intel HD Graphics 520" },
-        { "labelKey": "about.devices.specs.memory", "value": "16 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "12″ 1920×1080 60Hz" }
+        { "labelKey": "devices.specs.processor", "value": "Intel Core i5-6300U" },
+        { "labelKey": "devices.specs.gpu", "value": "Intel HD Graphics 520" },
+        { "labelKey": "devices.specs.memory", "value": "16 GiB" },
+        { "labelKey": "devices.specs.display", "value": "12″ 1920×1080 60Hz" }
       ]
     },
     {
       "name": "Apple iPhone 16 Pro",
       "subtitle": "黑色钛金属 · 512 GiB",
-      "subtitleKey": "about.devices.subtitle.black-titanium",
+      "subtitleKey": "devices.subtitle.black-titanium",
       "retired": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Apple A18 Pro" },
-        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "6.3″ 120Hz OLED" }
+        { "labelKey": "devices.specs.processor", "value": "Apple A18 Pro" },
+        { "labelKey": "devices.specs.memory", "value": "8 GiB" },
+        { "labelKey": "devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "devices.specs.display", "value": "6.3″ 120Hz OLED" }
       ]
     },
     {
       "name": "OnePlus Ace 5",
       "subtitle": "引力钛 · 12+256",
-      "subtitleKey": "about.devices.subtitle.gravity-titanium",
+      "subtitleKey": "devices.subtitle.gravity-titanium",
       "retired": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
-        { "labelKey": "about.devices.specs.memory", "value": "12 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "256 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "6.78″ 120Hz 1.5K" }
+        { "labelKey": "devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
+        { "labelKey": "devices.specs.memory", "value": "12 GiB" },
+        { "labelKey": "devices.specs.storage", "value": "256 GiB" },
+        { "labelKey": "devices.specs.display", "value": "6.78″ 120Hz 1.5K" }
       ]
     },
     {
@@ -81,9 +81,9 @@
       "subtitle": "41mm GPS",
       "retired": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Apple S9" },
-        { "labelKey": "about.devices.specs.storage", "value": "64 GiB" },
-        { "labelKey": "about.devices.specs.size", "value": "41mm" }
+        { "labelKey": "devices.specs.processor", "value": "Apple S9" },
+        { "labelKey": "devices.specs.storage", "value": "64 GiB" },
+        { "labelKey": "devices.specs.size", "value": "41mm" }
       ]
     },
     {
@@ -91,10 +91,10 @@
       "subtitle": "M1 8+512",
       "retired": true,
       "specs": [
-        { "labelKey": "about.devices.specs.processor", "value": "Apple M1" },
-        { "labelKey": "about.devices.specs.memory", "value": "8 GiB" },
-        { "labelKey": "about.devices.specs.storage", "value": "512 GiB" },
-        { "labelKey": "about.devices.specs.display", "value": "13.3″ Retina" }
+        { "labelKey": "devices.specs.processor", "value": "Apple M1" },
+        { "labelKey": "devices.specs.memory", "value": "8 GiB" },
+        { "labelKey": "devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "devices.specs.display", "value": "13.3″ Retina" }
       ]
     }
   ]

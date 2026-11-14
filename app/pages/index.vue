@@ -109,8 +109,8 @@ const { data: cities } = useCity();
     </div>
     <KNavCard
       to="/friends-and-links"
-      :title="$t('about.links.title')"
-      :desc="$t('about.links.desc')"
+      :title="$t('friends-and-links.title')"
+      :desc="$t('friends-and-links.desc')"
       data-pagefind-ignore="all" />
 
     <CardContact />

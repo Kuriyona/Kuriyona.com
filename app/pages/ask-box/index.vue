@@ -31,7 +31,7 @@ useSeoMeta({ title: t('ask-box.title') });
 <template>
   <AppPage>
     <h3 class="text-xl font-bold">{{ $t('ask-box.you-can') }}</h3>
-    <KCardLink to="/ask-box/ask" :text="$t('ask-box.ask-me')" />
+    <KCardLink to="/ask-box/ask" :text="$t('ask-box.ask.title')" />
     <h3 class="text-xl font-bold flex items-center justify-between">
       <span>{{ $t('ask-box.browse-public-questions') }}</span>
       <KIconButton icon="material-symbols:refresh" @click="refresh" />
