@@ -1,4 +1,4 @@
-import type { Cities } from '@/scripts/cityTypes';
+import type { Cities } from '@/types/city';
 
 /** `GET /api/city`（常住/当前城市地图 + 常住城市天气）。预渲染阶段拿不到，挂载后由客户端拉取。 */
 export const useCity = () =>

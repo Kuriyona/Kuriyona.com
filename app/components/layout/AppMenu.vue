@@ -2,14 +2,14 @@
 import dayjs from 'dayjs';
 import { useSearch } from '~/composables/useSearch';
 
-const show = defineModel<boolean>();
+const open = defineModel<boolean>();
 const nav = useNav();
 
 // <md 时顶栏的搜索按钮收进这里（同一个「更多」按钮），见下方 narrow 区块。
 // 搜索：先关抽屉再开搜索框（SearchModal 是 Teleport 的独立浮层，层级更高，不会被抽屉遮住）。
 const search = useSearch();
 function openSearch() {
-  show.value = false;
+  open.value = false;
   search.open();
 }
 
@@ -32,7 +32,7 @@ onBeforeUnmount(() => narrowQuery?.removeEventListener('change', syncNarrow));
 const scrollLocked = ref(false);
 usePageScrollLock(scrollLocked);
 watch(
-  show,
+  open,
   (value) => {
     if (value) scrollLocked.value = true;
   },
@@ -46,7 +46,7 @@ const language = computed({
   get: () => locale.value,
   set: (code: string) => {
     setLocale(code);
-    show.value = false;
+    open.value = false;
   },
 });
 const localeOptions = computed(() => locales.value.map((l) => ({ value: l.code, label: l.name })));
@@ -58,17 +58,17 @@ const { currentNodeName } = useCloudflareStatus();
 
 <template>
   <Transition name="menu" @after-leave="unlock">
-    <div v-if="show">
+    <div v-if="open">
       <div
         class="k-scrim fixed left-0 top-0 z-[110] w-screen h-dvh select-none"
         @mousedown.prevent
-        @click="show = false" />
+        @click="open = false" />
       <KSurface
         as="aside"
         glass
         class="fixed w-80 max-[400px]:w-screen right-0 top-0 z-[110] h-dvh flex flex-col gap-4 p-4 overflow-y-auto">
         <div class="flex justify-end">
-          <KIconButton icon="material-symbols:close" @click="show = false" />
+          <KIconButton icon="material-symbols:close" @click="open = false" />
         </div>
         <!-- <md：顶栏的搜索按钮并入这个「更多」按钮，功能搬进抽屉。
              ≥md 顶栏自己有搜索入口，抽屉里不再重复。音乐不在抽屉里：<md 没有音乐入口（设计如此），
@@ -99,7 +99,7 @@ const { currentNodeName } = useCloudflareStatus();
             v-for="item in nav"
             :key="item.to"
             :to="item.to"
-            @click="show = false"
+            @click="open = false"
             :text="item.shortTitle || item.title"
             :desc="item.desc || undefined" />
         </div>

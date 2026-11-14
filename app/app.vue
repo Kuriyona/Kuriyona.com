@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppBar from './components/AppBar.vue';
-import { greet } from './utils/console.js';
+import AppBar from './components/layout/AppBar.vue';
+import { greet } from './utils/greet';
 import { useSearch } from './composables/useSearch';
 const { locale } = useI18n();
 const route = useRoute();
@@ -20,7 +20,7 @@ const fontFamilies = computed(() => {
   const cjk = FONT_BY_LOCALE[locale.value] ?? FONT_BY_LOCALE['zh-Hans'];
   return ['Inter', 'MapleMono', cjk.sans, cjk.rounded];
 });
-setLocale(locale.value);
+setDayjsLocale(locale.value);
 const { reinit } = useSearch();
 watch(
   () => locale.value,
@@ -30,7 +30,7 @@ watch(
         lang: newLocale,
       },
     });
-    setLocale(newLocale);
+    setDayjsLocale(newLocale);
     if (import.meta.client) {
       // Pagefind 初始化时读 <html lang> 选语言索引；useHead 的 DOM 更新在 nextTick 之后，
       // 直接 reinit 可能仍加载旧语言的索引。

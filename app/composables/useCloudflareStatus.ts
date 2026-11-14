@@ -1,18 +1,20 @@
 import ky from 'ky';
-import type { CF } from './cfn';
+import type { CloudflareSummary } from '@/types/cloudflare';
 
-const REGEX = /^[A-Za-z\s,]+-\s*\(([A-Z]{3})\)$/;
+/** 节点名形如 `Hong Kong, China - (HKG)`，括号里是 colo 码 */
+const NODE_NAME_RE = /^[A-Za-z\s,]+-\s*\(([A-Z]{3})\)$/;
 
 export function useCloudflareStatus() {
-  const { data: nodesData } = useAsyncData('cfn', async () => {
-    const res = await ky.get('https://www.cloudflarestatus.com/api/v2/summary.json').json<CF>();
-    const result = res.components
-      .filter((c) => REGEX.test(c.name))
+  const { data: nodesData } = useAsyncData('cloudflare-nodes', async () => {
+    const res = await ky
+      .get('https://www.cloudflarestatus.com/api/v2/summary.json')
+      .json<CloudflareSummary>();
+    return res.components
+      .filter((c) => NODE_NAME_RE.test(c.name))
       .map((n) => ({
         name: n.name,
-        code: n.name.match(REGEX)?.[1],
+        code: n.name.match(NODE_NAME_RE)?.[1],
       }));
-    return result;
   });
 
   const { data: traceData } = useAsyncData(

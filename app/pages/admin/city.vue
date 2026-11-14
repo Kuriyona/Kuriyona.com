@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { GenerateResult, SpanOptions } from '@kuriyona/amap-box';
 import ky, { HTTPError } from 'ky';
-import type { Cities } from '~/scripts/cityTypes';
+import type { Cities } from '~/types/city';
 
 definePageMeta({ layout: 'admin' });
 

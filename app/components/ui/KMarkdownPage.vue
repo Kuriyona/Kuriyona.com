@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Component } from 'vue';
-import KChips from '~/components/KChips.vue';
+import KChips from '~/components/ui/KChips.vue';
 
 const props = defineProps<{
   /** Markdown 源文本（页面用 `?raw` 直接 import） */

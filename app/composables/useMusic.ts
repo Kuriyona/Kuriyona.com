@@ -1,4 +1,4 @@
-import type { MusicLyric, MusicLyricLine, MusicPlaylist, MusicTrack } from '@/scripts/musicTypes';
+import type { MusicLyric, MusicLyricLine, MusicPlaylist, MusicTrack } from '@/types/music';
 
 type MusicState = 'idle' | 'loading' | 'ready' | 'error';
 
@@ -22,7 +22,7 @@ let audio: HTMLAudioElement | null = null;
 /** 当前已装进 audio 的曲目下标（-1 = 还没装）；用于「暂停后继续」不重新拉直链 */
 let loadedIndex = -1;
 let failId = 0;
-/** 同一次失败只提示一次：MusicControls 可能同时挂两份（左保留区卡片 + 窄视口悬浮面板） */
+/** 同一次失败只提示一次：MusicControls 可能在面板重挂时出现多个实例 */
 let notifiedErrorId = 0;
 const consumeError = (id: number) => {
   if (id === notifiedErrorId) return false;

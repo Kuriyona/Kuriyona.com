@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { City } from '~/scripts/cityTypes';
+import type { City } from '~/types/city';
 
 defineProps<{
   title: string;

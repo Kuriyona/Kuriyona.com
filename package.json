@@ -1,11 +1,11 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "bun scripts/gen-icons.ts && PORTLESS_TLD=localhost portless run nuxt dev",
-    "dev:plain": "bun scripts/gen-icons.ts && nuxt dev",
-    "gen:icons": "bun scripts/gen-icons.ts",
+    "dev": "bun scripts/generate-icons.ts && PORTLESS_TLD=localhost portless run nuxt dev",
+    "dev:plain": "bun scripts/generate-icons.ts && nuxt dev",
+    "gen:icons": "bun scripts/generate-icons.ts",
     "gen:zh-hant": "bun scripts/generate-zh-hant.ts",
-    "generate": "bun scripts/gen-icons.ts && nuxt generate",
+    "generate": "bun scripts/generate-icons.ts && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "index": "rm -rf .cache/pagefind && pagefind --site dist --output-path .cache/pagefind && rm -rf dist/pagefind && cp -R .cache/pagefind dist/pagefind",

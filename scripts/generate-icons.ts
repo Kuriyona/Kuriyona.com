@@ -9,7 +9,7 @@
  *   - 名字拼错、或本地集合里不存在 → 立即失败，构建中止；
  *   - 动态拼接（`material-symbols:${x}`）→ 立即失败，而不是静默丢图标。
  *
- * 运行：`bun scripts/gen-icons.ts`（dev / generate 前置脚本，已串联在 package.json）。
+ * 运行：`bun scripts/generate-icons.ts`（dev / generate 前置脚本，已串联在 package.json）。
  */
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
@@ -134,7 +134,7 @@ if (problems.length) {
   process.exit(1);
 }
 
-const output = `// 本文件由 scripts/gen-icons.ts 生成，请勿手动编辑（pnpm dev / pnpm generate 会自动重跑）。
+const output = `// 本文件由 scripts/generate-icons.ts 生成，请勿手动编辑（pnpm dev / pnpm generate 会自动重跑）。
 // 图标名写在调用点（<KIcon name="material-symbols:close" />）与 app/data/ 下的数据文件里，
 // 脚本扫描后只把用到的图标注册进 @iconify/vue。
 import { _api, addCollection, type IconifyJSON } from '@iconify/vue';
@@ -146,7 +146,7 @@ ${collections.join('\n\n')}
 // 去拉第三方 CDN。这里把下载通路替换掉，让「访客不加载任何第三方资源」成为结构性保证，
 // 而不是依赖人不犯错。
 _api.setFetch(() =>
-  Promise.reject(new Error('图标未注册：图标名必须由 scripts/gen-icons.ts 扫描到')),
+  Promise.reject(new Error('图标未注册：图标名必须由 scripts/generate-icons.ts 扫描到')),
 );
 `;
 

@@ -5,7 +5,7 @@
 - 首页「关于我」右侧的**常住城市**卡片（`app/pages/index.vue`，窄屏与「关于我」各占一行），以及 `/status` 曾有的**当前所在城市**配置（数据仍保留、暂无展示位），默认都是杭州（`330100`）。
 - 数据来自 `GET /api/city`：`resident`（含实时 `weather`）与 `current`，读 KV 键 `city:maps`（`backend/src/city-map.ts` 的 `readCityMaps`），缺失或坏值时回退默认杭州；KV 只存 `{ name, adcode }`，`map` 由 adcode 推导。
 - **出图跑在管理端浏览器里**：`/admin/city`（`app/pages/admin/city.vue`）动态 `import('@kuriyona/amap-box')`，浏览器拉边界 + 渲染 SVG，然后直传 R2、写 KV 城市配置。Worker 侧只做三件薄事（`backend/src/router/city.ts`），CPU ≈ 0：**不**在请求路径上出图，也**不**搬运 SVG 字节。
-- 前端：`app/components/card/CardCityMap.vue`（`ClientOnly` + `<img>` + `object-cover`）。容器比例 ≥600px 是 `2:1`、窄屏 `1:1`；出图画幅是 1:1 且目标居中，所以裁到 **2:1 ~ 1:2** 之间目标都不会跑出画面。图拿不到就是 404，前端不做任何探测。
+- 前端：`app/components/home/CardCityMap.vue`（`ClientOnly` + `<img>` + `object-cover`）。容器比例 ≥600px 是 `2:1`、窄屏 `1:1`；出图画幅是 1:1 且目标居中，所以裁到 **2:1 ~ 1:2** 之间目标都不会跑出画面。图拿不到就是 404，前端不做任何探测。
 
 ## 天气跟着常住城市
 
@@ -28,7 +28,7 @@
 | 5 写配置 | `PUT /api/city`（`requireAuthKey`），体 `{ resident: { name, adcode }, current? }` | 省略 `current` 时跟随 `resident`；写 KV `city:maps`（只存 `{ name, adcode }`，`map` 由 Worker 按 adcode 拼）                                                         |
 | 6 读取   | `GET /api/city`（公开）                                                            | `resident` 读 KV `city:maps` 并按 adcode 查出实时天气，`current` 只有配置；缺失时回退默认杭州；响应带 `cache-control: max-age=1800`，改城市后 CDN 最长 30 分钟才跟上 |
 
-浏览器侧缓存：边界按 adcode 存 IndexedDB（`app/utils/idbCache.ts`）。一组实测 41 个键 / 约 6 MB —— localStorage 的 5 MB 配额装不下，也不适合同步 IO，所以用它。页面上的「忽略缓存重新取数」会清掉这层并让代理绕过 KV。
+浏览器侧缓存：边界按 adcode 存 IndexedDB（`app/utils/boundaryCache.ts`）。一组实测 41 个键 / 约 6 MB —— localStorage 的 5 MB 配额装不下，也不适合同步 IO，所以用它。页面上的「忽略缓存重新取数」会清掉这层并让代理绕过 KV。
 
 ## 资源位置
 

@@ -7,7 +7,7 @@ interface TimelineItem {
 
 const props = defineProps<{ items: TimelineItem[] }>();
 
-const { isCurrent, openLink, linkIcon } = useTimelineLink();
+const { isCurrentPage, openLink, linkIcon } = useTimelineLink();
 
 /** <time> 的 datetime 需要 YYYY-MM-DD，数据里的日期是 YYYY/MM/DD */
 const isoDate = (date: string) => date.replace(/\//g, '-');
@@ -25,7 +25,7 @@ const isoDate = (date: string) => date.replace(/\//g, '-');
         </time>
         <span class="min-w-0 flex-1 text-sm text-(--color-text-1)">{{ item.text }}</span>
         <KIconButton
-          v-if="item.link && !isCurrent(item.link)"
+          v-if="item.link && !isCurrentPage(item.link)"
           :icon="linkIcon(item.link)"
           size="sm"
           @click="openLink(item.link)" />

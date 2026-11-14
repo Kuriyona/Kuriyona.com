@@ -1,7 +1,14 @@
-import type { NavItem } from '~/composables/useNav';
-
-/** 导航条目；`onAbout: true` 的会同时进入 `aboutNav`（首页「关于」区的导航卡） */
-export interface NavEntry extends NavItem {
+/**
+ * 导航条目（原始数据）：文案是 i18n key，由 `useNav` / `useAboutNav` 解析成当前语言。
+ * 类型定义放在数据层，避免 `app/data/` 反过来依赖 `app/composables/`。
+ */
+export interface NavEntry {
+  to: string;
+  title?: string;
+  titleKey?: string;
+  shortTitleKey?: string;
+  descKey?: string;
+  /** `true` 时同时进入 `aboutNav`（首页「关于」区的导航卡） */
   onAbout?: boolean;
 }
 

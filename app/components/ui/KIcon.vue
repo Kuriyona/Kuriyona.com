@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-// 副作用导入：注册图标数据，并把 Iconify 的远程下载通路掐掉（见生成文件与 scripts/gen-icons.ts）
+// 副作用导入：注册图标数据，并把 Iconify 的远程下载通路掐掉（见生成文件与 scripts/generate-icons.ts）
 import '~/utils/icons.gen';
 
 const props = withDefaults(

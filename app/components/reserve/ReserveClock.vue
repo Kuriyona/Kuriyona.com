@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs, { type Dayjs } from 'dayjs';
 
-// 语言参与依赖：切换语言后星期名要跟着变（dayjs 的 locale 由 app.vue 的 setLocale 维护）
+// 语言参与依赖：切换语言后星期名要跟着变（dayjs 的 locale 由 app.vue 的 setDayjsLocale 维护）
 const { locale } = useI18n();
 
 // 时间只可能在客户端推进：SSR / 预渲染先渲染占位符，onMounted 后再赋值，

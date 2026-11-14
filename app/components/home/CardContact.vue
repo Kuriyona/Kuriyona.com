@@ -3,7 +3,7 @@ import QRCode from 'qrcode.vue';
 
 const config = useAppConfig();
 
-type Contact = {
+type ContactItem = {
   name: string;
   i18nKey?: string;
   /** 账号等资料，仅作记录，不在首页展示 */
@@ -23,8 +23,8 @@ type Contact = {
 const groupOrder = ['social', 'contact'];
 
 const groups = computed(() => {
-  const map = new Map<string, Contact[]>();
-  for (const item of config.contact as Contact[]) {
+  const map = new Map<string, ContactItem[]>();
+  for (const item of config.contact as ContactItem[]) {
     const g = item.group || 'social';
     if (!map.has(g)) map.set(g, []);
     map.get(g)!.push(item);
@@ -32,7 +32,7 @@ const groups = computed(() => {
   return groupOrder.filter((g) => map.has(g)).map((g) => ({ key: g, items: map.get(g)! }));
 });
 
-const activeQr = ref<Contact | null>(null);
+const activeQr = ref<ContactItem | null>(null);
 const showQr = computed({
   get: () => !!activeQr.value,
   set: (v) => {
@@ -41,7 +41,7 @@ const showQr = computed({
 });
 
 /** 可跳转 → 外链 a；qrOnly（链接无效）→ button，点击直接开二维码 */
-const tileProps = (item: Contact) =>
+const tileProps = (item: ContactItem) =>
   item.link && !item.qrOnly
     ? { as: 'a', href: item.link, target: '_blank', rel: 'noopener noreferrer' }
     : { as: 'button', type: 'button', onClick: () => (activeQr.value = item) };

@@ -7,10 +7,10 @@ const key = useStorage('API_KEY', '');
 const AUTH_KEY_HEADER = 'X-Auth-Key';
 
 // 开发：portless（pnpm api:dev）把 wrangler dev 的 62802 映射成该域名，见根 AGENTS.md
-export const HOST = import.meta.env.DEV ? 'https://kuriyona-api.localhost/api' : '/api';
+const API_BASE_URL = import.meta.env.DEV ? 'https://kuriyona-api.localhost/api' : '/api';
 
 const client = ky.create({
-  prefix: HOST,
+  prefix: API_BASE_URL,
   hooks: {
     // auth 必须每请求现读（改密钥后即时生效，不用整页刷新）：写成 ky.create 的固定 header 会在创建时就取值。
     // 只在有值时设置：空值会让后端照旧判 401，但没必要真发一个空的自定义头。

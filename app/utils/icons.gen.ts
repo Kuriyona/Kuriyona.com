@@ -1,4 +1,4 @@
-// 本文件由 scripts/gen-icons.ts 生成，请勿手动编辑（pnpm dev / pnpm generate 会自动重跑）。
+// 本文件由 scripts/generate-icons.ts 生成，请勿手动编辑（pnpm dev / pnpm generate 会自动重跑）。
 // 图标名写在调用点（<KIcon name="material-symbols:close" />）与 app/data/ 下的数据文件里，
 // 脚本扫描后只把用到的图标注册进 @iconify/vue。
 import { _api, addCollection, type IconifyJSON } from '@iconify/vue';
@@ -293,5 +293,5 @@ addCollection({
 // 去拉第三方 CDN。这里把下载通路替换掉，让「访客不加载任何第三方资源」成为结构性保证，
 // 而不是依赖人不犯错。
 _api.setFetch(() =>
-  Promise.reject(new Error('图标未注册：图标名必须由 scripts/gen-icons.ts 扫描到')),
+  Promise.reject(new Error('图标未注册：图标名必须由 scripts/generate-icons.ts 扫描到')),
 );

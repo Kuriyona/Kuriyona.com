@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import AppMenu from './AppBar/AppMenu.vue';
-import KButton from './KButton.vue';
 import { adminNav } from '~/data/adminNav';
 import { useSearch } from '~/composables/useSearch';
-const mobileMenu = ref(false);
-/** 顶栏复合音乐按钮打开的悬浮面板（≥768 的唯一音乐入口；<768 用 AppMenu 抽屉里的播放器） */
-const musicPanel = ref(false);
+const menuOpen = ref(false);
+/** 顶栏复合音乐按钮打开的悬浮面板（≥768 的唯一音乐入口；<768 不提供音乐入口） */
+const musicOpen = ref(false);
 
 // 顶栏左侧只渲染面包屑：站名 / 一级 / 二级…（页面正文里不放返回按钮，见 AGENTS.md）。
 // 层级来自路径段（去掉语言前缀），每级文案按 `<各段以 . 连接>.title` 查 i18n：
@@ -38,7 +36,7 @@ const crumbs = computed<Crumb[]>(() =>
     const key = `${segs.join('.')}.title`;
     // 文章标题来自异步数据（SSR 拿不到），先用不换行空格占位避免布局跳动；其余页面按路径约定查 i18n
     const label =
-      isLast && isArticleRoute.value ? (article.value?.title || '\u00A0') : te(key) ? t(key) : '';
+      isLast && isArticleRoute.value ? article.value?.title || '\u00A0' : te(key) ? t(key) : '';
     // 管理端没有 i18n key，文案与侧栏共用 adminNav；仍查不到就整级跳过
     const text = label || adminNav.find((item) => item.to === path)?.label || '';
     return text ? [{ to: path, label: text }] : [];
@@ -152,7 +150,7 @@ onMounted(() => {
               type="button"
               class="absolute inset-0 rounded-full"
               :aria-label="$t('music.open-panel')"
-              @click="musicPanel = true" />
+              @click="musicOpen = true" />
             <KIcon name="material-symbols:music-note" class="pointer-events-none text-lg" />
             <button
               type="button"
@@ -166,15 +164,15 @@ onMounted(() => {
             </button>
           </div>
           <!-- 「更多」按钮只画菜单图标：语言切换在抽屉里（进抽屉后再选），不在按钮上预告 -->
-          <KButton round :aria-label="$t('global.more')" @click="mobileMenu = true">
+          <KButton round :aria-label="$t('global.more')" @click="menuOpen = true">
             <KIcon name="material-symbols:menu" class="text-lg" />
           </KButton>
         </div>
       </div>
     </div>
   </div>
-  <AppMenu v-model="mobileMenu" />
-  <MusicPanel v-model="musicPanel" />
+  <AppMenu v-model="menuOpen" />
+  <MusicPanel v-model="musicOpen" />
   <SearchModal />
 </template>
 

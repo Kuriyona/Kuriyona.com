@@ -39,7 +39,11 @@ pnpm api:d1:migrate:remote  应用迁移到远程 D1
 pnpm deploy          构建前端 + wrangler deploy（= pnpm build && wrangler deploy）
 ```
 
-`postinstall` 自动 `nuxt prepare`。**应用侧无 lint / typecheck / test 命令**：`pnpm build`（含 prerender 全部路由）与 `pnpm deploy`（wrangler）即构建验证手段。`scripts/` 下的 Bun 脚本可单独类型检查：`node_modules/.bin/tsc -p scripts/tsconfig.json --noEmit`（该 tsconfig 按 Bun 语义配 `ESNext` + `types: ['bun','node']`，不影响 Nuxt 生成的三份 tsconfig，它们都是 `types: []`）。
+- `postinstall` 自动 `nuxt prepare`：生成 `.nuxt/tsconfig.{app,server,shared,node}.json` 四份，根 `tsconfig.json` 只做 references。
+- **应用侧无 lint / typecheck / test 命令**：`pnpm build`（含 prerender 全部路由）与 `pnpm deploy`（wrangler）即构建验证手段。
+- `scripts/` 下的 Bun 脚本可单独类型检查：`node_modules/.bin/tsc -p scripts/tsconfig.json --noEmit`（按 Bun 语义配 `ESNext` + `types: ['bun','node']`，与 Nuxt 的 tsconfig 互不影响）。临时校验应用代码可用 `node_modules/.bin/tsc -p .nuxt/tsconfig.app.json --noEmit`，但 `icons.gen.ts` / `markdownPage.ts` 有改动前就存在的 strict 报错，别当成回归。
+- `pnpm-workspace.yaml` 只有 pnpm 的构建白名单，没有 `packages:` —— `backend/` 自带 lockfile，不是 workspace 成员。
+- `.github/` 只有一个友链申请 issue 模板：**无 CI**。
 
 ## Git Commit Convention
 
@@ -57,137 +61,134 @@ Conventional Commits（CC 规范），描述用中文：`<type>: <中文描述>`
 
 这两类变更固定用 `blog` / `links` scope，标题取 frontmatter `title` 或友链 `name` 原文，放在 `「」` 里：
 
-| 变更 | 格式 |
-| --- | --- |
-| 新增文章 | `feat(blog): 添加文章「<标题>」` |
-| 修改文章正文 / 元信息 / 翻译 | `docs(blog): 更新文章「<标题>」` |
-| 删除文章 | `chore(blog): 删除文章「<标题>」` |
-| 只改单个语言版本 | `docs(blog): 文章「<标题>」更新 <语言> 版本`（如 `zh-Hant`、`ja`） |
-| 新增友链 | `feat(links): 添加「<名称>」友链` |
-| 修改友链信息 / 分组 / 排序 | `docs(links): 更新「<名称>」友链` |
-| 删除友链 | `chore(links): 删除「<名称>」友链` |
+| 变更                         | 格式                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| 新增文章                     | `feat(blog): 添加文章「<标题>」`                             |
+| 修改文章正文 / 元信息 / 翻译 | `docs(blog): 更新文章「<标题>」`                             |
+| 删除文章                     | `chore(blog): 删除文章「<标题>」`                            |
+| 只改单个语言版本             | `docs(blog): 文章「<标题>」更新 <语言> 版本`（如 `zh-Hant`） |
+| 新增友链                     | `feat(links): 添加「<名称>」友链`                            |
+| 修改友链信息 / 分组 / 排序   | `docs(links): 更新「<名称>」友链`                            |
+| 删除友链                     | `chore(links): 删除「<名称>」友链`                           |
 
 一次提交涉及多篇文章或多个友链时，标题可概括为「更新 N 篇文章」/「批量整理友链」，正文逐条列出 slug 或名称。
 
 **每次提交前必须更新 `AGENTS.md`**：确保项目结构、组件、路由、命令、约定等与当前代码一致（涉及新增 / 删除 / 修改时同步）。
-
-## Search (PageFind)
-
-[PageFind](https://pagefind.app/) 全文搜索。`app/utils/pagefind.ts` 用 `new Function()` 包 JS API 绕过打包器；`app/composables/useSearch.ts` 为单例状态；UI 在 `app/components/SearchModal.vue`（Teleport 到 body），`Ctrl+K` 或顶栏按钮触发，切语言时 `pagefindReinit()` 重建索引。
-
-- **开发**：先 `pnpm generate && pnpm index` 再 `pnpm dev`。`pnpm index` 出索引到 `.cache/pagefind` 并复制一份到 `dist/pagefind`（部署用）。**索引不能只放 `dist/`**：Nitro `prepare()` 每次 dev 启动 `rm -rf nitro.output.publicDir`（= `dist`），`dist/pagefind` 会被删光、`/pagefind/*` 全 404；dev server 靠 `nuxt.config.ts` 的 `pagefind-dev` 插件从 `.cache/pagefind/` 提供。
-- **生产**：`pnpm build` = `generate` + `index`。
-- **索引范围**（Pagefind 只读 SSG 产物，不看 CSS：`hidden` 的元素照样会被索引）：
-  - 整列入索引：`/`、`/trans`、`/devices`、`/friends-and-links`、`/timeline` —— `<AppPage data-pagefind-body>`，属性透传到根节点，覆盖正文列。
-  - 只索引正文：`/blog/:slug` —— 仅 `div.markdown-body` 带 `data-pagefind-body`；标题不在 body 内，但 Pagefind 自动取页面第一个 `<h1>` 作为 `title` metadata，metadata 参与检索且有加权（默认 5x），所以标题可搜；语言切换器、阅读时长、AI 徽标、目录都不进索引。
-  - 不索引：`/blog`（同语言全部文章标题/摘要的聚合页，收进来会让几乎所有文章查询都命中它）、`/ask-box`（`useAsyncData(..., { server: false })`，SSG 产物里没有问答内容，无可索引正文）、`/admin/*`、`404.html`/`200.html`。
-  - `AppPage` 两侧 `aside.reserve` 固定 `data-pagefind-ignore="all"`：时钟、导航、最近文章与所有 `reserve-*` 插槽内容都不入索引（曾因这些内容随每页重复收录，搜文章标题会命中全站）。
-- **新页面怎么接索引**：
-  1. 内容型页面：在根 `<AppPage>` 上加 `data-pagefind-body`，索引整个正文列。
-  2. 页面内重复/装饰性内容（导航卡、聚合列表、浮动 UI、控件）包一层 `data-pagefind-ignore="all"`。**别用默认的 `="index"`**：它仍会处理内部 metadata 并允许被当作页面标题，只有 `all` 是彻底跳过。
-  3. 需要被搜到的正文**不要**放进 `reserve-*` 插槽（那是已忽略区）；保留区内新增组件不必再逐个标注。
-  4. 客户端取数的页面（`server: false`，或 `onMounted` 后才渲染的内容）无法被索引；要么保持不索引，要么改成构建期可取的数据。
-  5. 需要自定义搜索结果标题时，给标题元素加 `data-pagefind-meta="title"`；文章详情沿用「只有正文是 body」的模式，不要为了搜 `desc` 把整列改成 body。
-- **构建**：`pnpm index` 先 `rm -rf .cache/pagefind` 再出索引 —— Pagefind 不清理输出目录，重跑会在 content-hash 文件名下累积旧 fragment / `pf_meta`（曾在 34 页的站上堆到 216 个 fragment）。索引落 `.cache/pagefind` 并复制到 `dist/pagefind`；dev 由 `pagefind-dev` 插件服务 `.cache/pagefind`。切语言时 `app.vue` 会 `await nextTick()` 等 `<html lang>` 更新后再 `pagefindReinit()`（Pagefind 按该属性选语言索引）。
-- **验证索引内容**：`pagefind-entry.json` 的 `languages.*.page_count` 应为该语言实际索引页数；`fragment/*.pf_fragment` 是 gzip + `pagefind_dcd` JSON，可直接解包检查正文有没有混入保留区/导航文本（如 `Navigation.`、`Recent posts`、`--:--:--`）。
-- 改样式只动 `app/components/SearchModal.vue`（遮罩底色用 `base.css` 的 `--color-scrim-soft`，比弹窗/抽屉的 `--color-scrim` 浅）。布局：输入框独立浮在遮罩上（不套卡片），加载/出错/空态/结果统一装进一张 `KCard`，单条结果是卡内的 `a` 行。状态经 `useSearch()` 取：`s.query`/`s.results`/`s.loading`/`s.error`/`s.activeIndex`/`s.open()`/`s.close()`/`s.toggle()`/`s.clear()`。
-
-## OG 图（站点与博客预览图）
-
-两张，都指向 R2 静态对象（`r2.kuriyona.com` 后的路径即对象键）：**站点默认图** `img/site/og/default.jpg`（`app/app.vue` 的 `ogImage`，除博客详情页外全站）与**博客详情页图** `img/site/og/<slug>/<lang>.jpg`（`app/pages/blog/[slug].vue` 按 slug + 语言覆盖）。均为 1200×630、JPEG 质量 80（**不用 WebP**：部分社交平台爬虫不渲染 WebP 预览卡片）。
-
-```bash
-bun scripts/download-fonts.ts           # 一次性：字体 → .cache/fonts（--force 重下）
-bun scripts/generate-blog-og.ts         # 站点默认图 → .cache/og/default.{svg,jpg}
-bun scripts/generate-blog-og.ts <slug>  # 文章图 → .cache/og/<slug>/<lang>.{svg,jpg}
-bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run 只打印键）
-```
-
-- **渲染**：`@kuriyona/svg-toolkit` 排版成 SVG，`@resvg/resvg-js` 光栅化成 PNG，再交给 `Bun.Image`（Bun 1.3+ 内置）编码 JPEG（质量 80），PNG 不落盘；`loadSystemFonts: false`，只加载 `.cache/fonts` 里显式列出的字体，出图结果与本机装了哪些字体无关。上传时显式写 `Content-Type: image/jpeg`（R2 不按扩展名猜）。
-- **字体**：文本优先 `Maple Mono`（拉丁），非英文再挂 `Noto Sans SC/TC/JP` 其一（resvg 逐字回退）；Regular 与 Bold 都要（版式用 `font-weight: bold`，缺 Bold 会变细）。字体只放 `.cache/fonts`（gitignored）。
-- 默认图两行居中：svg-toolkit 不做文本测量（文本节点宽度算 0），靠 `alignItems: center` + `textAnchor: 'middle'` 落在中轴。
-- **meta 约定**（`app/app.vue` 站点级 + `app/pages/blog/[slug].vue` 覆盖）：`og:url` 必须绝对地址；`twitter:*` 与 `og:*` 显式写同一组值（不依赖爬虫的 og 回退）；站点描述取自 i18n `about.description`（四语都要填，空串会让 `og:description` 为空）。
-- 改版式或字体后要**重新出图并上传**；R2 上旧的 `static/og/blog/**`、`static/intro/intro-*.png` 是历史路径，站点已不再引用。
 
 ## Project Structure
 
 ```
 Kuriyona.com/
 ├── app/                        Nuxt 应用（核心代码）
-│   ├── app.vue                 根组件：背景 + NuxtLayout/NuxtPage + AppBar + ToastHost + i18n locale watcher
+│   ├── app.vue                 根组件：AppBackground + NuxtLayout/NuxtPage + AppBar + ToastHost + i18n locale watcher
 │   ├── app.config.ts           defineAppConfig：把 app/data/ 的 profile / links / nav / timeline 合成一份 AppConfig
 │   ├── assets/css/             main.css（@import 汇总）· fonts.css（字体变量：Inter + Source Han Sans CN/TW/JP + Maple Mono + Resource Han Rounded CN/TW/JP，不含图标字体）· base.css（设计令牌/主题/版式宽度令牌/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-glass-bar/.k-interactive/.k-scrim）· utilities.css（.link/.trans-*）
 │   ├── assets/icons/           背景平铺图案 SVG（白色填充；勿再给 <pattern> 内 <image> 加 CSS filter，iOS WebKit 下整层不渲染）
-│   ├── components/             自动导入：AppPage（页面容器 + 两侧保留区）· AppBar（固定顶栏：全站不显示头像；非首页左侧两行 —— 面包屑 `Kuriyona's Space / 祖先级…` + 当前页大字标题，各级文案按路径段查 i18n `<各段以 . 连接>.title`（文章详情末级用文章标题，管理端取 `adminNav`），页面正文里不放返回按钮；首页只显示站名，≥768px 显示搜索 + 复合音乐按钮；<768px 搜索并入 AppMenu 抽屉、音乐无入口，菜单按钮只画 menu 图标，页面级按钮如文章目录不合并）· AppBackground（图标平铺 + 高亮点）· BlogToc（目录列表：正文内联卡片 / 宽屏保留区 / 顶栏窄屏面板共用）· MusicControls / MusicPanel · SearchModal · TimelineList · ToastHost · KTurnstile · KSurface · KIcon · card/（About 卡片，含 CardCityMap）· reserve/（ReserveClock/ReserveNav/ReserveArticles）· K* 组件（见下表）
-│   ├── composables/            自动导入：useSearch · useToast · useNav · useCity · useMusic（播放器单例，跨路由不中断；播放地址直连网易 outer，不走后端）· useCodeCopy · useHeadingAnchor · useTimelineLink · useSurfaceLevel · usePageScrollLock · useCloudflareStatus · useAppBar（文章页把标题与目录注入固定顶栏）· idbCache · cfn
+│   ├── components/             自动导入，按用途分目录（组件名只取文件名，见 Key Conventions）
+│   │   ├── ui/                 通用原语：K* 全部（见下）
+│   │   ├── layout/             全站骨架与全局浮层：AppPage · AppBar · AppMenu · AppBackground · SearchModal · MusicPanel · MusicControls · ToastHost
+│   │   ├── blog/               BlogToc（文章目录）
+│   │   ├── home/               首页卡片：CardCityMap · CardContact · CardGames
+│   │   ├── reserve/            两侧保留区：ReserveClock · ReserveNav · ReserveArticles
+│   │   └── timeline/           TimelineList（/timeline 与 /trans 的性别认同历程共用）
+│   ├── composables/            自动导入：useSearch · useToast · useNav（+ useAboutNav）· useCity · useMusic（播放器单例，跨路由不中断；播放地址直连网易 outer，不走后端）· useCodeCopy · useHeadingAnchor · useTimelineLink · useSurfaceLevel · usePageScrollLock · useCloudflareStatus · useAppBar（文章页把标题与目录注入固定顶栏）
 │   ├── layouts/                default.vue（透传）/ admin.vue（管理页共用壳：宽屏左侧 sticky 竖导航，窄屏顶部 KSelect）
 │   ├── pages/                  路由页面（见下表）：index · trans · devices · blog/{index,[slug]} · timeline · friends-and-links · ask-box/{index,ask} · admin/*
 │   ├── stores/main.ts          Pinia：JWT（Turnstile 验证后存）
-│   ├── utils/                  api.ts（ky 的 fetchApi，`beforeRequest` 每请求注入 X-Auth-Key）· time.ts（dayjs 封装 + setLocale）· i18n.ts · emoji.ts · console.ts · pagefind.ts · markdownPage.ts（页面 Markdown → HTML/组件块）· icons.gen.ts（生成，勿手改）· weatherIcon.ts · highlightMotion.ts
-│   ├── scripts/                客户端共享类型：i18n.ts（重导出 useI18n）· cityTypes.ts · musicTypes.ts
+│   ├── types/                  客户端共享类型（显式 import，不自动导入）：city.ts（/api/city）· music.ts（歌单 / 歌词）· cloudflare.ts（cloudflarestatus summary 的节点部分）
+│   ├── utils/                  自动导入：api.ts（ky 的 fetchApi，`beforeRequest` 每请求注入 X-Auth-Key）· time.ts（dayjs 封装 + setDayjsLocale）· greet.ts（控制台留言，读 greet.txt）· boundaryCache.ts（高德边界 IndexedDB 缓存）· adminError.ts · aiReview.ts · pagefind.ts · markdownPage.ts（页面 Markdown → HTML/组件块）· icons.gen.ts（生成，勿手改）· weatherIcon.ts · highlightMotion.ts
 │   ├── content/blog/<lang>/    博客 Markdown 源（zh-Hans/zh-Hant/en/ja）
 │   ├── content/pages/index/    首页介绍 Markdown 源（`<lang>.md`：zh-Hans / zh-Hant / en / ja；缺版本时回退 zh-Hans）
 │   └── data/                   appConfig 数据：profile.json（info/contact/tech_stack/languages/games）· links.json（main/others/links）· nav.ts（导航，`onAbout` 派生 aboutNav）· timeline.ts（时间线）· devices.json（`/devices`；`primary` 主设备光晕 + 「主要设备」徽标，`retired` 卡片降不透明度 + 「不再使用」徽标）· adminNav.ts（管理端导航，侧栏与顶栏标题共用）
 ├── server/                     Nitro API：utils.ts（markdown-exit + Shiki 高亮 + TOC + 外链图标；读 app/content/blog/，非 @nuxt/content）· api/articles.ts · api/articles/[slug].ts
-├── scripts/                    Bun 独立脚本：generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · check-contrast.ts（改颜色令牌后跑）· gen-icons.ts · generate-zh-hant.ts · sort-i18n.ts · tsconfig.json（脚本专用类型检查配置）
+├── scripts/                    Bun 独立脚本：generate-icons.ts · generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · generate-zh-hant.ts · sort-i18n.ts · check-contrast.ts（改颜色令牌后跑）· tsconfig.json（脚本专用类型检查配置）
 ├── backend/                    后端子包（自带 lockfile，非 workspace 成员）：Cloudflare Workers + Hono + D1
 │   ├── index.ts                Worker 入口（导出 Hono app，挂 /api/*；不做 listen/migrate）
 │   ├── src/                    env.ts · city-map.ts · amap.ts · db/schema.ts（ask_table）· plugin/auth.ts · router/{ask-box,r2,city,cache,music} · utils.ts
 │   ├── drizzle/                SQLite 迁移（入库，wrangler 消费）
-│   └── docs/                   后端文档（development/deployment/city-map/cache-purge）
+│   └── docs/                   后端文档（development / deployment / city-map / cache-purge）
 ├── i18n/locales/               zh-Hans.json（默认）/ zh-Hant.json / en.json / ja.json
-├── public/                     robots.txt · _headers（Workers 静态响应头）· _redirects（`/links`→`/friends-and-links`、`/about/as-mtf`→`/trans`、`/about/trans`→`/trans`、`/about/devices`→`/devices` 301，各含语言前缀）
+├── public/                     robots.txt · _headers（Workers 静态响应头）· _redirects（`/links`→`/friends-and-links`、`/about/{as-mtf,trans}`→`/trans`、`/about/devices`→`/devices` 301；/about/* 各带 `/en` `/ja` `/zh-Hant` 变体）
 ├── .cache/                     gitignored 产物：og/ · pagefind/ · fonts/ · map{,-cache}/
-├── nuxt.config.ts              模块 · i18n · nitro 输出 dist · pagefind-dev 插件 · build.transpile:['reka-ui'] · vite.optimizeDeps.include · GIT_HASH/BUILD_TIME
+├── nuxt.config.ts              模块 · i18n · components(pathPrefix:false) · nitro 输出 dist · pagefind-dev 插件 · build.transpile:['reka-ui'] · vite.optimizeDeps.include · GIT_HASH/BUILD_TIME
 ├── wrangler.jsonc              根 Worker：main=backend/index.ts · assets=./dist · run_worker_first:["/api","/api/*"] · D1 binding DB · KV binding STATUS_KV
 ├── package.json                依赖与脚本（无 lint/typecheck/test；含 api:* 与 deploy）
 └── .dev.vars.example · pnpm-workspace.yaml · vite-env.d.ts · .oxfmtrc.json
 ```
 
-### 自定义 UI 组件（K\*）
+### UI 原语（`app/components/ui/`）
 
-| 组件            | 用途                                                                                                                  |
-| --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `KCard`         | 表面卡片容器（可选 title；`level`/`glass` 透传 KSurface）                                                             |
-| `KSurface`      | 表面原语（`as`/`level`/`glass`；层级由嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`）            |
-| `KButton`       | 控件按钮（半透明 `--color-control-bg` + 描边，round/text/block）                                                      |
-| `KIcon`         | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）             |
-| `KIconButton`   | 圆形图标按钮（icon 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）                                |
-| `KCardLink`     | 链接卡片（可选 img/desc/icon/new，默认图标 `material-symbols:open-in-new` / `arrow-forward`）                         |
-| `KPersonCard`   | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为控件胶囊 + simple-icons 图标）                                |
-| `KNavCard`      | 导航 / 友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                     |
-| `KInput`        | 输入框 / textarea（clearable/disabled/maxlength）                                                                     |
-| `KSelect`       | 下拉选择（封装 Reka `Select`；触发器对齐 KInput、弹层对齐 KMenu）                                                     |
-| `KSwitch`       | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                          |
-| `KDivider`      | 分隔线（封装 Reka `Separator`，horizontal/vertical；`label` 在左端渲染小字标签，仅 horizontal）                       |
-| `KBadge`        | 半透明小徽标（text-xs 胶囊；`variant="muted"` 灰色）；关系 / 标签 / 主要设备 / 不再使用                               |
-| `MusicControls` | 播放器主体（封面/歌名/当前歌词行含翻译/进度条/上下首/曲目列表），只由 `MusicPanel` 复用 |
-| `MusicPanel`    | 悬浮音乐面板（`KDialog` + `MusicControls`，顶栏复合音乐按钮打开，≥768 可用）                                          |
-| `KMarkdown`     | Markdown 渲染（markdown-exit + github-markdown-css）                                                                  |
-| `KMarkdownPage` | 页面 Markdown 渲染（`source` 为 `?raw` 读入的文本；`<组件>` 块映射到注册表里的真实组件，正文用 `.md-page` 版式）       |
-| `KChips`        | chips 行（`content` 一行一个；`variant="solid"/"outline"`，`icon` 为整体图标，行首图标全名可覆盖）                    |
-| `KTable`        | 表格布局（th 左对齐 / td 右对齐）                                                                                     |
-| `KMenu`         | 下拉菜单（封装 Reka `DropdownMenu`；当前无使用处）                                                                    |
-| `KDialog`       | 弹窗（封装 Reka `Dialog`；遮罩/Esc/关闭按钮，KCard + KIconButton 组合）                                               |
+表面与布局：
+
+| 组件        | 用途                                                                                                       |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| `KSurface`  | 表面原语（`as`/`level`/`glass`；层级由嵌套自动推导、上限 3、可手动覆盖；输出 `.k-surface` + `data-level`） |
+| `KCard`     | 表面卡片容器（可选 title；`level`/`glass` 透传 KSurface）                                                  |
+| `KCardLink` | 链接卡片（可选 img/desc/icon/new，默认图标 `material-symbols:open-in-new` / `arrow-forward`）              |
+| `KDivider`  | 分隔线（封装 Reka `Separator`，horizontal/vertical；`label` 在左端渲染小字标签，仅 horizontal）            |
+| `KBadge`    | 半透明小徽标（text-xs 胶囊；`variant="muted"` 灰色）；关系 / 标签 / 主要设备 / 不再使用                    |
+
+控件与表单：
+
+| 组件          | 用途                                                                                           |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| `KButton`     | 控件按钮（半透明 `--color-control-bg` + 描边，round/text/block）                               |
+| `KIconButton` | 圆形图标按钮（icon 全名、size sm/base/md/lg/xl；无 label 时用图标名末段做 aria-label）         |
+| `KInput`      | 输入框 / textarea（clearable/disabled/maxlength）                                              |
+| `KSelect`     | 下拉选择（封装 Reka `Select`；触发器对齐 KInput，弹层用 `k-surface` L3 面板 + `SelectPortal`） |
+| `KSwitch`     | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                   |
+| `KDialog`     | 弹窗（封装 Reka `Dialog`；遮罩/Esc/关闭按钮，KCard + KIconButton 组合）                        |
+
+内容展示：
+
+| 组件            | 用途                                                                                                             |
+| --------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `KIcon`         | 图标（Iconify；`name` 为 `prefix:name` 全名，尺寸用字号类，单色 currentColor；无 `label` 时按装饰性处理）        |
+| `KNavCard`      | 导航 / 友链矩形卡片（title/desc/trans，首页 aboutNav 与友链共用）                                                |
+| `KPersonCard`   | 重要的人卡片（relationKey 关系徽标 + name/desc；links 为控件胶囊 + simple-icons 图标）                           |
+| `KChips`        | chips 行（`content` 一行一个；`variant="solid"/"outline"`，`icon` 为整体图标，行首图标全名可覆盖）               |
+| `KMarkdown`     | Markdown 渲染（markdown-exit + github-markdown-css）                                                             |
+| `KMarkdownPage` | 页面 Markdown 渲染（`source` 为 `?raw` 读入的文本；`<组件>` 块映射到注册表里的真实组件，正文用 `.md-page` 版式） |
+
+### 页面与功能组件
+
+| 组件              | 目录        | 用途                                                                                              |
+| ----------------- | ----------- | ------------------------------------------------------------------------------------------------- |
+| `AppPage`         | `layout/`   | 页面容器 + 两侧保留区（`hero` 开关让保留区从 hero 底部起算）                                      |
+| `AppBar`          | `layout/`   | 固定顶栏：面包屑 + 当前页大字标题 + 搜索 / 音乐胶囊 / 「更多」入口 + 文章页目录按钮               |
+| `AppMenu`         | `layout/`   | 窄屏抽屉：搜索行 + 语言 `KSelect` + 页面导航 + 关于信息（版本 / 构建时间 / CF 节点）              |
+| `AppBackground`   | `layout/`   | 图标平铺背景 + 跟随光标或触摸自走的高亮点                                                         |
+| `SearchModal`     | `layout/`   | 全文搜索浮层（Teleport 到 body，`Ctrl+K` / 顶栏按钮）                                             |
+| `MusicPanel`      | `layout/`   | 音乐悬浮面板（`KDialog` + `MusicControls`，≥768 的唯一音乐入口）                                  |
+| `MusicControls`   | `layout/`   | 播放器主体（封面 / 歌名 / 当前歌词行含翻译 / 进度条 / 上下首 / 曲目列表），只由 `MusicPanel` 复用 |
+| `ToastHost`       | `layout/`   | Toast 宿主（配合 `useToast`）                                                                     |
+| `BlogToc`         | `blog/`     | 文章目录（正文内联卡片 / 宽屏保留区 / 顶栏窄屏面板共用）                                          |
+| `CardCityMap`     | `home/`     | 常住城市地图 + 实时天气                                                                           |
+| `CardContact`     | `home/`     | 社交与联系方式（分组网格 + 二维码弹窗）                                                           |
+| `CardGames`       | `home/`     | 常玩游戏卡片（**当前无引用**）                                                                    |
+| `ReserveClock`    | `reserve/`  | 保留区时钟（客户端计时，SSR 渲染占位符）                                                          |
+| `ReserveNav`      | `reserve/`  | 保留区站点导航（当前页高亮）                                                                      |
+| `ReserveArticles` | `reserve/`  | 保留区当前语言最近 3 篇文章                                                                       |
+| `TimelineList`    | `timeline/` | 时间线条目列表（`/timeline` 与 `/trans` 的性别认同历程共用）                                      |
 
 ### 页面路由总览
 
-| 路由                        | 文件                                | 说明                                                                                                                               |
-| --------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `/`                         | `pages/index.vue`                   | 半屏 Hero + 关于我卡片（正文由 `app/content/pages/index/<lang>.md` 渲染：Markdown + `<Chips>`）+ 右栏（常驻城市 / 出生天数 / 关于我的名字 KNavCard；≥lg 与左卡等高并按比例分配余量，sm–lg 横排，<sm 只留城市卡）+ 技能、导航卡、社交与联系方式（含 data-pagefind-body）               |
-| `/trans`                    | `pages/trans/index.vue`             | 作为一个 MtF（半屏 hero + 关于我卡片 + 跨性别科普问答（流式输出）+ 性别探索计数 + 性别认同历程 + 资源链接，含 data-pagefind-body） |
-| `/devices`                  | `pages/devices/index.vue`           | 设备配置（在役设备在前，`retired` 的旧设备灰度置后；含 data-pagefind-body）                                                         |
-| `/blog`                     | `pages/blog/index.vue`              | 文章列表（按语言过滤；卡片整体可点，各语言标签是 button，只切换文章正文语言、不切换站点语言，也不产生可爬的 `?lang` 链接）          |
-| `/blog/:slug`               | `pages/blog/[slug].vue`             | 文章详情（多语言 + 固定顶栏面包屑 `Kuriyona's Space / 文章` + 文章标题两行并在窄屏挂目录按钮 + 宽屏左侧保留区目录 + 阅读进度高亮；`?lang=` 只切换文章版本，站点 UI 语言不变） |
-| `/timeline`                 | `pages/timeline/index.vue`          | 时间线（倒序，条目描述保持中文，可选 link 跳转，含 data-pagefind-body）                                                              |
-| `/friends-and-links`        | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                        |
-| `/ask-box` · `/ask-box/ask` | `pages/ask-box/*`                   | 提问箱列表 · 提交提问（Turnstile 验证）                                                                                            |
-| `/admin`                    | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                      |
-| `/admin/r2`                 | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴，图片可选 Compressor.js 压缩：质量/格式可调，压缩后可切原图或压缩图）+ 前缀/虚拟目录浏览                        |
-| `/admin/ask-box`            | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                       |
-| `/admin/city`               | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；高亮取 `--color-theme`，改主题色需重出图）               |
-| `/admin/cache`              | `pages/admin/cache.vue`             | 缓存清除：选 zone + URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存                                                       |
-| `/admin/music`              | `pages/admin/music.vue`             | 音乐缓存：刷新歌单 / 全部歌词的 Worker 侧 KV 缓存                                                                                  |
+| 路由                        | 文件                                | 说明                                                                                                                                                                                                                                                                    |
+| --------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                         | `pages/index.vue`                   | 半屏 Hero + 关于我卡片（正文由 `app/content/pages/index/<lang>.md` 渲染：Markdown + `<Chips>`）+ 右栏（常驻城市 / 出生天数 / 关于我的名字 KNavCard；≥lg 与左卡等高并按比例分配余量，sm–lg 横排，<sm 只留城市卡）+ 技能、导航卡、社交与联系方式（含 data-pagefind-body） |
+| `/trans`                    | `pages/trans/index.vue`             | 作为一个 MtF（半屏 hero + 关于我卡片 + 跨性别科普问答（流式输出）+ 性别探索计数 + 性别认同历程 + 资源链接，含 data-pagefind-body）                                                                                                                                      |
+| `/devices`                  | `pages/devices/index.vue`           | 设备配置（在役设备在前，`retired` 的旧设备灰度置后；含 data-pagefind-body）                                                                                                                                                                                             |
+| `/blog`                     | `pages/blog/index.vue`              | 文章列表（按语言过滤；卡片整体可点，各语言标签是 button，只切换文章正文语言、不切换站点语言，也不产生可爬的 `?lang` 链接）                                                                                                                                              |
+| `/blog/:slug`               | `pages/blog/[slug].vue`             | 文章详情（多语言 + 固定顶栏面包屑 `Kuriyona's Space / 文章` + 文章标题两行并在窄屏挂目录按钮 + 宽屏左侧保留区目录 + 阅读进度高亮；`?lang=` 只切换文章版本，站点 UI 语言不变）                                                                                           |
+| `/timeline`                 | `pages/timeline/index.vue`          | 时间线（倒序，条目描述保持中文，可选 link 跳转，含 data-pagefind-body）                                                                                                                                                                                                 |
+| `/friends-and-links`        | `pages/friends-and-links/index.vue` | 友链页（最重要的人 / 朋友们 / 友链 / 交换）                                                                                                                                                                                                                             |
+| `/ask-box` · `/ask-box/ask` | `pages/ask-box/*`                   | 提问箱列表 · 提交提问（Turnstile 验证）                                                                                                                                                                                                                                 |
+| `/admin`                    | `pages/admin/index.vue`             | 面板主页：密钥校验 + 管理入口                                                                                                                                                                                                                                           |
+| `/admin/r2`                 | `pages/admin/r2.vue`                | 文件上传（拖拽/粘贴，图片可选 Compressor.js 压缩：质量/格式可调，压缩后可切原图或压缩图）+ 前缀/虚拟目录浏览                                                                                                                                                            |
+| `/admin/ask-box`            | `pages/admin/ask-box.vue`           | 提问箱审核（回答/公开/删除）                                                                                                                                                                                                                                            |
+| `/admin/city`               | `pages/admin/city.vue`              | 城市地图：浏览器出图 → 直传 R2 → 写 KV 城市配置（配 `@kuriyona/amap-box`；高亮取 `--color-theme`，改主题色需重出图）                                                                                                                                                    |
+| `/admin/cache`              | `pages/admin/cache.vue`             | 缓存清除：选 zone + URL / 主机名 / 标签 / 前缀四种方式清 Cloudflare 边缘缓存                                                                                                                                                                                            |
+| `/admin/music`              | `pages/admin/music.vue`             | 音乐缓存：刷新歌单 / 全部歌词的 Worker 侧 KV 缓存                                                                                                                                                                                                                       |
 
 ### API 概览
 
@@ -208,48 +209,100 @@ Kuriyona.com/
 | `GET /api/cache/zones`                        | backend/ | 列出 `CF_API_TOKEN` 可见的 zone（管理端清缓存下拉用）                                                                                                                                                                                                                                                                                                                         |
 | `POST /api/cache/purge`                       | backend/ | body `{ zone, type, targets[] }` → `POST /zones/{id}/purge_cache`；`type` = url/hostname/tag/prefix；单次上限 100 条                                                                                                                                                                                                                                                          |
 
+## Search (PageFind)
+
+[PageFind](https://pagefind.app/) 全文搜索。`app/utils/pagefind.ts` 用 `new Function()` 包 JS API 绕过打包器；`app/composables/useSearch.ts` 为单例状态；UI 在 `app/components/layout/SearchModal.vue`（Teleport 到 body），`Ctrl+K` 或顶栏按钮触发，切语言时 `pagefindReinit()` 重建索引。
+
+- **开发**：先 `pnpm generate && pnpm index` 再 `pnpm dev`。`pnpm index` 出索引到 `.cache/pagefind` 并复制一份到 `dist/pagefind`（部署用）。**索引不能只放 `dist/`**：Nitro `prepare()` 每次 dev 启动 `rm -rf nitro.output.publicDir`（= `dist`），`dist/pagefind` 会被删光、`/pagefind/*` 全 404；dev server 靠 `nuxt.config.ts` 的 `pagefind-dev` 插件从 `.cache/pagefind/` 提供（`dist/` 的清空见 Key Conventions）。
+- **生产**：`pnpm build` = `generate` + `index`。
+- **索引范围**（Pagefind 只读 SSG 产物，不看 CSS：`hidden` 的元素照样会被索引）：
+  - 整列入索引：`/`、`/trans`、`/devices`、`/friends-and-links`、`/timeline` —— `<AppPage data-pagefind-body>`，属性透传到根节点，覆盖正文列。
+  - 只索引正文：`/blog/:slug` —— 仅 `div.markdown-body` 带 `data-pagefind-body`；标题不在 body 内，但 Pagefind 自动取页面第一个 `<h1>` 作为 `title` metadata，metadata 参与检索且有加权（默认 5x），所以标题可搜；语言切换器、阅读时长、AI 徽标、目录都不进索引。
+  - 不索引：`/blog`（同语言全部文章标题/摘要的聚合页，收进来会让几乎所有文章查询都命中它）、`/ask-box`（`useAsyncData(..., { server: false })`，SSG 产物里没有问答内容，无可索引正文）、`/admin/*`、`404.html`/`200.html`。
+  - `AppPage` 两侧 `aside.reserve` 固定 `data-pagefind-ignore="all"`：时钟、导航、最近文章与所有 `reserve-*` 插槽内容都不入索引（曾因这些内容随每页重复收录，搜文章标题会命中全站）。
+- **新页面怎么接索引**：
+  1. 内容型页面：在根 `<AppPage>` 上加 `data-pagefind-body`，索引整个正文列。
+  2. 页面内重复/装饰性内容（导航卡、聚合列表、浮动 UI、控件）包一层 `data-pagefind-ignore="all"`。**别用默认的 `="index"`**：它仍会处理内部 metadata 并允许被当作页面标题，只有 `all` 是彻底跳过。
+  3. 需要被搜到的正文**不要**放进 `reserve-*` 插槽（那是已忽略区）；保留区内新增组件不必再逐个标注。
+  4. 客户端取数的页面（`server: false`，或 `onMounted` 后才渲染的内容）无法被索引；要么保持不索引，要么改成构建期可取的数据。
+  5. 需要自定义搜索结果标题时，给标题元素加 `data-pagefind-meta="title"`；文章详情沿用「只有正文是 body」的模式，不要为了搜 `desc` 把整列改成 body。
+- **构建**：`pnpm index` 先 `rm -rf .cache/pagefind` 再出索引 —— Pagefind 不清理输出目录，重跑会在 content-hash 文件名下累积旧 fragment / `pf_meta`（曾在 34 页的站上堆到 216 个 fragment）。索引落 `.cache/pagefind` 并复制到 `dist/pagefind`；dev 由 `pagefind-dev` 插件服务 `.cache/pagefind`。切语言时 `app.vue` 会 `await nextTick()` 等 `<html lang>` 更新后再 `pagefindReinit()`（Pagefind 按该属性选语言索引）。
+- **验证索引内容**：`pagefind-entry.json` 的 `languages.*.page_count` 应为该语言实际索引页数；`fragment/*.pf_fragment` 是 gzip + `pagefind_dcd` JSON，可直接解包检查正文有没有混入保留区/导航文本（如 `Navigation.`、`Recent posts`、`--:--:--`）。
+- 改样式只动 `app/components/layout/SearchModal.vue`（遮罩底色用 `base.css` 的 `--color-scrim-soft`，比弹窗/抽屉的 `--color-scrim` 浅）。布局：输入框独立浮在遮罩上（不套卡片），加载/出错/空态/结果统一装进一张 `KCard`，单条结果是卡内的 `a` 行。状态经 `useSearch()` 取：`s.query`/`s.results`/`s.loading`/`s.error`/`s.activeIndex`/`s.open()`/`s.close()`/`s.toggle()`/`s.clear()`。
+
+## OG 图（站点与博客预览图）
+
+两张，都指向 R2 静态对象（`r2.kuriyona.com` 后的路径即对象键）：**站点默认图** `img/site/og/default.jpg`（`app/app.vue` 的 `ogImage`，除博客详情页外全站）与**博客详情页图** `img/site/og/<slug>/<lang>.jpg`（`app/pages/blog/[slug].vue` 按 slug + 语言覆盖）。均为 1200×630、JPEG 质量 80（**不用 WebP**：部分社交平台爬虫不渲染 WebP 预览卡片）。
+
+```bash
+bun scripts/download-fonts.ts           # 一次性：字体 → .cache/fonts（--force 重下）
+bun scripts/generate-blog-og.ts         # 站点默认图 → .cache/og/default.{svg,jpg}
+bun scripts/generate-blog-og.ts <slug>  # 文章图 → .cache/og/<slug>/<lang>.{svg,jpg}
+bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run 只打印键）
+```
+
+- **渲染**：`@kuriyona/svg-toolkit` 排版成 SVG，`@resvg/resvg-js` 光栅化成 PNG，再交给 `Bun.Image`（Bun 1.3+ 内置）编码 JPEG（质量 80），PNG 不落盘；`loadSystemFonts: false`，只加载 `.cache/fonts` 里显式列出的字体，出图结果与本机装了哪些字体无关。上传时显式写 `Content-Type: image/jpeg`（R2 不按扩展名猜）。
+- **字体**：文本优先 `Maple Mono`（拉丁），非英文再挂 `Noto Sans SC/TC/JP` 其一（resvg 逐字回退）；Regular 与 Bold 都要（版式用 `font-weight: bold`，缺 Bold 会变细）。字体只放 `.cache/fonts`（gitignored）。
+- 默认图两行居中：svg-toolkit 不做文本测量（文本节点宽度算 0），靠 `alignItems: center` + `textAnchor: 'middle'` 落在中轴。
+- **meta 约定**（`app/app.vue` 站点级 + `app/pages/blog/[slug].vue` 覆盖）：`og:url` 必须绝对地址；`twitter:*` 与 `og:*` 显式写同一组值（不依赖爬虫的 og 回退）；站点描述取自 i18n `about.description`（四语都要填，空串会让 `og:description` 为空）。
+- 改版式或字体后要**重新出图并上传**；R2 上旧的 `static/og/blog/**`、`static/intro/intro-*.png` 是历史路径，站点已不再引用。
+
 ## Key Conventions
 
+### 工程与构建
+
 - **Path aliases**: `@/` 与 `~/` 均可用，混用无碍。
-- **I18n**: `app/scripts/i18n.ts` 重导出 vue-i18n 的 `useI18n`；模板也直接用 `$t()`。
+- **`package.json` 的 `"type": "module"`**: 消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告（Nuxt dev 会把它计入 `✕ 1 error`）。
+- **Compile-time globals**: `GIT_HASH` / `BUILD_TIME` 在 `nuxt.config.ts` `define`（声明于 `vite-env.d.ts`）。
+- **`dist/` 会被 dev 启动清空**: `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory` 与 SSG 输出），Nitro `prepare()` 每次 dev 启动 `rm -rf` 它。所以**别把需跨 dev 重启保留的产物放 `dist/`**（PageFind 索引因此落 `.cache/pagefind`）。
+- **Env vars**: Worker 从 `c.env` 读，每请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored），生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB`/`STATUS_KV` 由 binding 提供）。可选：`AMAP_KEY`（城市地图出图取边界 + 查天气中心点；缺失时相关端点 500 / 回退默认城市中心点）、`CF_API_TOKEN`（`/admin/cache`，需 **Zone:Read + Cache Purge**；缺失时 `/cache/*` 报 500）。
 - **API client**: `app/utils/api.ts` 导出 ky 的 `fetchApi`，自动注入 `X-Auth-Key`（来自 `localStorage.API_KEY`）。开发 host `https://kuriyona-api.localhost/api`，生产同源 `/api`。
 - **Admin auth**: `useStorage('API_KEY')`，`fetchApi` 的 `beforeRequest` 每请求现读（改密钥即时生效）。**必须用 `X-Auth-Key` 头，不能用 `Authorization`** —— 后者是 JWT 通道，而公开接口也走同一个客户端。
 - **本地开发（portless）**: `pnpm dev` / `pnpm api:dev` 经 [portless](https://www.npmjs.com/package/portless)（全局安装，需 Node ≥ 24）提供 HTTPS 域名：前端 `https://kuriyona.localhost`、API `https://kuriyona-api.localhost`。首次 `portless trust`；代理默认 443（需 sudo，否则 `portless proxy start --port 1355 --https`，URL 带 `:1355`）。配置全在文件里：前端 app 名 = 根 `package.json` 的 `"portless": "kuriyona"`，API 名 = `api:dev` 里的 `--name kuriyona-api`，TLD = 两脚本首部内联的 `PORTLESS_TLD=localhost`（**两处成对，改一处必须改另一处**；内联是为不受环境变量影响，`pnpm run` 不加载 `.env`）。`api:dev` 里 `--app-port 62802` 与 `wrangler dev --port 62802` 也成对（Nuxt 读 portless 注入的 `PORT` 所以 `dev` 不写端口，wrangler 不读，必须显式指定）。不经 portless：`pnpm dev:plain`（3000）/ `pnpm api:run`（62802）/ `PORTLESS=0 pnpm dev`。
-- **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`，无 `tailwind.config.*`。`nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**（否则 SSR build 把裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 打开 `<root>/tailwindcss` 报 `ENOENT`）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
+
+### i18n 与内容
+
+- **I18n**: `useI18n` / `$t()` 由 `@nuxtjs/i18n` 自动导入，不需要再包一层重导出；客户端共享类型放 `app/types/`（需要显式 import，不参与自动导入）。
+- **I18n key 约定**: 全部 kebab-case（如 `blog.not-found`），全局通用文本归 `global.*`；**页面级文案按路由命名空间**：标题一律 `<路径各段以 . 连接>.title`（`trans.title`、`devices.title`、`friends-and-links.title`、`ask-box.ask.title`），其余页面文案同前缀（`devices.desc`、`devices.specs.*`），顶栏面包屑据此取各级标题；4 个语言文件 key 集合必须一致，改动后 `pnpm fmt` 触发 `sort-i18n.ts` 排序。
+- **Dayjs locale sync**: `app/utils/time.ts` 的 `setDayjsLocale(locale)` 需在 i18n locale 变化时调用（`app.vue` watcher 已做）；另提供 `formatRelativeTime(time)`。**别叫 `setLocale`**：那会与 vue-i18n 自动导入的 `setLocale` 同名，调用点看起来一样、实际行为完全不同。
+- **文章语言与站点语言解耦**: 博客详情用 `?lang=<code>` 选择正文版本，**不调用 `setLocale`**；列表页与详情页的语言切换都用 `<button>`（不是链接），路径固定为当前站点 locale、推送 `?lang` query，**静态 HTML 里不能出现带 `?lang` 的 `<a>`** —— 否则搜索引擎会把这些副本 URL 一并抓取（sitemap 只列正式 locale 路由，并已带 hreflang）。详情页语言选择器只列出该文章实际存在的版本，canonical 指向所选语言版本的正式路由；切换语言后需重新初始化代码块复制、标题锚点与目录滚动监听。
+- **博客 AI 标注（frontmatter）**: `aiGenerated: true` 表示含 AI 生成内容；`aiReview` 仅在含 AI 内容时填写，取值 `粗略核对` / `基本核对` / `充分核对`；`aiTranslated: true` 表示该语言版本为 AI 翻译。字段经 `server/utils.ts` 白名单校验后透传，缺省为 `false` / 空；博客列表与详情页按需显示对应徽标。
+- **zh-Hant 文章由 zh-Hans 生成**: `zh-Hant/` 由 `pnpm gen:zh-hant [slug...]` 从 `zh-Hans/` 用 OpenCC（`cn` → `t`）转换生成，生成结果直接提交；不要手改 `zh-Hant/`（会被覆盖）。行内代码原样保留；frontmatter 的 `date` / `edit` / `aiGenerated` / `aiReview` 保持原值（`aiReview` 是枚举标识，不能转成繁體）。
+- **页面 Markdown（首页介绍）**: 首页「关于我」正文在 `app/content/pages/index/<lang>.md`，页面用 `import.meta.glob('../content/pages/index/*.md', { query: '?raw', import: 'default', eager: true })` 构建期直接读入（不走 `/api/articles`），缺当前语言版本时回退 `zh-Hans`。渲染交给 `KMarkdownPage`：正文用 markdown-exit 转 HTML（内链自动补 locale 前缀、外链新窗口、统一 `.link`），独占一行的 `<组件 …>…</组件>` 映射成 `COMPONENTS` 表里的真实 Vue 组件（当前只有 `<Chips>`），组件用 `content` prop 接收块内文本。`v-html` 塞不进组件，所以 `app/utils/markdownPage.ts` 先把源切成 HTML 块与组件块；未闭合的标签按普通正文处理。`KMarkdown`（文章）不复用这套：它是纯 HTML、无组件。新增可用组件 = 在 `KMarkdownPage.vue` 的 `COMPONENTS` 登记并在块里保持 `content` 约定。
+
+### 字体、样式与布局
+
 - **字体（fonts-cdn）**: 文本字体全部来自 `fonts-cdn.sharpdotnut.com`，**不再用 Google Fonts CDN**。`app/assets/css/fonts.css` 定义 `--font-family`（`Inter` + `Source Han Sans CN/TW/JP`，按 `:lang()` 切地区字形）与 `--font-family-monos`（`Maple Mono` + `Resource Han Rounded CN/TW/JP` 作 CJK 回退）；`app/app.vue` 用 `useHead` 按当前 locale 只注入 Inter、MapleMono 与该地区的 Source Han Sans / Resource Han Rounded CSS（一个家族一个 CSS，分片由 `unicode-range` 自动按需加载）。博客正文另带 `:lang="article.lang"`，正文语言与站点语言不一致时仍用正确的地区字形。新增字体家族需同时确认该 CDN 的 `.woff2` 带 CORS 头。
+- **Styling**: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css`，无 `tailwind.config.*`。`nuxt.config.ts` 的 `vite.ssr.noExternal: ['tailwindcss']` 是 Vite 8 回归的 workaround，**必须保留**（否则 SSR build 把裸 `@import 'tailwindcss'` 当外部依赖返回原 specifier，postcss-import 打开 `<root>/tailwindcss` 报 `ENOENT`）。上游 vitejs/vite#23096（修复 PR #23099），修复发布后可移除。
 - **视觉令牌（颜色 / 层级 / 毛玻璃）**: 颜色 / 层级只能用 `app/assets/css/base.css` 的 `--color-*`/`--card-*`/`--shadow-*` 令牌 + `surface.css` 的 5 个类（`.k-surface`/`.k-glass`/`.k-glass-bar`/`.k-interactive`/`.k-scrim`）；卡片层级由 `KSurface`/`KCard` 的 `level`（或嵌套自动推导，上限 3）落到 `data-level`。禁止 `bg-black/*`、`bg-white/*`、`text-white/*`、`backdrop-*` 等一次性透明度 / 模糊类（`.k-glass`/`.k-glass-bar`/`.k-scrim` 是允许 `backdrop-filter` 处）。顶栏用 `.k-glass-bar`：底色 `--color-glass-bg-bar` 按 `(1 − (1 − alpha) × brightness) / alpha × --color-bg` 反算（alpha 0.5、brightness 0.3 时即 `1.7 × --color-bg`），空背景下与页面同色、白底图片滚过时约 `#303035`；改 `--glass-filter-bar` 的 brightness 或该 alpha 必须重算补色与对比度。控件用 `--color-control-bg`/`--color-control-border`（半透明，叠任何表面都成立；会抬亮表面，控件内文本只用 `--color-text-1`/`-2`，不用 `text-3`/`-4`）。改颜色令牌后跑 `bun scripts/check-contrast.ts`。**别在组件里写 `cursor-*`**：全站光标在 `base.css` 用**未分层**规则给（`*` 箭头、`a`/`button`/`[role=slider]` 手型），优先级高于 Tailwind 的 `@layer utilities`，写了也是死代码 —— 要手型就把选择器加进那条规则。跨性别旗配色（`--color-trans-*`）与 `utilities.css` 的 `.trans-*` 只做旗面装饰，不承载正文、不参与层级、不纳入对比度校验。
-- **最外层容器只用 `overflow-x: clip`（`app.vue`）**: 不要写 `overflow-x: hidden` —— 单轴 `hidden` 会把另一轴的 `visible` 算成 `auto`，这层就变成「自己不滚动却当了所有后代的滚动容器」，其内 `position: sticky`（保留区栏位、管理端侧栏导航）全部失效。`clip` 同样裁切、同样不传播溢出，但不建滚动容器。
+- **最外层容器只用 `overflow-x-clip`（`app.vue`）**: 不要写 `overflow-x: hidden` —— 单轴 `hidden` 会把另一轴的 `visible` 算成 `auto`，这层就变成「自己不滚动却当了所有后代的滚动容器」，其内 `position: sticky`（保留区栏位、管理端侧栏导航）全部失效。`clip` 同样裁切、同样不传播溢出，但不建滚动容器。
 - **版式宽度（正文 / 保留区）**: 正文列 `--content-width`（960px）、两侧保留区 `--reserve-width`（240px），定义在 `base.css` 的 `body`。保留区由 `AppPage.vue` 渲染，仅在视口容得下（960 + 240×2 = 1440，留余量取 1500px）时出现，断点写成 Tailwind 自定义变体 `reserve:`（`@custom-variant`，定义在 `main.css`）—— 改宽度令牌必须同步重算该断点。相关处（AppPage 两侧 aside、博客内联目录卡片、博客浮动目录按钮）都用 `reserve:`，别写 `min-[...px]:` 字面量。`--app-bar-height` 定义在 `base.css` 的 `:root`，同时用于正文 `mt-`、保留区 sticky `top` 与 `html` 的 `scroll-padding-top`（锚点目标停在顶栏下方并留 4rem）。
 - **响应式三档（狭窄 / 中等 / 完整）**: 结构上只有三档，**别新增第四档**。分界只有两个：`md`（768px）与 `reserve:`（1500px）；640（`sm`）与 1024（`lg`）只用于正文内部细节（头像 `sm:inline-block` 显隐、`sm:/md:/lg:grid-cols-*` 栅格），不是结构层。三档的差别集中体现在顶栏入口组合：
 
-  |档|视口|顶栏|音乐入口|搜索入口|两侧保留区|
-  |---|---|---|---|---|---|
-  |狭窄|<768px|标题 + 「更多」（文章页另有目录按钮）|**无**（设计如此）|抽屉里的搜索行|无|
-  |中等|768–1499px|标题 + 搜索图标 + 音乐胶囊 + 「更多」|顶栏胶囊 → `MusicPanel` 浮层|顶栏图标 / `Ctrl+K`|无（正文单列居中）|
-  |完整|≥1500px|标题 + 搜索图标 + 音乐胶囊 + 「更多」|顶栏胶囊 → `MusicPanel` 浮层|顶栏图标 / `Ctrl+K`|两侧 240px sticky（左栏仅页面自有内容，如文章目录）|
-
+  | 档   | 视口       | 顶栏                                  | 音乐入口                     | 搜索入口            | 两侧保留区                                          |
+  | ---- | ---------- | ------------------------------------- | ---------------------------- | ------------------- | --------------------------------------------------- |
+  | 狭窄 | <768px     | 标题 + 「更多」（文章页另有目录按钮） | **无**（设计如此）           | 抽屉里的搜索行      | 无                                                  |
+  | 中等 | 768–1499px | 标题 + 搜索图标 + 音乐胶囊 + 「更多」 | 顶栏胶囊 → `MusicPanel` 浮层 | 顶栏图标 / `Ctrl+K` | 无（正文单列居中）                                  |
+  | 完整 | ≥1500px    | 标题 + 搜索图标 + 音乐胶囊 + 「更多」 | 顶栏胶囊 → `MusicPanel` 浮层 | 顶栏图标 / `Ctrl+K` | 两侧 240px sticky（左栏仅页面自有内容，如文章目录） |
   - 合并规则：搜索**只在 <768 收进抽屉**（`AppBar.vue` 音乐胶囊与搜索都用 `max-md:hidden`）；`AppMenu.vue` 的搜索块用 `v-if="narrow"`（`matchMedia('(width < 48rem)')`）而不是 CSS 隐藏，宽屏开抽屉不重复挂入口。音乐**不提供 <768 入口**（顶栏胶囊隐藏、抽屉里也没有），≥768 统一走顶栏胶囊 → `MusicPanel`。页面级按钮（如文章目录）不参与合并，窄屏照旧单独显示。
   - 「更多」按钮只画 `menu` 图标，语言切换只走抽屉里的 `KSelect`；不要把 `translate` 图标加回按钮。
   - 例外：管理端 `layouts/admin.vue` 在 `lg`（1024px）切「左侧 sticky 竖导航 ↔ 顶部 `KSelect`」，独立于这三档（管理页不受 `--content-width` 约束）。
+
 - **顶栏面包屑（`AppBar.vue`）**: 非首页顶栏左侧是两行 —— 第一行面包屑 `Kuriyona's Space / 祖先级…`（`text-xs`，各级是 `NuxtLinkLocale` 链接），第二行当前页大字标题（`text-lg font-bold`，超长截断）；首页只有站名。**页面正文里不再放返回按钮**（也不放「返回列表」这类卡片）。层级按路径段（去掉语言前缀 `route.path` 的第一段）逐级生成；每级文案统一按 `<该级各段以 . 连接>.title` 查 i18n —— `/blog` → `blog.title`、`/ask-box/ask` → `ask-box.ask.title`，所以页面 i18n 命名空间必须与路由一致（`trans.*`、`devices.*`、`friends-and-links.*`）。文章详情末级用文章标题（页面异步写进 `useAppBar`，SSR 用不换行空格占位）；查不到 key 的路径（`/admin/*`、404）退回 `adminNav` 标签，仍没有就整级跳过（只剩站名）。`aria-label` 取 `global.breadcrumb`。新增页面只需按 `<路径各段>.title` 提供文案，不必改顶栏。
 - **半屏 hero（`--hero-height` / `--reserve-hero-offset`）**: 页面首块为半屏 hero 时用 `min-h-(--hero-height)`（令牌在 `base.css`，当前 50svh）并给 `<AppPage hero>`。**两侧保留区**随之 `mt-(--reserve-hero-offset)`（= `--hero-height` + `1rem`），使栏内首卡跟在 hero 下方、滚过后再吸顶；**两栏 `:class` 写法必须一致**（只加一侧会让另一侧压在 hero 上）。那 `1rem` 是正文列的 `gap-4`：hero 与下一块之间**只允许这一个列间距**，所以 **hero 块别写 `mb-*`、紧随其后那块别写 `mt-*`**（写了偏移失准）。实现是给 sticky 元素加 `margin-top`，**不要**用滚动监听改 `top`，也**不要**把偏移加到 aside 内部 div（会把卡片推进栏内固定高、`overflow-y: auto` 的滚动区）。`.reserve` 的 `padding-top: 6rem` = 正文列 `my-20`(5rem) + `p-4`(1rem)，保证两栏首卡齐平。前提：hero 是内容首块且高度就是该令牌（`min-h` 是下限）。
 - **动画（GSAP）**: 唯一使用处 `pages/trans/index.vue`。`gsap` 与 `gsap/ScrollTrigger` **静态 import**（编译进该页 chunk），`registerPlugin` 与 `gsap.matchMedia(...)` 放 `onMounted`；**`onUnmounted` 必须在 setup 同步阶段注册**（放进 `onMounted` 的 async 回调会因失去活动组件实例而失效，GC 掉整个 MatchMedia 上下文）。补间初值取「最终值」而非 0，SSR / 无 JS 时渲染真实数值（无需 `ClientOnly`）；代价是 JS 接管前先显示最终值再滚上去。
-- **图标（Iconify）**: 只用 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 图标字体与 `cdn.simpleicons.org`）。用 `<KIcon name="material-symbols:close" class="text-lg" />`，尺寸一律用字号类（svg 为 1em×1em，别写 `w-5 h-5`）、单色随 `currentColor`；`KIconButton` 的 `icon` 也是完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case），数据层（`app/data/*.json`）也存全名，禁止拼接。`scripts/gen-icons.ts` 扫源码、数据与页面 Markdown → `app/utils/icons.gen.ts`（只注册用到的图标），由 `dev`/`gen:icons`/`generate` 前置执行；名字拼错 / 不存在 / 动态拼接都会**构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，漏注册也不会打 Iconify API。加图标 = 在调用点写出即可。天气图标同理经 `app/utils/weatherIcon.ts` 映射（不再引入 `qweather-icons` 字体）。
-- **UI components**: `K*` 组件在 `app/components/`，Tailwind 样式；交互组件（KDialog/KSwitch/KDivider/KMenu）基于 Reka UI，保留 `K*` 公共 API。Toast 用 `useToast` + `ToastHost`（替代 Varlet Snackbar）。`KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`，`<a>` 退回 `display:inline` 会在普通卡片内部触发 block-in-inline 拆分，百分比高度形成循环依赖 → 内层卡溢出父卡底边并压住边框。
-- **页面 Markdown（首页介绍）**: 首页「关于我」正文在 `app/content/pages/index/<lang>.md`，页面用 `import.meta.glob('../content/pages/index/*.md', { query: '?raw', import: 'default', eager: true })` 构建期直接读入（不走 `/api/articles`），缺当前语言版本时回退 `zh-Hans`。渲染交给 `KMarkdownPage`：正文用 markdown-exit 转 HTML（内链自动补 locale 前缀、外链新窗口、统一 `.link`），独占一行的 `<组件 …>…</组件>` 映射成 `COMPONENTS` 表里的真实 Vue 组件（当前只有 `<Chips>`），组件用 `content` prop 接收块内文本。`v-html` 塞不进组件，所以 `app/utils/markdownPage.ts` 先把源切成 HTML 块与组件块；未闭合的标签按普通正文处理。`KMarkdown`（文章）不复用这套：它是纯 HTML、无组件。新增可用组件 = 在 `KMarkdownPage.vue` 的 `COMPONENTS` 登记并在块里保持 `content` 约定。
-- **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，async/Suspense 页面渲染 `renderSlot` 时抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
-- **Env vars**: Worker 从 `c.env` 读，每请求校验必需项（缺失返回 500 `[config] 缺少必需的环境变量: <KEY>`）。本地模板 `.dev.vars.example`（复制为 `.dev.vars`，gitignored），生产 `wrangler secret put`。必需 7 项：`JWT_SECRET`、`AUTH_KEY`、`TURNSTILE_SECRET_KEY`、`ENDPOINT`、`ACCESS_KEY_ID`、`SECRET_ACCESS_KEY`、`BUCKET_NAME`（`DB`/`STATUS_KV` 由 binding 提供）。可选：`AMAP_KEY`（城市地图出图取边界 + 查天气中心点；缺失时相关端点 500 / 回退默认城市中心点）、`CF_API_TOKEN`（`/admin/cache`，需 **Zone:Read + Cache Purge**；缺失时 `/cache/*` 报 500）。
-- **`dist/` 会被 dev 启动清空**: `nitro.output.publicDir = 'dist'`（同时是 wrangler 的 `assets.directory` 与 SSG 输出），Nitro `prepare()` 每次 dev 启动 `rm -rf` 它。所以**别把需跨 dev 重启保留的产物放 `dist/`**（PageFind 索引因此落 `.cache/pagefind`）。
-- **`package.json` 的 `"type": "module"`**: 消除 `nuxt.config.ts` 触发的 `MODULE_TYPELESS_PACKAGE_JSON` 警告（Nuxt dev 会把它计入 `✕ 1 error`）。
-- **Compile-time globals**: `GIT_HASH` / `BUILD_TIME` 在 `nuxt.config.ts` `define`（声明于 `vite-env.d.ts`）。
-- **Dayjs locale sync**: `app/utils/time.ts` 的 `setLocale(locale)` 需在 i18n locale 变化时调用（`app.vue` watcher 已做）；另提供 `formatRelativeTime(time)`。
-- **I18n key 约定**: 全部 kebab-case（如 `blog.not-found`），全局通用文本归 `global.*`；**页面级文案按路由命名空间**：标题一律 `<路径各段以 . 连接>.title`（`trans.title`、`devices.title`、`friends-and-links.title`、`ask-box.ask.title`），其余页面文案同前缀（`devices.desc`、`devices.specs.*`），顶栏面包屑据此取各级标题；4 个语言文件 key 集合必须一致，改动后 `pnpm fmt` 触发 `sort-i18n.ts` 排序。
-- **博客 AI 标注（frontmatter）**: `aiGenerated: true` 表示含 AI 生成内容；`aiReview` 仅在含 AI 内容时填写，取值 `粗略核对` / `基本核对` / `充分核对`；`aiTranslated: true` 表示该语言版本为 AI 翻译。字段经 `server/utils.ts` 白名单校验后透传，缺省为 `false` / 空；博客列表与详情页按需显示对应徽标。
-- **文章语言与站点语言解耦**: 博客详情用 `?lang=<code>` 选择正文版本，**不调用 `setLocale`**；列表页与详情页的语言切换都用 `<button>`（不是链接），路径固定为当前站点 locale、推送 `?lang` query，**静态 HTML 里不能出现带 `?lang` 的 `<a>`** —— 否则搜索引擎会把这些副本 URL 一并抓取（sitemap 只列正式 locale 路由，并已带 hreflang）。详情页语言选择器只列出该文章实际存在的版本，canonical 指向所选语言版本的正式路由；切换语言后需重新初始化代码块复制、标题锚点与目录滚动监听。
-- **zh-Hant 文章由 zh-Hans 生成**: `zh-Hant/` 由 `pnpm gen:zh-hant [slug...]` 从 `zh-Hans/` 用 OpenCC（`cn` → `t`）转换生成，生成结果直接提交；不要手改 `zh-Hant/`（会被覆盖）。行内代码原样保留；frontmatter 的 `date` / `edit` / `aiGenerated` / `aiReview` 保持原值（`aiReview` 是枚举标识，不能转成繁體）。
-- **`app/data/`**: 所有 `useAppConfig()` 数据的唯一来源，`app/app.config.ts` 只做组合。`profile.json`（info/contact/tech_stack/languages/games；`languages[].name` 是硬编码标签，首页技能卡不随语言切换，另配 `icon` 缩写徽标）· `links.json`（友链 main/others/links）· `nav.ts`（含 `NavEntry` 类型）· `timeline.ts`（含 `TimelineEntry` 类型）· `devices.json`（`/devices`，页面直接 import，不经 appConfig）· `adminNav.ts`（管理端导航条目：`layouts/admin.vue` 与 `AppBar.vue` 的顶栏标题共用，管理端只有中文）。纯数据用 `.json`，需要类型（`nav` / `timeline`，页面靠 `(typeof timeline)[number]` 推导）用 `.ts`。
-- **`app/app.config.ts`**: 把上述数据展开并派生 `aboutNav = nav.filter(onAbout)`。**`nav` 顺序即各处展示顺序**；`shortTitleKey`（如 `blog.short-title`）供单行位置，缺省回退 `titleKey`；`timeline` 条目可带 `link`（跳转）与 `tag`（展示徽标）—— `/trans` 的「性别认同历程」按 `tag === '性别认同'` 过滤同一份数据（改文案会同时改该区块，属有意耦合）。
-- **城市地图与天气**: `GET /api/city` 的 `resident`/`current` 读 KV `city:maps`，缺失/坏值回退杭州 `330100`；`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`（KV 只存 `{ name, adcode }`）。**出图跑在管理端浏览器**（`/admin/city` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置，CPU ≈ 0（Worker 内出图 CPU ~0.9s，超 Free 10ms 上限两个数量级）。首页「关于我」右侧常驻城市卡片复用同一份 `resident`（`useCity()`），预渲染阶段拿不到数据。`resident.weather`：`cityCenter()` 取高德中心点（KV `amap:center:<adcode>`，30 天）→ 以 `location=经度,纬度` 查 QWeather（`cache:weather:<adcode>`，30 分钟）。详见 `backend/docs/city-map.md`。
+
+### 组件
+
+- **组件目录**: `app/components/` 按用途分组 —— `ui/`（通用原语）、`layout/`（全站骨架 + 全局浮层）、`blog/` `home/` `reserve/` `timeline/`（页面/功能专用）。`nuxt.config.ts` 显式配 `components: [{ path: '~/components', pathPrefix: false }]`：**目录只是文件组织，组件名永远等于文件名**。所以新增组件不用管目录前缀，但也别在不同目录放同名文件（会冲突）。
+- **UI components**: `K*` 组件在 `app/components/ui/`，Tailwind 样式；交互组件（KDialog / KSelect / KSwitch / KDivider）基于 Reka UI，保留 `K*` 公共 API。Toast 用 `useToast` + `ToastHost`（替代 Varlet Snackbar）。`KCardLink` 根 `<a>` 的 `block` 类**必须保留**：内层 `KCard` 带 `h-full`，`<a>` 退回 `display:inline` 会在普通卡片内部触发 block-in-inline 拆分，百分比高度形成循环依赖 → 内层卡溢出父卡底边并压住边框。
+- **图标（Iconify）**: 只用 `material-symbols`（Material Symbols Outlined）与 `simple-icons` 两个集合，**访客不加载任何第三方图标资源**（已移除 Google Fonts 图标字体与 `cdn.simpleicons.org`）。用 `<KIcon name="material-symbols:close" class="text-lg" />`，尺寸一律用字号类（svg 为 1em×1em，别写 `w-5 h-5`）、单色随 `currentColor`；`KIconButton` 的 `icon` 也是完整名。图标名必须是 `prefix:name` 的**完整字面量**（小写 kebab-case），数据层（`app/data/*.json`）也存全名，禁止拼接。`scripts/generate-icons.ts` 扫源码、数据与页面 Markdown → `app/utils/icons.gen.ts`（只注册用到的图标），由 `dev`/`gen:icons`/`generate` 前置执行；名字拼错 / 不存在 / 动态拼接都会**构建失败**；生成文件把 `@iconify/vue` 的远程下载通路替换为 reject，漏注册也不会打 Iconify API。加图标 = 在调用点写出即可。天气图标同理经 `app/utils/weatherIcon.ts` 映射（不再引入 `qweather-icons` 字体）。
+- **Reka UI (SSR)**: `nuxt.config.ts` 的 `build.transpile: ['reka-ui']` **必须保留**（`KDialog` / `KSelect` / `KSwitch` / `KDivider` 直接 import `reka-ui`）。否则生产 SSR 下 reka-ui 被 external，与 Nuxt 打包的 Vue 形成两份 `@vue/runtime-core`，async/Suspense 页面渲染 `renderSlot` 时抛 `Cannot read properties of null (reading 'ce')`（`pnpm generate` 报 blog 详情页 500）。
+
+### 数据与外部服务
+
+- **`app/data/`**: 所有 `useAppConfig()` 数据的唯一来源，`app/app.config.ts` 只做组合。`profile.json`（info/contact/tech_stack/languages/games；`languages[].name` 是硬编码标签，首页技能卡不随语言切换，另配 `icon` 缩写徽标）· `links.json`（友链 main/others/links）· `nav.ts`（含 `NavEntry` 类型；原始数据，文案是 i18n key）· `timeline.ts`（含 `TimelineEntry` 类型）· `devices.json`（`/devices`，页面直接 import，不经 appConfig）· `adminNav.ts`（管理端导航条目：`layouts/admin.vue` 与 `AppBar.vue` 的顶栏标题共用，管理端只有中文）。纯数据用 `.json`，需要类型（`nav` / `timeline`，页面靠 `(typeof timeline)[number]` 推导）用 `.ts`。类型定义属于数据层，别让 `app/data/` 反向依赖 `app/composables/`。
+- **`app/app.config.ts`**: 把上述数据展开并派生 `aboutNav = nav.filter(onAbout)`。**`nav` 顺序即各处展示顺序**；`shortTitleKey`（如 `blog.short-title`）供单行位置，缺省回退 `titleKey`；`useNav()` / `useAboutNav()` 把 i18n key 解析成当前语言的 `ResolvedNavEntry`。`timeline` 条目可带 `link`（跳转）与 `tag`（展示徽标）—— `/trans` 的「性别认同历程」按 `tag === '性别认同'` 过滤同一份数据（改文案会同时改该区块，属有意耦合）。
+- **城市地图与天气**: `GET /api/city` 的 `resident`/`current` 读 KV `city:maps`，缺失/坏值回退杭州 `330100`；`map` 指向 R2 静态 SVG `img/site/map/<adcode>.svg`（KV 只存 `{ name, adcode }`）。**出图跑在管理端浏览器**（`/admin/city` 动态 `import('@kuriyona/amap-box')`）：Worker 只做高德代理（注入 `AMAP_KEY` + KV 缓存 30 天）、签发 R2 上传地址、写 KV 城市配置，CPU ≈ 0（Worker 内出图 CPU ~0.9s，超 Free 10ms 上限两个数量级）。首页「关于我」右侧常驻城市卡片复用同一份 `resident`（`useCity()`），预渲染阶段拿不到数据；浏览器侧边界缓存是 `app/utils/boundaryCache.ts`（IndexedDB，一组实测 41 键 / 约 6 MB）。`resident.weather`：`cityCenter()` 取高德中心点（KV `amap:center:<adcode>`，30 天）→ 以 `location=经度,纬度` 查 QWeather（`cache:weather:<adcode>`，30 分钟）。详见 `backend/docs/city-map.md`。
 - **缓存清除（Cloudflare）**: `/admin/cache` → `backend/src/router/cache.ts` 两个端点（需 `X-Auth-Key`）：`GET /api/cache/zones`（`CF_API_TOKEN` 列 zone）、`POST /api/cache/purge`（转发 `purge_cache`，type = url/hostname/tag/prefix，单次上限 100 条）。token 只存 Worker（需 **Zone:Read + Cache Purge**）。返回 200 只代表请求被收下，是否真清掉看 `CF-Cache-Status`。起因：R2 对象带 `cache-control: max-age=86400`，换图后边缘最长 24h 才过期。详见 `backend/docs/cache-purge.md`。
 - **管理页**: 6 个受保护页（`/admin` 及 `r2`/`ask-box`/`city`/`cache`/`music`）共用 `layouts/admin.vue`；失败文案统一经 `app/utils/adminError.ts`（`adminErrorText`，`adminErrorMessage` 优先用响应体 `message`）。
-- **No tests or CI**.

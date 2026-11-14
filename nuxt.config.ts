@@ -11,6 +11,10 @@ export default defineNuxtConfig({
     transpile: ['reka-ui'],
   },
   ssr: true,
+  // 组件按用途分目录（ui/ 通用原语 · layout/ 全站骨架 · blog / home / reserve / timeline 按页面），
+  // 但组件名只取文件名：分组不改变 `<KCard>` / `<AppBar>` / `<ReserveClock>` 这些调用名，
+  // 也避免 `layout/AppBar.vue` + `layout/AppMenu.vue` 之类被拼成 `LayoutAppBar` 这种前缀名。
+  components: [{ path: '~/components', pathPrefix: false }],
   modules: ['@vueuse/nuxt', '@nuxtjs/i18n', '@nuxtjs/sitemap', '@pinia/nuxt'],
   nitro: {
     output: {

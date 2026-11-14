@@ -9,7 +9,7 @@ export const useTimelineLink = () => {
   const isExternal = (link: string) => link.startsWith('http');
 
   /** 内部链接且指向当前页面（如 /trans 上的条目指向自身）→ 不渲染跳转按钮 */
-  const isCurrent = (link: string) => !isExternal(link) && localePath(link) === route.path;
+  const isCurrentPage = (link: string) => !isExternal(link) && localePath(link) === route.path;
 
   function openLink(link: string) {
     if (isExternal(link)) window.open(link, '_blank', 'noopener');
@@ -22,5 +22,5 @@ export const useTimelineLink = () => {
     return isExternal(link) ? 'material-symbols:open-in-new' : 'material-symbols:arrow-forward';
   };
 
-  return { isExternal, isCurrent, openLink, linkIcon };
+  return { isExternal, isCurrentPage, openLink, linkIcon };
 };
