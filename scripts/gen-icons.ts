@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * 扫描源码与数据里的 `prefix:name` 图标全名，生成 `app/utils/icons.gen.ts`。
+ * 扫描源码、数据与页面 Markdown 里的 `prefix:name` 图标全名，生成 `app/utils/icons.gen.ts`。
  *
  * 为什么生成而不是手写：图标白名单若手工维护，漏一个就是运行时空白且没人发现。
  * 这里把「声明」交给调用点本身（`<KIcon name="material-symbols:close" />`），
@@ -17,7 +17,7 @@ import { join, relative, resolve } from 'node:path';
 const ROOT = resolve(import.meta.dir, '..');
 const OUT_FILE = join(ROOT, 'app/utils/icons.gen.ts');
 const SCAN_DIRS = ['app', 'server'];
-const SCAN_EXT = new Set(['.vue', '.ts', '.js', '.json']);
+const SCAN_EXT = new Set(['.vue', '.ts', '.js', '.json', '.md']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', '.nuxt', '.output', '.cache']);
 const PREFIXES = ['material-symbols', 'simple-icons'];
 const NAME_RE = /(material-symbols|simple-icons):([A-Za-z0-9-]*)/g;

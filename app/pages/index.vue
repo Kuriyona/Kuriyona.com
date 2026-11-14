@@ -1,9 +1,32 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
+
 const config = useAppConfig();
 const aboutNav = useAboutNav();
 
 // 常住城市卡片：城市配置由 KV 提供（见 /api/city），预渲染阶段拿不到，切到客户端后再取
 const { data: cities } = useCity();
+
+// 首页介绍：Markdown 源在 app/content/pages/index/<locale>.md，缺该语言版本时回退 zh-Hans。
+// 单页内容构建期直接读入（不走 /api/articles —— 那套只服务文章列表/详情）。
+const homeSources = import.meta.glob('../content/pages/index/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+const sourceFor = (lang: string) =>
+  Object.entries(homeSources).find(([path]) => path.endsWith(`/${lang}.md`))?.[1];
+
+const { locale } = useI18n();
+const intro = computed(() => sourceFor(locale.value) ?? sourceFor('zh-Hans') ?? '');
+
+// 出生天数随当前日期变化：预渲染时算出来的值会过期，切到客户端后再算
+const birthDate = config.info.birth.replaceAll('-', '/');
+const daysAlive = ref<number>();
+onMounted(() => {
+  daysAlive.value = dayjs().diff(dayjs(config.info.birth), 'day');
+});
 </script>
 
 <template>
@@ -21,80 +44,33 @@ const { data: cities } = useCity();
         class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-(--color-text-4)" />
     </div>
 
-    <!-- 关于我（左） + 常驻城市（右）：窄屏换成两行，城市数据缺失时关于我独占整行 -->
-    <div class="grid grid-cols-1 gap-4" :class="{ 'min-[900px]:grid-cols-[2fr_1fr]': cities }">
+    <!-- 关于我（左） + 右栏（常驻城市 / 出生天数 / 名字卡片）：窄屏换成两行。
+         两格都默认 stretch，左卡与右栏容器取较高的那个高度；右栏里卡片不满时按比例分掉余量 -->
+    <div class="grid grid-cols-1 min-lg:grid-cols-[2fr_1fr] gap-4">
       <KCard :title="$t('about.about-me')">
-        <p class="whitespace-pre-line">
-          {{ $t('about.hello-i-am-kuriyona') }}
-          <NuxtLinkLocale to="/blog/about-name" class="link">{{
-            $t('about.about-my-name')
-          }}</NuxtLinkLocale>
-        </p>
-        <p class="mt-4 whitespace-pre-line">{{ $t('about.intro') }}</p>
+        <KMarkdownPage :source="intro" />
       </KCard>
-      <CardCityMap
-        v-if="cities?.resident"
-        :title="$t('about.city-resident')"
-        :city="cities.resident" />
-    </div>
-
-    <!-- 生日 / MBTI / 最爱的颜色：各自独立成块（纵向排图标-标签-值）。
-         窄屏两列，第三块占满一行；够宽后三列并排。 -->
-    <div class="grid grid-cols-2 gap-4 min-[480px]:grid-cols-3">
-      <KCard class="text-center">
-        <div class="flex flex-col items-center gap-1">
-          <KIcon name="material-symbols:cake" class="text-2xl text-(--color-text-4)" />
-          <p class="text-xs text-(--color-text-3)">{{ $t('about.birth') }}</p>
-          <p class="font-monos text-base font-bold sm:text-lg">
-            <time :datetime="config.info.birth">{{ config.info.birth }}</time>
-          </p>
+      <div class="flex flex-col min-sm:max-lg:flex-row gap-4 max-sm:max-h-80">
+        <CardCityMap
+          v-if="cities?.resident"
+          class="min-h-42 flex-1"
+          :title="$t('about.city-resident')"
+          :city="cities.resident" />
+        <div class="flex flex-col gap-4 flex-1 max-sm:hidden">
+          <KCard class="flex min-h-28 flex-col flex-1">
+            <p class="text-xs text-(--color-text-3)">
+              {{ $t('about.since', { date: birthDate }) }}
+            </p>
+            <p class="mt-auto flex items-baseline justify-end gap-1.5 pt-3">
+              <span class="text-xs text-(--color-text-3)">{{ $t('about.alive-for') }}</span>
+              <span class="font-monos text-2xl leading-none font-bold">{{ daysAlive ?? '—' }}</span>
+              <span class="text-xs text-(--color-text-3)">{{ $t('global.unit.day') }}</span>
+            </p>
+          </KCard>
+          <KNavCard to="/blog/about-name" class="flex-1" :title="$t('about.about-my-name')" />
         </div>
-      </KCard>
-      <KCard class="text-center">
-        <div class="flex flex-col items-center gap-1">
-          <KIcon name="material-symbols:psychology" class="text-2xl text-(--color-text-4)" />
-          <p class="text-xs text-(--color-text-3)">MBTI</p>
-          <p class="font-monos text-base font-bold sm:text-lg">{{ config.info.mbti }}</p>
-        </div>
-      </KCard>
-      <KCard class="col-span-2 text-center min-[480px]:col-span-1">
-        <div class="flex flex-col items-center gap-1">
-          <KIcon name="material-symbols:palette" class="text-2xl text-(--color-text-4)" />
-          <p class="text-xs text-(--color-text-3)">{{ $t('about.favorite-color') }}</p>
-          <p class="flex items-center gap-2 font-monos text-base font-bold sm:text-lg">
-            <span
-              class="inline-block size-3 rounded-full"
-              :style="{ backgroundColor: config.info.favoriteColor }" />
-            <span>{{ config.info.favoriteColor }}</span>
-          </p>
-        </div>
-      </KCard>
-    </div>
-
-    <KCard :title="$t('about.skills')">
-      <div class="flex gap-2 flex-wrap justify-center">
-        <KSurface
-          v-for="item in config.tech_stack"
-          :key="item.name"
-          class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm">
-          <KIcon :name="item.icon" class="text-xl text-(--color-text-1)" />
-          <span>{{ item.name }}</span>
-        </KSurface>
-        <span
-          class="hidden min-[600px]:block self-center w-px h-8 bg-(--color-line-strong) mx-1"></span>
-        <KSurface
-          v-for="item in config.languages"
-          :key="item.name"
-          class="k-interactive flex items-center gap-2 px-3 py-2 rounded-xl text-sm">
-          <KIcon name="material-symbols:translate" class="text-xl text-(--color-text-1)" />
-          <span
-            class="px-1.5 py-0.5 bg-white rounded-sm text-[10px] font-bold text-black leading-none"
-            >{{ item.icon }}</span
-          >
-          <span>{{ item.name }}</span>
-        </KSurface>
       </div>
-    </KCard>
+    </div>
 
     <!-- 导航卡只是各页面标题/描述的聚合：正文页各自可被搜到，这里重复收录会让
          任意页面名都命中首页。与保留区导航同理排除出索引。 -->
