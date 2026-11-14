@@ -43,6 +43,14 @@
   /* 毛玻璃 / 遮罩 */
   --color-glass-bg: rgb(20 20 26 / 76%); /* 毛玻璃底色 */
   --glass-filter: blur(20px) brightness(0.3) saturate(150%);
+  /* 顶栏浅毛玻璃：同一套模糊，底色 50%（滚动内容能透出来）。
+   * 底色按 C = 2·B − 0.3·B = 1.7·B 反算，B = --color-bg #0b0b11：
+   * 50% 的 rgb(19 19 29) 叠在被 brightness(0.3) 压暗的页面底色上，
+   * 合成回 #0b0b11 —— 空背景下顶栏与页面无缝；白底图片滚过时合成 ~#303035，
+   * text-1 ≈ 7:1。改 --glass-filter-bar 的 brightness 或这里 alpha 必须重算 C。
+   * 再透（alpha < 50%）白底会变亮、text-1 跌破 7:1。 */
+  --color-glass-bg-bar: rgb(19 19 29 / 50%);
+  --glass-filter-bar: var(--glass-filter);
   --color-scrim: rgb(6 6 9 / 68%); /* 遮罩底色 */
 
   /* 卡片层级：data-level 绑定这些变量（见 surface.css）；比对应 --color-surface-N 再暗一档 */

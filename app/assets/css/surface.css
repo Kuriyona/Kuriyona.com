@@ -37,6 +37,16 @@
   backdrop-filter: var(--glass-filter);
 }
 
+/* 顶栏浅毛玻璃：与 .k-glass 同一套滤镜，底色更透明、无描边、不投影
+ * （全宽顶栏投 --shadow-floating 会在下方压出一条黑边，看起来又像实心块；
+ *  描边置透明而不是去掉 border，保留 1px 盒模型尺寸，避免内容上下位移） */
+.k-glass-bar {
+  --card-bg: var(--color-glass-bg-bar);
+  --card-border: transparent;
+  --card-shadow: none;
+  backdrop-filter: var(--glass-filter-bar);
+}
+
 /* 交互态：按当前表面基色提亮，background-color 可过渡
  * 默认基色是控件底色（半透明，任何表面都成立）；自带底色的元素
  * （.k-surface 卡片、KInput/KSelect 触发器）需自行声明 --interactive-base。 */
