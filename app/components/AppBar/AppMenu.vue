@@ -5,7 +5,7 @@ import { useSearch } from '~/composables/useSearch';
 const show = defineModel<boolean>();
 const nav = useNav();
 
-// <md 时顶栏的搜索按钮与音乐胶囊收进这里（同一个「更多」按钮），见下方 narrow 区块。
+// <md 时顶栏的搜索按钮收进这里（同一个「更多」按钮），见下方 narrow 区块。
 // 搜索：先关抽屉再开搜索框（SearchModal 是 Teleport 的独立浮层，层级更高，不会被抽屉遮住）。
 const search = useSearch();
 function openSearch() {
@@ -13,8 +13,8 @@ function openSearch() {
   search.open();
 }
 
-// 窄视口判定（与 Tailwind 的 md = 48rem 对齐）：抽屉里只在窄视口渲染搜索 / 音乐，
-// 宽视口那两块的入口还在顶栏，抽屉里没必要再挂一份 MusicControls（它会加载歌单）。
+// 窄视口判定（与 Tailwind 的 md = 48rem 对齐）：抽屉里只在窄视口渲染搜索入口。
+// 音乐不放抽屉：<md 没有音乐入口，≥md 走顶栏胶囊 → MusicPanel。
 const narrow = ref(false);
 let narrowQuery: MediaQueryList | null = null;
 function syncNarrow() {
@@ -70,28 +70,21 @@ const { currentNodeName } = useCloudflareStatus();
         <div class="flex justify-end">
           <KIconButton icon="material-symbols:close" @click="show = false" />
         </div>
-        <!-- <md：顶栏的搜索按钮与音乐胶囊并入这个「更多」按钮，两块功能搬进抽屉。
-             ≥md 顶栏自己有这两个入口，抽屉里不再重复（也不多挂一份 MusicControls）。 -->
-        <div v-if="narrow" class="flex flex-col gap-4">
-          <div class="flex flex-col gap-2">
-            <KDivider :label="$t('global.search')" />
-            <button
-              type="button"
-              class="k-interactive flex items-center gap-3 rounded-lg border border-(--color-control-border) bg-(--color-control-bg) px-3 py-2 text-left"
-              @click="openSearch">
-              <KIcon name="material-symbols:search" class="text-lg" />
-              <span class="flex-1 truncate text-sm text-(--color-text-2)">
-                {{ $t('global.search') }}
-              </span>
-              <KIcon name="material-symbols:arrow-forward" class="text-(--color-text-3)" />
-            </button>
-          </div>
-          <div class="flex flex-col gap-2">
-            <KDivider :label="$t('music.title')" />
-            <KCard>
-              <MusicControls />
-            </KCard>
-          </div>
+        <!-- <md：顶栏的搜索按钮并入这个「更多」按钮，功能搬进抽屉。
+             ≥md 顶栏自己有搜索入口，抽屉里不再重复。音乐不在抽屉里：<md 没有音乐入口（设计如此），
+             ≥md 走顶栏胶囊 → MusicPanel。 -->
+        <div v-if="narrow" class="flex flex-col gap-2">
+          <KDivider :label="$t('global.search')" />
+          <button
+            type="button"
+            class="k-interactive flex items-center gap-3 rounded-lg border border-(--color-control-border) bg-(--color-control-bg) px-3 py-2 text-left"
+            @click="openSearch">
+            <KIcon name="material-symbols:search" class="text-lg" />
+            <span class="flex-1 truncate text-sm text-(--color-text-2)">
+              {{ $t('global.search') }}
+            </span>
+            <KIcon name="material-symbols:arrow-forward" class="text-(--color-text-3)" />
+          </button>
         </div>
         <div class="flex flex-col gap-2">
           <KDivider :label="$t('global.language-settings')" />

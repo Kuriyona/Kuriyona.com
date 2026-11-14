@@ -118,7 +118,7 @@ Kuriyona.com/
 │   ├── app.config.ts           defineAppConfig：把 app/data/ 的 profile / links / nav / timeline 合成一份 AppConfig
 │   ├── assets/css/             main.css（@import 汇总）· fonts.css（字体变量：Inter + Source Han Sans CN/TW/JP + Maple Mono + Resource Han Rounded CN/TW/JP，不含图标字体）· base.css（设计令牌/主题/版式宽度令牌/滚动条/光标）· surface.css（.k-surface/.k-glass/.k-glass-bar/.k-interactive/.k-scrim）· utilities.css（.link/.trans-*）
 │   ├── assets/icons/           背景平铺图案 SVG（白色填充；勿再给 <pattern> 内 <image> 加 CSS filter，iOS WebKit 下整层不渲染）
-│   ├── components/             自动导入：AppPage（页面容器 + 两侧保留区）· AppBar（顶栏：≥768px 显示搜索 + 复合音乐按钮，<768px 两者并入 AppMenu 抽屉，菜单按钮只画 menu 图标，页面级按钮如文章目录不合并）· AppBackground（图标平铺 + 高亮点）· BlogToc（目录列表：正文内联卡片 / 宽屏保留区 / 顶栏窄屏面板共用）· MusicControls / MusicPanel · SearchModal · TimelineList · ToastHost · KTurnstile · KSurface · KIcon · card/（About 卡片，含 CardCityMap）· reserve/（ReserveClock/ReserveNav/ReserveArticles）· K* 组件（见下表）
+│   ├── components/             自动导入：AppPage（页面容器 + 两侧保留区）· AppBar（顶栏：≥768px 显示搜索 + 复合音乐按钮；<768px 搜索并入 AppMenu 抽屉、音乐无入口，菜单按钮只画 menu 图标，页面级按钮如文章目录不合并）· AppBackground（图标平铺 + 高亮点）· BlogToc（目录列表：正文内联卡片 / 宽屏保留区 / 顶栏窄屏面板共用）· MusicControls / MusicPanel · SearchModal · TimelineList · ToastHost · KTurnstile · KSurface · KIcon · card/（About 卡片，含 CardCityMap）· reserve/（ReserveClock/ReserveNav/ReserveArticles）· K* 组件（见下表）
 │   ├── composables/            自动导入：useSearch · useToast · useNav · useCity · useMusic（播放器单例，跨路由不中断；播放地址直连网易 outer，不走后端）· useCodeCopy · useHeadingAnchor · useTimelineLink · useSurfaceLevel · usePageScrollLock · useCloudflareStatus · useAppBar（文章页把标题与目录注入固定顶栏）· idbCache · cfn
 │   ├── layouts/                default.vue（透传）/ admin.vue（管理页共用壳：宽屏左侧 sticky 竖导航，窄屏顶部 KSelect）
 │   ├── pages/                  路由页面（见下表）：index · about/trans · about/devices · blog/{index,[slug]} · timeline · friends-and-links · ask-box/{index,ask} · admin/*
@@ -160,7 +160,7 @@ Kuriyona.com/
 | `KSwitch`       | 开关（封装 Reka `SwitchRoot`/`SwitchThumb`）                                                                          |
 | `KDivider`      | 分隔线（封装 Reka `Separator`，horizontal/vertical；`label` 在左端渲染小字标签，仅 horizontal）                       |
 | `KBadge`        | 半透明小徽标（text-xs 胶囊；`variant="muted"` 灰色）；关系 / 标签 / 主要设备 / 不再使用                               |
-| `MusicControls` | 播放器主体（封面/歌名/当前歌词行含翻译/进度条/上下首/曲目列表）；`MusicPanel`（≥768 顶栏胶囊）与 `AppMenu`（<768 抽屉）共用 |
+| `MusicControls` | 播放器主体（封面/歌名/当前歌词行含翻译/进度条/上下首/曲目列表），只由 `MusicPanel` 复用 |
 | `MusicPanel`    | 悬浮音乐面板（`KDialog` + `MusicControls`，顶栏复合音乐按钮打开，≥768 可用）                                          |
 | `KMarkdown`     | Markdown 渲染（markdown-exit + github-markdown-css）                                                                  |
 | `KTable`        | 表格布局（th 左对齐 / td 右对齐）                                                                                     |
@@ -221,11 +221,11 @@ Kuriyona.com/
 
   |档|视口|顶栏|音乐入口|搜索入口|两侧保留区|
   |---|---|---|---|---|---|
-  |狭窄|<768px|标题 + 「更多」（文章页另有目录按钮）|`AppMenu` 抽屉里的 `MusicControls`|抽屉里的搜索行|无|
+  |狭窄|<768px|标题 + 「更多」（文章页另有目录按钮）|**无**（设计如此）|抽屉里的搜索行|无|
   |中等|768–1499px|标题 + 搜索图标 + 音乐胶囊 + 「更多」|顶栏胶囊 → `MusicPanel` 浮层|顶栏图标 / `Ctrl+K`|无（正文单列居中）|
   |完整|≥1500px|标题 + 搜索图标 + 音乐胶囊 + 「更多」|顶栏胶囊 → `MusicPanel` 浮层|顶栏图标 / `Ctrl+K`|两侧 240px sticky（左栏仅页面自有内容，如文章目录）|
 
-  - 合并规则：搜索与音乐**只在 <768 收进抽屉**（`AppBar.vue` 里 `max-md:hidden`）；`AppMenu.vue` 这两块用 `v-if="narrow"`（`matchMedia('(width < 48rem)')`）而不是 CSS 隐藏 —— 否则宽屏开抽屉会多挂一份 `MusicControls` 并重复加载歌单。页面级按钮（如文章目录）不参与合并，窄屏照旧单独显示。
+  - 合并规则：搜索**只在 <768 收进抽屉**（`AppBar.vue` 音乐胶囊与搜索都用 `max-md:hidden`）；`AppMenu.vue` 的搜索块用 `v-if="narrow"`（`matchMedia('(width < 48rem)')`）而不是 CSS 隐藏，宽屏开抽屉不重复挂入口。音乐**不提供 <768 入口**（顶栏胶囊隐藏、抽屉里也没有），≥768 统一走顶栏胶囊 → `MusicPanel`。页面级按钮（如文章目录）不参与合并，窄屏照旧单独显示。
   - 「更多」按钮只画 `menu` 图标，语言切换只走抽屉里的 `KSelect`；不要把 `translate` 图标加回按钮。
   - 例外：管理端 `layouts/admin.vue` 在 `lg`（1024px）切「左侧 sticky 竖导航 ↔ 顶部 `KSelect`」，独立于这三档（管理页不受 `--content-width` 约束）。
 - **半屏 hero（`--hero-height` / `--reserve-hero-offset`）**: 页面首块为半屏 hero 时用 `min-h-(--hero-height)`（令牌在 `base.css`，当前 50svh）并给 `<AppPage hero>`。**两侧保留区**随之 `mt-(--reserve-hero-offset)`（= `--hero-height` + `1rem`），使栏内首卡跟在 hero 下方、滚过后再吸顶；**两栏 `:class` 写法必须一致**（只加一侧会让另一侧压在 hero 上）。那 `1rem` 是正文列的 `gap-4`：hero 与下一块之间**只允许这一个列间距**，所以 **hero 块别写 `mb-*`、紧随其后那块别写 `mt-*`**（写了偏移失准）。实现是给 sticky 元素加 `margin-top`，**不要**用滚动监听改 `top`，也**不要**把偏移加到 aside 内部 div（会把卡片推进栏内固定高、`overflow-y: auto` 的滚动区）。`.reserve` 的 `padding-top: 6rem` = 正文列 `my-20`(5rem) + `p-4`(1rem)，保证两栏首卡齐平。前提：hero 是内容首块且高度就是该令牌（`min-h` 是下限）。

@@ -97,7 +97,8 @@ onMounted(() => {
             </div>
             <KDivider vertical class="reserve:hidden" />
           </template>
-          <!-- 搜索 / 音乐在 <md 收进 AppMenu（同一个「更多」按钮），见 AppMenu.vue 的 narrow 区块。
+          <!-- 搜索在 <md 收进 AppMenu（同一个「更多」按钮），见 AppMenu.vue 的 narrow 区块；
+               音乐 <md 不提供入口（设计如此），只剩本胶囊这一条路。
                插槽/页面级按钮（文章目录）不合并，窄屏照旧单独显示。 -->
           <KIconButton
             icon="material-symbols:search"
@@ -105,7 +106,7 @@ onMounted(() => {
             @click="search.toggle()" />
           <!-- 复合音乐按钮：整体是一个胶囊，右端嵌一个更小的播放/暂停子按钮。
                点胶囊其他区域（含左端乐符）= 打开悬浮音乐面板；点子按钮 = 播放/暂停。
-               ≥768 一直显示（保留区不再放播放器，这里是唯一入口）；<768 并入 AppMenu 抽屉（max-md:hidden）。
+               ≥768 一直显示（保留区不再放播放器，这里是 <768 以上唯一音乐入口）；<768 直接隐藏（max-md:hidden）。
                h-9（36px，border-box）= 两侧 KButton 的高度（p-2 + text-lg 图标 18px + 边框），
                不写死的话内容高度（size-6 子按钮 24px）撑出来只有 30px，会比左右两个按钮矮一截。
                pr-1.25（5px）= 内高 34 − 子按钮 24 = 上下各 5px，加边框后四周到子按钮都是 6px
