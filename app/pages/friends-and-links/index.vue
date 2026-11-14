@@ -10,7 +10,8 @@ useSeoMeta({ title: $t('about.links.title') });
     <NuxtLinkLocale to="/">
       <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
-    <h1 class="text-2xl" data-pagefind-meta="title">{{ $t('about.links.title') }}</h1>
+    <!-- 标题已在固定顶栏：保留一份不可见 h1 供 Pagefind 取页面标题与 SEO -->
+    <h1 class="hidden" data-pagefind-meta="title">{{ $t('about.links.title') }}</h1>
     <KCard :title="$t('about.links.best-friends')">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <KPersonCard v-for="person in config.links.main" :key="person.name" v-bind="person" />

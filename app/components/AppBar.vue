@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppMenu from './AppBar/AppMenu.vue';
 import KButton from './KButton.vue';
+import { adminNav } from '~/data/adminNav';
 import { useSearch } from '~/composables/useSearch';
 const mobileMenu = ref(false);
 /** 顶栏复合音乐按钮打开的悬浮面板（≥768 的唯一音乐入口；<768 用 AppMenu 抽屉里的播放器） */
@@ -11,8 +12,33 @@ const musicPanel = ref(false);
 // 而页面是异步组件（await 文章数据），SSR 时顶栏先渲染拿不到标题 ——
 // 所以标题等水合后再填，否则服务端（无标题）与客户端（有标题）结构不一致会报水合错误。
 const route = useRoute();
+const { t } = useI18n();
+// i18n 给每个语言的同名路由加了 `___<locale>` 后缀（`timeline___en`），取基名才能查表
+const routeBaseName = useRouteBaseName();
+const baseName = computed(() => routeBaseName(route) ?? '');
 const { article } = useAppBar();
 const isArticleRoute = computed(() => String(route.name ?? '').startsWith('blog-slug'));
+
+// 非文章页的顶栏大字：路由基名 → i18n key。
+// 首页（`index`）不在此表，仍只显示站名；文章详情走上面那条分支（标题来自异步数据）。
+const PAGE_TITLE_KEYS: Record<string, string> = {
+  blog: 'blog.title',
+  'about-trans': 'about.mtf.as-mtf',
+  'about-devices': 'about.devices.title',
+  timeline: 'timeline.title',
+  'friends-and-links': 'about.links.title',
+  'ask-box': 'ask-box.title',
+  'ask-box-ask': 'ask-box.ask-me',
+};
+
+/** 顶栏两级标题的大字；空串表示退回「只显示站名」（首页 / 未知路由） */
+const pageTitle = computed(() => {
+  if (isArticleRoute.value) return '';
+  const key = PAGE_TITLE_KEYS[baseName.value];
+  if (key) return t(key);
+  // 管理端共用 admin 布局，标题取与侧栏导航同一份条目（路径带语言前缀也能匹配）
+  return adminNav.find((item) => route.path.endsWith(item.to))?.label ?? '';
+});
 const hydrated = ref(false);
 // 顶栏目录按钮（窄屏；宽屏的目录在左侧保留区）与展开的面板
 const tocOpen = ref(false);
@@ -66,10 +92,12 @@ onMounted(() => {
             }}</span>
           </div>
         </template>
+        <!-- 其余页面（首页除外）：同样两级，上层站名、下层页面名；全站不再显示头像 -->
+        <div v-else-if="pageTitle" class="flex min-w-0 flex-1 flex-col justify-center">
+          <span class="truncate text-xs leading-tight text-(--color-text-2)">Kuriyona's Space</span>
+          <span class="truncate text-lg leading-tight font-bold">{{ pageTitle }}</span>
+        </div>
         <div v-else class="h-full flex items-center gap-4">
-          <img
-            class="h-6 rounded-md hidden sm:inline-block"
-            src="https://r2.kuriyona.com/img/avatar/Avatar_256.png" />
           <NuxtLinkLocale to="/">
             <span class="hover:underline">Kuriyona's Space</span>
           </NuxtLinkLocale>

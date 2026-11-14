@@ -35,7 +35,8 @@ useSeoMeta({ title: $t('timeline.title') });
     <NuxtLinkLocale to="/">
       <KIconButton icon="material-symbols:arrow-back" />
     </NuxtLinkLocale>
-    <h1 class="text-2xl font-bold">{{ $t('timeline.title') }}</h1>
+    <!-- 标题已在固定顶栏：保留一份不可见 h1 供 Pagefind 取页面标题与 SEO -->
+    <h1 class="hidden">{{ $t('timeline.title') }}</h1>
     <p class="text-(--color-text-2)">{{ $t('timeline.desc') }}</p>
     <div class="relative flex flex-col gap-8 py-6">
       <div class="absolute inset-y-0 left-4 w-px -translate-x-1/2 bg-(--color-line-strong)"></div>

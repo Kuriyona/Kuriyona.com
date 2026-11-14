@@ -30,7 +30,6 @@ useSeoMeta({ title: t('ask-box.title') });
 
 <template>
   <AppPage>
-    <h2 class="text-2xl font-bold">{{ $t('ask-box.weixi-askbox') }}</h2>
     <h3 class="text-xl font-bold">{{ $t('ask-box.you-can') }}</h3>
     <KCardLink to="/ask-box/ask" :text="$t('ask-box.ask-me')" />
     <h3 class="text-xl font-bold flex items-center justify-between">
