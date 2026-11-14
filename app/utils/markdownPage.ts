@@ -28,6 +28,7 @@ const md = createMarkdownExit({
 // 内链补语言前缀，外链新窗口打开。
 md.renderer.rules.link_open = (tokens, idx, options, env, slf) => {
   const token = tokens[idx];
+  if (!token) return '';
   const href = token.attrGet('href') ?? '';
   const resolveLink = (env as MarkdownPageEnv | undefined)?.resolveLink;
   const resolved = href.startsWith('/') && resolveLink ? resolveLink(href) : href;
@@ -66,29 +67,30 @@ export function parseMarkdownPage(source: string, env?: MarkdownPageEnv): Markdo
   };
 
   for (let i = 0; i < lines.length; i++) {
-    const open = lines[i].match(OPEN_TAG);
+    const line = lines[i]!;
+    const open = line.match(OPEN_TAG);
     if (!open) {
-      prose.push(lines[i]);
+      prose.push(line);
       continue;
     }
 
-    const name = open[1];
+    const name = open[1]!;
     const close = `</${name}>`;
     let end = -1;
     for (let j = i + 1; j < lines.length; j++) {
-      if (lines[j].trim() === close) {
+      if (lines[j]!.trim() === close) {
         end = j;
         break;
       }
     }
     if (end === -1) {
-      prose.push(lines[i]);
+      prose.push(line);
       continue;
     }
 
     flushProse();
     const attrs: Record<string, string> = {};
-    for (const [, key, value] of open[2].matchAll(ATTR)) attrs[key] = value;
+    for (const [, key, value] of (open[2] ?? '').matchAll(ATTR)) attrs[key!] = value ?? '';
     blocks.push({
       type: 'component',
       name,

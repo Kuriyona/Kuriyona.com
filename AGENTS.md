@@ -41,7 +41,7 @@ pnpm deploy          构建前端 + wrangler deploy（= pnpm build && wrangler d
 
 - `postinstall` 自动 `nuxt prepare`：生成 `.nuxt/tsconfig.{app,server,shared,node}.json` 四份，根 `tsconfig.json` 只做 references。
 - **应用侧无 lint / typecheck / test 命令**：`pnpm build`（含 prerender 全部路由）与 `pnpm deploy`（wrangler）即构建验证手段。
-- `scripts/` 下的 Bun 脚本可单独类型检查：`node_modules/.bin/tsc -p scripts/tsconfig.json --noEmit`（按 Bun 语义配 `ESNext` + `types: ['bun','node']`，与 Nuxt 的 tsconfig 互不影响）。临时校验应用代码可用 `node_modules/.bin/tsc -p .nuxt/tsconfig.app.json --noEmit`，但 `icons.gen.ts` / `markdownPage.ts` 有改动前就存在的 strict 报错，别当成回归。
+- `scripts/` 下的 Bun 脚本可单独类型检查：`node_modules/.bin/tsc -p scripts/tsconfig.json --noEmit`（按 Bun 语义配 `ESNext` + `types: ['bun','node']`，与 Nuxt 的 tsconfig 互不影响）。临时校验应用代码可用 `node_modules/.bin/tsc -p .nuxt/tsconfig.app.json --noEmit`（服务端用 `.nuxt/tsconfig.server.json`），四份 tsconfig 与 `scripts/tsconfig.json` 目前均零报错。
 - `pnpm-workspace.yaml` 只有 pnpm 的构建白名单，没有 `packages:` —— `backend/` 自带 lockfile，不是 workspace 成员。
 - `.github/` 只有一个友链申请 issue 模板：**无 CI**。
 

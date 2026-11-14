@@ -55,10 +55,10 @@ function slugifyHeading(text: string) {
 md.renderer.rules.heading_open = (tokens, idx, _options, _env, slf) => {
   const token = tokens[idx];
   const next = tokens[idx + 1];
-  if (next?.type === 'inline' && next.content) {
+  if (token && next?.type === 'inline' && next.content) {
     const text = next.content;
     const slug = slugifyHeading(text);
-    const level = Number(token.tag.slice(1));
+    const level = Number((token.tag ?? '').slice(1));
     token.attrSet('id', slug);
     if (level <= 3) {
       currentTOC.push({ level, text, slug });
@@ -71,8 +71,8 @@ const isExternal = (href: string) => /^https?:\/\//i.test(href) && !href.include
 
 md.renderer.rules.link_open = (tokens, idx, _options, _env, slf) => {
   const token = tokens[idx];
-  const href = token.attrGet('href');
-  if (href && isExternal(href)) {
+  const href = token?.attrGet('href');
+  if (token && href && isExternal(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
     externalLinkDepth++;

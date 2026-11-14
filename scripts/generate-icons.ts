@@ -145,8 +145,11 @@ ${collections.join('\n\n')}
 // 指向 api.iconify.design —— 一旦有名字漏注册（拼错、动态拼接、集合外的名字），它会在运行时
 // 去拉第三方 CDN。这里把下载通路替换掉，让「访客不加载任何第三方资源」成为结构性保证，
 // 而不是依赖人不犯错。
-_api.setFetch(() =>
-  Promise.reject(new Error('图标未注册：图标名必须由 scripts/generate-icons.ts 扫描到')),
+_api.setFetch(
+  Object.assign(
+    () => Promise.reject(new Error('图标未注册：图标名必须由 scripts/generate-icons.ts 扫描到')),
+    { preconnect: () => {} },
+  ),
 );
 `;
 
