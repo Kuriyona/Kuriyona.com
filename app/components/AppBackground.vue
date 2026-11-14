@@ -27,9 +27,9 @@ const TILE = 2 * GAP;
 
 // 背景亮度（改这几个常量即可调节）
 const BASE_OPACITY = 0.1; // 图标默认亮度（整体降透明度）
-const HIGHLIGHT_OPACITY = 0.4; // 鼠标模式加亮峰值亮度
-// 触摸屏模式没有光标指路，加亮提升 50%（常量 = HIGHLIGHT_OPACITY × 1.5，写死避免浮点尾数）
-const TOUCH_HIGHLIGHT_OPACITY = 0.6;
+const HIGHLIGHT_OPACITY = 0.2; // 鼠标模式加亮峰值亮度
+// 触摸屏模式没有光标指路；当前与鼠标模式同亮度，保留独立常量以便单独调节
+const TOUCH_HIGHLIGHT_OPACITY = HIGHLIGHT_OPACITY;
 const HIGHLIGHT_RADIUS = 300; // 加亮衰减半径（视口像素）
 
 // 触摸屏模式：高亮点移动速度（视口像素 / 秒）
