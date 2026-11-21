@@ -127,9 +127,10 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
         children: [
           {
             type: 'text' as const,
-            content: `Kuriyona\'s Space / Blog`,
+            content: `Kuriyona\'s Space / 文章`,
             fontSize: 32,
             height: 40,
+            font: { defaultFontFamily: font },
             color: 'black',
           },
           {
