@@ -46,7 +46,7 @@
   "contact.bilibili": "哔哩哔哩",
   "contact.email": "邮箱",
   "contact.zhihu": "知乎",
-  "devices.desc": "我的设备配置（灰色为不再使用）",
+  "devices.desc": "我的设备配置",
   "devices.name.desktop": "台式 PC",
   "devices.primary": "主要设备",
   "devices.retired": "不再使用",
