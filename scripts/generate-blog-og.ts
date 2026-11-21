@@ -23,11 +23,27 @@ const OG_DIR = path.resolve(import.meta.dirname, '../.cache/og');
 // 中英文统一用 Maple Mono NF CN（CN 变体自带中日韩字形，不再额外挂 Noto Sans）
 const MAPLE_MONO = 'Maple Mono NF CN';
 
-const L10N: Record<string, { langPrefix: string; wordLabel: string }> = {
-  en: { langPrefix: 'Languages:', wordLabel: 'words' },
-  ja: { langPrefix: '記事の言語：', wordLabel: '字' },
-  'zh-Hans': { langPrefix: '文章语言：', wordLabel: '字' },
-  'zh-Hant': { langPrefix: '文章語言：', wordLabel: '字' },
+// nf-md-translate（Nerd Font，U+F05CA）：AI 翻译文章在信息行追加的标记
+const AI_TRANSLATED_LABEL = 'AI \u{f05ca}';
+
+const L10N: Record<
+  string,
+  { langPrefix: string; minuteLabel: string; wordLabel: string; updatedLabel: string }
+> = {
+  en: { langPrefix: 'Languages:', minuteLabel: 'minutes', wordLabel: 'words', updatedLabel: 'Updated' },
+  ja: { langPrefix: '記事の言語：', minuteLabel: '分', wordLabel: '字', updatedLabel: '更新日' },
+  'zh-Hans': {
+    langPrefix: '文章语言：',
+    minuteLabel: '分钟',
+    wordLabel: '字',
+    updatedLabel: '更新于',
+  },
+  'zh-Hant': {
+    langPrefix: '文章語言：',
+    minuteLabel: '分鐘',
+    wordLabel: '字',
+    updatedLabel: '更新於',
+  },
 };
 
 // 根字体配置随 layout 下传：文本节点的 font 逐键覆盖，字体文件与光栅器选项只在这里给一次
@@ -114,8 +130,13 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
   const descLines = splitText(article.desc, CONTENT_W, 48);
 
   const dateStr = dayjs(article.date).format('YYYY-MM-DD');
-  const readingTime = `${Math.ceil(article.readingTime.minutes)} mins · ${article.readingTime.words} ${cfg.wordLabel}`;
-  const info = `${dateStr} · ${readingTime}`;
+  const readingTime = `${Math.ceil(article.readingTime.minutes)} ${cfg.minuteLabel} · ${article.readingTime.words} ${cfg.wordLabel}`;
+  // 右上角只放创建日期；信息行最左边是「更新于 <edit || date>」
+  const editStr = article.edit ? dayjs(article.edit).format('YYYY-MM-DD') : '';
+  const updated = `${cfg.updatedLabel} ${editStr || dateStr}`;
+  const readingLine = [updated, readingTime, article.aiTranslated ? AI_TRANSLATED_LABEL : '']
+    .filter(Boolean)
+    .join(' · ');
 
   return {
     width: WIDTH,
@@ -130,11 +151,26 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
         flexDirection: 'column',
         children: [
           {
-            type: 'text' as const,
-            content: `Kuriyona\'s Space / 文章`,
-            fontSize: 32,
-            height: 40,
-            color: 'black',
+            type: 'container' as const,
+            flexDirection: 'row' as const,
+            justifyContent: 'space-between' as const,
+            children: [
+              {
+                type: 'text' as const,
+                content: `Kuriyona\'s Space / 文章`,
+                fontSize: 32,
+                height: 40,
+                color: 'black',
+              },
+              {
+                type: 'text' as const,
+                content: dateStr,
+                fontSize: 32,
+                height: 40,
+                color: 'black',
+                textAnchor: 'end' as const,
+              },
+            ],
           },
           {
             type: 'container' as const,
@@ -171,7 +207,7 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
         children: [
           {
             type: 'text' as const,
-            content: info,
+            content: readingLine,
             fontSize: 32,
             height: 40,
             color: 'black',
