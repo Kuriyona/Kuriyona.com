@@ -1,15 +1,15 @@
 {
   "devices": [
     {
-      "name": "OPPO Find X8s",
-      "subtitle": "月光白",
-      "subtitleKey": "devices.subtitle.moonlight-white",
+      "name": "OnePlus 15",
+      "subtitle": "原色沙丘 · 16+512",
+      "subtitleKey": "devices.subtitle.primordial-dune",
       "primary": true,
       "specs": [
-        { "labelKey": "devices.specs.processor", "value": "MediaTek Dimensity 9400+" },
+        { "labelKey": "devices.specs.processor", "value": "Qualcomm Snapdragon 8 Elite Gen 5" },
         { "labelKey": "devices.specs.memory", "value": "16 GiB" },
-        { "labelKey": "devices.specs.storage", "value": "256 GiB" },
-        { "labelKey": "devices.specs.display", "value": "6.32″ 2460×1216 120Hz" }
+        { "labelKey": "devices.specs.storage", "value": "512 GiB" },
+        { "labelKey": "devices.specs.display", "value": "6.78″ 2772×1272 165Hz" }
       ]
     },
     {
