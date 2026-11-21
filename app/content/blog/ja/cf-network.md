@@ -1,8 +1,8 @@
 ---
 title: ウェブサイトに現在使用中の Cloudflare ネットワークを表示する方法
 desc: Cloudflare の /cdn-cgi/trace エンドポイントを解析して現在のネットワークノード ID を取得し、Cloudflare Status の公開 API でノード名を照合することで、訪問者が使用中の Cloudflare ネットワーク名をウェブサイトに動的に表示します。
-date: 2026-05-24
-edit: 2026-05-24
+date: 2026-10-19
+edit: 2026-10-19
 aiTranslated: true
 ---
 

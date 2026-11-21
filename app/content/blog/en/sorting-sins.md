@@ -2,7 +2,7 @@
 title: 'A Whimsical "Sin of Sorting": What If You Use a Random Comparator for Sorting?'
 desc: What happens if I use a random function as a comparator when sorting?
 date: 2026-07-15
-edit: 2026-07-15
+edit: 2026-10-15
 aiGenerated: true
 aiReview: 充分核对
 aiTranslated: true

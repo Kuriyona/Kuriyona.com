@@ -2,7 +2,7 @@
 title: 突発的な思いつき「ソートの罪」：ソートにランダムコンパレータを使ったらどうなるか
 desc: ソートの際に比較関数としてランダム関数を使ったら、何が起こるのか？
 date: 2026-07-15
-edit: 2026-07-15
+edit: 2026-10-15
 aiGenerated: true
 aiReview: 充分核对
 aiTranslated: true
