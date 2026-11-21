@@ -4,8 +4,7 @@
  * 渲染端（`generate-blog-og.ts`）用 resvg 的 `loadSystemFonts: false`，只认这批文件里的字体，
  * 所以本机装没装字体、装的是哪一版，都不影响出图结果。
  *
- * - `MapleMono-*`：拉丁字形（含西里尔 / 希腊 / 常见符号），也是默认字体
- * - `NotoSansSC/TC/JP-*`：中日韩字形（Maple Mono 不含 CJK），按文章语言各取一份
+ * - `MapleMono-NF-CN-*`：中英文字形统一用这一款（CN 变体自带中日韩字形），也是默认字体
  * - Regular 与 Bold 都要：版式（svg-toolkit 生成的 SVG）里文本是 `font-weight: bold`，
  *   缺 Bold 时 resvg 只会退到 Regular（它不做合成加粗），字重会整体变细
  *
@@ -19,21 +18,12 @@ const FONTS_DIR = path.resolve(import.meta.dirname, '../.cache/fonts');
 const force = process.argv.includes('--force');
 
 const WEIGHTS = ['Regular', 'Bold'] as const;
-const CJK_VARIANTS = ['SC', 'TC', 'JP'] as const;
 
-// Maple Mono 只发 zip，没有单个字重的直链（release 里的 `MapleMono-TTF.zip` 约 1.8 MB，一次取回再挑）
+// Maple Mono 只发 zip，没有单个字重的直链（`MapleMono-NF-CN.zip` 约 160 MB，一次取回再挑）
 const MAPLE_ZIP =
-  'https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF.zip';
-// Noto Sans CJK 的官方地区子集（SC/TC/JP 各自一份，字形按当地写法，不是同一份换标签）
-const NOTO_BASE = 'https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/Sans/SubsetOTF';
+  'https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-CN.zip';
 
-const ZIP_ENTRIES = WEIGHTS.map((weight) => `MapleMono-${weight}.ttf`);
-const DIRECT_FILES = CJK_VARIANTS.flatMap((variant) =>
-  WEIGHTS.map((weight) => {
-    const name = `NotoSans${variant}-${weight}`;
-    return { file: `${name}.otf`, url: `${NOTO_BASE}/${variant}/${name}.otf` };
-  }),
-);
+const ZIP_ENTRIES = WEIGHTS.map((weight) => `MapleMono-NF-CN-${weight}.ttf`);
 
 async function download(url: string): Promise<Uint8Array> {
   const res = await fetch(url, { redirect: 'follow' });
@@ -62,15 +52,6 @@ if (missingEntries.length > 0) {
     filter: (entry) => missingEntries.includes(entry.name),
   });
   for (const file of missingEntries) await save(file, archive[file]);
-}
-
-// Noto Sans CJK：逐个直链下载
-for (const { file, url } of DIRECT_FILES) {
-  if (await exists(file)) {
-    console.log(`· 已存在 ${file}`);
-    continue;
-  }
-  await save(file, await download(url));
 }
 
 console.log(`字体目录：${FONTS_DIR}`);

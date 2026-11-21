@@ -20,21 +20,14 @@ const CONTENT_W = WIDTH - 60 * 2;
 const FONTS_DIR = path.resolve(import.meta.dirname, '../.cache/fonts');
 const OG_DIR = path.resolve(import.meta.dirname, '../.cache/og');
 
-// 所有文本默认优先 Maple Mono；它不含中日韩字形，非英文文章再挂一份对应地区的 Noto Sans CJK
-// （resvg 逐字回退：Maple Mono 有的字形用它，没有的落到列表里下一个字体）
-const MAPLE_MONO = 'Maple Mono';
-const CJK_VARIANT: Record<string, string> = { ja: 'JP', 'zh-Hans': 'SC', 'zh-Hant': 'TC' };
+// 中英文统一用 Maple Mono NF CN（CN 变体自带中日韩字形，不再额外挂 Noto Sans）
+const MAPLE_MONO = 'Maple Mono NF CN';
 
 const L10N: Record<string, { langPrefix: string; wordLabel: string }> = {
   en: { langPrefix: 'Languages:', wordLabel: 'words' },
   ja: { langPrefix: '記事の言語：', wordLabel: '字' },
   'zh-Hans': { langPrefix: '文章语言：', wordLabel: '字' },
   'zh-Hant': { langPrefix: '文章語言：', wordLabel: '字' },
-};
-
-const fontStack = (lang: string) => {
-  const variant = CJK_VARIANT[lang];
-  return variant ? `${MAPLE_MONO}, Noto Sans ${variant}` : MAPLE_MONO;
 };
 
 // 根字体配置随 layout 下传：文本节点的 font 逐键覆盖，字体文件与光栅器选项只在这里给一次
@@ -67,15 +60,27 @@ function isWide(c: string): boolean {
   );
 }
 
+// Maple Mono NF CN 是等宽字体：拉丁 / 半角 0.6em，CJK / 全角 1.2em（含全角标点）。
+// 这里只是估算换行宽度，按字体实际 advance 取，写小了中日文行会超出正文列
+const LATIN_RATIO = 0.6;
+const WIDE_RATIO = 1.2;
+
 function splitText(text: string, maxWidth: number, fontSize: number): string[] {
-  const cw = (c: string) => (isWide(c) ? fontSize : fontSize * 0.6);
   const lines: string[] = [];
   let rest = text;
 
   while (rest.length > 0) {
     if (lines.length >= 3 && rest) {
-      const last = rest.slice(0, Math.max(1, Math.floor((maxWidth - cw('…')) / cw(rest[0])))) + '…';
-      lines[2] = last;
+      const ellipsisW = fontSize * LATIN_RATIO;
+      let width = 0;
+      let cut = 0;
+      while (cut < rest.length) {
+        const w = fontSize * (isWide(rest[cut]) ? WIDE_RATIO : LATIN_RATIO);
+        if (width + w + ellipsisW > maxWidth) break;
+        width += w;
+        cut++;
+      }
+      lines[2] = rest.slice(0, Math.max(1, cut)) + '…';
       break;
     }
 
@@ -84,7 +89,7 @@ function splitText(text: string, maxWidth: number, fontSize: number): string[] {
     let brk = -1;
 
     for (let i = 0; i < rest.length; i++) {
-      width += cw(rest[i]);
+      width += fontSize * (isWide(rest[i]) ? WIDE_RATIO : LATIN_RATIO);
       if (rest[i] === ' ') lastSpace = i;
       if (width > maxWidth) {
         brk = lastSpace > 0 ? lastSpace : Math.max(1, i);
@@ -105,7 +110,6 @@ function splitText(text: string, maxWidth: number, fontSize: number): string[] {
 
 function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
   const cfg = L10N[article.lang] ?? L10N.en;
-  const font = fontStack(article.lang);
   const titleLines = splitText(article.title, CONTENT_W, 64);
   const descLines = splitText(article.desc, CONTENT_W, 48);
 
@@ -130,7 +134,6 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
             content: `Kuriyona\'s Space / 文章`,
             fontSize: 32,
             height: 40,
-            font: { defaultFontFamily: font },
             color: 'black',
           },
           {
@@ -142,7 +145,6 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
             content: line,
             fontSize: 64,
             height: 68,
-            font: { defaultFontFamily: font },
             color: 'black',
           })),
           {
@@ -154,7 +156,6 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
             content: line,
             fontSize: 48,
             height: 52,
-            font: { defaultFontFamily: font },
             color: 'black',
           })),
         ],
@@ -173,7 +174,6 @@ function buildLayout(article: Article, fontFiles: string[]): LayoutDefinition {
             content: info,
             fontSize: 32,
             height: 40,
-            font: { defaultFontFamily: font },
             color: 'black',
           },
           {
@@ -227,13 +227,10 @@ function buildDefaultLayout(fontFiles: string[]): LayoutDefinition {
 // 缺 Bold 时 resvg 会退到 Regular（它不做合成加粗），整张图字重会变细
 const WEIGHTS = ['Regular', 'Bold'];
 
-async function resolveFontFiles(lang: string): Promise<string[]> {
-  const variant = CJK_VARIANT[lang];
-  const files = WEIGHTS.map((weight) => path.join(FONTS_DIR, `MapleMono-${weight}.ttf`));
-  if (variant)
-    files.push(
-      ...WEIGHTS.map((weight) => path.join(FONTS_DIR, `NotoSans${variant}-${weight}.otf`)),
-    );
+async function resolveFontFiles(): Promise<string[]> {
+  const files = WEIGHTS.map((weight) =>
+    path.join(FONTS_DIR, `MapleMono-NF-CN-${weight}.ttf`),
+  );
 
   for (const file of files) {
     if (await fs.exists(file)) continue;
@@ -265,8 +262,7 @@ async function renderTo(basePath: string, layout: LayoutDefinition) {
 const slug = process.argv[2];
 
 if (!slug) {
-  // 默认 OG 图只有拉丁字符，给 Maple Mono 即可
-  await renderTo(path.join(OG_DIR, 'default'), buildDefaultLayout(await resolveFontFiles('en')));
+  await renderTo(path.join(OG_DIR, 'default'), buildDefaultLayout(await resolveFontFiles()));
 } else {
   const articles = await getArticles();
   const filtered = articles.filter((a) => a.slug === slug);
@@ -277,7 +273,7 @@ if (!slug) {
   }
 
   for (const article of filtered) {
-    const fontFiles = await resolveFontFiles(article.lang);
+    const fontFiles = await resolveFontFiles();
     await renderTo(path.join(OG_DIR, slug, article.lang), buildLayout(article, fontFiles));
   }
 }
