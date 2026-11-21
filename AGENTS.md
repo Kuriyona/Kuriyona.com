@@ -101,7 +101,7 @@ Kuriyona.com/
 │   ├── content/pages/index/    首页介绍 Markdown 源（`<lang>.md`：zh-Hans / zh-Hant / en / ja；缺版本时回退 zh-Hans）
 │   └── data/                   appConfig 数据：profile.json（info/contact/tech_stack/languages/games）· links.json（main/others/links）· nav.ts（导航，`onAbout` 派生 aboutNav）· timeline.ts（时间线）· devices.json（`/devices`；`primary` 主设备光晕 + 「主要设备」徽标，`retired` 卡片降不透明度 + 「不再使用」徽标）· adminNav.ts（管理端导航，侧栏与顶栏标题共用）
 ├── server/                     Nitro API：utils.ts（markdown-exit + Shiki 高亮 + TOC + 外链图标；读 app/content/blog/，非 @nuxt/content）· api/articles.ts · api/articles/[slug].ts
-├── scripts/                    Bun 独立脚本：generate-icons.ts · generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · generate-zh-hant.ts · sort-i18n.ts · check-contrast.ts（改颜色令牌后跑）· tsconfig.json（脚本专用类型检查配置）
+├── scripts/                    Bun 独立脚本：generate-icons.ts · generate-blog-og.ts · upload-blog-og.ts · download-fonts.ts · generate-zh-hant.ts · sort-i18n.ts · check-contrast.ts（改颜色令牌后跑）· check-blog-dates.ts（核对文章 date/edit 与 git 提交日期）· tsconfig.json（脚本专用类型检查配置）
 ├── backend/                    后端子包（自带 lockfile，非 workspace 成员）：Cloudflare Workers + Hono + D1
 │   ├── index.ts                Worker 入口（导出 Hono app，挂 /api/*；不做 listen/migrate）
 │   ├── src/                    env.ts · city-map.ts · amap.ts · db/schema.ts（ask_table）· plugin/auth.ts · router/{ask-box,r2,city,cache,music} · utils.ts
@@ -267,6 +267,7 @@ bun scripts/upload-blog-og.ts           # 上传 → img/site/og/...（--dry-run
 - **Dayjs locale sync**: `app/utils/time.ts` 的 `setDayjsLocale(locale)` 需在 i18n locale 变化时调用（`app.vue` watcher 已做）；另提供 `formatRelativeTime(time)`。**别叫 `setLocale`**：那会与 vue-i18n 自动导入的 `setLocale` 同名，调用点看起来一样、实际行为完全不同。
 - **文章语言与站点语言解耦**: 博客详情用 `?lang=<code>` 选择正文版本，**不调用 `setLocale`**；列表页与详情页的语言切换都用 `<button>`（不是链接），路径固定为当前站点 locale、推送 `?lang` query，**静态 HTML 里不能出现带 `?lang` 的 `<a>`** —— 否则搜索引擎会把这些副本 URL 一并抓取（sitemap 只列正式 locale 路由，并已带 hreflang）。详情页语言选择器只列出该文章实际存在的版本，canonical 指向所选语言版本的正式路由；切换语言后需重新初始化代码块复制、标题锚点与目录滚动监听。
 - **博客 AI 标注（frontmatter）**: `aiGenerated: true` 表示含 AI 生成内容；`aiReview` 仅在含 AI 内容时填写，取值 `粗略核对` / `基本核对` / `充分核对`；`aiTranslated: true` 表示该语言版本为 AI 翻译。字段经 `server/utils.ts` 白名单校验后透传，缺省为 `false` / 空；博客列表与详情页按需显示对应徽标。
+- **文章日期（frontmatter）**: `date` 是该语言版本首次发布的日期，`edit` 是最后一次修改正文的日期；**每次修改文章（正文、元信息、翻译）都必须同步把 `edit` 更新为当天**。`bun scripts/check-blog-dates.ts` 校验两者与 git 提交日期（`edit` 对最后一次内容提交、`date` 对文件首次提交；`--follow` 跨改名追溯）。纯机械提交（图片格式转换、全局改名、目录合并、纯 frontmatter 修正、OpenCC 生成译文）通过 `IGNORED_COMMIT_PATTERNS` 白名单排除，新增同类提交要补进去。
 - **zh-Hant 文章由 zh-Hans 生成**: `zh-Hant/` 由 `pnpm gen:zh-hant [slug...]` 从 `zh-Hans/` 用 OpenCC（`cn` → `t`）转换生成，生成结果直接提交；不要手改 `zh-Hant/`（会被覆盖）。行内代码原样保留；frontmatter 的 `date` / `edit` / `aiGenerated` / `aiReview` 保持原值（`aiReview` 是枚举标识，不能转成繁體）。
 - **页面 Markdown（首页介绍）**: 首页「关于我」正文在 `app/content/pages/index/<lang>.md`，页面用 `import.meta.glob('../content/pages/index/*.md', { query: '?raw', import: 'default', eager: true })` 构建期直接读入（不走 `/api/articles`），缺当前语言版本时回退 `zh-Hans`。渲染交给 `KMarkdownPage`：正文用 markdown-exit 转 HTML（内链自动补 locale 前缀、外链新窗口、统一 `.link`），独占一行的 `<组件 …>…</组件>` 映射成 `COMPONENTS` 表里的真实 Vue 组件（当前只有 `<Chips>`），组件用 `content` prop 接收块内文本。`v-html` 塞不进组件，所以 `app/utils/markdownPage.ts` 先把源切成 HTML 块与组件块；未闭合的标签按普通正文处理。`KMarkdown`（文章）不复用这套：它是纯 HTML、无组件。新增可用组件 = 在 `KMarkdownPage.vue` 的 `COMPONENTS` 登记并在块里保持 `content` 约定。
 
