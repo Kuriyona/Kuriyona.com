@@ -4,7 +4,7 @@ desc: ソートの際に比較関数としてランダム関数を使ったら�
 date: 2026-07-15
 edit: 2026-10-15
 aiGenerated: true
-aiReview: 充分核对
+aiReview: full
 aiTranslated: true
 ---
 

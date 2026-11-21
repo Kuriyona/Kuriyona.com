@@ -4,7 +4,7 @@ desc: 如果我在排序的时候用一个随机函数做比较器，会发生�
 date: 2026-07-15
 edit: 2026-10-15
 aiGenerated: true
-aiReview: 充分核对
+aiReview: full
 ---
 
 ## 突发奇想

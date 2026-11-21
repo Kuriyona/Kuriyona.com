@@ -4,7 +4,7 @@ desc: What happens if I use a random function as a comparator when sorting?
 date: 2026-07-15
 edit: 2026-10-15
 aiGenerated: true
-aiReview: 充分核对
+aiReview: full
 aiTranslated: true
 ---
 

@@ -4,7 +4,7 @@ desc: 从非官方系统回刷 ColorOS 16 的完整踩坑记录：三次翻车�
 date: 2026-10-19
 edit: 2026-10-19
 aiGenerated: true
-aiReview: 基本核对
+aiReview: basic
 ---
 
 ## 起因

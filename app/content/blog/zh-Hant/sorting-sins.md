@@ -4,7 +4,7 @@ desc: 如果我在排序的時候用一個隨機函數做比較器，會發生�
 date: 2026-07-15
 edit: 2026-10-15
 aiGenerated: true
-aiReview: 充分核对
+aiReview: full
 ---
 
 ## 突發奇想

@@ -8,9 +8,9 @@ import readingTime from 'reading-time';
 
 export type TocItem = { level: number; text: string; slug: string };
 
-export type AiReview = '粗略核对' | '基本核对' | '充分核对';
+export type AiReview = 'rough' | 'basic' | 'full';
 
-const AI_REVIEW_LEVELS: AiReview[] = ['粗略核对', '基本核对', '充分核对'];
+const AI_REVIEW_LEVELS: AiReview[] = ['rough', 'basic', 'full'];
 
 export type ArticleMeta = {
   slug: string;
