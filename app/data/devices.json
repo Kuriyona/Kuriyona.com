@@ -2,8 +2,7 @@
   "devices": [
     {
       "name": "OnePlus 15",
-      "subtitle": "原色沙丘 · 16+512",
-      "subtitleKey": "devices.subtitle.primordial-dune",
+      "subtitle": "原色沙丘",
       "primary": true,
       "specs": [
         { "labelKey": "devices.specs.processor", "value": "Qualcomm Snapdragon 8 Elite Gen 5" },
@@ -15,7 +14,6 @@
     {
       "name": "OnePlus Pad Pro",
       "subtitle": "卡其绿",
-      "subtitleKey": "devices.subtitle.khaki-green",
       "primary": true,
       "specs": [
         { "labelKey": "devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
@@ -39,7 +37,6 @@
     {
       "name": "OPPO Watch S2",
       "subtitle": "薄雾粉",
-      "subtitleKey": "devices.subtitle.misty-pink",
       "primary": true,
       "specs": [{ "labelKey": "devices.specs.size", "value": "45mm" }]
     },
@@ -54,8 +51,7 @@
     },
     {
       "name": "Apple iPhone 16 Pro",
-      "subtitle": "黑色钛金属 · 512 GiB",
-      "subtitleKey": "devices.subtitle.black-titanium",
+      "subtitle": "黑色钛金属",
       "retired": true,
       "specs": [
         { "labelKey": "devices.specs.processor", "value": "Apple A18 Pro" },
@@ -66,8 +62,7 @@
     },
     {
       "name": "OnePlus Ace 5",
-      "subtitle": "引力钛 · 12+256",
-      "subtitleKey": "devices.subtitle.gravity-titanium",
+      "subtitle": "引力钛",
       "retired": true,
       "specs": [
         { "labelKey": "devices.specs.processor", "value": "Qualcomm Snapdragon 8 Gen 3" },
@@ -78,7 +73,7 @@
     },
     {
       "name": "Apple Watch Series 9",
-      "subtitle": "41mm GPS",
+      "subtitle": "GPS",
       "retired": true,
       "specs": [
         { "labelKey": "devices.specs.processor", "value": "Apple S9" },
@@ -88,7 +83,6 @@
     },
     {
       "name": "Apple MacBook Pro",
-      "subtitle": "M1 8+512",
       "retired": true,
       "specs": [
         { "labelKey": "devices.specs.processor", "value": "Apple M1" },

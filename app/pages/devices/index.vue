@@ -21,7 +21,7 @@ useSeoMeta({ title: $t('devices.title') });
             {{ device.nameKey ? $t(device.nameKey) : device.name }}
           </h2>
           <p class="text-(--color-text-2) text-sm leading-6 min-h-6 flex items-center gap-2">
-            <span>{{ device.subtitleKey ? $t(device.subtitleKey) : device.subtitle }}</span>
+            <span v-if="device.subtitle">{{ device.subtitle }}</span>
             <KBadge v-if="device.primary" class="shrink-0">
               {{ $t('devices.primary') }}
             </KBadge>
